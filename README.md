@@ -39,6 +39,19 @@ If you publish work using this toolbox, please cite it as
 > "Routine and simplified generation of SLM patterns for optical tweezers",
 > [Journal to be decided](link to the article)
 
+Contributing
+------------
+
+If you would like to contribute a feature, report a bug or request
+we add something to the toolbox, the easiest way is by creating
+a new issue on the GitHub page.
+
+If you have code you would like to submit, fork the repository,
+add the code and open a new issue.
+This method is preferable to pasting the code in the issue
+or sending it to us via email since your contribution details
+will remain attached to the commit you send (tracking authorship).
+
 Contact us
 ----------
 
