@@ -15,7 +15,8 @@ assert(floor(amode) == amode, 'Azimuthal mode must be integer');
 
 p = inputParser;
 p.addParameter('centre', [sz(2)/2, sz(1)/2]);
-p.addParameter('radius', min(sz(1), sz(2))/2/max([1, amode, rmode]));
+p.addParameter('radius', min(sz(1), sz(2))/2 ...
+    / sqrt(max(1, rootBound(amode, rmode))));
 p.parse(varargin{:});
 
 % Generate grid
@@ -41,7 +42,15 @@ end
 
 end
 
+function value = rootBound(amode, rmode)
+% Calculate the upper bound of the root (Wikipedia formula)
+
+  value = rmode + abs(amode) + (rmode - 1)*sqrt(rmode+abs(amode));
+
+end
+
 function roots = findLgRoots(amode, rmode)
+% Find the roots of the lg polynomial
 
 if rmode == 0
   roots = [];
@@ -49,8 +58,7 @@ elseif rmode == 1
   roots = [ 1 + abs(amode) ];
 else
 
-  x = linspace(0, 1+rmode + abs(amode) + (rmode - 1)*sqrt(rmode+abs(amode)), ...
-      50*rmode);
+  x = linspace(0, 1+rootBound(amode, rmode), 50*rmode);
   lg = laguerreL(rmode, abs(amode), x);
 
   start = 1;
