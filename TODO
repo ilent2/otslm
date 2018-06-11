@@ -1,0 +1,20 @@
+
+* Sinc shaped patterns (line trap) (+simple)
+
+* 2-D GS algorithm (+iter)
+* 3-D GS algorithm (+iter)
+* Pattern from superposition of Gaussian beams (+iter)
+* Other iterative algorithms?
+
+* Near to far field function (+utils)
+* Toolbox function for near field visualisation (+utils)
+* Other function for visualisation of near field? (+utils)
+* Method to describe/generate target field (+utils)
+* Matlab full screen code for display (+utils)
+* Function to apply colour maps to gratings (+tools)
+
+* Graphical user interface
+
+* Generate figures for paper
+* Examples
+* Unit tests to verify that at least everything runs (code coverage)
