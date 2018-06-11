@@ -34,11 +34,15 @@ phi = atan2(yy, xx);
 pattern = amode .* phi ./ (2.0*pi);
 
 % Calculate radial part of pattern
-roots = findLgRoots(amode, rmode) * p.Results.radius;
 
+roots = findLgRoots(amode, rmode) * p.Results.radius;
 for ii = 1:length(roots)
   pattern(rho <= roots(ii)) = pattern(rho <= roots(ii)) + 0.5;
 end
+
+% This is too slow
+%lg = laguerreL(rmode, abs(amode), rho ./ p.Results.radius);
+%pattern = pattern + (sign(lg) > 0)*0.5;
 
 end
 
