@@ -15,6 +15,8 @@
 
 * Graphical user interface
 
+* Aberration correction?
+
 * Generate figures for paper
 * Examples
 * Unit tests to verify that at least everything runs (code coverage)
