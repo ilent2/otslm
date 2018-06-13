@@ -2,7 +2,7 @@ function pattern = aperture(sz, dimension, varargin)
 % APERTURE creates an aperture mask
 %
 % pattern = aperture(sz, dimension, ...) creates a circular aperture with
-% radius given by parameter dimension.
+% radius given by parameter dimension.  Array is logical array.
 %
 % Optional named parameters:
 %
@@ -11,7 +11,7 @@ function pattern = aperture(sz, dimension, varargin)
 %           'square'    [width]     Square with equal sides
 %           'rect'      [w, h]      Rectangle with width and height
 %   'centre'      [x, y]      centre location for pattern
-%   'values'      [l, h]      values for off and on regions
+%   'values'      [l, h]      values for off and on regions (default: [])
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
@@ -19,7 +19,7 @@ function pattern = aperture(sz, dimension, varargin)
 p = inputParser;
 p.addParameter('type', 'circle');
 p.addParameter('centre', [sz(2), sz(1)]/2.0);
-p.addParameter('values', [0, 1.0]);
+p.addParameter('values', []);
 p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
@@ -74,8 +74,10 @@ switch p.Results.type
     error('Unknown shape type argument');
 end
 
-% Scale the pattern
-high = p.Results.values(2);
-low = p.results.value(1);
-pattern = pattern .* (high - low) + low;
+% Scale the pattern (convert from logical to double)
+if ~isempty(p.Results.values)
+  high = p.Results.values(2);
+  low = p.results.value(1);
+  pattern = pattern .* (high - low) + low;
+end
 
