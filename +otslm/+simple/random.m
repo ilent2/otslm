@@ -22,6 +22,8 @@ switch p.Results.type
     pattern = rand(sz) * (high-low) + low;
   case 'gaussian'
     pattern = randn(sz) * (high-low) + low;
+  case 'binary'
+    pattern = (randi(2, sz) - 1) * (high-low) + low;
   otherwise
     error('Unknown noise type');
 end
