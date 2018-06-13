@@ -24,6 +24,7 @@ function pattern = aspheric(sz, radius, kappa, varargin)
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'imag_value'  val         Value to replace imaginary values with
 
 p = inputParser;
 p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
@@ -33,6 +34,7 @@ p.addParameter('type', '2d');
 p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
+p.addParameter('imag_value', Inf*sign(radius));
 p.parse(varargin{:});
 
 % Generate grid
@@ -89,5 +91,5 @@ pattern = pattern .* p.Results.scale;
 
 % Ensure result is real
 imag_parts = imag(pattern) ~= 0;
-pattern(imag_parts) = Inf * sign(radius);
+pattern(imag_parts) = p.Results.imag_value;
 
