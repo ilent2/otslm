@@ -68,6 +68,6 @@ switch p.Results.method
     end
 
   otherwise
-    error('Unknown method');
+    error('Unknown combination method');
 end
 
