@@ -7,12 +7,22 @@ function pattern = random(sz, varargin)
 % Optional named parameters:
 %
 %   'range'   [low, high]  Range of values (default: [0, 1)).
+%   'type'    type         Type of noise: 'uniform' or 'gaussian'
 
 p = inputParser;
 p.addParameter('range', [0, 1]);
+p.addParameter('type', 'uniform');
 p.parse(varargin{:});
 
 high = p.Results.range(2);
 low = p.Results.range(1);
 
-pattern = rand(sz) * (high-low) + low;
+switch p.Results.type
+  case 'uniform'
+    pattern = rand(sz) * (high-low) + low;
+  case 'gaussian'
+    pattern = randn(sz) * (high-low) + low;
+  otherwise
+    error('Unknown noise type');
+end
+
