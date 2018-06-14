@@ -2,28 +2,28 @@
 
     % Properties that correspond to app components
     properties (Access = public)
-        UIFigure                    matlab.ui.Figure
-        TabGroup                    matlab.ui.container.TabGroup
-        RegionTab                   matlab.ui.container.Tab
-        PositionEditFieldLabel      matlab.ui.control.Label
-        PositionEditField           matlab.ui.control.EditField
-        TargetEditFieldLabel        matlab.ui.control.Label
-        TargetEditField             matlab.ui.control.EditField
-        FilterDropDownLabel         matlab.ui.control.Label
-        FilterDropDown              matlab.ui.control.DropDown
-        FilterParamsEditFieldLabel  matlab.ui.control.Label
-        FilterParamsEditField       matlab.ui.control.EditField
-        RadiusEditFieldLabel        matlab.ui.control.Label
-        RadiusEditField             matlab.ui.control.EditField
-        BeamNameEditFieldLabel      matlab.ui.control.Label
-        BeamNameEditField           matlab.ui.control.EditField
-        BackgroundDropDownLabel     matlab.ui.control.Label
-        BackgroundDropDown          matlab.ui.control.DropDown
-        SizeEditFieldLabel          matlab.ui.control.Label
-        SizeEditField               matlab.ui.control.EditField
-        UIAxes                      matlab.ui.control.UIAxes
-        AddRegionButton             matlab.ui.control.Button
-        RemoveRegionButton          matlab.ui.control.Button
+        GenerateSampleRegionUIFigure  matlab.ui.Figure
+        TabGroup                      matlab.ui.container.TabGroup
+        RegionTab                     matlab.ui.container.Tab
+        PositionEditFieldLabel        matlab.ui.control.Label
+        PositionEditField             matlab.ui.control.EditField
+        TargetEditFieldLabel          matlab.ui.control.Label
+        TargetEditField               matlab.ui.control.EditField
+        FilterDropDownLabel           matlab.ui.control.Label
+        FilterDropDown                matlab.ui.control.DropDown
+        FilterParamsEditFieldLabel    matlab.ui.control.Label
+        FilterParamsEditField         matlab.ui.control.EditField
+        RadiusEditFieldLabel          matlab.ui.control.Label
+        RadiusEditField               matlab.ui.control.EditField
+        BeamNameEditFieldLabel        matlab.ui.control.Label
+        BeamNameEditField             matlab.ui.control.EditField
+        BackgroundDropDownLabel       matlab.ui.control.Label
+        BackgroundDropDown            matlab.ui.control.DropDown
+        SizeEditFieldLabel            matlab.ui.control.Label
+        SizeEditField                 matlab.ui.control.EditField
+        UIAxes                        matlab.ui.control.UIAxes
+        AddRegionButton               matlab.ui.control.Button
+        RemoveRegionButton            matlab.ui.control.Button
     end
 
 
@@ -36,7 +36,7 @@
         function saveData(app)
             varname = app.BeamNameEditField.Value;
             if isvarname(varname)
-                eval(['global ', varname, '; ', varname, ' = app.beamData;']);
+                assignin('base', varname, app.beamData);
             end
         end
         
@@ -158,9 +158,14 @@
             app.updateData();
         end
 
-        % Callback function: FilterDropDown, FilterParamsEditField, 
-        % PositionEditField, TargetEditField
+        % Value changed function: FilterDropDown, 
+        % FilterParamsEditField, PositionEditField, TargetEditField
         function RegionValueChanged(app, event)
+            app.updateData();
+        end
+
+        % Value changed function: BeamNameEditField
+        function BeamNameEditFieldValueChanged2(app, event)
             app.updateData();
         end
     end
@@ -171,13 +176,13 @@
         % Create UIFigure and components
         function createComponents(app)
 
-            % Create UIFigure
-            app.UIFigure = uifigure;
-            app.UIFigure.Position = [100 100 727 429];
-            app.UIFigure.Name = 'UI Figure';
+            % Create GenerateSampleRegionUIFigure
+            app.GenerateSampleRegionUIFigure = uifigure;
+            app.GenerateSampleRegionUIFigure.Position = [100 100 727 429];
+            app.GenerateSampleRegionUIFigure.Name = 'Generate Sample Region';
 
             % Create TabGroup
-            app.TabGroup = uitabgroup(app.UIFigure);
+            app.TabGroup = uitabgroup(app.GenerateSampleRegionUIFigure);
             app.TabGroup.Position = [21 99 250 221];
 
             % Create RegionTab
@@ -245,24 +250,24 @@
             app.RadiusEditField.Value = '10';
 
             % Create BeamNameEditFieldLabel
-            app.BeamNameEditFieldLabel = uilabel(app.UIFigure);
+            app.BeamNameEditFieldLabel = uilabel(app.GenerateSampleRegionUIFigure);
             app.BeamNameEditFieldLabel.HorizontalAlignment = 'right';
             app.BeamNameEditFieldLabel.Position = [81 392 73 15];
             app.BeamNameEditFieldLabel.Text = 'Beam Name';
 
             % Create BeamNameEditField
-            app.BeamNameEditField = uieditfield(app.UIFigure, 'text');
+            app.BeamNameEditField = uieditfield(app.GenerateSampleRegionUIFigure, 'text');
+            app.BeamNameEditField.ValueChangedFcn = createCallbackFcn(app, @BeamNameEditFieldValueChanged2, true);
             app.BeamNameEditField.Position = [171 388 100 22];
-            app.BeamNameEditField.Value = 'newBeam';
 
             % Create BackgroundDropDownLabel
-            app.BackgroundDropDownLabel = uilabel(app.UIFigure);
+            app.BackgroundDropDownLabel = uilabel(app.GenerateSampleRegionUIFigure);
             app.BackgroundDropDownLabel.HorizontalAlignment = 'right';
             app.BackgroundDropDownLabel.Position = [81 332 71 15];
             app.BackgroundDropDownLabel.Text = 'Background';
 
             % Create BackgroundDropDown
-            app.BackgroundDropDown = uidropdown(app.UIFigure);
+            app.BackgroundDropDown = uidropdown(app.GenerateSampleRegionUIFigure);
             app.BackgroundDropDown.Items = {'Zero', 'NaN', 'Checker Board', 'Random', 'Random Binary'};
             app.BackgroundDropDown.ItemsData = {'zero', 'nan', 'checkerboard', 'random', 'randombin'};
             app.BackgroundDropDown.ValueChangedFcn = createCallbackFcn(app, @BackgroundDropDownValueChanged, true);
@@ -270,32 +275,32 @@
             app.BackgroundDropDown.Value = 'zero';
 
             % Create SizeEditFieldLabel
-            app.SizeEditFieldLabel = uilabel(app.UIFigure);
+            app.SizeEditFieldLabel = uilabel(app.GenerateSampleRegionUIFigure);
             app.SizeEditFieldLabel.HorizontalAlignment = 'right';
             app.SizeEditFieldLabel.Position = [121 362 29 15];
             app.SizeEditFieldLabel.Text = 'Size';
 
             % Create SizeEditField
-            app.SizeEditField = uieditfield(app.UIFigure, 'text');
+            app.SizeEditField = uieditfield(app.GenerateSampleRegionUIFigure, 'text');
             app.SizeEditField.ValueChangedFcn = createCallbackFcn(app, @SizeEditFieldValueChanged, true);
             app.SizeEditField.Position = [171 358 100 22];
             app.SizeEditField.Value = '512, 512';
 
             % Create UIAxes
-            app.UIAxes = uiaxes(app.UIFigure);
+            app.UIAxes = uiaxes(app.GenerateSampleRegionUIFigure);
             title(app.UIAxes, 'Title')
             xlabel(app.UIAxes, 'X')
             ylabel(app.UIAxes, 'Y')
             app.UIAxes.Position = [297 17 418 394];
 
             % Create AddRegionButton
-            app.AddRegionButton = uibutton(app.UIFigure, 'push');
+            app.AddRegionButton = uibutton(app.GenerateSampleRegionUIFigure, 'push');
             app.AddRegionButton.ButtonPushedFcn = createCallbackFcn(app, @AddRegionButtonPushed, true);
             app.AddRegionButton.Position = [31 68 100 22];
             app.AddRegionButton.Text = 'Add Region';
 
             % Create RemoveRegionButton
-            app.RemoveRegionButton = uibutton(app.UIFigure, 'push');
+            app.RemoveRegionButton = uibutton(app.GenerateSampleRegionUIFigure, 'push');
             app.RemoveRegionButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveRegionButtonPushed, true);
             app.RemoveRegionButton.Position = [161 68 104 22];
             app.RemoveRegionButton.Text = 'Remove Region';
@@ -311,7 +316,7 @@
             createComponents(app)
 
             % Register the app with App Designer
-            registerApp(app, app.UIFigure)
+            registerApp(app, app.GenerateSampleRegionUIFigure)
 
             % Execute the startup function
             runStartupFcn(app, @startupFcn)
@@ -325,7 +330,7 @@
         function delete(app)
 
             % Delete UIFigure when app is deleted
-            delete(app.UIFigure)
+            delete(app.GenerateSampleRegionUIFigure)
         end
     end
 end]]></w:t></w:r></w:p></w:body></w:document>
