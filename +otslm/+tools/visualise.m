@@ -23,12 +23,14 @@ function varargout = visualise(phase, varargin)
 %   'incident'  image     Specifies the incident illumination
 %       Default illumination is a Gaussian beam (w0 = 0.25*min(size(phase))
 %   'z'         z         z-position of output plane
+%   'padding'   p         Add padding to the outside of the image.
 
 p = inputParser;
 p.addParameter('method', 'fft');
 p.addParameter('amplitude', ones(size(phase)));
 p.addParameter('incident', []);
 p.addParameter('z', 0.0);
+p.addParameter('padding', 100);
 p.parse(varargin{:});
 
 amplitude = p.Results.amplitude;
@@ -49,6 +51,8 @@ end
 % Handle default value for incident
 if isempty(incident)
   [xx, yy] = meshgrid(1:size(phase, 2), 1:size(phase, 1));
+  xx = xx - size(phase, 2)/2;
+  yy = yy - size(phase, 1)/2;
   sigma = 0.25 * min(size(phase));
   incident = exp(-(xx.^2 + yy.^2)./(2*sigma^2));
   incident = incident ./ max(incident(:));
@@ -68,7 +72,7 @@ U = amplitude .* exp(1i*phase) .* incident;
 
 switch p.Results.method
   case 'fft'
-    varargout{1} = fft_method(U, p.Results.z);
+    varargout{1} = fft_method(U, p.Results.z, p.Results.padding);
   case 'ott'
     [varargout{1:length(varargout)}] = ott_method(U, p.Results.z);
   otherwise
@@ -77,23 +81,43 @@ end
 
 end
 
-function output = fft_method(U, z)
+function output = fft_method(U, z, padding)
 % z should be dimensionless, multiplied by a factor of 2pi/lambda
+
+  % Apply padding to the image
+  img = zeros(size(U)+2*[padding, padding]);
+  img(padding+(1:size(U, 1)), padding+(1:size(U, 2))) = U;
+  U = img;
+
+  % This should work, perhaps x and y are the wrong size
+  %[tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
+  %tx = tx - size(U, 2)/2;
+  %ty = ty - size(U, 1)/2;
+  %x = tx ./ size(U, 2);
+  %y = ty ./ size(U, 1);
+  %lambda = 1e-6;
+  %d = 1.0;
+  %f = (1.0 + z)*d;
+  %output = exp(i*pi*(1 - d/f).*(x.^2 + y.^2)/(lambda*f)) ...
+  %    .* fftshift(fft2(U));
+
+  % Transform to the focal plane (missing scaling factor)
+  output = fftshift(fft2(U));
 
   [tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
   tx = tx - size(U, 2)/2;
   ty = ty - size(U, 1)/2;
 
   % Currently guessing a range for these values
-  m = sqrt(tx(end, end)^2 + ty(end, end)^2);
-  tx = tx ./ m .* (pi/2);
-  ty = ty ./ m .* (pi/2);
+  tx = tx ./ size(U, 2);
+  ty = ty ./ size(U, 1);
 
   ax = sin(tx);
   ay = sin(ty);
 
-  % Calculate the output plane
-  output = ifft2(fft2(U) .* fftshift(exp(-1i*z*sqrt(1 - ax.^2 + ay.^2))));
+  % Shift the plane in the z direction
+  output = ifft2(fft2(output) .* ...
+      fftshift(exp(-1i*z*sqrt(1 - ax.^2 + ay.^2))));
 
 end
 
