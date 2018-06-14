@@ -61,9 +61,9 @@ assert(length(radii) == length(locations), 'Not enough radii');
 bmethods = p.Results.amplitude;
 if ~isempty(bmethods)
   if ischar(bmethods{1})
-    bmethods = {bmethods};
-  end
-  if length(bmethods) == 1 && length(locations) ~= 1
+    [tbmethods{1:length(locations)}] = deal(bmethods);
+    bmethods = tbmethods;
+  elseif length(bmethods) == 1 && length(locations) ~= 1
     [tbmethods{1:length(locations)}] = deal(bmethods);
     bmethods = tbmethods;
   end

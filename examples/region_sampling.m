@@ -1,5 +1,8 @@
 % Demonstrating of otslm.tools.sample_region function
 
+% Add toolbox to the path
+addpath('../');
+
 sz = [512, 512];
 locations = {[ 100, 100 ], [ 300, 250 ], [ 200, 100 ] };
 detectors = {[ 0, 10 ], [ 20, 0 ], [ 10, 5 ]};
