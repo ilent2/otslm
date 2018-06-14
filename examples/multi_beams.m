@@ -7,9 +7,9 @@ sz = [512, 512];
 
 %% Generate a couple of simple diffraction grating patterns
 
-pattern1 = linear(sz, 'angle_deg', 0, 'spacing', 20);
+pattern1 = linear(sz, 'angle_deg', 45, 'spacing', 10);
 
-pattern2 = linear(sz, 'gradient', [0, 1]);
+pattern2 = linear(sz, 'gradient', [0.01, 0]);
 
 pattern3 = linear(sz) + spherical(sz, 100, 'imag_value', 0);
 
@@ -31,7 +31,7 @@ imagesc(combined);
 
 %% Visualise far field
 
-farfield = otslm.tools.visualise(pattern1*2*pi);
+farfield = otslm.tools.visualise(combined*2*pi);
 
 figure(3);
 subplot(1, 2, 1);

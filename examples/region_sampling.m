@@ -4,26 +4,32 @@
 addpath('../');
 
 sz = [512, 512];
-locations = {[ 100, 100 ], [ 300, 250 ], [ 200, 100 ] };
+locations = {[ 180, 300 ], [ 300, 300 ], [ 200, 200 ] };
 detectors = {[ 0, 10 ], [ 20, 0 ], [ 10, 5 ]};
 radii = [ 10, 20, 15 ]*2;
 
 % amplitude_opts = {'step'};
-% amplitude_opts = {'gaussian_dither'};
+amplitude_opts = {'gaussian_dither'};
 % amplitude_opts = {'gaussian_noise'};
-amplitude_opts = {'gaussian_scale', 'mix', 'sadd'};
+% amplitude_opts = {'gaussian_scale', 'mix', 'sadd'};
 
 % Generate pattern
 pattern = otslm.tools.sample_region(sz, locations, detectors, ...
-    'radii', radii, 'background', 'checkerboard', 'amplitude', amplitude_opts);
+    'radii', radii, 'background', 'random', 'amplitude', amplitude_opts);
 
 % Show pattern
 figure(1);
 imagesc(pattern);
-title('phase pattern');
+title('Phase pattern');
+
+% Calculate the farfield
+farfield = otslm.tools.visualise(pattern*2*pi);
+
+% Mask the zero-th order
+% farfield = farfield .* ~otslm.simple.aperture(size(farfield), 10);
 
 % Show far-field amplitude
 figure(2);
-imagesc(abs(otslm.tools.visualise(pattern*2*pi)));
+imagesc(abs(farfield(100:end-100, 100:end-100)));
 title('Far-field amplitude');
 
