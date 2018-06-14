@@ -59,9 +59,14 @@ assert(length(radii) == length(locations), 'Not enough radii');
 
 % Ensure the number of blur methods matches the number of locations
 bmethods = p.Results.amplitude;
-if ~iscell(bmethods{1}) || length(bmethods) == 1
-  [tbmethods{1:length(locations)}] = deal(bmethods);
-  bmethods = tbmethods;
+if ~isempty(bmethods)
+  if ischar(bmethods{1})
+    bmethods = {bmethods};
+  end
+  if length(bmethods) == 1 && length(locations) ~= 1
+    [tbmethods{1:length(locations)}] = deal(bmethods);
+    bmethods = tbmethods;
+  end
 end
 assert(length(bmethods) == length(locations), 'Not enough amplitude methods');
 
@@ -74,7 +79,7 @@ switch p.Results.background
   case 'random'
     pattern = otslm.simple.random(sz);
   case 'randombin'
-    pattern = otslm.simple.randombin(sz);
+    pattern = otslm.simple.random(sz, 'type', 'binary');
   case 'checkerboard'
     pattern = otslm.simple.checkerboard(sz);
   otherwise
@@ -88,7 +93,7 @@ for ii = 1:length(locations)
   loc = locations{ii};
   target = detectors{ii};
   radius = radii(ii);
-  method = bmethods{1, ii};
+  method = bmethods{ii};
 
   linear = otslm.simple.linear(sz, 'angle', atan2(target(2), target(1)), ...
         'spacing', norm(target));
