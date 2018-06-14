@@ -3,3 +3,8 @@
 *.swo
 *.m~
 
+gui/tools/*
+gui/simple/*
+gui/utils/*
+gui/iter/*
+
