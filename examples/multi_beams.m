@@ -1,3 +1,4 @@
+% Example to demonstrate combining multiple beams
 
 % Add the otslm toolbox to the path
 addpath('../');
@@ -7,11 +8,12 @@ sz = [512, 512];
 
 %% Generate a couple of simple diffraction grating patterns
 
-pattern1 = linear(sz, 'angle_deg', 45, 'spacing', 10);
+pattern1 = linear(sz, 'angle_deg', 90, 'spacing', 20);
 
-pattern2 = linear(sz, 'gradient', [0.01, 0]);
+pattern2 = linear(sz, 'angle_deg', 90, 'spacing', 40);
 
-pattern3 = linear(sz) + spherical(sz, 100, 'imag_value', 0);
+pattern3 = linear(sz, 'angle_deg', 45, 'spacing', 20) ...
+    + spherical(sz, 100, 'imag_value', 0);
 
 figure(1);
 subplot(1, 3, 1);
@@ -21,20 +23,67 @@ imagesc(pattern2);
 subplot(1, 3, 3);
 imagesc(pattern3);
 
-%% Combine patterns
+%% Combine patterns: angle(\sum_i exp(1i*2*pi*pattern_i))
 
 combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
-    'method', 'expangle');
+    'method', 'super');
+  
+farfield = otslm.tools.visualise(2*pi*combined);
+farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
+    floor(size(farfield, 2)/2)+(-50:50));
 
 figure(2);
+subplot(1, 2, 1);
 imagesc(combined);
+subplot(1, 2, 2);
+imagesc(abs(farfield));
+title('super');
 
-%% Visualise far field
+%% Combine patterns: angle(\sum_i exp(1i*2*pi*pattern_i + theta_i))
 
-farfield = otslm.tools.visualise(combined*2*pi);
+combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
+    'method', 'rsuper');
+  
+farfield = otslm.tools.visualise(2*pi*combined);
+farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
+    floor(size(farfield, 2)/2)+(-50:50));
 
 figure(3);
 subplot(1, 2, 1);
-imagesc(abs(farfield));
+imagesc(combined);
 subplot(1, 2, 2);
-imagesc(angle(farfield));
+imagesc(abs(farfield));
+title('rsuper');
+
+%% Combine patterns: Gerchberg-Saxton algorithm
+
+combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
+    'method', 'gs');
+  
+farfield = otslm.tools.visualise(2*pi*combined);
+farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
+    floor(size(farfield, 2)/2)+(-50:50));
+
+figure(4);
+subplot(1, 2, 1);
+imagesc(combined);
+subplot(1, 2, 2);
+imagesc(abs(farfield));
+title('GS');
+
+
+%% Combine patterns: Random sampling
+
+combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
+    'method', 'dither');
+  
+farfield = otslm.tools.visualise(2*pi*combined);
+farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
+    floor(size(farfield, 2)/2)+(-50:50));
+
+figure(5);
+subplot(1, 2, 1);
+imagesc(combined);
+subplot(1, 2, 2);
+imagesc(abs(farfield));
+title('Dither');
