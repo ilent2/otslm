@@ -1,4 +1,4 @@
-function xx, yy, rr, phi = grid(sz, varargin)
+function [xx, yy, rr, phi] = grid(sz, varargin)
 % GRID generates a grid of points for other functions
 %
 % xx, yy = grid(sz, ...) equivilant to mesh grid.

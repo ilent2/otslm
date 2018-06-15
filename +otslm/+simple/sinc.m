@@ -13,9 +13,9 @@ function pattern = sinc(sz, radius, varargin)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
 
 % Calculate radial coordinates
-[~, ~, rr] = grid(sz, varargin{:});
+[~, ~, rr] = otslm.simple.grid(sz, varargin{:});
 
 % Generate pattern
 pattern = sinc(radius*rr);
-pattern = pattern ./ max(abs(pattern));
+pattern = pattern ./ max(abs(pattern(:)));
 
