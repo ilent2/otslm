@@ -27,6 +27,7 @@ function varargout = visualise(phase, varargin)
 
 p = inputParser;
 p.addParameter('method', 'fft');
+p.addParameter('type', 'farfield');
 p.addParameter('amplitude', ones(size(phase)));
 p.addParameter('incident', []);
 p.addParameter('z', 0.0);
@@ -72,53 +73,68 @@ U = amplitude .* exp(1i*phase) .* incident;
 
 switch p.Results.method
   case 'fft'
-    varargout{1} = fft_method(U, p.Results.z, p.Results.padding);
+    varargout{1} = fft_method(U, p);
   case 'ott'
-    [varargout{1:length(varargout)}] = ott_method(U, p.Results.z);
+    [varargout{1:length(varargout)}] = ott_method(U, p);
   otherwise
     error('Unknown method');
 end
 
 end
 
-function output = fft_method(U, z, padding)
+function output = fft_method(U, p)
 % z should be dimensionless, multiplied by a factor of 2pi/lambda
 
-  % Apply padding to the image
-  img = zeros(size(U)+2*[padding, padding]);
-  img(padding+(1:size(U, 1)), padding+(1:size(U, 2))) = U;
-  U = img;
+  z = p.Results.z;
+  padding = p.Results.padding;
 
-  % This should work, perhaps x and y are the wrong size
-  %[tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
-  %tx = tx - size(U, 2)/2;
-  %ty = ty - size(U, 1)/2;
-  %x = tx ./ size(U, 2);
-  %y = ty ./ size(U, 1);
-  %lambda = 1e-6;
-  %d = 1.0;
-  %f = (1.0 + z)*d;
-  %output = exp(i*pi*(1 - d/f).*(x.^2 + y.^2)/(lambda*f)) ...
-  %    .* fftshift(fft2(U));
+  if strcmpi(p.Results.type, 'farfield')
 
-  % Transform to the focal plane (missing scaling factor)
-  output = fftshift(fft2(U));
+    % Apply padding to the image
+    img = zeros(size(U)+2*[padding, padding]);
+    img(padding+(1:size(U, 1)), padding+(1:size(U, 2))) = U;
+    U = img;
 
-  [tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
-  tx = tx - size(U, 2)/2;
-  ty = ty - size(U, 1)/2;
+    % This should work, perhaps x and y are the wrong size
+    %[tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
+    %tx = tx - size(U, 2)/2;
+    %ty = ty - size(U, 1)/2;
+    %x = tx ./ size(U, 2);
+    %y = ty ./ size(U, 1);
+    %lambda = 1e-6;
+    %d = 1.0;
+    %f = (1.0 + z)*d;
+    %output = exp(i*pi*(1 - d/f).*(x.^2 + y.^2)/(lambda*f)) ...
+    %    .* fftshift(fft2(U));
 
-  % Currently guessing a range for these values
-  tx = tx ./ size(U, 2);
-  ty = ty ./ size(U, 1);
+    % Transform to the focal plane (missing scaling factor)
+    output = fftshift(fft2(U));
 
-  ax = sin(tx);
-  ay = sin(ty);
+    [tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
+    tx = tx - size(U, 2)/2;
+    ty = ty - size(U, 1)/2;
 
-  % Shift the plane in the z direction
-  output = ifft2(fft2(output) .* ...
-      fftshift(exp(-1i*z*sqrt(1 - ax.^2 + ay.^2))));
+    % Currently guessing a range for these values
+    tx = tx ./ size(U, 2);
+    ty = ty ./ size(U, 1);
 
+    ax = sin(tx);
+    ay = sin(ty);
+
+    % Shift the plane in the z direction
+    output = ifft2(fft2(output) .* ...
+        fftshift(exp(-1i*z*sqrt(1 - ax.^2 + ay.^2))));
+
+    % TODO: z-shift should be its own function
+
+  elseif strcmpi(p.Results.type, 'nearfield')
+
+    % TODO: inverse z-shift
+
+    % Calculate pattern at DOE
+    output = ifft2(fftshift(U)));
+
+  end
 end
 
 function [output, beam] = ott_method(U, z)
