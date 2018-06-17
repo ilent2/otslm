@@ -18,7 +18,7 @@ p.parse(varargin{:});
 pad = p.Results.padding;
 
 % Calculate pattern in conjugate plane
-filtered = otslm.tools.visualise(ones(size(input)), 'incident', input, ...
+filtered = otslm.tools.visualise([], 'incident', input, ...
     'method', 'fft', 'type', 'farfield', 'padding', pad);
 
 % Apply the filter
@@ -26,14 +26,15 @@ filtered = otslm.tools.visualise(ones(size(input)), 'incident', input, ...
 assert(all(size(filter) <= size(filtered)), ...
   'Size of filter must be smaller than input+2*padding');
 
-padr = size(filtered) - size(filter);
-filtered_roi = zeros(size(filtered), 'logical');
-filtered_roi(padr(1)+1:end-padr(1), padr(2)+1:end-padr(2)) = 1;
-filtered(filtered_roi) = filtered(filtered_roi) .* filter;
+fsz = size(filter);
+padr = floor((size(filtered) - fsz)/2);
+filtered_roi = false(size(filtered));
+filtered_roi(padr(1)+(1:fsz(1)), padr(2)+(1:fsz(2))) = true;
+filtered(filtered_roi) = filtered(filtered_roi) .* filter(:);
 filtered(~filtered_roi) = 0.0;
 
 % Calculate pattern in output plane (no extra padding)
-output = otslm.tools.visualise(ones(size(input)), 'incident', filtered, ...
+output = otslm.tools.visualise([], 'incident', filtered, ...
     'method', 'fft', 'type', 'nearfield', 'padding', 0);
 
 % Remove padding if asked

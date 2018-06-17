@@ -60,12 +60,14 @@ if isempty(incident)
 end
 
 % Check sizes of input images
-assert(all(size(incident) == size(phase)));
-assert(all(size(amplitude) == size(phase)));
+assert(all(size(incident) == size(phase)), ...
+  'Incident size must match phase size');
+assert(all(size(amplitude) == size(phase)), ...
+  'Amplitude size must match phase size');
 
 % Check phase range
-if abs(max(phase(:)) - min(phase(:))) < eps(1)
-  warning('Phase range should be 0 to 2*pi');
+if abs(1 - max(phase(:)) - min(phase(:))) < eps(1)
+  warning('Phase range should be 2*pi');
 end
 
 % Generate combined pattern
@@ -133,7 +135,7 @@ function output = fft_method(U, p)
     % TODO: inverse z-shift
 
     % Calculate pattern at DOE
-    output = ifft2(fftshift(U)));
+    output = ifft2(fftshift(U));
 
   end
 end
