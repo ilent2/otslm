@@ -58,6 +58,9 @@ if nargout == 2
   amplitude = (rho./p.Results.radius).^abs(2*amode) ...
       .* Lpoly_rho .* exp(-p.Results.p0*0.5*(rho./p.Results.radius).^2);
 
+  % Normalize amplitude maximum value
+  amplitude = amplitude ./ max(abs(amplitude(:)));
+
 end
 
 end

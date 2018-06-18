@@ -15,6 +15,7 @@ function pattern = linear(sz, varargin)
 
 p = inputParser;
 p.addParameter('centre', [ 1, 1 ]);
+p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
 p.addParameter('slope', []);
@@ -22,6 +23,7 @@ p.addParameter('gradient', []);
 p.addParameter('spacing', []);
 p.parse(varargin{:});
 
+% Calculate pattern angle
 theta = [];
 
 if ~isempty(p.Results.angle)
@@ -43,12 +45,12 @@ if isempty(theta)
   theta = 0.0;
 end
 
-centre = p.Results.centre;
+% Generate pattern (unscaled)
 
-[xx, yy] = meshgrid(1:sz(2), 1:sz(1));
+pattern = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
+    'aspect', p.Results.aspect, 'angle', theta);
 
-pattern = (xx-centre(1))*cos(theta) + (yy-centre(2))*sin(theta);
-
+% Calculate slope
 slope = [];
 
 if ~isempty(p.Results.slope)
