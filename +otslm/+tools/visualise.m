@@ -77,7 +77,7 @@ switch p.Results.method
   case 'fft'
     varargout{1} = fft_method(U, p);
   case 'ott'
-    [varargout{1:length(varargout)}] = ott_method(U, p);
+    [varargout{1:nargout}] = ott_method(U, p);
   otherwise
     error('Unknown method');
 end
@@ -140,8 +140,45 @@ function output = fft_method(U, p)
   end
 end
 
-function [output, beam] = ott_method(U, z)
-  % TODO
-  error('Not yet implemented');
+function [output, beam] = ott_method(U, p)
+
+  z = p.Results.z;
+
+  % TODO: We should choose this based on the output range
+  % TODO: We should warn when Nmax gets much larger, memory/time
+  Nmax = 20;
+
+  % TODO: Set the output range to other values
+
+  % TODO: Set the NA to other values
+  NA = 1.02;
+
+  % TODO: Lower resolution for output image
+
+  % Calculate the beam shape coefficients of focussed beam
+  polarisation = [ 1, 0 ];
+  nMedium = 1.33;
+  beam = ott.BscPmParaxial(NA, U, 'index_medium', nMedium, ...
+      'polarisation', polarisation, 'Nmax', Nmax);
+
+  %% create image of the resulting beams along two axes:
+
+  xrange = linspace(-3, 3, round(size(U, 2)/5));
+  yrange = linspace(-3, 3, round(size(U, 1)/5));
+
+  [X1,Y1,Z1]=meshgrid(xrange/nMedium,yrange/nMedium,z);
+
+  % Calculate the E field
+  E = beam.emFieldXyz([X1(:),Y1(:),Z1(:)].');
+
+  % Add the irradiance to the output
+  output = sum(abs(E).^2, 1);
+
+  % Add the z-phase to the output (is this a good idea?)
+  output = output .* exp(1i*angle(E(3, :)));
+
+  % Turn the output back into an image
+  output = reshape(output, [round(size(U, 1)/5), round(size(U, 2)/5)]);
+
 end
 
