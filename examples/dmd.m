@@ -1,6 +1,10 @@
 % Demonstrate the current DMD functionality of the toolbox
 %  This is for a DMD with tiling that gives it a 1:2 aspect ratio
 
+% Add toolbox to path
+addpath('../');
+
+% Declare properties for simulations
 dmdsz = [512, 1024];
 aspect = 2;
 
