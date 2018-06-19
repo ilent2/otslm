@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:pPr><w:pStyle w:val="code"/></w:pPr><w:r><w:t><![CDATA[classdef lgmode < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        LGBeamUIFigure             matlab.ui.Figure
+        UIAxes                     matlab.ui.control.UIAxes
+        DisplayDropDownLabel       matlab.ui.control.Label
+        DisplayDropDown            matlab.ui.control.DropDown
+        LinearGratingPanel         matlab.ui.container.Panel
+        SpacingSpinnerLabel        matlab.ui.control.Label
+        SpacingSpinner             matlab.ui.control.Spinner
+        AngledegSpinnerLabel       matlab.ui.control.Label
+        AngledegSpinner            matlab.ui.control.Spinner
+        SizeEditFieldLabel         matlab.ui.control.Label
+        SizeEditField              matlab.ui.control.EditField
+        PatternCorrectionPanel     matlab.ui.container.Panel
+        YOffsetSpinnerLabel        matlab.ui.control.Label
+        YOffsetSpinner             matlab.ui.control.Spinner
+        RadiusSpinnerLabel         matlab.ui.control.Label
+        RadiusSpinner              matlab.ui.control.Spinner
+        CorrectionSpinnerLabel     matlab.ui.control.Label
+        CorrectionSpinner          matlab.ui.control.Spinner
+        XOffsetSpinnerLabel        matlab.ui.control.Label
+        XOffsetSpinner             matlab.ui.control.Spinner
+        RadialSpinnerLabel         matlab.ui.control.Label
+        RadialSpinner              matlab.ui.control.Spinner
+        AzimuthalSpinnerLabel      matlab.ui.control.Label
+        AzimuthalSpinner           matlab.ui.control.Spinner
+        UpdateDeviceCheckBox       matlab.ui.control.CheckBox
+        DeviceEditFieldLabel       matlab.ui.control.Label
+        DeviceEditField            matlab.ui.control.EditField
+        NameEditFieldLabel         matlab.ui.control.Label
+        NameEditField              matlab.ui.control.EditField
+        EnableDisplayCheckBox      matlab.ui.control.CheckBox
+        DisplayNameEditFieldLabel  matlab.ui.control.Label
+        DisplayNameEditField       matlab.ui.control.EditField
+        EnableCheckBox             matlab.ui.control.CheckBox
+    end
+
+    methods (Access = private)
+
+        % Code that executes after component creation
+        function startupFcn(app)
+            addpath('../../');
+            app.patternValueChanged([]);
+        end
+
+        % Value changed function: AngledegSpinner, AzimuthalSpinner, 
+        % CorrectionSpinner, EnableCheckBox, RadialSpinner, 
+        % RadiusSpinner, SizeEditField, SpacingSpinner, XOffsetSpinner, 
+        % YOffsetSpinner
+        function patternValueChanged(app, event)
+            
+            sz = eval(['[', app.SizeEditField.Value, ']']);
+            rmode = app.RadialSpinner.Value;
+            amode = app.AzimuthalSpinner.Value;
+            radius = app.RadiusSpinner.Value;
+            p0 = app.CorrectionSpinner.Value;
+            cx = app.XOffsetSpinner.Value;
+            cy = app.YOffsetSpinner.Value;
+            pattern = otslm.simple.lgmode(sz, amode, rmode, ...
+                'radius', radius, 'p0', p0, 'centre', ceil(sz/2) + [cx, cy]);
+            
+            spacing = app.SpacingSpinner.Value;
+            if spacing ~= 0 && app.EnableCheckBox.Value == true
+                angle = app.AngledegSpinner.Value;
+                linear = otslm.simple.linear(sz, 'spacing', spacing, 'angle_deg', angle);
+                pattern = pattern + linear;
+            end
+            
+            pattern = otslm.tools.finalize(pattern, 'colormap', 'gray');
+            
+            % Try displaying the pattern
+            try
+                slm =  evalin('base', 'slm');
+                slm.show(pattern);
+            catch e
+                disp(e);
+            end
+            
+            imagesc(app.UIAxes, pattern);
+            axis(app.UIAxes, 'image');
+            
+        end
+    end
+
+    % App initialization and construction
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create LGBeamUIFigure
+            app.LGBeamUIFigure = uifigure;
+            app.LGBeamUIFigure.Position = [100 100 645 439];
+            app.LGBeamUIFigure.Name = 'LG Beam';
+
+            % Create UIAxes
+            app.UIAxes = uiaxes(app.LGBeamUIFigure);
+            title(app.UIAxes, 'Display')
+            xlabel(app.UIAxes, 'X')
+            ylabel(app.UIAxes, 'Y')
+            app.UIAxes.GridAlpha = 0.15;
+            app.UIAxes.MinorGridAlpha = 0.25;
+            app.UIAxes.Position = [301 130 328 290];
+
+            % Create DisplayDropDownLabel
+            app.DisplayDropDownLabel = uilabel(app.LGBeamUIFigure);
+            app.DisplayDropDownLabel.Position = [478 97 46 15];
+            app.DisplayDropDownLabel.Text = 'Display';
+
+            % Create DisplayDropDown
+            app.DisplayDropDown = uidropdown(app.LGBeamUIFigure);
+            app.DisplayDropDown.Items = {'Phase Mask', 'SLM image', 'Simulated farfield'};
+            app.DisplayDropDown.Position = [529 93 100 22];
+            app.DisplayDropDown.Value = 'Phase Mask';
+
+            % Create LinearGratingPanel
+            app.LinearGratingPanel = uipanel(app.LGBeamUIFigure);
+            app.LinearGratingPanel.Title = 'Linear Grating';
+            app.LinearGratingPanel.Position = [21 21 260 97];
+
+            % Create SpacingSpinnerLabel
+            app.SpacingSpinnerLabel = uilabel(app.LinearGratingPanel);
+            app.SpacingSpinnerLabel.Position = [11 49 50 15];
+            app.SpacingSpinnerLabel.Text = 'Spacing';
+
+            % Create SpacingSpinner
+            app.SpacingSpinner = uispinner(app.LinearGratingPanel);
+            app.SpacingSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.SpacingSpinner.Position = [91 45 160 22];
+
+            % Create AngledegSpinnerLabel
+            app.AngledegSpinnerLabel = uilabel(app.LinearGratingPanel);
+            app.AngledegSpinnerLabel.Position = [11 19 69 15];
+            app.AngledegSpinnerLabel.Text = 'Angle (deg)';
+
+            % Create AngledegSpinner
+            app.AngledegSpinner = uispinner(app.LinearGratingPanel);
+            app.AngledegSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.AngledegSpinner.Position = [91 15 160 22];
+
+            % Create SizeEditFieldLabel
+            app.SizeEditFieldLabel = uilabel(app.LGBeamUIFigure);
+            app.SizeEditFieldLabel.Position = [21 372 29 15];
+            app.SizeEditFieldLabel.Text = 'Size';
+
+            % Create SizeEditField
+            app.SizeEditField = uieditfield(app.LGBeamUIFigure, 'text');
+            app.SizeEditField.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.SizeEditField.Position = [131 368 150 22];
+            app.SizeEditField.Value = '512, 512';
+
+            % Create PatternCorrectionPanel
+            app.PatternCorrectionPanel = uipanel(app.LGBeamUIFigure);
+            app.PatternCorrectionPanel.Title = 'Pattern Correction';
+            app.PatternCorrectionPanel.Position = [21 140 260 150];
+
+            % Create YOffsetSpinnerLabel
+            app.YOffsetSpinnerLabel = uilabel(app.PatternCorrectionPanel);
+            app.YOffsetSpinnerLabel.Position = [11 12 47 15];
+            app.YOffsetSpinnerLabel.Text = 'Y Offset';
+
+            % Create YOffsetSpinner
+            app.YOffsetSpinner = uispinner(app.PatternCorrectionPanel);
+            app.YOffsetSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.YOffsetSpinner.Position = [91 8 160 22];
+
+            % Create RadiusSpinnerLabel
+            app.RadiusSpinnerLabel = uilabel(app.PatternCorrectionPanel);
+            app.RadiusSpinnerLabel.Position = [11 102 44 15];
+            app.RadiusSpinnerLabel.Text = 'Radius';
+
+            % Create RadiusSpinner
+            app.RadiusSpinner = uispinner(app.PatternCorrectionPanel);
+            app.RadiusSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.RadiusSpinner.Position = [91 98 159 22];
+            app.RadiusSpinner.Value = 50;
+
+            % Create CorrectionSpinnerLabel
+            app.CorrectionSpinnerLabel = uilabel(app.PatternCorrectionPanel);
+            app.CorrectionSpinnerLabel.Position = [11 72 62 15];
+            app.CorrectionSpinnerLabel.Text = 'Correction';
+
+            % Create CorrectionSpinner
+            app.CorrectionSpinner = uispinner(app.PatternCorrectionPanel);
+            app.CorrectionSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.CorrectionSpinner.Position = [91 68 159 22];
+            app.CorrectionSpinner.Value = 1;
+
+            % Create XOffsetSpinnerLabel
+            app.XOffsetSpinnerLabel = uilabel(app.PatternCorrectionPanel);
+            app.XOffsetSpinnerLabel.Position = [11 42 47 15];
+            app.XOffsetSpinnerLabel.Text = 'X Offset';
+
+            % Create XOffsetSpinner
+            app.XOffsetSpinner = uispinner(app.PatternCorrectionPanel);
+            app.XOffsetSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.XOffsetSpinner.Position = [91 38 159 22];
+
+            % Create RadialSpinnerLabel
+            app.RadialSpinnerLabel = uilabel(app.LGBeamUIFigure);
+            app.RadialSpinnerLabel.Position = [21 342 41 15];
+            app.RadialSpinnerLabel.Text = 'Radial';
+
+            % Create RadialSpinner
+            app.RadialSpinner = uispinner(app.LGBeamUIFigure);
+            app.RadialSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.RadialSpinner.Position = [131 338 150 22];
+
+            % Create AzimuthalSpinnerLabel
+            app.AzimuthalSpinnerLabel = uilabel(app.LGBeamUIFigure);
+            app.AzimuthalSpinnerLabel.Position = [21 312 59 15];
+            app.AzimuthalSpinnerLabel.Text = 'Azimuthal';
+
+            % Create AzimuthalSpinner
+            app.AzimuthalSpinner = uispinner(app.LGBeamUIFigure);
+            app.AzimuthalSpinner.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.AzimuthalSpinner.Position = [131 308 150 22];
+
+            % Create UpdateDeviceCheckBox
+            app.UpdateDeviceCheckBox = uicheckbox(app.LGBeamUIFigure);
+            app.UpdateDeviceCheckBox.Text = 'Update Device';
+            app.UpdateDeviceCheckBox.Position = [319 28 103 15];
+
+            % Create DeviceEditFieldLabel
+            app.DeviceEditFieldLabel = uilabel(app.LGBeamUIFigure);
+            app.DeviceEditFieldLabel.Position = [481 27 43 15];
+            app.DeviceEditFieldLabel.Text = 'Device';
+
+            % Create DeviceEditField
+            app.DeviceEditField = uieditfield(app.LGBeamUIFigure, 'text');
+            app.DeviceEditField.Position = [529 23 100 22];
+
+            % Create NameEditFieldLabel
+            app.NameEditFieldLabel = uilabel(app.LGBeamUIFigure);
+            app.NameEditFieldLabel.Position = [21 402 38 15];
+            app.NameEditFieldLabel.Text = 'Name';
+
+            % Create NameEditField
+            app.NameEditField = uieditfield(app.LGBeamUIFigure, 'text');
+            app.NameEditField.Position = [131 398 150 22];
+
+            % Create EnableDisplayCheckBox
+            app.EnableDisplayCheckBox = uicheckbox(app.LGBeamUIFigure);
+            app.EnableDisplayCheckBox.Text = 'Enable Display';
+            app.EnableDisplayCheckBox.Position = [319 98 105 15];
+
+            % Create DisplayNameEditFieldLabel
+            app.DisplayNameEditFieldLabel = uilabel(app.LGBeamUIFigure);
+            app.DisplayNameEditFieldLabel.Position = [442 67 82 15];
+            app.DisplayNameEditFieldLabel.Text = 'Display Name';
+
+            % Create DisplayNameEditField
+            app.DisplayNameEditField = uieditfield(app.LGBeamUIFigure, 'text');
+            app.DisplayNameEditField.Position = [529 63 100 22];
+
+            % Create EnableCheckBox
+            app.EnableCheckBox = uicheckbox(app.LGBeamUIFigure);
+            app.EnableCheckBox.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
+            app.EnableCheckBox.Text = 'Enable';
+            app.EnableCheckBox.Position = [217 102 61 15];
+        end
+    end
+
+    methods (Access = public)
+
+        % Construct app
+        function app = lgmode
+
+            % Create and configure components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.LGBeamUIFigure)
+
+            % Execute the startup function
+            runStartupFcn(app, @startupFcn)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.LGBeamUIFigure)
+        end
+    end
+end]]></w:t></w:r></w:p></w:body></w:document>
