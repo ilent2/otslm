@@ -30,6 +30,11 @@ function pattern = finalize(pattern, varargin)
 %         'dmd'   Digital micro mirror (amplitude) device
 %         'slm'   Spatial light modulator (phase) device
 %
+%   'encodemethod' method Method to use when encoding phase/amplitude
+%       'checker'   Use checkerboard pattern and acos correction (phase)
+%       'grating'   Use linear grating and sinc correction (phase)
+%       'magnitude' Use grating magnitude modulation (phase)
+%
 %   'amplitude' pattern Amplitude pattern to generate output for
 
 p = inputParser;
@@ -38,6 +43,7 @@ p.addParameter('device', 'slm');
 p.addParameter('colormap', []);
 p.addParameter('rpack', []);
 p.addParameter('amplitude', []);
+p.addParameter('encodemethod', []);
 p.parse(varargin{:});
 
 % Set default colour map
@@ -79,8 +85,20 @@ end
 if ~isempty(p.Results.amplitude)
 
   if strcmpi(p.Results.device, 'slm')
-    % TODO: Amplitude modulation for SLM patterns
-    error('Not yet implemented');
+
+    switch p.Results.encodemethod
+      case 'checker'
+        background = otslm.simple.checkerboard(size(pattern), ...
+            'value', [0.0, 0.5]);
+        error('Not yet implemented');
+      case 'grating'
+        error('Not yet implemented');
+      case 'magnitude'
+        error('Not yet implemented');
+      otherwise
+        error('Encode method not recognized for phase pattern');
+    end
+
   elseif strcmpi(p.Results.device, 'dmd')
 
     % First finalize the phase pattern
@@ -111,11 +129,12 @@ end
 
 % Apply colour map
 if ischar(cmap)
+  
   switch cmap
     case 'pmpi'
-      pattern = pattern/max(abs(pattern(:)))*2*pi - pi;
+      pattern = pattern*2*pi - pi;
     case '2pi'
-      pattern = pattern/max(abs(pattern(:)))*2*pi;
+      pattern = pattern*2*pi;
     case 'bin'
       pattern = otslm.tools.dither(pattern, 0.5*max(pattern(:)));
     case 'gray'
