@@ -1,5 +1,8 @@
 function pattern = aspheric(sz, radius, kappa, varargin)
-% ASPHERIC generates a aspherical lens described by radius and conic constant.
+% ASPHERIC generates a aspherical lens 
+%
+% pattern = aspheric(sz, radius, kappa, ...) generates a aspheric lens
+% described by radius and conic constant (kappa) centred in the image.
 %
 % The equation describing the lens is
 %
@@ -20,21 +23,27 @@ function pattern = aspheric(sz, radius, kappa, varargin)
 %   'centre'      [x, y]      centre location for lens
 %   'alpha'       [a1, ...]   additional parabolic correction terms
 %   'scale'       scale       scaling value for the final pattern
+%   'offset'      offset      offset for the final pattern (default: 0.0)
 %   'type'        type        is the lens cylindrical or spherical (1d or 2d)
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
 %   'imag_value'  val         Value to replace imaginary values with
+%   'background'  img         Specifies a background pattern to use for
+%       values outside the lens.  Can also be a scalar, in which case
+%       all values are replaced by this value; or a string with
+%       'random' or 'checkerboard' for these patterns.
 
 p = inputParser;
 p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
 p.addParameter('alpha', []);
 p.addParameter('scale', 1.0);
+p.addParameter('offset', 0.0);
 p.addParameter('type', '2d');
 p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
-p.addParameter('imag_value', Inf*sign(radius));
+p.addParameter('background', 0.0);
 p.parse(varargin{:});
 
 % Generate grid
@@ -85,11 +94,30 @@ for ii = 1:length(p.Results.alpha)
   pattern = pattern + p.Results.alpha(ii)*rr2^(ii+1);
 end
 
-% Scale result
+% Offset and scale result
 
-pattern = pattern .* p.Results.scale;
+pattern = pattern .* p.Results.scale + p.Results.offset;
 
 % Ensure result is real
 imag_parts = imag(pattern) ~= 0;
-pattern(imag_parts) = p.Results.imag_value;
+
+if isa(p.Results.background, 'char')
+  switch p.Results.background
+    case 'random'
+      background = otslm.simple.random(sz);
+    case 'checkerboard'
+      background = otslm.simple.checkerboard(sz);
+    otherwise
+      error('Unknown background string');
+  end
+  pattern(imag_parts) = background(imag_parts);
+else
+  if numel(p.Results.background) == 1
+    pattern(imag_parts) = p.Results.background;
+  elseif size(p.Results.background) == size(imag_parts)
+    pattern(imag_parts) = p.Results.background(imag_parts);
+  else
+    error('Number of background elements must be 1 or same size as pattern');
+  end
+end
 

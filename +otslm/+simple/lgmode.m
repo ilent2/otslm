@@ -1,10 +1,10 @@
 function [phase, amplitude] = lgmode(sz, amode, rmode, varargin)
 % LGMODE generates the phase pattern for a LG beam
 %
-% pattern = lgbeam(sz, amode, rmode, radius, ...) generates the phase
+% pattern = lgmode(sz, amode, rmode, ...) generates the phase
 % pattern with azimuthal order amode, radial order rmode.
 %
-% [phase, amplitude] = lgbeam(...) also generates the amplitude pattern.
+% [phase, amplitude] = lgmode(...) also generates the amplitude pattern.
 %
 % Optional named parameters:
 %
