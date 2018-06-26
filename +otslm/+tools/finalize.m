@@ -43,7 +43,7 @@ p.addParameter('device', 'slm');
 p.addParameter('colormap', []);
 p.addParameter('rpack', []);
 p.addParameter('amplitude', []);
-p.addParameter('encodemethod', []);
+p.addParameter('encodemethod', 'checker');
 p.parse(varargin{:});
 
 % Set default colour map
@@ -88,9 +88,18 @@ if ~isempty(p.Results.amplitude)
 
     switch p.Results.encodemethod
       case 'checker'
+        
+        % Use a checkerboard background
         background = otslm.simple.checkerboard(size(pattern), ...
-            'value', [0.0, 0.5]);
-        error('Not yet implemented');
+            'value', [-1, 1]);
+          
+        % This ratio depends on the background level
+        mixratio = 2/pi*acos(abs(p.Results.amplitude));
+          
+        % Add the amplitude and mix with the background
+        pattern = pattern + angle(p.Results.amplitude)/(2*pi)+0.5;
+        pattern = pattern + mixratio.*angle(background)/(2*pi)+0.5;
+        
       case 'grating'
         error('Not yet implemented');
       case 'magnitude'
