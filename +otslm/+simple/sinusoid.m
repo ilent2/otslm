@@ -1,33 +1,51 @@
-function pattern = sinusoid(sz, varargin)
+function pattern = sinusoid(sz, period, varargin)
 % SINUSOID generates a linear gradient
 %
-% pattern = sinusoid(sz, ...) generates a sinusoidal grating.
+% pattern = sinusoid(sz, period, ...) generates a sinusoidal grating.
+% the output is in the range 0 to 1.
 %
 % Optional named parameters:
 %
-%   'centre'    [ x, y ]    centre location for rotation (default: [1, 1])
-%   'angle'     theta       angle in radians for gradient (from +x to +y)
-%   'angle_deg' theta       angle in degrees for gradient
-%   'slope'     slope       inverse period (similar to linear slope)
-%   'gradient'  [ dx, dy ]  slope and direction of gradient
-%   'spacing'   spacing     period of the grating
-%   'scaling'   scale       scaling factor for result
+%   'centre'      [x, y]      centre location for lens
+%   'type'        type        the type of sinusoid pattern to generate
+%       '1d'      one dimensional
+%       '2d'      circular coordinates
+%       '2dcart'  multiple of two sinusoid functions at 90 degree angle
+%           supports two period values [ Px, Py ].
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'scale'       scale       Scale for the final result
 
 p = inputParser;
-p.addParameter('centre', [ 1, 1 ]);
+p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
+p.addParameter('type', '2d');
+p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
-p.addParameter('slope', []);
-p.addParameter('gradient', []);
-p.addParameter('spacing', []);
-p.addParameter('scale', 1.0 - eps(1.0));
+p.addParameter('scale', 1.0);
 p.parse(varargin{:});
 
+% Calculate radial coordinates
+[xx, yy, rr] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
+    'type', p.Results.type(1:2), 'aspect', p.Results.aspect, ...
+    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
 
-pattern = otslm.simple.linear(sz, 'centre', p.Results.centre, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg, ...
-    'slope', p.Results.slope, 'gradient', p.Results.gradient, ...
-    'spacing', p.Results.spacing);
+% Generate pattern
+if strcmpi(p.Results.type, '1d')
+  pattern = sin(2*pi*xx./period(1));
+elseif strcmpi(p.Results.type, '2d')
+  pattern = sin(2*pi*rr./period(1));
+elseif strcmpi(p.Results.type, '2dcart')
+  if numel(period) == 2
+    pattern = sin(2*pi*xx./period(1)) .* sin(2*pi*yy./period(2));
+  else
+    pattern = sin(2*pi*xx./period(1)) .* sin(2*pi*yy./period(1));
+  end
+else
+  error('Unknown value passed for type argument');
+end
 
-pattern = (sin(pattern*2*pi)+1)*0.5*p.Results.scale;
+% Scale the pattern
+pattern = (pattern+1)*0.5*p.Results.scale;
 
