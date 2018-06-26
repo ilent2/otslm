@@ -1,89 +1,86 @@
-% Attempt to reproduce the beam from Roichman and Grier (2006).
+% Simulation of different types of line traps
 
 % Add toolbox to path
 addpath('../');
 
-sz = [512, 512];              % Pattern size
-L = 0.05;                     % Length of the line
-theta = 0.0;                  % Rotation of pattern
-scale = 100.0;                % Scale for intensity of line
-background = 'checkerboard';  % Background values to use
-max_width = sz(1);            % Max pattern width (spatial filtering)
-noise_factor = 0.0;           % Noise to blur out the pattern
+radius = 50;          % Inverse length of the line trap (sinc radius)
 
-sinc = otslm.simple.sinc(sz, L, 'type', '1d', 'angle_deg', theta);
-[xx, yy, rr] = otslm.simple.grid(sz, 'angle_deg', theta);
+sz = [512, 512];      % Size of pattern
+o = 50;               % Region of interest size in output
+padding = 500;        % Padding for FFT
 
-phi = (sinc >= 0)*0.5;
-assigned = (abs(yy) < abs(sinc*scale));
-pattern = phi .* assigned;
+incident = [];        % Incident beam (use default in visualize)
+% incident = ones(sz);  % Incident beam (use uniform illumination)
 
-%% Repeat the process if we are broadening the line (doesn't work)
+% Functions used for generating figures
+zoom = @(im) im(round(size(im, 1)/2)+(-o:o), round(size(im, 2)/2)+(-o:o));
+visualize = @(pattern) zoom(abs(otslm.tools.visualise(pattern, ...
+    'method', 'fft', 'padding', padding, 'incident', incident)).^2);
+  
+figure();
 
-% L2 = 0.02;                    % Width of the line
-% scale2 = 0.0;                 % Scale for second sinc
-% 
-% sinc2 = otslm.simple.sinc(sz, L2, 'type', '1d', 'angle_deg', theta+90);
-% 
-% phi2 = (sinc2 >= 0)*0.5;
-% assigned2 = (abs(xx) < abs(sinc2*scale2));
-% pattern = pattern + phi2 .* assigned .* assigned2;
+%% Roichman and Grier (2006) using 1-D line trap with amplitude encoded in 2d
 
-% Only include the overlap of the two regions
-% assigned = assigned & assigned2;
+sinc = otslm.simple.sinc(sz, radius, 'type', '1d', 'angle_deg', theta);
+[pattern, assigned] = otslm.tools.encode1d(sinc, ...
+    'angle_deg', theta, 'scale', 200);
+  
+% Apply a checkerboard to unassigned regions
+checker = otslm.simple.checkerboard(sz);
+pattern(~assigned) = checker(~assigned);
 
-%% Apply an aperture (broaden the pattern, remove higher frequencies)
-assigned = assigned & rr < max_width/2;
-
-%% Add noise to blur out the pattern
-pattern(assigned) = pattern(assigned) ...
-    + rand(size(pattern(assigned)))*noise_factor;
-
-%% Add a linear diffraction grating to move the pattern
-shift = otslm.simple.linear(sz, 'spacing', 25, 'angle_deg', 45);
-pattern(assigned) = shift(assigned)+pattern(assigned);
-
-%% Remove the excess light
-
-switch background
-  case 'linear'
-
-    % Add a linear diffraction grating to unassigned region
-    linear = otslm.simple.linear(sz, 'spacing', 15, 'angle_deg', 45);
-    pattern(~assigned) = linear(~assigned);
-    
-  case 'random'
-
-    % Apply random phase the the non-assigned region
-    pattern(~assigned) = rand(size(pattern(~assigned)));
-    
-  case 'checkerboard'
-
-    % Apply a checkerboard to the unassigned regions
-    checker = otslm.simple.checkerboard(sz);
-    pattern(~assigned) = checker(~assigned);
-   
-  otherwise
-    error('Unknown background type specified');
-    
-end
-
-%% Finalize the pattern (makes it in the range -pi to pi)
 pattern = otslm.tools.finalize(pattern);
 
-%% Visualise the pattern
-
-figure(1);
-subplot(1, 2, 1);
-imagesc(assigned);
-subplot(1, 2, 2);
+subplot(3, 2, 1);
 imagesc(pattern);
 
-%% Generate far field image and crop to roi
-farfield = otslm.tools.visualise(pattern, 'method', 'fft');
-farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
-    floor(size(farfield, 2)/2)+(-50:50));
+subplot(3, 2, 2);
+imagesc(visualize(pattern));
 
-figure(2);
-imagesc(abs(farfield));
+%% 1-D line trap everywhere with amplitude encoded in phase
 
+pattern = otslm.simple.sinc(sz, radius, 'type', '1d', 'angle_deg', theta);
+pattern = otslm.tools.finalize(zeros(size(pattern)), 'amplitude', pattern);
+
+subplot(3, 2, 3);
+imagesc(pattern);
+
+subplot(3, 2, 4);
+imagesc(visualize(pattern));
+
+%% 2-D line trap (rectangle, two sincs)
+
+pattern = otslm.simple.sinc(sz, radius, 'type', '2dcart', ...
+    'angle_deg', theta, 'aspect', 0.3);
+pattern = otslm.tools.finalize(zeros(size(pattern)), 'amplitude', pattern);
+
+subplot(3, 2, 5);
+imagesc(pattern);
+
+subplot(3, 2, 6);
+imagesc(visualize(pattern));
+
+%% Change properties of all figures
+
+for ii = 1:6
+  subplot(3, 2, ii);
+  axis('image');
+  colormap('gray');
+  set(gca,'YTickLabel', [], 'XTickLabels', []);
+end
+
+% function imagesc(im)
+% 
+%   global kk;
+% 
+%   maxval = max(im(:)) - min(im(:));
+%   if maxval == 0.0
+%     maxval = 1.0;
+%   end
+%   
+%   im = (im - min(im(:))) ./ maxval;
+% 
+%   imwrite(im, ['beams' num2str(kk) '.png']);
+%   kk = kk + 1;
+% 
+% end
