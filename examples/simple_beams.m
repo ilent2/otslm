@@ -11,7 +11,9 @@ incident = [];        % Incident beam (use default in visualize)
 zoom = @(im) im(round(size(im, 1)/2)+(-o:o), round(size(im, 2)/2)+(-o:o));
 visualize = @(pattern) zoom(abs(otslm.tools.visualise(pattern, ...
     'method', 'fft', 'padding', padding, 'incident', incident)).^2);
-  
+
+figure();
+
 %% Zero phase pattern (no modification to input beam)
 
 pattern = zeros(sz);
@@ -70,14 +72,12 @@ imagesc(visualize(pattern));
 
 %% Sinc pattern (line trap)
 
-sinc = otslm.simple.sinc(sz, 0.05, 'type', '1d', 'angle_deg', 0.0);
-[~, yy] = otslm.simple.grid(sz, 'angle_deg', 0.0);
-phi = (sinc >= 0)*0.5;
-assigned = (abs(yy) < abs(sinc*100.0));
-pattern = (0.5-eps(0.5)+phi) .* assigned;
+sinc = otslm.simple.sinc(sz, radius, 'type', '1d');
+[pattern, assigned] = otslm.tools.encode1d(sinc, 'scale', 200);
 
-checkerboard = otslm.simple.checkerboard(sz);
-pattern(~assigned) = checkerboard(~assigned);
+% Apply a checkerboard to unassigned regions
+checker = otslm.simple.checkerboard(sz);
+pattern(~assigned) = checker(~assigned);
 
 pattern = otslm.tools.finalize(pattern);
 
