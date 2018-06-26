@@ -19,6 +19,8 @@ function varargout = visualise(phase, varargin)
 %                       https://doi.org/10.1364/JOSAA.15.000857
 %         'ott'         Use optical tweezers toolbox
 %
+%   'type'      type      Type of transformation: 'nearfield' or 'farfield'
+%
 %   'amplitude' image     Specifies the amplitude pattern
 %   'incident'  image     Specifies the incident illumination
 %       Default illumination is a Gaussian beam (w0 = 0.25*min(size(phase))

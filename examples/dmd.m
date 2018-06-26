@@ -62,7 +62,7 @@ pattern = otslm.tools.finalize(pattern, ...
 output = otslm.tools.visualise([], 'amplitude', pattern);
 
 % Zoom to a single diffracted region
-output = output(670+(-20:20), 613+(-20:20));
+output = output(655+(-20:20), 626+(-20:20));
 
 figure(2);
 subplot(1, 3, 1);
