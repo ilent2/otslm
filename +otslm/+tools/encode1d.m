@@ -28,7 +28,7 @@ if isempty(angle)
 end
 
 % Generate grid
-[~, yy] = otslm.simple.grid(size(target), 'angle_deg', angle);
+[~, yy] = otslm.simple.grid(size(target), 'angle', angle);
 
 % TODO: Pattern doesn't need to be centred around y = 0
 % TODO: We could use non-continuous regions

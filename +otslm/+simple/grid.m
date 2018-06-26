@@ -43,13 +43,13 @@ if isempty(angle)
   angle = 0.0;
 end
 
-% Apply aspect ratio
-yy = yy * p.Results.aspect;
-
 xxr = cos(angle).*xx - sin(angle).*yy;
 yyr = sin(angle).*xx + cos(angle).*yy;
 xx = xxr;
 yy = yyr;
+
+% Apply aspect ratio
+yy = yy * p.Results.aspect;
 
 % Calculate r
 

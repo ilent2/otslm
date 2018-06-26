@@ -4,6 +4,7 @@
 addpath('../');
 
 radius = 50;          % Inverse length of the line trap (sinc radius)
+theta = 45.0;         % Rotation of pattern (degrees)
 
 sz = [512, 512];      % Size of pattern
 o = 50;               % Region of interest size in output

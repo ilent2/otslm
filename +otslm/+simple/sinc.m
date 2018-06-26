@@ -11,6 +11,7 @@ function pattern = sinc(sz, radius, varargin)
 %       '1d'      one dimensional
 %       '2d'      circular coordinates
 %       '2dcart'  multiple of two sinc functions at 90 degree angle
+%           supports two radius values: radius = [ Rx, Ry ].
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
@@ -30,11 +31,15 @@ p.parse(varargin{:});
 
 % Generate pattern
 if strcmpi(p.Results.type, '1d')
-  pattern = sinc(xx./radius);
+  pattern = sinc(xx./radius(1));
 elseif strcmpi(p.Results.type, '2d')
-  pattern = sinc(rr./radius);
+  pattern = sinc(rr./radius(1));
 elseif strcmpi(p.Results.type, '2dcart')
-  pattern = sinc(xx./radius) .* sinc(yy./radius);
+  if numel(radius) == 2
+    pattern = sinc(xx./radius(1)) .* sinc(yy./radius(2));
+  else
+    pattern = sinc(xx./radius(1)) .* sinc(yy./radius(1));
+  end
 else
   error('Unknown value passed for type argument');
 end
