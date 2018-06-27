@@ -10,6 +10,7 @@ function pattern = aperture(sz, dimension, varargin)
 %           'circle'    [radius]    Pinhole/circular aperture
 %           'square'    [width]     Square with equal sides
 %           'rect'      [w, h]      Rectangle with width and height
+%           'ring'      [r1, r2]    Ring specified by inner and outer radius
 %   'centre'      [x, y]      centre location for pattern
 %   'values'      [l, h]      values for off and on regions (default: [])
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
@@ -70,6 +71,9 @@ switch p.Results.type
   case 'rect'
     assert(length(dimension) == 2, 'Rectangle must have two parameters');
     pattern = abs(xx) < dimension(1) & abs(yy) < dimension(2);
+  case 'ring'
+    assert(length(dimension) == 2, 'Ring must have two parameters');
+    pattern = rr > dimension(1) & rr < dimension(2);
   otherwise
     error('Unknown shape type argument');
 end
