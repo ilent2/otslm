@@ -24,6 +24,8 @@ function pattern = combine(inputs, varargin)
 %         add           Adds the patterns: \sum_ii inputs(ii)
 %         multiply      Multiplies the patterns: \prod_ii inputs(ii)
 %         addangle      Uses phi = angle(\prod_ii exp(1i*2*pi*inputs(ii)))
+%         average       Weighted average of inputs.  (default weights: ones)
+%                           \sum_ii w_ii*inputs(ii) / \sum_ii w_ii
 %
 %       Default method: super.
 %
@@ -90,6 +92,21 @@ switch p.Results.method
     for ii = 1:length(inputs)
       pattern = pattern + inputs{ii};
     end
+
+  case 'average'
+
+    pattern = zeros(size(inputs{1}));
+
+    weights = p.Results.weights;
+    if isempty(weights)
+      weights = zeros(length(inputs), 1);
+    end
+
+    for ii = 1:length(inputs)
+      pattern = pattern + weights(ii).*inputs{ii};
+    end
+
+    pattern = pattern ./ sum(weights(:));
 
   case 'multiply'
 
