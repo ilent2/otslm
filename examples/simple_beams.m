@@ -4,7 +4,8 @@ sz = [512, 512];      % Size of pattern
 o = 50;              % Region of interest size in output
 padding = 500;        % Padding for FFT
 
-incident = [];        % Incident beam (use default in visualize)
+% incident = [];        % Incident beam (use default in visualize)
+incident = otslm.simple.gaussian(sz, 150);  % Incident beam (gaussian)
 % incident = ones(sz);  % Incident beam (use uniform illumination)
 
 % Functions used for generating figures
@@ -72,6 +73,7 @@ imagesc(visualize(pattern));
 
 %% Sinc pattern (line trap)
 
+radius = 50;
 sinc = otslm.simple.sinc(sz, radius, 'type', '1d');
 [pattern, assigned] = otslm.tools.encode1d(sinc, 'scale', 200);
 

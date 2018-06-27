@@ -8,10 +8,12 @@ sz = [512, 512];      % Size of pattern
 padding = 500;        % Padding for FFT
 
 % incident = [];        % Incident beam (use default in visualize)
-incident = otslm.simple.gaussian(sz, 100);  % Incident beam (gaussian)
+incident = otslm.simple.gaussian(sz, 150);  % Incident beam (gaussian)
 % incident = ones(sz);  % Incident beam (use uniform illumination)
 
-beamCorrection = 1.0 - incident*1.0;
+% Calculate beam correction amplitude
+beamCorrection = 1.0 - incident + 0.5;
+beamCorrection(beamCorrection > 1.0) = 1.0;
 
 % Functions used for generating figures
 zoom = @(im, o) im(round(size(im, 1)/2)+(-o:o), round(size(im, 2)/2)+(-o:o));
@@ -52,8 +54,10 @@ imagesc(visualize(pattern, 100));
 
 %% HG beam with amplitude correction for Gaussian illumination
 
-pattern = otslm.simple.hgmode(sz, 3, 2, 'scale', 50);
-pattern = otslm.tools.finalize(pattern, 'amplitude', beamCorrection);
+[pattern, amplitude] = otslm.simple.hgmode(sz, 3, 2, 'scale', 50);
+
+pattern = otslm.tools.finalize(pattern, ...
+    'amplitude', beamCorrection.*abs(amplitude));
 
 subplot(4, 4, 13);
 imagesc(pattern);
@@ -61,29 +65,21 @@ imagesc(pattern);
 subplot(4, 4, 14);
 imagesc(visualize(pattern, 20));
 
-%% Counter rotating LG beams
+%% Bessel beam
 
-% % lgpattern1 = otslm.simple.lgmode(sz, 5, 3, 'centre', [ 200, 200 ]);
-% % lgpattern2 = otslm.simple.lgmode(sz, -2, 1, 'centre', [ 370, 370 ]);
-% 
-% % This is pretty, but not what we want?
-% lgpattern1 = otslm.simple.lgmode(sz, 10, 1);
-% lgpattern2 = otslm.simple.lgmode(sz, -2, 1);
-% 
-% % Hmm, this doesn't produce the espected output yet...
-% pattern = otslm.tools.combine({lgpattern1, lgpattern2}, ...
-%     'method', 'rsuper');
-%   
-% % shift = otslm.simple.linear(sz, 'spacing', 50);
-% % pattern = pattern + shift;
-% 
-% pattern = otslm.tools.finalize(pattern);
-% 
-% subplot(4, 4, 3);
-% imagesc(pattern);
-% 
-% subplot(4, 4, 4);
-% imagesc(visualize(pattern, 30));
+pattern = otslm.simple.aperture(sz, [ 100, 110 ], 'type', 'ring');
+
+% Coorect for amplitude of beam
+pattern = pattern .* beamCorrection;
+
+% Finalize pattern
+pattern = otslm.tools.finalize(zeros(sz), 'amplitude', pattern);
+
+subplot(4, 4, 3);
+imagesc(pattern);
+
+subplot(4, 4, 4);
+imagesc(visualize(pattern, 50));
 
 %% Array of LG beams
 
@@ -145,13 +141,13 @@ pattern1 = otslm.tools.finalize(pattern1, 'amplitude', beamCorrection, ...
     'colormap', 'gray');
 
 loc2 = [ 320, 170 ];
-radius2 = 30;
+radius2 = 35;
 pattern2 = zeros(sz);
 
 loc3 = [ 270, 300 ];
 radius3 = 50;
 pattern3 = otslm.simple.linear(sz, 'spacing', -20, 'angle_deg', 45);
-pattern3 = otslm.tools.finalize(pattern3, 'amplitude', 0.2, ...
+pattern3 = otslm.tools.finalize(pattern3, 'amplitude', 0.4, ...
     'colormap', 'gray');
 
 background = otslm.simple.checkerboard(sz);
