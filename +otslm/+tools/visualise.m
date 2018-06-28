@@ -34,6 +34,8 @@ p.addParameter('amplitude', ones(size(phase)));
 p.addParameter('incident', []);
 p.addParameter('z', 0.0);
 p.addParameter('padding', 100);
+p.addParameter('methoddata', []);
+p.addParameter('axis', 'z');
 p.parse(varargin{:});
 
 amplitude = p.Results.amplitude;
@@ -88,6 +90,11 @@ end
 
 function output = fft_method(U, p)
 % z should be dimensionless, multiplied by a factor of 2pi/lambda
+
+  axis = p.Results.axis;
+  if ~strcmpi(axis, 'z')
+    error('Only z-axis supported for now with fft');
+  end
 
   z = p.Results.z;
   padding = p.Results.padding;
@@ -144,7 +151,10 @@ end
 
 function [output, beam] = ott_method(U, p)
 
+  axis = p.Results.axis;
+
   z = p.Results.z;
+  beam = p.Results.methoddata;
 
   % TODO: We should choose this based on the output range
   % TODO: We should warn when Nmax gets much larger, memory/time
@@ -158,17 +168,27 @@ function [output, beam] = ott_method(U, p)
   % TODO: Lower resolution for output image
 
   % Calculate the beam shape coefficients of focussed beam
-  polarisation = [ 1, 0 ];
+  polarisation = [ 1, 1i ];
   nMedium = 1.33;
-  beam = ott.BscPmParaxial(NA, U, 'index_medium', nMedium, ...
-      'polarisation', polarisation, 'Nmax', Nmax);
 
-  %% create image of the resulting beams along two axes:
+  if isempty(beam)
+    beam = ott.BscPmParaxial(NA, U, 'index_medium', nMedium, ...
+        'polarisation', polarisation, 'Nmax', Nmax);
+  end
 
-  xrange = linspace(-3, 3, round(size(U, 2)/5));
-  yrange = linspace(-3, 3, round(size(U, 1)/5));
+  xrange = linspace(-3, 3, round(size(U, 2)/5))/nMedium;
+  yrange = linspace(-3, 3, round(size(U, 1)/5))/nMedium;
 
-  [X1,Y1,Z1]=meshgrid(xrange/nMedium,yrange/nMedium,z);
+  switch axis
+    case 'x'
+      [X1,Y1,Z1]=meshgrid(z, xrange, yrange);
+    case 'y'
+      [X1,Y1,Z1]=meshgrid(xrange, z, yrange);
+    case 'z'
+      [X1,Y1,Z1]=meshgrid(xrange, yrange, z);
+    otherwise
+      error('Unknown axis direction specified');
+  end
 
   % Calculate the E field
   E = beam.emFieldXyz([X1(:),Y1(:),Z1(:)].');
@@ -177,7 +197,7 @@ function [output, beam] = ott_method(U, p)
   output = sum(abs(E).^2, 1);
 
   % Add the z-phase to the output (is this a good idea?)
-  output = output .* exp(1i*angle(E(3, :)));
+%   output = output .* exp(1i*angle(E(3, :)));
 
   % Turn the output back into an image
   output = reshape(output, [round(size(U, 1)/5), round(size(U, 2)/5)]);
