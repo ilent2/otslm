@@ -1,5 +1,5 @@
 function pattern = gs(target, varargin)
-% GS Gerchberg-Saxton algorithm
+% GS Gerchberg-Saxton algorithm and Adaptive-Adaptive algorithm
 %
 % pattern = gs(target, ...) attempts to recreate the target using
 % the Gerchberg-Saxton algorithm.
@@ -9,27 +9,41 @@ function pattern = gs(target, varargin)
 %   'guess'       guess     Initial guess for phase
 %   'incident'    incident  Incident illumination
 %   'iterations'  num       Number of iterations to run
+%   'adaptive'    factor    Factor for Adaptive-Adaptive algorithm
+%       If the factor is 1 (default), the algorithm becomes GS.
 
 p = inputParser;
 p.addParameter('guess', []);
 p.addParameter('incident', ones(size(target)));
 p.addParameter('iterations', 30);
+p.addParameter('adaptive', 1.0);
 p.parse(varargin{:});
+
+target = fftshift(target);
 
 % If no guess supplied, use ifft of target
 guess = p.Results.guess;
 if isempty(guess)
-  guess = ifft(target);
+  guess = ifft2(target);
 else
   guess = exp(1i*guess);
 end
 
 % Iterate to find a solution
 for ii = 1:p.Results.iterations
+
+  % Calculate generated pattern from guess
   B = abs(p.Results.incident) .* exp(1i*angle(guess));
-  C = fft(B);
-  D = abs(target) .* exp(1i*angle(C));
-  guess = ifft(D);
+  output = fft2(B);
+
+  % Do adaptive-adaptive step
+  a = p.Results.adaptive;
+  targetAmplitude = a.*abs(target) + (1 - a).*abs(output);
+
+  % Calculate new guess
+  D = targetAmplitude .* exp(1i*angle(output));
+  guess = ifft2(D);
+
 end
 
 % Calculate the phase of the result

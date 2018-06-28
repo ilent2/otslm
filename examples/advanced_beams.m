@@ -52,6 +52,20 @@ imagesc(visualize(pattern, 100));
 
 %% Gerchberg-Saxton demonstration
 
+% Generate the target image
+im = zeros(sz);
+im = insertText(im,[7 0; 0 25] + [ 230, 225 ], {'UQ', 'OMG'}, ...
+    'FontSize', 18, 'BoxColor', 'black', 'TextColor', 'white', 'BoxOpacity', 0);
+im = im(:, :, 1);
+
+pattern = otslm.iter.gs(im, 'incident', incident);
+
+subplot(4, 4, 9);
+imagesc(pattern);
+
+subplot(4, 4, 10);
+imagesc(visualize(pattern, 100));
+
 %% HG beam with amplitude correction for Gaussian illumination
 
 [pattern, amplitude] = otslm.simple.hgmode(sz, 3, 2, 'scale', 50);
@@ -184,7 +198,7 @@ end
 %   
 %   im = (im - min(im(:))) ./ maxval;
 % 
-%   imwrite(im, ['beams' num2str(kk) '.png']);
+%   imwrite(im, ['advanced' num2str(kk) '.png']);
 %   kk = kk + 1;
 % 
 % end
