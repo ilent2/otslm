@@ -24,6 +24,8 @@ classdef (Abstract) Showable
 %       'amplitude'         Real pattern in range [0, 1]
 %       'complex'           Complex pattern, abs(value) <= 1
 %
+%   size                Size of the device [rows, columns]
+%
 % This is the interface that utility functions which request an
 % image from the experiment/simulation use.  For declaring a new
 % display device, you should inherit from this class and define
