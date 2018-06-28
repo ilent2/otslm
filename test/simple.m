@@ -30,6 +30,14 @@ function testLgmode(testCase)
 end
 
 function testLinear(testCase)
+  % Test single spacing
+  pattern = otslm.simple.linear([512, 512], 10);
+
+  % Test multiple spacings for different directions
+  pattern = otslm.simple.linear([512, 512], [10, 20]);
+end
+
+function testGrid(testCase)
   % TODO
 end
 
