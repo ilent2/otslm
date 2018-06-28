@@ -17,8 +17,14 @@ p.addParameter('guess', []);
 p.addParameter('incident', ones(size(target)));
 p.addParameter('iterations', 30);
 p.addParameter('adaptive', 1.0);
+p.addParameter('padding', 0);
 p.parse(varargin{:});
 
+% Add padding to inputs
+target = padarray(target, p.Results.padding.*[1,1], 0, 'both');
+incident = padarray(p.Results.incident, p.Results.padding.*[1,1], 0, 'both');
+
+% Apply quadrant shift to target
 target = fftshift(target);
 
 % If no guess supplied, use ifft of target
@@ -33,7 +39,7 @@ end
 for ii = 1:p.Results.iterations
 
   % Calculate generated pattern from guess
-  B = abs(p.Results.incident) .* exp(1i*angle(guess));
+  B = abs(incident) .* exp(1i*angle(guess));
   output = fft2(B);
 
   % Do adaptive-adaptive step
@@ -48,4 +54,8 @@ end
 
 % Calculate the phase of the result
 pattern = angle(guess);
+
+% Remove padding from result
+pattern = pattern(1+p.Results.padding:end-p.Results.padding, ...
+    1+p.Results.padding:end-p.Results.padding);
 
