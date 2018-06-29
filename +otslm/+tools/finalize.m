@@ -169,8 +169,13 @@ else
   end
 
   % Apply colour map
-  pattern = interp1(linspace(0, 1, size(cmap, 1)), cmap, pattern(:), ...
-      'nearest');
+  if isa(cmap, 'double')
+    pattern = interp1(linspace(0, 1, size(cmap, 1)), cmap, pattern(:), ...
+        'nearest');
+  elseif isa(cmap, 'uint8')
+    pattern = uint8(interp1(linspace(0, 1, size(cmap, 1)), double(cmap), ...
+        pattern(:), 'nearest'));
+  end
 
   % Reshape to correct size
   pattern = reshape(pattern, sz);

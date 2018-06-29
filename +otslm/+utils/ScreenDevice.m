@@ -8,11 +8,9 @@ classdef ScreenDevice < otslm.utils.Showable
 % Copyright (C) 2018 Isaac Lenton (aka ilent2)
 
   properties (SetAccess=private)
-    java_window;            % Java window obejct
-    java_icon;              % Java icon object
-
+    figure_handle;          % Matlab figure handle
+    image_handle;           % Matlab image handle
     device_number;          % Screen number
-    temp_file;              % Temoprary file for screen device
   end
 
   properties (Dependent)
@@ -56,9 +54,8 @@ classdef ScreenDevice < otslm.utils.Showable
       p.parse(varargin{:});
 
       % Set-up dependent properties for java window
+      obj.figure_handle = [];
       obj.device_number = p.Results.device_number;
-      obj.temp_file = [tempname(),  '.bmp'];
-      obj.java_window = [];
 
       % Store other properties
       obj.valueRange = p.Results.value_range;
@@ -67,9 +64,9 @@ classdef ScreenDevice < otslm.utils.Showable
 
       % Store or generate the lookup table
       if isempty(p.Results.lookup_table)
-        table = obj.valueRange{1}.';
-        table = table ./ max(abs(table(:)));
-        table = table + min(table(:));
+        table = uint8(obj.valueRange{1}.');
+        %table = table ./ max(abs(table(:)));
+        %table = table + min(table(:));
         obj.lookupTable = repmat(table, ...
             [1, length(obj.valueRange)]);
       else
@@ -110,24 +107,8 @@ classdef ScreenDevice < otslm.utils.Showable
 
     function close(obj)
       % Close the window used to control the device
-
-      % Try closing the window
-      if ~isempty(obj.java_window)
-        try
-          obj.java_window.dispose();
-          obj.java_window = [];
-        catch
-            warning('Unable to close window');
-        end
-      end
-
-      % Try removing the temp file
-      if exist(obj.temp_file, 'file')
-        try
-          delete(obj.temp_file);
-        catch
-          warning('Unable to delete temp file');
-        end
+      if ~isempty(obj.figure_handle) && ishandle(obj.figure_handle)
+        close(obj.figure_handle);
       end
     end
 
@@ -147,43 +128,42 @@ classdef ScreenDevice < otslm.utils.Showable
         assert(size(img, 3) == 1 || size(img, 3) == 3, ...
             'Number of channels in image must be 1 or 3');
 
+        % Convert image from double to uint8 (for speed)
+        if isa(img, 'double')
+          img = uint8(img .* 255);
+        end
+
         % Generate blank image
         if size(img, 3) == 3
-          blank = zeros([obj.device_size, 3], class(img));
+          blank = zeros([obj.device_size, 3], 'uint8');
           blank(obj.offset(1)+(1:obj.size(1)), ...
               obj.offset(2)+(1:obj.size(2)), :) = img;
         elseif size(img, 3) == 1
-          blank = zeros(obj.device_size, class(img));
+          blank = zeros(obj.device_size, 'uint8');
           blank(obj.offset(1)+(1:obj.size(1)), ...
               obj.offset(2)+(1:obj.size(2))) = img;
         end
 
       else
-        blank = zeros(obj.device_size);
+        blank = zeros(obj.device_size, 'uint8');
       end
 
-      imwrite(blank, obj.temp_file);
-      buff_image = javax.imageio.ImageIO.read(...
-          java.io.File(obj.temp_file));
-
-      ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
-      gds = ge.getScreenDevices();
-
-      if isempty(obj.java_window)
-          obj.java_window = javax.swing.JFrame(...
-              gds(obj.device_number).getDefaultConfiguration());
-          obj.java_window.setUndecorated(true);
-          obj.java_icon = javax.swing.ImageIcon(buff_image);
-          label = javax.swing.JLabel(obj.java_icon);
-          obj.java_window.getContentPane.add(label);
-          obj.java_window.setExtendedState(obj.java_window.MAXIMIZED_BOTH);
+      % Open the window or display the image
+      if isempty(obj.figure_handle) || ~ishandle(obj.figure_handle)
+        obj.figure_handle = figure();
+        obj.image_handle = image(blank);
+        set(obj.figure_handle, 'WindowState', 'fullscreen', ...
+            'menubar','none', 'NumberTitle','off', ...
+            'units','normalized','outerposition',[0 0 1 1]);
+        set(imgca(obj.figure_handle), 'units', 'normalize', ...
+            'position', [0, 0, 1, 1], ...
+            'YTickLabel', [], 'XTickLabel', [], ...
+            'YTick', [], 'XTick', []);
+        drawnow;
       else
-          obj.java_icon.setImage(buff_image);
+        set(obj.image_handle, 'CData', blank);
+        drawnow nocallbacks;
       end
-
-      obj.java_window.pack
-      obj.java_window.repaint
-      obj.java_window.show
     end
   end
 end
