@@ -4,27 +4,21 @@ end
 
 function testSimple(tests)
 
-  slm = otslm.utils.ScreenDevice(1);
+  slm = otslm.utils.ScreenDevice(1, 'target_size', [512, 512], 'target_offset', [100, 0]);
   pattern = otslm.simple.linear(slm.size, 50);
-  slm.show(pattern);
-  pause(2);
-  slm.close();
+%   slm.show(pattern);
+%   pause(2);
+%   slm.close();
   
   % Generate images first
-  patterns = {};
+  patterns = struct('cdata', {}, 'colormap', {});
   for ii = 1:100
-    patterns{ii} = pattern + ii/100;
-    patterns{ii} = otslm.tools.finalize(patterns{ii}, ...
-        'colormap', slm.lookupTable);
+    patterns(ii) = im2frame(otslm.tools.finalize(pattern + ii/100, ...
+        'colormap', slm.lookupTable));
   end
   
   % Show the display first (takes longer)
-  slm.showRaw();
-  
-  for ii = 1:length(patterns)
-    slm.showRaw(patterns{ii});
-%     pause(0.01);
-  end
+  slm.showRaw(patterns, 'framerate', 100);
   slm.close();
 
 end
