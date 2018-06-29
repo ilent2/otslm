@@ -14,6 +14,10 @@ function [pattern, amplitude] = hgmode(sz, xmode, ymode, varargin)
 %   'aspect'    aspect      aspect ratio for pattern
 %   'angle'     angle       rotation angle of pattern (radians)
 %   'angle_deg' angle       rotation angle of pattern (degrees)
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 assert(xmode >= 0, 'xmode must be >= 0');
 assert(ymode >= 0, 'ymode must be >= 0');

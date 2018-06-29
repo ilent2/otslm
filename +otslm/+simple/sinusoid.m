@@ -16,6 +16,10 @@ function pattern = sinusoid(sz, period, varargin)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
 %   'scale'       scale       Scale for the final result
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);

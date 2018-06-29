@@ -32,6 +32,10 @@ function pattern = combine(inputs, varargin)
 %   'weights'   [weights] Array of weights for each pattern.
 %       If the method is dither, this is the percentage of each pattern
 %       to include in the result.  Not yet used by other methods.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('method', 'super');

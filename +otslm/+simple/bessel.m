@@ -14,6 +14,10 @@ function [pattern, amplitude] = bessel(sz, mode, varargin)
 %   'aspect'    aspect      aspect ratio for pattern
 %   'angle'     angle       rotation angle of pattern (radians)
 %   'angle_deg' angle       rotation angle of pattern (degrees)
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 assert(floor(mode) == mode, 'mode must be integer');
 

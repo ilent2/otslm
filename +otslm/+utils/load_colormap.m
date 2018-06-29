@@ -28,6 +28,10 @@ function lookupTable = load_colormap(filename, varargin)
 % Data is read, cast to this type, and then the mask is applied.
 % The output value is then calculated as a uint8 from the bits
 % that were masked using the morder argument.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('channels', [ -1, 0, 0 ]);

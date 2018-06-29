@@ -5,7 +5,9 @@ classdef ScreenDevice < otslm.utils.Showable
 % The actual target device size may be smaller than the size
 % reported by the device.
 %
-% Copyright (C) 2018 Isaac Lenton (aka ilent2)
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
   properties (SetAccess=private)
     figure_handle;          % Matlab figure handle

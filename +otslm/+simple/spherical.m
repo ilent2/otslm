@@ -11,6 +11,10 @@ function pattern = spherical(sz, radius, varargin)
 %       'random' or 'checkerboard' for these patterns.
 %
 % See simple.aspheric for more information and named arguments.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.KeepUnmatched = true;

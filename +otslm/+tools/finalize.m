@@ -36,6 +36,10 @@ function pattern = finalize(pattern, varargin)
 %       'magnitude' Use grating magnitude modulation (phase)
 %
 %   'amplitude' pattern Amplitude pattern to generate output for
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('modulo', []);

@@ -34,6 +34,10 @@ function lookuptable = calibrate(slm, cam, varargin)
 %   'single'            Single lookup table for entire device.
 %   'pixel'             Lookup table for each slm device pixel.
 %   {'regions', [X,Y]}  Lookup table for each XxY region of device.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('method', 'checker');

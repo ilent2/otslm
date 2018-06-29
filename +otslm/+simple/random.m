@@ -8,6 +8,10 @@ function pattern = random(sz, varargin)
 %
 %   'range'   [low, high]  Range of values (default: [0, 1)).
 %   'type'    type         Type of noise: 'uniform' or 'gaussian'
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('range', [0, 1]);

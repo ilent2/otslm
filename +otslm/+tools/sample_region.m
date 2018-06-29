@@ -36,6 +36,10 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 %           'checkerboard'    Uses a checkerboard for the background.
 %           'random'          Uses noise for the background.
 %           'randombin'       Uses binary noise for the background.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 % Parse inputs
 p = inputParser;

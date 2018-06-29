@@ -6,6 +6,10 @@ function [pattern, assigned] = encode1d(target, varargin)
 %   'scale'       scale       Scale for the height of the pattern
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('scale', 1.0);

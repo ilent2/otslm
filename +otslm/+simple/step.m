@@ -9,6 +9,10 @@ function pattern = step(sz, varargin)
 %   'angle'     theta       angle in radians for gradient (from +x to +y)
 %   'angle_deg' theta       angle in degrees for gradient
 %   'value'     [ l, h ]    low and high values of step (default: [0, 0.5])
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);

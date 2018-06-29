@@ -33,6 +33,10 @@ function pattern = aspheric(sz, radius, kappa, varargin)
 %       values outside the lens.  Can also be a scalar, in which case
 %       all values are replaced by this value; or a string with
 %       'random' or 'checkerboard' for these patterns.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);

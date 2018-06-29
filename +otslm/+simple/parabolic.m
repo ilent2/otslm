@@ -10,6 +10,10 @@ function pattern = parabolic(sz, alphas, varargin)
 % this can be modified with named parameters.
 %
 % See simple.aspheric for more information and named parameters.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 assert(length(alphas) >= 1, 'Must provide at least one alpha');
 

@@ -14,6 +14,10 @@ function im = image_device(slm, cam, varargin)
 % Supported methods:
 %   'scan1d'   Scans a bar region across device
 %   'scan2d'   Scans a aperture across device
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('method', 'scanap');

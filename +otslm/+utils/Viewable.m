@@ -15,6 +15,10 @@ classdef (Abstract) Viewable < handle
 % This is the interface that utility functions which request an
 % image from the experiment/simulation use.  For declaring a new
 % camera, you should inherit from this class and define the view method.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
   methods (Abstract)
     view(obj)       % Acquire an image from the device

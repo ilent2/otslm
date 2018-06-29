@@ -13,6 +13,10 @@ function [pattern] = cubic(sz, varargin)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
 %   'scale'       scale       Scaling factor for pattern.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('type', '2d');

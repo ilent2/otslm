@@ -9,6 +9,10 @@ function [output, filtered] = spatial_filter(input, filter, varargin)
 % Optional named parameters:
 %     'padding'       padding     Add padding to the outside of the image.
 %     'keep_padding'  keep        Keep or discard padding after filter
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('padding', 100);

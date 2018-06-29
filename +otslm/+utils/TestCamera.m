@@ -1,5 +1,9 @@
 classdef TestCamera < otslm.utils.Viewable
 % TestCamera non-physical camera object for viewing Test* Showable objects
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
   properties (SetAccess=protected)
     size = [512, 512];

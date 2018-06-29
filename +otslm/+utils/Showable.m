@@ -33,6 +33,10 @@ classdef (Abstract) Showable < handle
 % display device, you should inherit from this class and define
 % the abstract methods and properties described above.
 % You can also override the other methods if needed.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
   methods (Abstract)
     showRaw(obj, pattern)     % Method to show raw pattern

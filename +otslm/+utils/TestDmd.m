@@ -1,5 +1,9 @@
 classdef TestDmd < otslm.utils.Showable
 % TestDmd non-physical dmd-like device for testing code
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
   properties (SetAccess=protected)
     pattern         % Pattern currently displayed on the device

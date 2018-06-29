@@ -12,6 +12,10 @@ function pattern = checkerboard(sz, varargin)
 %   'centre'    [x,y]       Centre location for rotation (default: centre)
 %   'value'     [l,h]       Lower and upper values of checks (default: 0, 0.5)
 %   'aspect'    aspect      Aspect ratio of pattern (default: 1.0)
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('centre', [sz(1), sz(2)]/2);

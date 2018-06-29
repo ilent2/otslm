@@ -10,6 +10,10 @@ function pattern = linear(sz, spacing, varargin)
 %   'aspect'    aspect      aspect ratio for coordinates
 %   'angle'     theta       angle in radians for gradient (from +x to +y)
 %   'angle_deg' theta       angle in degrees for gradient
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('centre', [ 1, 1 ]);

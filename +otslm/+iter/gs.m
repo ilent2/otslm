@@ -11,6 +11,10 @@ function pattern = gs(target, varargin)
 %   'iterations'  num       Number of iterations to run
 %   'adaptive'    factor    Factor for Adaptive-Adaptive algorithm
 %       If the factor is 1 (default), the algorithm becomes GS.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('guess', []);

@@ -26,6 +26,10 @@ function varargout = visualise(phase, varargin)
 %       Default illumination is a Gaussian beam (w0 = 0.25*min(size(phase))
 %   'z'         z         z-position of output plane
 %   'padding'   p         Add padding to the outside of the image.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 p = inputParser;
 p.addParameter('method', 'fft');
