@@ -158,8 +158,19 @@ else
     sz = [sz, size(cmap, 2)];
   end
 
+  % Check range of inputs
+  if max(pattern(:)) > 2
+    warning('Capping max value to 1');
+    pattern(pattern > 1) = 1.0;
+  end
+  if min(pattern(:)) < 0
+    warning('Capping min value to 0');
+    pattern(pattern < 0) = 0.0;
+  end
+
   % Apply colour map
-  pattern = interp1(linspace(0, 1, size(cmap, 1)), cmap, pattern(:));
+  pattern = interp1(linspace(0, 1, size(cmap, 1)), cmap, pattern(:), ...
+      'nearest');
 
   % Reshape to correct size
   pattern = reshape(pattern, sz);
