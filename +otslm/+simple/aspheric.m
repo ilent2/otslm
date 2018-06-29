@@ -46,45 +46,11 @@ p.addParameter('angle_deg', []);
 p.addParameter('background', 0.0);
 p.parse(varargin{:});
 
-% Generate grid
-[xx, yy] = meshgrid(1:sz(2), 1:sz(1));
-
-% Move centre of pattern
-xx = xx - p.Results.centre(1);
-yy = yy - p.Results.centre(2);
-
-% Apply rotation to pattern
-
-angle = [];
-if ~isempty(p.Results.angle)
-  assert(isempty(angle), 'Angle set multiple times');
-  angle = p.Results.angle;
-end
-if ~isempty(p.Results.angle_deg)
-  assert(isempty(angle), 'Angle set multiple times');
-  angle = p.Results.angle_deg * pi/180.0;
-end
-if isempty(angle)
-  angle = 0.0;
-end
-
-xxr = cos(angle).*xx - sin(angle).*yy;
-yyr = sin(angle).*xx + cos(angle).*yy;
-xx = xxr;
-yy = yyr;
-
-% Apply aspect ratio
-yy = yy * p.Results.aspect;
-
-% Calculate r
-
-if strcmpi(p.Results.type, '1d')
-  rr2 = xx.^2;
-elseif strcmpi(p.Results.type, '2d')
-  rr2 = xx.^2 + yy.^2;
-else
-  error('Unknown type, must be 1d or 2d');
-end
+% Calculate radial coordinates
+[~, ~, rr] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
+    'type', p.Results.type, 'aspect', p.Results.aspect, ...
+    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+rr2 = rr.^2;
 
 % Calculate pattern
 

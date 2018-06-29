@@ -15,8 +15,18 @@ function pattern = axicon(sz, gradient, varargin)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
 
+p = inputParser;
+p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
+p.addParameter('type', '2d');
+p.addParameter('aspect', 1.0);
+p.addParameter('angle', []);
+p.addParameter('angle_deg', []);
+p.parse(varargin{:});
+
 % Calculate radial coordinates
-[~, ~, rr] = otslm.simple.grid(sz, varargin{:});
+[~, ~, rr] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
+    'type', p.Results.type, 'aspect', p.Results.aspect, ...
+    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
 
 % Calculate pattern
 pattern = -rr.*gradient;

@@ -1,5 +1,5 @@
 function [pattern, amplitude] = bessel(sz, mode, varargin)
-% HGMODE generates the phase and amplitude patterns for Bessel beams
+% BESSEL generates the phase and amplitude patterns for Bessel beams
 %
 % pattern = bessel(sz, mode, ...) generates the phase
 % pattern for a particular order Bessel beam.
