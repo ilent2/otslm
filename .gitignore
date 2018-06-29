@@ -2,6 +2,7 @@
 *.swp
 *.swo
 *.m~
+*.asv
 
 gui/tools/*
 gui/simple/*
