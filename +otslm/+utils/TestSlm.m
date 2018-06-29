@@ -1,13 +1,21 @@
-classdef TestSlm < otslm.utils.Showable, handle
+classdef TestSlm < otslm.utils.Showable
 % TestSlm non-physical slm-like device for testing code
 
-  methods
-    function show(obj, pattern)
-      % TODO: Implement
-    end
+  properties (SetAccess=protected)
+    pattern       % Pattern currently displayed on the device
+    output        % Resulting pattern in far-field
 
+    valueRange = linspace(0, 1, 256).';
+    lookupTable = linspace(-pi, pi, 256).';
+    patternType = 'phase';
+    size = [512, 512];
+  end
+
+  methods
     function showRaw(obj, pattern)
-      % TODO: Implement
+      % Simulate the pattern being shown, store result in obj.output
+      obj.pattern = pattern;
+      obj.output = abs(otslm.tools.visualise(pattern, 'method', 'fft')).^2;
     end
   end
 

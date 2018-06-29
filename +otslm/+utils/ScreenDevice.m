@@ -1,4 +1,4 @@
-classdef ScreenDevice < otslm.utils.Showable, handle
+classdef ScreenDevice < otslm.utils.Showable
   %ScreenDevice Represents a device controlled by full screen window
   %   Base class used for SlmScreen and DmdScreen devices.
   %

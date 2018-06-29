@@ -1,4 +1,4 @@
-classdef (Abstract) Viewable
+classdef (Abstract) Viewable < handle
 % VIEWABLE represents objects that can be viewed (cameras)
 %
 % Methods (Abstract)
@@ -23,12 +23,14 @@ classdef (Abstract) Viewable
   methods
     function im = viewTarget(obj)
       % View the target, applies a ROI to the result of view()
+      % TODO: Not yet implemented
       im = obj.view();
     end
   end
 
-  properties (Abstract)
+  properties (Abstract, SetAccess=protected)
     size        % Size of the device [rows, columns]
+    roisize     % Size of the region of interest [rows, columns]
   end
 
 end

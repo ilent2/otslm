@@ -1,13 +1,14 @@
-classdef (Abstract) Showable
+classdef (Abstract) Showable < handle
 % SHOWABLE represents objects that can be used to change the beam (slm/dmds)
 %
 % Methods (abstract):
-%   show(pattern)         Display the pattern on the device.  The pattern
-%       type is determined from the patternType property.
-%
 %   showRaw(pattern)      Display the pattern on the device.  The pattern
 %       is raw values from the device valueRange (i.e. colour mapping
 %       should already have been applied).
+%
+% Methods:
+%   show(pattern)         Display the pattern on the device.  The pattern
+%       type is determined from the patternType property.
 %
 %   showComplex(pattern)  Display a complex pattern.  The default
 %       behaviour is to call show after converting the pattern
@@ -25,18 +26,28 @@ classdef (Abstract) Showable
 %       'complex'           Complex pattern, abs(value) <= 1
 %
 %   size                Size of the device [rows, columns]
+%   lookupTable         Lookup table for show -> raw mapping
 %
 % This is the interface that utility functions which request an
 % image from the experiment/simulation use.  For declaring a new
 % display device, you should inherit from this class and define
-% the methods and properties described above.
+% the abstract methods and properties described above.
+% You can also override the other methods if needed.
 
   methods (Abstract)
-    show(obj, pattern)        % Method to show device type pattern
     showRaw(obj, pattern)     % Method to show raw pattern
   end
 
   methods
+    function show(obj, pattern)
+      % Method to show device type pattern
+      %
+      % Default behaviour is to apply the colour map and call showRaw.
+
+      pattern = otslm.tools.finalize(pattern, 'colormap', obj.lookupTable);
+      obj.showRaw(pattern);
+    end
+
     function showComplex(obj, pattern)
       % Default function to display a complex pattern on a device
 
@@ -65,7 +76,9 @@ classdef (Abstract) Showable
 
   properties (Abstract, SetAccess=protected)
     valueRange        % Range of values for raw pattern
+    lookupTable       % Lookup table for raw values
     patternType       % Type of pattern show() expects
+    size              % Size of the device
   end
 
 end

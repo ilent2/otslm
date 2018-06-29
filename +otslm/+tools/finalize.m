@@ -152,8 +152,17 @@ if ischar(cmap)
       error('Unrecognized colormap string');
   end
 else
-  % TODO: Lookup tables
-  error('Other colourmaps not yet implemented');
+  % Calculate size of output image
+  sz = size(pattern);
+  if size(cmap, 2) ~= 1
+    sz = [sz, size(cmap, 2)];
+  end
+
+  % Apply colour map
+  pattern = interp1(linspace(0, 1, size(cmap, 1)), cmap, pattern(:));
+
+  % Reshape to correct size
+  pattern = reshape(pattern, sz);
 end
 
 % Apply rotation to pattern
