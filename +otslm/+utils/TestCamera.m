@@ -1,6 +1,9 @@
 classdef TestCamera < otslm.utils.Viewable
 % TestCamera non-physical camera object for viewing Test* Showable objects
 %
+% TODO: This functionality should be combined with TestDmd and TestSlm,
+%   i.e. these device should inherit from Viewable too
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
