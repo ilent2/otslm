@@ -12,6 +12,7 @@ function pattern = aperture(sz, dimension, varargin)
 %           'rect'      [w, h]      Rectangle with width and height
 %           'ring'      [r1, r2]    Ring specified by inner and outer radius
 %   'centre'      [x, y]      centre location for pattern
+%   'offset'      [x, y]      offset in rotated coordinate system
 %   'values'      [l, h]      values for off and on regions (default: [])
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
@@ -24,44 +25,17 @@ function pattern = aperture(sz, dimension, varargin)
 p = inputParser;
 p.addParameter('type', 'circle');
 p.addParameter('centre', [sz(2), sz(1)]/2.0);
+p.addParameter('offset', [0, 0]);
 p.addParameter('values', []);
 p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
 p.parse(varargin{:});
 
-% Generate grid
-[xx, yy] = meshgrid(1:sz(2), 1:sz(1));
-
-% Move centre of pattern
-xx = xx - p.Results.centre(1);
-yy = yy - p.Results.centre(2);
-
-% Apply rotation to pattern
-
-angle = [];
-if ~isempty(p.Results.angle)
-  assert(isempty(angle), 'Angle set multiple times');
-  angle = p.Results.angle;
-end
-if ~isempty(p.Results.angle_deg)
-  assert(isempty(angle), 'Angle set multiple times');
-  angle = p.Results.angle_deg * pi/180.0;
-end
-if isempty(angle)
-  angle = 0.0;
-end
-
-xxr = cos(angle).*xx - sin(angle).*yy;
-yyr = sin(angle).*xx + cos(angle).*yy;
-xx = xxr;
-yy = yyr;
-
-% Apply aspect ratio
-yy = yy * p.Results.aspect;
-
-% Calculate radial position
-rr = sqrt(xx.^2 + yy.^2);
+% Calculate coordinates
+[xx, yy, rr] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
+    'aspect', p.Results.aspect, 'angle', p.Results.angle, ...
+    'angle_deg', p.Results.angle_deg, 'offset', p.Results.offset);
 
 % Generate the pattern
 

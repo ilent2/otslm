@@ -8,6 +8,7 @@ function [xx, yy, rr, phi] = grid(sz, varargin)
 % Optional named parameters:
 %
 %   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
 %   'type'        type        is the lens cylindrical or spherical (1d or 2d)
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
@@ -19,6 +20,7 @@ function [xx, yy, rr, phi] = grid(sz, varargin)
 
 p = inputParser;
 p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
+p.addParameter('offset', [0, 0]);
 p.addParameter('type', '2d');
 p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
@@ -54,6 +56,10 @@ yy = yyr;
 
 % Apply aspect ratio
 yy = yy * p.Results.aspect;
+
+% Apply offset in transformed coordinates
+xx = xx - p.Results.offset(1);
+yy = yy - p.Results.offset(2);
 
 % Calculate r
 
