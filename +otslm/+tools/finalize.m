@@ -92,18 +92,18 @@ if ~isempty(p.Results.amplitude)
 
     switch p.Results.encodemethod
       case 'checker'
-        
+
         % Use a checkerboard background
         background = otslm.simple.checkerboard(size(pattern), ...
             'value', [-1, 1]);
-          
+
         % This ratio depends on the background level
         mixratio = 2/pi*acos(abs(p.Results.amplitude));
-          
+
         % Add the amplitude and mix with the background
         pattern = pattern + angle(p.Results.amplitude)/(2*pi)+0.5;
         pattern = pattern + mixratio.*angle(background)/(2*pi)+0.5;
-        
+
       case 'grating'
         error('Not yet implemented');
       case 'magnitude'
@@ -142,7 +142,7 @@ end
 
 % Apply colour map
 if ischar(cmap)
-  
+
   switch cmap
     case 'pmpi'
       pattern = pattern*2*pi - pi;
@@ -156,6 +156,16 @@ if ischar(cmap)
       error('Unrecognized colormap string');
   end
 else
+
+  % Allow for non-linear color maps
+  if iscell(cmap)
+    crange = cmap{1};
+    cmap = cmap{2};
+  else
+    % TODO: This case could be faster, we don't need to use interp1
+    crange = linspace(0, 1, size(cmap, 1));
+  end
+
   % Calculate size of output image
   sz = size(pattern);
   if size(cmap, 2) ~= 1

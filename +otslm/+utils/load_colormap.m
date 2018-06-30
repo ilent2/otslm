@@ -3,12 +3,17 @@ function lookupTable = load_colormap(filename, varargin)
 % for SLM devices or in the tools.finalize colormap argument.
 %
 % lookupTable = load_colormap(filename, ...) loads the lookup table.
+% The lookupTable is a cell array with { phase, values } if the
+% 'phase' named argument is included, otherwise it is a matrix.
 %
 % Optional named arguments:
 %
 %   'channels'    channels    Array of columns numbers in input file
 %       0 correspond to 0 in output.  Negative values correspond to
 %       columns in reverse order.
+%
+%   'phase'       column      Column of input file taken as phase
+%       value.  If omitted, i.e. [], assumes 0 to 2*pi linear phase range.
 %
 %   'oformat'     format      Output format string (default: uint8)
 %   'format'      format      Input format function handle (default @uint8)
@@ -35,6 +40,7 @@ function lookupTable = load_colormap(filename, varargin)
 
 p = inputParser;
 p.addParameter('channels', [ -1, 0, 0 ]);
+p.addParameter('phase', []);
 p.addParameter('oformat', 'uint8');
 p.addParameter('format', @uint8);
 p.addParameter('mask', []);
@@ -98,5 +104,11 @@ for ii = 1:length(p.Results.channels)
           logical(bitand(ch, 2^(p.Results.order(jj)-1)))*2^(jj-1));
     end
   end
+end
+
+% Read phase from file if requested
+if ~isempty(p.Results.phase)
+  phase = data(:, p.Results.phase);
+  lookupTable = { phase, lookupTable };
 end
 
