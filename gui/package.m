@@ -1,4 +1,8 @@
 % Script to package the user interface into matlab packages
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 dirs = {'tools', 'simple', 'utils', 'iter'};
 
@@ -16,6 +20,7 @@ for d = dirs
 
     % Copy file to package
     fname = fullfile(f.folder, f.name);
+    [~,~] = mkdir('../guifiles/meta/matlab');
     copyfile(fname, '../guifiles/meta/matlab/document.xml');
 
     % Zip up files
