@@ -4,9 +4,3 @@
 *.m~
 *.asv
 
-gui/tools/*
-gui/simple/*
-gui/utils/*
-gui/iter/*
-guifiles/meta/matlab/document.xml
-
