@@ -4,6 +4,9 @@ function varargout = visualise(phase, varargin)
 % [output, ...] = visualise(phase, ...) visualise the phase plane.
 % Some methods output additional parameters, such as the ott-toolbox beam.
 %
+% [output, ...] = visualise(complex_amplitude, ...) visualise the
+% plane 
+%
 % If phase is an empty array and one of the other images is supplied,
 % the phase is assumed to be an array of zeros the same size as one of
 % the other images.
@@ -18,13 +21,18 @@ function varargout = visualise(phase, varargin)
 %         'fft'         Use fourier transform approach described in
 %                       https://doi.org/10.1364/JOSAA.15.000857
 %         'ott'         Use optical tweezers toolbox
+%         'rs'          Rayleigh-Sommerfeld diffraction formula
+%         'rslens'      Use rs to propagate to a lens, apply the lens
+%             phase pattern and propagate some distance from the lens.
 %
 %   'type'      type      Type of transformation: 'nearfield' or 'farfield'
 %
 %   'amplitude' image     Specifies the amplitude pattern
 %   'incident'  image     Specifies the incident illumination
 %       Default illumination is a Gaussian beam (w0 = 0.25*min(size(phase))
-%   'z'         z         z-position of output plane
+%   'z'         z         z-position of output plane.  For fft/ott this
+%       is an offset from the focal plane.  For rs/rslens, this is the
+%       distance along the beam axis.
 %   'padding'   p         Add padding to the outside of the image.
 %
 % Copyright 2018 Isaac Lenton
@@ -57,35 +65,53 @@ if isempty(phase)
   end
 end
 
-% Handle default value for incident
-if isempty(incident)
-  [xx, yy] = meshgrid(1:size(phase, 2), 1:size(phase, 1));
-  xx = xx - size(phase, 2)/2;
-  yy = yy - size(phase, 1)/2;
-  sigma = 0.25 * min(size(phase));
-  incident = exp(-(xx.^2 + yy.^2)./(2*sigma^2));
-  incident = incident ./ max(incident(:));
+% Allow the user to pass in a single complex amplitude or
+% separate phase and amplitude matrices
+if isreal(phase)
+
+  % Handle default value for incident
+  if isempty(incident)
+    [xx, yy] = meshgrid(1:size(phase, 2), 1:size(phase, 1));
+    xx = xx - size(phase, 2)/2;
+    yy = yy - size(phase, 1)/2;
+    sigma = 0.25 * min(size(phase));
+    incident = exp(-(xx.^2 + yy.^2)./(2*sigma^2));
+    incident = incident ./ max(incident(:));
+  end
+
+  % Check sizes of input images
+  assert(all(size(incident) == size(phase)), ...
+    'Incident size must match phase size');
+  assert(all(size(amplitude) == size(phase)), ...
+    'Amplitude size must match phase size');
+
+  % Check phase range
+  if abs(1 - max(phase(:)) - min(phase(:))) < eps(1)
+    warning('Phase range should be 2*pi');
+  end
+
+  % Generate combined pattern
+  U = amplitude .* exp(1i*phase) .* incident;
+
+else
+
+  % The input is a complex amplitude
+  U = phase;
+
 end
-
-% Check sizes of input images
-assert(all(size(incident) == size(phase)), ...
-  'Incident size must match phase size');
-assert(all(size(amplitude) == size(phase)), ...
-  'Amplitude size must match phase size');
-
-% Check phase range
-if abs(1 - max(phase(:)) - min(phase(:))) < eps(1)
-  warning('Phase range should be 2*pi');
-end
-
-% Generate combined pattern
-U = amplitude .* exp(1i*phase) .* incident;
 
 switch p.Results.method
   case 'fft'
     varargout{1} = fft_method(U, p);
   case 'ott'
     [varargout{1:nargout}] = ott_method(U, p);
+  case 'rs'
+    [varargout{1:nargout}] = rs_method(U, p);
+  case 'rslens'
+    Uatlens = otslm.tools.visualise(U, 'z', focal_length);
+    lensphase = otslm.simple.spherical(focal_length, 'background', NaN);
+    Uafterlens = Uatlens .* exp(1i*2*pi*lensphase);
+    varargout{1} = otslm.tools.visualise(Uafterlens, 'z', p.Results.z);
   otherwise
     error('Unknown method');
 end
@@ -205,6 +231,44 @@ function [output, beam] = ott_method(U, p)
 
   % Turn the output back into an image
   output = reshape(output, [round(size(U, 1)/5), round(size(U, 2)/5)]);
+
+end
+
+function [output] = rs_method(U, p)
+% Implementation of Rayleigh-Sommerfeld integral
+
+  output = zeros(size(U));
+  lambda = 1.0;
+  resolution = [10, 10];
+  k = 2*pi/lambda;
+  dxdy = 1.0;
+
+  [igridx, igridy] = otslm.simple.grid(size(U).*resolution, ...
+      'centre', [size(U, 2)*resolution(2), size(U, 1)*resolution(1)]./2);
+  [ogridx, ogridy] = otslm.simple.grid(size(output), ...
+      'centre', [size(output, 2), size(output, 1)]./2);
+
+  % Loop over pixels in output image
+  for ii = 1:size(output, 2)
+    for jj = 1:size(output, 1)
+
+      % Calculate distance between output and incident
+      dgridx = igridx - ogridx(jj, ii);
+      dgridy = igridy - ogridy(jj, ii);
+      r = sqrt(dgridx.^2 + dgridy.^2 + p.Results.z.^2);
+
+      % Only use finite values
+      m = isfinite(U);
+
+      % Calculate integral
+      layer = U(m) .* exp(1i*k*r(m))./r(m);
+      output(jj, ii) = sum(layer(:));
+
+    end
+  end
+
+  % Add other factors for integral
+  output = output ./ (1i * lambda) .* dxdy;
 
 end
 
