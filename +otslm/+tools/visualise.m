@@ -108,10 +108,12 @@ switch p.Results.method
   case 'rs'
     [varargout{1:nargout}] = rs_method(U, p);
   case 'rslens'
-    Uatlens = otslm.tools.visualise(U, 'z', focal_length);
+    focal_length = 1000;  % Focal length of 1000 wavelengths
+    Uatlens = otslm.tools.visualise(U, 'z', focal_length, 'method', 'rs');
     lensphase = otslm.simple.spherical(focal_length, 'background', NaN);
     Uafterlens = Uatlens .* exp(1i*2*pi*lensphase);
-    varargout{1} = otslm.tools.visualise(Uafterlens, 'z', p.Results.z);
+    varargout{1} = otslm.tools.visualise(Uafterlens, ...
+        'z', p.Results.z, 'method', 'rs');
   otherwise
     error('Unknown method');
 end
@@ -235,40 +237,15 @@ function [output, beam] = ott_method(U, p)
 end
 
 function [output] = rs_method(U, p)
-% Implementation of Rayleigh-Sommerfeld integral
 
-  output = zeros(size(U));
-  lambda = 1.0;
-  resolution = [10, 10];
-  k = 2*pi/lambda;
-  dxdy = 1.0;
+  scale = 1;                % Number of pixels in output
+  uscale = 1;               % Upscaling of input input image
+  pixelsize = [20, 20];     % Pixel size in units of wavelength
 
-  [igridx, igridy] = otslm.simple.grid(size(U).*resolution, ...
-      'centre', [size(U, 2)*resolution(2), size(U, 1)*resolution(1)]./2);
-  [ogridx, ogridy] = otslm.simple.grid(size(output), ...
-      'centre', [size(output, 2), size(output, 1)]./2);
+  % Repeat elements for multi-sampling
+  U = repelem(U, uscale, uscale);
 
-  % Loop over pixels in output image
-  for ii = 1:size(output, 2)
-    for jj = 1:size(output, 1)
-
-      % Calculate distance between output and incident
-      dgridx = igridx - ogridx(jj, ii);
-      dgridy = igridy - ogridy(jj, ii);
-      r = sqrt(dgridx.^2 + dgridy.^2 + p.Results.z.^2);
-
-      % Only use finite values
-      m = isfinite(U);
-
-      % Calculate integral
-      layer = U(m) .* exp(1i*k*r(m))./r(m);
-      output(jj, ii) = sum(layer(:));
-
-    end
-  end
-
-  % Add other factors for integral
-  output = output ./ (1i * lambda) .* dxdy;
+  output = otslm.tools.vis_rsmethod(U, pixelsize, p.Results.z, scale*uscale);
 
 end
 
