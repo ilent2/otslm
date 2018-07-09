@@ -28,7 +28,6 @@ function pattern = aspheric(sz, radius, kappa, varargin)
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'imag_value'  val         Value to replace imaginary values with
 %   'background'  img         Specifies a background pattern to use for
 %       values outside the lens.  Can also be a scalar, in which case
 %       all values are replaced by this value; or a string with
