@@ -7,8 +7,8 @@ addpath('../');
 sz = [512, 512];        % Pattern size (pixels)
 r_particle = 5;        % Radius of particle (pixels)
 x_particle = 0;         % Particle offset from centre (pixels)
-z_qpd = 0.0;            % Offset of qpd plane from Fourier plane (units?)
-r_slm = 15;             % Size of SLM ROI (pixels)
+z_qpd = 1000;           % Offset of qpd plane from lens (wavelengths)
+r_slm = 30;             % Size of SLM ROI (pixels)
 r_pinhole = 100;         % Size of spatial filter (pixels)
 padding = 800;          % Padding for FT (pixels)
 particle_type = 'spherical';
@@ -35,7 +35,7 @@ switch particle_type
     phase_scale = 0.5;
     
     particle = otslm.simple.spherical(sz, r_particle, ...
-      'centre', particle_centre, 'imag_value', 0.0);
+      'centre', particle_centre, 'background', 0.0);
     particle = otslm.tools.finalize(particle*phase_scale);
     image_fp = incident .* exp(1i*particle);
     
@@ -54,19 +54,21 @@ subplot(3, 2, 1);
 imagesc(abs(image_fp));
 % imagesc(angle(image_fp));
 title('Light at focal plane');
+axis image;
 subplot(3, 2, 2);
 imagesc(abs(image_slm));
 title('Light at SLM plane');
+axis image;
 
 subplot(3, 2, 3);
 imagesc(pinhole);
 title('Pinhole');
+axis image;
 
 %% Generate sampling pattern for slm
 
 % Apply an angle to avoid numerical noise from fft
-grating = otslm.simple.linear(sz, 'spacing', 5, ...
-    'angle_deg', 45);
+grating = otslm.simple.linear(sz, 10, 'angle_deg', 45);
 slm_roi = otslm.simple.aperture(sz, r_slm, 'type', 'circle');
 
 % TODO: try different ROI mask techniques (test sample_region.m)
@@ -78,20 +80,23 @@ slm_pattern = otslm.tools.finalize(slm_pattern);
 subplot(3, 2, 4);
 imagesc(slm_pattern);
 title('SLM Pattern');
+axis image;
 
 %% Generate image in plane of QPD
 
 image_qpdplane = otslm.tools.visualise(slm_pattern, ...
-    'incident', image_slm, 'type', 'farfield', 'z', z_qpd, ...
-    'method', 'fft', 'padding', padding);
+    'incident', image_slm, 'z', z_qpd, ...
+    'method', 'rslens');
   
 %% Display QPD plane image and QPD ROI
 
-image_qpd = image_qpdplane(padding+340+(1:400), padding+340+(1:400));
+image_qpd = image_qpdplane(padding+55+(1:100), padding+355+(1:100));
 
 subplot(3, 2, 5);
 imagesc(abs(image_qpdplane));
 title('QPD plane intensity');
+axis image;
 subplot(3, 2, 6);
 imagesc(abs(image_qpd));
 title('QPD region of interest');
+axis image;
