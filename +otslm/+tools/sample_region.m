@@ -99,8 +99,7 @@ for ii = 1:length(locations)
   radius = radii(ii);
   method = bmethods{ii};
 
-  linear = otslm.simple.linear(sz, 'angle', atan2(target(2), target(1)), ...
-        'spacing', norm(target));
+  linear = otslm.simple.linear(sz, norm(target), 'angle', atan2(target(2), target(1)));
   linear = otslm.tools.finalize(linear);
 
   switch method{1}
