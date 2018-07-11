@@ -24,3 +24,9 @@
 Use matlab compare tool:
 https://au.mathworks.com/help/matlab/matlab_prog/customize-external-source-control-to-use-matlab-for-comparison-and-merge.html
 
+Commands for git/config, perhaps just use the ml context menu
+
+[diff "mldiff"]
+  command = /usr/local/MATLAB/R2018a/bin/glnxa64/mlDiff $REMOTE $LOCAL
+[merge "mlmerge"]
+	command = /usr/local/MATLAB/R2018a/bin/glnxa64/mlMerge $BASE $LOCAL $REMOTE $MERGED
