@@ -25,16 +25,40 @@ classdef (Abstract) Viewable < handle
   end
 
   methods
+
+    function obj = Viewable()
+      obj.roisize = obj.size;
+    end
+
     function im = viewTarget(obj)
       % View the target, applies a ROI to the result of view()
-      % TODO: Not yet implemented
+
+      % Acquire the image in the normal way
       im = obj.view();
+
+      % Crop the image to the ROI
+      im = im(obj.roioffset(1):obj.roioffset(1)+obj.roisize(1), ...
+          obj.roioffset(2):obj.roioffset(2)+obj.roisize(2));
     end
+
+    function crop(obj, roi)
+      % Crop the image to a specified ROI
+      %
+      %  obj.crop([rows cols yoffset xoffset])
+      assert(all(roi(1:2) <= obj.size), ...
+          'ROI must be smaller or equal to image size');
+      obj.roisize = roi(1:2);
+      obj.roioffset = roi(3:4);
+    end
+  end
+
+  properties (SetAccess=protected)
+    roisize     % Size of the region of interest [rows, columns]
+    roioffset;  % Offset of region of interest [y, x]
   end
 
   properties (Abstract, SetAccess=protected)
     size        % Size of the device [rows, columns]
-    roisize     % Size of the region of interest [rows, columns]
   end
 
 end

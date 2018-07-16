@@ -8,7 +8,7 @@ function lookupTable = calibrate(slm, cam, varargin)
 % the phase values [0, 1] and a table of corresponding device values.
 %
 % lookuptable = calibrate(slm, cam, 'tableres', res, ...) as above
-% but produces a since column lookup table with res evenly spaced
+% but produces a single column lookup table with res evenly spaced
 % elements in the phase range.
 %
 % Optional named parameters:
@@ -61,7 +61,7 @@ p.parse(varargin{:});
 
 switch p.Results.method
   case 'checker'
-    lookupTable = method_checker(p.Results.tablerange, p.Results.methodargs);
+    lookupTable = method_checker(slm, cam, p.Results.methodargs{:});
   case 'michaelson'
     lookupTable = method_michaelson(p.Results.tablerange, ...
         p.Results.methodargs);
@@ -81,10 +81,10 @@ end
 % Convert from full range to desired range
 if ~ischar(p.Results.tablerange)
 
-  minphase = min(fullTable{1});
-  maxphase = max(fullTable{1});
+  minphase = min(lookupTable{1});
+  maxphase = max(lookupTable{1});
 
-  if maxphase - minphase < range
+  if maxphase - minphase < p.Results.tablerange
     warning('Device range smaller than requested range');
   end
 
@@ -95,35 +95,40 @@ if ~ischar(p.Results.tablerange)
     case 'sort'
 
       % Discard values outside range
-      value = value(phase <= range);
-      phase = phase(phase <= range);
+      value = value(phase <= p.Results.tablerange);
+      phase = phase(phase <= p.Results.tablerange);
 
       % Sort the lookupTable
       [sortedPhase, idx] = sort(phase);
-      sortedValue = value(idx, :);
+      sortedValue = value(:, idx);
 
     case 'minvalue'
 
       % Start at the centre of the device minus range/2
       % TODO: Allow user to specify start value
-      [~, idx] = min(abs(phase - max(phase)/2 + range/2));
+      [~, idx] = min(abs(phase - max(phase)/2 + p.Results.tablerange/2));
 
       % Reshape the phase array to make traversal easier
-      valueRangeSz = calculate_value_table_size(slm);
-      phaseNd = reshape(phase, valueRangeSz);
+      valueRangeSz = slm.valueRangeSize();
+      if length(valueRangeSz) == 1
+        phaseNd = phase;
+      else
+        phaseNd = reshape(phase, valueRangeSz);
+      end
 
       % Shift phaseNd to zero
       phaseNd = phaseNd - phase(idx);
 
       sortedPhaseIdx = [idx];
       sortedPhase = [0.0];
-      candidates = phaseNd > sortedPhase(end) & phaseNd < range;
+      candidates = phaseNd > sortedPhase(end) & phaseNd < p.Results.tablerange;
+      lastCoord = ind2sub(size(phaseNd), idx);
       while any(candidates)
 
         % Calculate distance^2 of all candidates (periodic boundaries)
         indices = find(candidates);
-        [coords{1:length(slm.valueRange)}] = ind2sub(indices);
-        distances = zeros(size(candidates));
+        [coords{1:length(slm.valueRange)}] = ind2sub(size(phaseNd), indices);
+        distances = zeros(size(indices));
         for ii = 1:length(coords)
 
           % Calculate relative coordinates
@@ -136,21 +141,22 @@ if ~ischar(p.Results.tablerange)
               relCoords(relCoords > valueRangeSz(ii)/2) + valueRangeSz(ii);
 
           % Calculate distance^2
-          distances = distances + relCoords.^2
+          distances = distances + relCoords.^2;
         end
 
         % Find and store nearest candidate
-        [~, canidx] = min(distances)
+        [~, canidx] = min(distances);
         idx = indices(canidx);
+        lastCoord = ind2sub(size(phaseNd), idx);
         sortedPhaseIdx(end+1) = idx;
         sortedPhase(end+1) = phaseNd(idx);
 
         % Calculate new candidates
-        candidates = phaseNd > sortedPhase(end) & phaseNd < range;
+        candidates = phaseNd > sortedPhase(end) & phaseNd < p.Results.tablerange;
       end
 
       % Retrieve corresponding values
-      sortedValues = values(sortedPhaseIdx, :);
+      sortedValue = value(:, sortedPhaseIdx);
 
     otherwise
       error('Unknown rangemethod parameter value');
@@ -168,7 +174,7 @@ end
 % Generate the linearised lookup table
 if ~isempty(p.Results.tableres)
 
-  range = linspace(0, tablerange, p.Results.tableres);
+  range = linspace(0, p.Results.tablerange, p.Results.tableres);
   phase = lookupTable{1};
   value = lookupTable{2};
 
@@ -182,6 +188,8 @@ end
 end
 
 function lookupTable = method_checker(slm, cam, varargin)
+% Measures the intensity of the zero order for different checkerboard
+% patterns applied to the device.
 
   % Parse method arguments
   p = inputParser;
@@ -198,20 +206,20 @@ function lookupTable = method_checker(slm, cam, varargin)
   %   <     >   3pi/2 -> 2pi
 
   % Generate the checkerboard
-  mask = otslm.simple.checkerboard(slm.size);
+  mask = otslm.simple.checkerboard(slm.size, 'value', [false, true]);
 
   % Generate full value table
-  valueTable = generate_full_value_table(slm);
+  valueTable = slm.linearValueRange('structured', true);
 
   % Rank everything in region 1
   idx1 = 1;
-  value1 = valueTable(idx1, :);
-  phase1 = zeros([size(valueTable, 1), 1]);
-  for ii = 1:size(valueTable, 1)
+  value1 = valueTable(:, idx1);
+  phase1 = zeros([size(valueTable, 2), 1]);
+  for ii = 1:size(valueTable, 2)
 
     % Generate pattern
     rawpattern = generate_raw_pattern(slm, mask, ...
-        value1, valueTable(ii, :));
+        value1, valueTable(:, ii));
 
     % Show pattern and get image
     slm.showRaw(rawpattern);
@@ -225,13 +233,13 @@ function lookupTable = method_checker(slm, cam, varargin)
 
   % Choose a region 2 and rank everything in this region
   [~, idx2] = min(abs(phase1 - max(phase1)/2));
-  value2 = valueTable(idx2, :);
-  phase2 = zeros([size(valueTable, 1), 1]);
-  for ii = 1:size(valueTable, 1)
+  value2 = valueTable(:, idx2);
+  phase2 = zeros([size(valueTable, 2), 1]);
+  for ii = 1:size(valueTable, 2)
 
     % Generate pattern
     rawpattern = generate_raw_pattern(slm, mask, ...
-        value2, valueTable(ii, :));
+        value2, valueTable(:, ii));
 
     % Show pattern and get image
     slm.showRaw(rawpattern);
@@ -245,10 +253,11 @@ function lookupTable = method_checker(slm, cam, varargin)
 
   % Determine which region points are in
   phase2small = phase2 - max(phase2)/2 < 0;
-
-  % Assign a phase to each region
-  phase = 0.5 * phase1 ./ max(phase1);
-  phase(~phase2small) = 1 - phase(~phase2small);
+  
+  % Convert from intensity to phase
+  phase = sqrt(phase1./max(phase1));
+  phase(~phase2small) = -phase(~phase2small);
+  phase = unwrap(2*acos(phase));
 
   % Package into lookupTable
   lookupTable = {phase, valueTable};
@@ -277,7 +286,7 @@ function lookupTable = method_smichaelson(slm, cam, varargin)
   mask = logical(otslm.simple.step(slm.size, 'value', [0, 1]));
 
   % Generate full value table
-  valueTable = generate_full_value_table(slm);
+  valueTable = slm.linearValueRange('structured', true);
 
   % Measure phase of each value
   for ii = 1:size(valueTable, 1)
@@ -340,10 +349,37 @@ function lookupTable = method_pinholes(slm, cam, varargin)
   p = inputParser;
   p.parse(varargin{:});
 
-  % TODO: Design a pattern that minimises intensity in target
+  % Design a pattern that minimises intensity in target
+  basepattern = generate_random_pattern(slm);
 
-  % TODO: Apply two pinhole regions and measure the fringes
-  error('Not yet implemented');
+  % Generate mask for pinhole regions
+  r = 10;
+  o = 20;
+  c1 = [ceil(slm.size(2)/2)-o, ceil(slm.size(1)/2)];
+  c2 = [ceil(slm.size(2)/2)+o, ceil(slm.size(1)/2)];
+  mask_pinhole1 = otslm.simple.aperture(slm.size, r, 'centre', c1);
+  mask_pinhole2 = otslm.simple.aperture(slm.size, r, 'centre', c2);
+
+  % Generate full value table
+  valueTable = slm.linearValueRange('structured', true);
+
+  % Measure phase of each value
+  for ii = 1:size(valueTable, 1)
+
+    % Generate raw pattern
+    rawpattern = basepattern;
+    rawpattern = add_masked_region(slm, rawpattern, ...
+        mask_pinhole1, valueTable(1, :));
+    rawpattern = add_masked_region(slm, rawpattern, ...
+        mask_pinhole2, valueTable(ii, :));
+
+    % Display on slm and acquire image
+    slm.showRaw(rawpattern);
+    im = cam.viewTarget();
+
+    % TODO: Extract the fringes from the image
+    error('Not yet implemented');
+  end
 
 end
 
@@ -357,7 +393,7 @@ function lookupTable = method_step(slm, cam, varargin)
   pattern = logical(otslm.simple.step(slm.size, 'value', [0, 1]));
 
   % Generate full value table
-  valueTable = generate_full_value_table(slm);
+  valueTable = slm.linearValueRange('structured', true);
 
   % Do full range test
   for ii = 2:size(valueTable, 1)
@@ -381,6 +417,9 @@ end
 
 function rawpattern = generate_raw_pattern(slm, mask, base, value)
 % Generate a raw image for the slm by masking the base and value
+%
+%   rawpattern(~mask) = base;
+%   rawpattern(mask) = value;
 
   rawpattern = zeros([slm.size, length(value)]);
   for jj = 1:length(value)
@@ -389,42 +428,4 @@ function rawpattern = generate_raw_pattern(slm, mask, base, value)
     rawpattern(:, :, jj) = layer;
   end
 
-end
-
-function valueTable = generate_full_value_table(slm)
-
-  valueRangeSz = calculate_value_table_size(slm);
-  numValues = prod(valueRangeSz);
-
-  valueTable = zeros([length(slm.valueRange), numValues]);
-
-  % Generate values for each column
-  for ii = 1:length(valueRangeSz)
-
-    % Get the value range column in row form
-    data = slm.valueRange{ii}(:).';
-
-    % Repeate the values for every remaining column
-    if ii+1 < length(valueRangeSz)
-      data = repmat(slm.valueRange{ii}(:).', [prod(valueRangeSz(ii+1:end)), 1]);
-    end
-
-    % Convert to column form
-    data = reshape(data, [numel(data), 1]);
-
-    % Repeate the values for all previous columns
-    data = repmat(data, [prod(valueRangeSz(1:ii-1)), 1]);
-
-    % Store the column
-    valueTable(:, ii) = data;
-
-  end
-
-end
-
-function valueRangeSz = calculate_value_table_size(slm)
-  valueRangeSz = zeros([1, length(slm.valueRange)]);
-  for ii = 1:length(valueRangeSz)
-    valueRangeSz(ii) = length(slm.valueRange{ii});
-  end
 end

@@ -159,8 +159,8 @@ else
 
   % Allow for non-linear color maps
   if iscell(cmap)
-    crange = cmap{1};
-    cmap = cmap{2};
+    crange = cmap{1}(:);
+    cmap = cmap{2}(:);
   else
     % TODO: This case could be faster, we don't need to use interp1
     crange = linspace(0, 1, size(cmap, 1));
@@ -183,13 +183,10 @@ else
   end
 
   % Apply colour map
-  if isa(cmap, 'double')
-    pattern = interp1(linspace(0, 1, size(cmap, 1)), cmap, pattern(:), ...
-        'nearest');
-  elseif isa(cmap, 'uint8')
-    pattern = uint8(interp1(linspace(0, 1, size(cmap, 1)), double(cmap), ...
-        pattern(:), 'nearest'));
-  end
+  pattern = interp1(crange, double(cmap), pattern(:), 'nearest');
+  
+  % Ensure output has the correct type
+  pattern = cast(pattern, 'like', cmap);
 
   % Reshape to correct size
   pattern = reshape(pattern, sz);

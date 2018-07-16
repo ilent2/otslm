@@ -88,7 +88,7 @@ if isreal(phase)
 
   % Check phase range
   if abs(1 - max(phase(:)) - min(phase(:))) < eps(1)
-    warning('Phase range should be 2*pi');
+    warning('otslm:tools:visualise:range', 'Phase range should be 2*pi');
   end
 
   % Generate combined pattern

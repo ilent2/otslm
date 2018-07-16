@@ -60,7 +60,7 @@ classdef (Abstract) Showable < handle
       amplitude = abs(pattern);
 
       % Convert the pattern
-      switch patternType
+      switch obj.patternType
         case 'amplitude'
           pattern = otslm.tools.finalize(phase, 'amplitude', amplitude, ...
               'device', 'dmd', 'rpack', 'none', 'colormap', 'gray');
@@ -75,6 +75,104 @@ classdef (Abstract) Showable < handle
 
       % Call the show method to display the function
       obj.show(pattern);
+    end
+    
+    function valueRangeSz = valueRangeSize(obj, idx)
+      % Calculate the size of the lookup table
+      valueRangeSz = zeros([1, length(obj.valueRange)]);
+      for ii = 1:length(valueRangeSz)
+        valueRangeSz(ii) = length(obj.valueRange{ii});
+      end
+      
+      if nargin == 2
+        valueRangeSz = valueRangeSz(idx);
+      end
+    end
+    
+    function num = valueRangeNumel(obj)
+      % Calculate the total number of values the device can display
+      num = prod(obj.valueRangeSize());
+    end
+    
+    function values = linearValueRange(obj, varargin)
+      % Generate an array of all possible device value combinations
+      %
+      % linearValueRange('structured', true) generates a table with
+      % as many rows as valueRange has cells.
+      %
+      % lienarValueRange() generates a table with a single column.
+      % values in each column of valueRange must be column unique.
+      
+      p = inputParser;
+      p.addParameter('structured', false);
+      p.parse(varargin{:});
+      
+      valueRangeSz = obj.valueRangeSize();
+      
+      if p.Results.structured
+        values = zeros([length(obj.valueRange), obj.valueRangeNumel()]);
+        
+        % Generate values for each column
+        for ii = 1:length(obj.valueRange)
+
+          % Get the value range column in row form
+          data = obj.valueRange{ii}(:).';
+
+          % Repeate the values for every remaining column
+          if ii+1 < length(obj.valueRange)
+            data = repmat(obj.valueRange{ii}(:).', [prod(valueRangeSz(ii+1:end)), 1]);
+          end
+
+          % Convert to column form
+          data = reshape(data, [numel(data), 1]);
+
+          % Repeate the values for all previous columns
+          data = repmat(data, [prod(valueRangeSz(1:ii-1)), 1]);
+
+          % Store the column
+          values(ii, :) = data;
+
+        end
+      else
+        values = zeros(obj.valueRangeNumel(), 1);
+        
+        % Calculate range and min values
+        minvalues = zeros(length(obj.valueRange), 1);
+        maxvalues = zeros(length(obj.valueRange), 1);
+        for ii = 1:length(obj.valueRange)
+          minvalues(ii) = min(obj.valueRange{ii});
+          maxvalues(ii) = max(obj.valueRange{ii}) - minvalues(ii);
+          
+          if size(unique(obj.valueRange{ii})) ~= size(obj.valueRange{ii})
+            error('columns of valueRange must have no repetitions');
+          end
+        end
+        
+        % Get a modified value table with normalized values
+        mvalueRange = obj.valueRange;
+        for ii = 1:length(mvalueRange)
+          mvalueRange{ii} = mvalueRange{ii} - minvalues(ii);
+        end
+        
+        for ii = 1:length(mvalueRange)
+          % Get the value range column in row form
+          data = mvalueRange{ii}(:).';
+
+          % Repeate the values for every remaining column
+          if ii+1 < length(mvalueRange)
+            data = repmat(mvalueRange{ii}(:).', [prod(valueRangeSz(ii+1:end)), 1]);
+          end
+
+          % Convert to column form
+          data = reshape(data, [numel(data), 1]);
+
+          % Repeate the values for all previous columns
+          data = repmat(data, [prod(valueRangeSz(1:ii-1)), 1]);
+
+          % Store the result
+          values(:) = values(:) + data*prod(maxvalues(1:ii-1));
+        end
+      end
     end
   end
 

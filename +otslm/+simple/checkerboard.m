@@ -67,3 +67,6 @@ low = p.Results.value(1);
 
 pattern = mod(floor(mod(xx, 2)) + floor(mod(yy, 2)), 2) .* (high-low) + low;
 
+% Ensure type of output matches low/high
+pattern = cast(pattern, 'like', p.Results.value);
+

@@ -9,9 +9,7 @@ classdef TestCamera < otslm.utils.Viewable
 % using/distributing this file.
 
   properties (SetAccess=protected)
-    size = [512, 512];
-    roisize = [512, 512];
-
+    size              % Size of the output image
     showable          % The Test* showable object we are looking at
   end
 
@@ -25,7 +23,11 @@ classdef TestCamera < otslm.utils.Viewable
           'Showable object must be TestSlm or TestDmd');
 
       obj.showable = showable;
-    end
+
+      % Calculate size of output by showing a dummy image
+      showable.showComplex(zeros(showable.size));
+      obj.size = size(showable.output);
+     end
 
     function im = view(obj)
       % View the Test* Showable object's output

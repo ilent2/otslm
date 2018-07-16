@@ -1,75 +1,44 @@
 % Demonstrate the SLM calibration stuff
 
+% Add the toolbox to the path
 addpath('../');
 
-sz = [300, 300];
+slm = otslm.utils.TestSlm();
+cam = otslm.utils.TestCamera(slm);
 
-high = linspace(0.0, 2*pi, 10);
+figure();
+plot(slm.linearValueRange(), slm.actualPhaseTable);
+% plot(linspace(0, 1, length(slm.lookupTable)), slm.lookupTable);  % TODO: Remove this?
+labels = {'actual'};
+legend(labels);
+title('Comparison of different calibration methods');
+xlabel('SLM pixel value');
+ylabel('Phase offset');
+hold on;
 
-%% Test using a step function
+%% Use checkerboard pattern and zeroth order
 
-testPattern(high, @(h) otslm.simple.step(sz, 'value', [0.0, h]));
-  
-%% Test using two pinhole regions
+% Modify the camera to look at the zeroth order
+cam.crop(round([cam.size/2, cam.size/4]));
 
-testPattern(high, @(h) pinholePattern(sz, h));
+lookuptable_checker = otslm.utils.calibrate(slm, cam, 'method', 'checker');
+plot(lookuptable_checker{2}, lookuptable_checker{1});
+% plot(linspace(0, 1, length(lookuptable_checker{1})), lookuptable_checker{1});  % TODO: Remove this?
+labels{end+1} = 'checker';
+legend(labels);
 
-%% Function to run the test
+%% Use Michaelson interfereometer and intensity measurement
+lookuptable_michaelson = otslm.utils.calibrate(slm, cam, 'method', 'michaelson');
 
-function testPattern(high, pattern_method)
+%% Use sloped michaelson interferometer and interference fringes
+lookuptable_smichaelson = otslm.utils.calibrate(slm, cam, 'method', 'smichaelson');
 
-  pt = 100;
-  padding = 800;
+%% Use step function and dark fringe measurement
+lookuptable_step = otslm.utils.calibrate(slm, cam, 'method', 'step');
 
-  for ii = 1:length(high)
+%% Use pinholes and interferences fringes
+lookuptable_pinholes = otslm.utils.calibrate(slm, cam, 'method', 'pinholes');
 
-    figure(1);
-    subplot(2, 5, ii);
-    pattern = pattern_method(high(ii));
-    imagesc(pattern);
-    caxis([0.0, 2*pi]);
+%% Use optimisation of linear grating diffraction efficiency
+lookuptable_linear = otslm.utils.calibrate(slm, cam, 'method', 'linear');
 
-    figure(2);
-    subplot(2, 5, ii);
-    farfield = otslm.tools.visualise(pattern, 'method', 'fft', ...
-      'padding', padding);
-    farfieldpt = farfield((-pt:pt)+ceil(size(farfield, 1)/2), ...
-        (-pt:pt)+ceil(size(farfield, 2)/2));
-    imagesc(abs(farfieldpt));
-
-    figure(3);
-    subplot(2, 5, ii);
-    slice = farfieldpt(ceil(size(farfieldpt, 1)/2), :);
-    plot(1:length(slice), abs(slice));
-  end
-
-end
-
-%% Other functions
-
-function pattern = pinholePattern(sz, h)
-
-  pattern = otslm.simple.step(sz, 'value', [0.0, h]);
-  
-  r = 10;
-  o = 20;
-  c1 = [ceil(sz(2)/2)-o, ceil(sz(1)/2)];
-  c2 = [ceil(sz(2)/2)+o, ceil(sz(1)/2)];
-  
-  mask_pinhole1 = otslm.simple.aperture(sz, r, 'centre', c1);
-  mask_pinhole2 = otslm.simple.aperture(sz, r, 'centre', c2);
-  
-  mask = mask_pinhole1 | mask_pinhole2;
-  
-  % Uniform random noise
-%   pattern(~mask) = 2*pi*rand(size(pattern(~mask)));
-  
-  % Gaussian centred around zero (most likely)
-%   scale = 4.0;
-%   pattern(~mask) = min(2*pi, scale*abs(randn(size(pattern(~mask)))));
-
-  % Checkerboard
-  checker = otslm.simple.checkerboard(sz);
-  pattern(~mask) = checker(~mask)*2*pi;
-
-end
