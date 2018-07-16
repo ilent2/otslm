@@ -63,9 +63,9 @@ Point operator+ (const Point& a, const Point& b)
 /** An object to wrap a MEX complex field plane. */
 class Field
 {
-  typedef std::complex<double> complex;
-
 public:
+
+  typedef std::complex<double> complex;
 
   /** Construct a new field wrapper object. */
   Field(unsigned m, unsigned n, complex* _data, double _dx, double _dy)
@@ -201,8 +201,10 @@ void mexFunction(int nlhs, mxArray* plhs[],
   if (MAX(mDx, nDx) == 2) dy = dxdy[1];
 
   // Wrap field objects
-  Field input(mUin, nUin, mxGetComplexDoubles(U_IN), dx, dy);
-  Field output(mUout, nUout, mxGetComplexDoubles(U_OUT), dx*scale, dy*scale);
+  Field input(mUin, nUin,
+      (Field::complex*) mxGetComplexDoubles(U_IN), dx, dy);
+  Field output(mUout, nUout,
+      (Field::complex*) mxGetComplexDoubles(U_OUT), dx*scale, dy*scale);
 
   double distance = *mxGetPr(DISTANCE_IN);
 

@@ -47,6 +47,7 @@ p.addParameter('incident', []);
 p.addParameter('z', 0.0);
 p.addParameter('padding', 100);
 p.addParameter('methoddata', []);
+p.addParameter('focallength', 1000);  % [lambda]
 p.addParameter('axis', 'z');
 p.parse(varargin{:});
 
@@ -108,9 +109,10 @@ switch p.Results.method
   case 'rs'
     [varargout{1:nargout}] = rs_method(U, p);
   case 'rslens'
-    focal_length = 1000;  % Focal length of 1000 wavelengths
-    Uatlens = otslm.tools.visualise(U, 'z', focal_length, 'method', 'rs');
-    lensphase = otslm.simple.spherical(focal_length, 'background', NaN);
+    wavelength_per_pixel = 20;
+    Uatlens = otslm.tools.visualise(U, ...
+        'z', p.Results.focallength, 'method', 'rs');
+    lensphase = otslm.simple.spherical(p.Results.focallength./wavelength_per_pixel, 'background', NaN);
     Uafterlens = Uatlens .* exp(1i*2*pi*lensphase);
     varargout{1} = otslm.tools.visualise(Uafterlens, ...
         'z', p.Results.z, 'method', 'rs');

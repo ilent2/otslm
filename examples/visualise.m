@@ -4,7 +4,7 @@
 addpath('../');
 
 % Generate pattern to simulate
-sz = [256, 256];
+sz = [512, 512];
 pattern = otslm.simple.linear(sz, 10, 'angle_deg', 45);
 pattern = otslm.tools.finalize(pattern);
 
@@ -34,8 +34,12 @@ axis image;
 
 z_offset = 100;
 
-im1 = otslm.tools.visualise(pattern, 'method', 'rslens', ...
-    'focallength', 1000, 'z', 1000);
+tic
+imtest = otslm.tools.visualise(pattern, 'method', 'rs', 'z', 1000);
+runTime = toc();
+
+% im1 = otslm.tools.visualise(pattern, 'method', 'rslens', ...
+%     'focallength', 1000, 'z', 1000);
 % im2 = otslm.tools.visualise(pattern, 'method', 'rslens', 'z', z_offset);
 
 subplot(3, 2, 3);
