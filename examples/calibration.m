@@ -8,7 +8,7 @@ cam = otslm.utils.TestCamera(slm);
 
 figure();
 plot(slm.linearValueRange(), slm.actualPhaseTable);
-% plot(linspace(0, 1, length(slm.lookupTable)), slm.lookupTable);  % TODO: Remove this?
+ax = gca;
 labels = {'actual'};
 legend(labels);
 title('Comparison of different calibration methods');
@@ -22,8 +22,7 @@ hold on;
 cam.crop(round([cam.size/2, cam.size/4]));
 
 lookuptable_checker = otslm.utils.calibrate(slm, cam, 'method', 'checker');
-plot(lookuptable_checker{2}, lookuptable_checker{1});
-% plot(linspace(0, 1, length(lookuptable_checker{1})), lookuptable_checker{1});  % TODO: Remove this?
+plot(ax, lookuptable_checker{2}, lookuptable_checker{1});
 labels{end+1} = 'checker';
 legend(labels);
 
@@ -40,5 +39,12 @@ lookuptable_step = otslm.utils.calibrate(slm, cam, 'method', 'step');
 lookuptable_pinholes = otslm.utils.calibrate(slm, cam, 'method', 'pinholes');
 
 %% Use optimisation of linear grating diffraction efficiency
+
+% More ROI to first order
+cam.crop(round([cam.size(1), cam.size(2)/4, 0, cam.size(2)/2 + 10]));
+
 lookuptable_linear = otslm.utils.calibrate(slm, cam, 'method', 'linear');
+plot(ax, lookuptable_linear{2}, lookuptable_linear{1});
+labels{end+1} = 'linear';
+legend(labels);
 

@@ -73,7 +73,7 @@ switch p.Results.method
   case 'pinholes'
     lookupTable = method_pinholes(p.Results.tablerange, p.Results.methodargs);
   case 'linear'
-    lookupTable = method_linear(p.Results.tablerange, p.Results.methodargs);
+    lookupTable = method_linear(slm, cam, p.Results.methodargs{:});
   otherwise
     error('Unknown method paremter given');
 end
@@ -318,28 +318,80 @@ function lookupTable = method_linear(slm, cam, varargin)
 
   % TODO: Different optimisation methods (simulated annealing?)
 
+  % Get the full range of values we can use
+  fullTable = slm.linearValueRange('structured', true);
+  
   % Assume the valueTable is in sequential order (might not be)
-  % and try to fit a line to it
-  % TODO: Allow the user to pick an initial guess/range
-  phase = linspace(0, 1, numsteps);
+  % and use this as an initial guess for the table
+  % TODO: Allow the user to pick an initial guess/range or other method (rand)
+  % TODO: Allow user to pick number of steps in output table
+  numsteps = 100;
+  valueTable = round(linspace(1, length(fullTable), numsteps));
+  
+  % Guess the phase corresponding to this valueTable
+  % The target is 2*pi, so we use 2*pi
+  phase = linspace(0, 2*pi, length(valueTable));
 
-  % TODO: Generate linear grating with this phase mapping
-  % TODO: Evaluate the initial guess and use as baseline
+  % Generate linear grating with this phase mapping
+  grating = otslm.simple.linear(slm.size, 10);
+  
+  % Evaluate the initial guess and use as baseline
+  rawpattern = otslm.tools.finalize(grating, ...
+      'colormap', {phase, fullTable(:, valueTable)});
+  slm.showRaw(rawpattern);
+  im = cam.viewTarget();
+  goodness = zeros(10000, 1);
+  goodness(1) = sum(im(:));
+  bestgoodness = goodness(1);
+  
+  scale = 1.0;
+  hf = figure();
+  h = axes(hf);
+  plot(h, 1, goodness(1));
+  xlabel('Attempts');
+  ylabel('Goodness');
+  ii = 1;
 
-  error('Not yet implemented');
+  % Loop for some number of trials
+  % TODO: While not converged option
+  while ishandle(hf) && ii < length(goodness)
+    
+    % Increment ii
+    ii = ii + 1;
 
-  % While not converged
-  while not_converged
+    % Randomly pick a point to shift (and apply periodic boundary condition)
+    newValueTable = valueTable + round(scale*randn(size(valueTable)));
+    newValueTable(newValueTable < 1) = mod(newValueTable(newValueTable < 1), ...
+        length(fullTable)) + length(fullTable);
+    newValueTable(newValueTable > length(fullTable)) = ...
+        1+mod(newValueTable(newValueTable > length(fullTable))-1, length(fullTable));
 
-    % Randomly pick a point to shift
-
-    % Check the shift
+    % Check the shift (display on slm and acquire image)
+    rawpattern = otslm.tools.finalize(grating, ...
+      'colormap', {phase, fullTable(:, newValueTable)});
+    slm.showRaw(rawpattern);
+    im = cam.viewTarget();
+    goodness(ii) = sum(im(:));
 
     % If the shift improved the result, keep it
+    if goodness(ii) > bestgoodness
+      bestgoodness = goodness(ii);
+      valueTable = newValueTable;
+    end
+    
+    % Plot the progress
+    % TODO: Add a stop button to the figure instead of close figure response
+    % TODO: Add an option to omit the figure
+    plot(h, 1:ii, goodness(1:ii));
+    drawnow;
 
   end
+  
+  % TODO: Add an option to minimise voltage difference (value distance)
+  % TODO: Parametric curve optimisation (smoother for continuous devices)
 
   % Package the result
+  lookupTable = {phase, fullTable(:, newValueTable)};
 
 end
 

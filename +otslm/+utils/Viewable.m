@@ -37,8 +37,8 @@ classdef (Abstract) Viewable < handle
       im = obj.view();
 
       % Crop the image to the ROI
-      im = im(obj.roioffset(1):obj.roioffset(1)+obj.roisize(1), ...
-          obj.roioffset(2):obj.roioffset(2)+obj.roisize(2));
+      im = im(1+obj.roioffset(1):obj.roioffset(1)+obj.roisize(1), ...
+          1+obj.roioffset(2):obj.roioffset(2)+obj.roisize(2));
     end
 
     function crop(obj, roi)
