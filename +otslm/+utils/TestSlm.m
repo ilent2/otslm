@@ -1,5 +1,5 @@
 classdef TestSlm < otslm.utils.Showable
-% TestSlm non-physical slm-like device for testing code
+% TESTSLM non-physical slm-like device for testing code
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

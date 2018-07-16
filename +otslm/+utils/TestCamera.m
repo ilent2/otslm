@@ -1,5 +1,5 @@
 classdef TestCamera < otslm.utils.Viewable
-% TestCamera non-physical camera object for viewing Test* Showable objects
+% TESTCAMERA non-physical camera object for viewing Test* Showable objects
 %
 % TODO: This functionality should be combined with TestDmd and TestSlm,
 %   i.e. these device should inherit from Viewable too
