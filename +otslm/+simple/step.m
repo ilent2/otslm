@@ -59,3 +59,6 @@ high = p.Results.value(2);
 
 pattern = pattern * (high - low) + low;
 
+% Ensure type of output matches low/high
+pattern = cast(pattern, 'like', p.Results.value);
+

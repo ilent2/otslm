@@ -38,10 +38,10 @@ function lookupTable = calibrate(slm, cam, varargin)
 %   'checker'         Minimise the zero-th order by changing the phase
 %       of the values in a checkerboard.
 %
-%   'michaelson'      Michaelson interferometer image of SLM surface.
+%   'michelson'      Michelson interferometer image of SLM surface.
 %       Change in intensity of image determines phase change.
 %
-%   'smichaelson'     Sloped Michaelson interferometer with fringes.
+%   'smichelson'     Sloped Michelson interferometer with fringes.
 %       Changes half the SLM phase which shifts the fringes on half
 %       of the device.
 %
@@ -64,10 +64,10 @@ p.parse(varargin{:});
 switch p.Results.method
   case 'checker'
     lookupTable = method_checker(slm, cam, p.Results.methodargs{:});
-  case 'michaelson'
-    lookupTable = method_michaelson(slm, cam, p.Results.methodargs{:});
-  case 'smichaelson'
-    lookupTable = method_smichaelson(slm, cam, p.Results.methodargs{:});
+  case 'michelson'
+    lookupTable = method_michelson(slm, cam, p.Results.methodargs{:});
+  case 'smichelson'
+    lookupTable = method_smichelson(slm, cam, p.Results.methodargs{:});
   case 'step'
     lookupTable = method_step(slm, cam, p.Results.methodargs{:});
   case 'pinholes'
@@ -138,7 +138,7 @@ if ~ischar(p.Results.tablerange)
           relCoords(relCoords > valueRangeSz(ii)/2) = ...
               relCoords(relCoords > valueRangeSz(ii)/2) - valueRangeSz(ii);
           relCoords(relCoords < -valueRangeSz(ii)/2) = ...
-              relCoords(relCoords > valueRangeSz(ii)/2) + valueRangeSz(ii);
+              relCoords(relCoords < -valueRangeSz(ii)/2) + valueRangeSz(ii);
 
           % Calculate distance^2
           distances = distances + relCoords.^2;
@@ -257,56 +257,119 @@ function lookupTable = method_checker(slm, cam, varargin)
   % Convert from intensity to phase
   phase = sqrt(phase1./max(phase1));
   phase(~phase2small) = -phase(~phase2small);
-  phase = unwrap(2*acos(phase));
+  phase = unwrap(2*acos(-phase));
 
   % Package into lookupTable
   lookupTable = {phase, valueTable};
 
 end
 
-function lookupTable = method_michaelson(slm, cam, varargin)
+function lookupTable = method_michelson(slm, cam, varargin)
 
   % Parse method arguments
   p = inputParser;
   p.parse(varargin{:});
 
-  % TODO: michaelson interferometer method
-  error('Not yet implemented');
+  % Generate full value table
+  valueTable = slm.linearValueRange('structured', true);
+  
+  % TODO: Calibration for each pixel
+  
+  intensity = zeros(size(valueTable, 2), 1);
+  
+  for ii = 1:size(valueTable, 2)
+    
+    % Generate pattern with same value everywhere
+    rawpattern = generate_raw_pattern(slm, ones(slm.size), ...
+        valueTable(:, ii), valueTable(:, ii));
+
+    % Show pattern and get image
+    slm.showRaw(rawpattern);
+    im = cam.viewTarget();
+
+    % Calculate intensity in target region
+    intensity(ii) = sum(im(:));
+    
+  end
+  
+  % Calculate phase from intensity
+  intensity = intensity - min(intensity);
+  intensity = intensity ./ max(intensity);
+  phase = acos(2*intensity - 1);
+  
+  % Guess the phase sign, would be better to collect multiple measurements
+  % with different path lengths
+  deriv = [0; diff(phase)];
+  phase(deriv < 0) = 2*pi - phase(deriv < 0);
+  
+  phase = unwrap(phase);
+  phase = phase - min(phase);
+
+  % Package into lookupTable
+  lookupTable = {phase, valueTable};
 
 end
 
-function lookupTable = method_smichaelson(slm, cam, varargin)
+function lookupTable = method_smichelson(slm, cam, varargin)
 
   % Parse method arguments
   p = inputParser;
+  p.addParameter('slice_index', round(0.1*cam.roisize(2)));
   p.parse(varargin{:});
 
   % Generate pattern we will use
   % Only mask half the device so we have a reference
-  mask = logical(otslm.simple.step(slm.size, 'value', [0, 1]));
+  mask = otslm.simple.step(slm.size, 'value', [false, true], 'angle_deg', 90);
 
   % Generate full value table
   valueTable = slm.linearValueRange('structured', true);
+  
+  % The slice index to use
+  sidx = p.Results.slice_index;
 
   % Measure phase of each value
-  for ii = 1:size(valueTable, 1)
+  phase = zeros(size(valueTable, 2), 1);
+  for ii = 1:size(valueTable, 2)
 
     % Generate raw pattern
-    rawpattern = generate_raw_pattern(slm, pattern, ...
-        valueTable(1, :), valueTable(ii, :));
+    rawpattern = generate_raw_pattern(slm, mask, ...
+        valueTable(:, 1), valueTable(:, ii));
 
     % Display on slm and acquire image
     slm.showRaw(rawpattern);
     im = cam.viewTarget();
 
-    % TODO: Extract two slices for reference and offset
-
-    % TODO: Extract phase from each region and calculate difference
-    error('Not yet implemented');
-
+    % Extract two slices for reference and offset
+    csliceref = sum(im(1:round(end/2), :), 1);
+    cslicephs = sum(im(round(end/2)+1:end, :), 1);
+    
+    % Calculate frequencies of two slices
+    fftref = fft(csliceref);
+    fftphs = fft(cslicephs);
+    
+    % Extract phase from reference
+    phase(ii) = angle(fftphs(sidx)) - angle(fftref(sidx));
+    
+    % Display a plot to show the slice we are using
+    if ii == 1
+      hf = figure();
+      h = axes(hf);
+      plot(h, abs(fftref));
+      title('Frequency spectrum for sloped michelson method');
+      hold(h, 'on');
+      plot(h, abs(fftphs));
+      V = axis(h);
+      line([sidx sidx], V(3:4));
+      hold(h, 'off');
+      legend(h, {'reference', 'sample', 'frequency'});
+    end
   end
-
-  % TODO: Package result
+  
+  % Unwrap and normalize phase
+  phase = unwrap(-phase);
+  phase = phase - min(phase);
+  
+  lookupTable = {phase, valueTable};
 
 end
 
@@ -314,6 +377,7 @@ function lookupTable = method_linear(slm, cam, varargin)
 
   % Parse method arguments
   p = inputParser;
+  p.addParameter('grating', 'sinusoid');
   p.parse(varargin{:});
 
   % TODO: Different optimisation methods (simulated annealing?)
@@ -333,7 +397,14 @@ function lookupTable = method_linear(slm, cam, varargin)
   phase = linspace(0, 2*pi, length(valueTable));
 
   % Generate linear grating with this phase mapping
-  grating = otslm.simple.linear(slm.size, 10);
+  switch p.Results.grating
+    case 'linear'
+      grating = otslm.simple.linear(slm.size, 10);
+    case 'sinusoid'
+      grating = otslm.simple.sinusoid(slm.size, 10);
+    otherwise
+      error('Unknown grating type');
+  end
   
   % Evaluate the initial guess and use as baseline
   rawpattern = otslm.tools.finalize(grating, ...
@@ -349,7 +420,8 @@ function lookupTable = method_linear(slm, cam, varargin)
   h = axes(hf);
   plot(h, 1, goodness(1));
   xlabel('Attempts');
-  ylabel('Goodness');
+  ylabel('Intensity');
+  title('Intensity in first order (close to stop)');
   ii = 1;
 
   % Loop for some number of trials
@@ -447,6 +519,7 @@ function lookupTable = method_pinholes(slm, cam, varargin)
       hf = figure();
       h = axes(hf);
       plot(h, abs(fftcslice));
+      title('Frequency spectrum for pinhole method');
       hold(h, 'on');
       plot(h, sidx, abs(fftcslice(sidx)), 'ro');
       hold(h, 'off');

@@ -1,4 +1,4 @@
-classdef TestDmd < otslm.utils.Showable
+classdef TestDmd < otslm.utils.TestShowable
 % TESTDMD non-physical dmd-like device for testing code
 %
 % Copyright 2018 Isaac Lenton
@@ -7,7 +7,6 @@ classdef TestDmd < otslm.utils.Showable
 
   properties (SetAccess=protected)
     pattern         % Pattern currently displayed on the device
-    output          % Resulting pattern in far-field
 
     valueRange = [ 0, 1 ].';
     lookupTable = [ 0, 1 ].';
@@ -17,16 +16,12 @@ classdef TestDmd < otslm.utils.Showable
 
   methods
     function showRaw(obj, pattern)
-      % Simulate the pattern being shown, store result in obj.output
-      obj.pattern = pattern;
-
       % Pack pattern with 45 degree rotation
-      pattern = otslm.tools.finalize(pattern, 'rpack', '45deg', ...
+      obj.pattern = otslm.tools.finalize(pattern, 'rpack', '45deg', ...
           'colormap', 'gray');
 
-      % Simulate output
-      obj.output = abs(otslm.tools.visualise(zeros(size(pattern)), ...
-          'amplitude', pattern, 'method', 'fft')).^2;
+      % Make the pattern complex
+      obj.pattern = complex(obj.pattern);
     end
   end
 

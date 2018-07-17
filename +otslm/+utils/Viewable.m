@@ -28,6 +28,7 @@ classdef (Abstract) Viewable < handle
 
     function obj = Viewable()
       obj.roisize = obj.size;
+      obj.roioffset = [0, 0];
     end
 
     function im = viewTarget(obj)
@@ -35,6 +36,15 @@ classdef (Abstract) Viewable < handle
 
       % Acquire the image in the normal way
       im = obj.view();
+      
+      % Handle default roi properties
+      if isempty(obj.roisize)
+        obj.roisize = obj.size;
+      end
+      
+      if isempty(obj.roioffset)
+        obj.roioffset = [0,0];
+      end
 
       % Crop the image to the ROI
       im = im(1+obj.roioffset(1):obj.roioffset(1)+obj.roisize(1), ...

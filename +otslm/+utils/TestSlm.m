@@ -1,4 +1,4 @@
-classdef TestSlm < otslm.utils.Showable
+classdef TestSlm < otslm.utils.TestShowable
 % TESTSLM non-physical slm-like device for testing code
 %
 % Properties:
@@ -18,7 +18,6 @@ classdef TestSlm < otslm.utils.Showable
 
   properties (SetAccess=protected)
     pattern       % Pattern currently displayed on the device
-    output        % Resulting pattern in far-field
 
     valueRange = {linspace(0, 1, 256).'};
     lookupTable = linspace(0, 1, 256).';
@@ -30,21 +29,13 @@ classdef TestSlm < otslm.utils.Showable
   methods
     function showRaw(obj, pattern)
       % Simulate the pattern being shown, store result in obj.output
-      obj.pattern = pattern;
-      
+
       % Apply inverse lookupTable
-      pattern = otslm.tools.finalize(pattern, ...
+      obj.pattern = otslm.tools.finalize(pattern, ...
           'colormap', {obj.lookupTable, obj.actualPhaseTable});
-      
-      % Disable range warning (SLM might have larger range)
-      oldstate = warning('query', 'otslm:tools:visualise:range');
-      warning('off', 'otslm:tools:visualise:range');
-      
-      obj.output = abs(otslm.tools.visualise(pattern, ...
-          'method', 'fft', 'padding', 200)).^2;
-        
-      % Restore original range warning
-      warning(oldstate);
+
+      % Convert pattern to complex amplitude
+      obj.pattern = complex(exp(1i*obj.pattern));
     end
   end
 
