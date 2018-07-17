@@ -378,6 +378,8 @@ function lookupTable = method_linear(slm, cam, varargin)
   % Parse method arguments
   p = inputParser;
   p.addParameter('grating', 'sinusoid');
+  p.addParameter('max_iterations', 10000);
+  p.addParameter('show_progress', true);
   p.parse(varargin{:});
 
   % TODO: Different optimisation methods (simulated annealing?)
@@ -411,22 +413,34 @@ function lookupTable = method_linear(slm, cam, varargin)
       'colormap', {phase, fullTable(:, valueTable)});
   slm.showRaw(rawpattern);
   im = cam.viewTarget();
-  goodness = zeros(10000, 1);
-  goodness(1) = sum(im(:));
+  goodness = sum(im(:));
   bestgoodness = goodness(1);
   
+  % Create a figure to track the progress
+  if p.Results.show_progress
+    hf = figure();
+    h = axes(hf);
+    plt = plot(h, 1, goodness(1));
+    xlabel(h, 'Attempts');
+    ylabel(h, 'Intensity');
+    title(h, 'Intensity in first order');
+    btn = uicontrol(hf, 'Style', 'pushbutton', 'String', 'Stop',...
+        'Position', [20 20 50 20]);  
+    btn.Enable = 'Inactive';
+    btn.UserData = true;
+    btn.ButtonDownFcn = @(src, event) set(btn, 'UserData', false);
+    drawnow;
+    
+    figure_active = @() ishandle(hf) && btn.UserData;
+  else
+    figure_active = @() true;
+  end
+  
   scale = 1.0;
-  hf = figure();
-  h = axes(hf);
-  plot(h, 1, goodness(1));
-  xlabel('Attempts');
-  ylabel('Intensity');
-  title('Intensity in first order (close to stop)');
   ii = 1;
 
   % Loop for some number of trials
-  % TODO: While not converged option
-  while ishandle(hf) && ii < length(goodness)
+  while figure_active() && ii < p.Results.max_iterations
     
     % Increment ii
     ii = ii + 1;
@@ -452,10 +466,11 @@ function lookupTable = method_linear(slm, cam, varargin)
     end
     
     % Plot the progress
-    % TODO: Add a stop button to the figure instead of close figure response
-    % TODO: Add an option to omit the figure
-    plot(h, 1:ii, goodness(1:ii));
-    drawnow;
+    if p.Results.show_progress
+      plt.XData = 1:ii;
+      plt.YData = goodness;
+      drawnow;
+    end
 
   end
   
