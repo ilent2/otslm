@@ -11,6 +11,8 @@ function lookupTable = calibrate(slm, cam, varargin)
 % but produces a single column lookup table with res evenly spaced
 % elements in the phase range.
 %
+% TODO: Should this be a subpackage otslm.utils.calibration? SRP?
+%
 % Optional named parameters:
 %
 %   'method'      method    Method to use for calibration.
@@ -63,15 +65,13 @@ switch p.Results.method
   case 'checker'
     lookupTable = method_checker(slm, cam, p.Results.methodargs{:});
   case 'michaelson'
-    lookupTable = method_michaelson(p.Results.tablerange, ...
-        p.Results.methodargs);
+    lookupTable = method_michaelson(slm, cam, p.Results.methodargs{:});
   case 'smichaelson'
-    lookupTable = method_smichaelson(p.Results.tablerange, ...
-        p.Results.methodargs);
+    lookupTable = method_smichaelson(slm, cam, p.Results.methodargs{:});
   case 'step'
-    lookupTable = method_step(p.Results.tablerange, p.Results.methodargs);
+    lookupTable = method_step(slm, cam, p.Results.methodargs{:});
   case 'pinholes'
-    lookupTable = method_pinholes(p.Results.tablerange, p.Results.methodargs);
+    lookupTable = method_pinholes(slm, cam, p.Results.methodargs{:});
   case 'linear'
     lookupTable = method_linear(slm, cam, p.Results.methodargs{:});
   otherwise
@@ -402,6 +402,10 @@ function lookupTable = method_pinholes(slm, cam, varargin)
   p.parse(varargin{:});
 
   % Design a pattern that minimises intensity in target
+  % This adds noise to the output, but can still produce reasonable results
+  % TODO: Allow the user to supply a base pattern or use checkerboard
+  % TODO: Average over multiple background patterns
+  % TODO: Optimisation to minimise power in zeroth order
   basepattern = generate_random_pattern(slm);
 
   % Generate mask for pinhole regions
@@ -414,24 +418,47 @@ function lookupTable = method_pinholes(slm, cam, varargin)
 
   % Generate full value table
   valueTable = slm.linearValueRange('structured', true);
+  
+  % The slice index to use
+  sidx = 22;
 
   % Measure phase of each value
-  for ii = 1:size(valueTable, 1)
+  phase = zeros(size(valueTable, 2), 1);
+  for ii = 1:size(valueTable, 2)
 
     % Generate raw pattern
     rawpattern = basepattern;
     rawpattern = add_masked_region(slm, rawpattern, ...
-        mask_pinhole1, valueTable(1, :));
+        mask_pinhole1, valueTable(:, 1));
     rawpattern = add_masked_region(slm, rawpattern, ...
-        mask_pinhole2, valueTable(ii, :));
+        mask_pinhole2, valueTable(:, ii));
 
     % Display on slm and acquire image
     slm.showRaw(rawpattern);
     im = cam.viewTarget();
 
-    % TODO: Extract the fringes from the image
-    error('Not yet implemented');
+    % Extract the fringes from the image
+    cslice = sum(im, 1);
+    fftcslice = fft(cslice - 0.5.*max(cslice(:))); % zeroth order reduced
+    phase(ii) = angle(fftcslice(sidx));
+    
+    % Display a plot to show the slice we are using
+    if ii == 1
+      hf = figure();
+      h = axes(hf);
+      plot(h, abs(fftcslice));
+      hold(h, 'on');
+      plot(h, sidx, abs(fftcslice(sidx)), 'ro');
+      hold(h, 'off');
+      legend(h, {'FFT', 'Phase'});
+    end
   end
+  
+  % Unwrap and normalize phase
+  phase = unwrap(-phase);
+  phase = phase - min(phase);
+  
+  lookupTable = {phase, valueTable};
 
 end
 
@@ -446,24 +473,33 @@ function lookupTable = method_step(slm, cam, varargin)
 
   % Generate full value table
   valueTable = slm.linearValueRange('structured', true);
-
+  
+  sidx = round(0.9*cam.roisize(2)/2);
+  
   % Do full range test
-  for ii = 2:size(valueTable, 1)
+  phase = zeros(size(valueTable, 2), 1);
+  for ii = 2:size(valueTable, 2)
 
     % Generate raw pattern
     rawpattern = generate_raw_pattern(slm, pattern, ...
-        valueTable(1, :), valueTable(ii, :));
+        valueTable(:, 1), valueTable(:, ii));
 
-    % Display on slm
+    % Display on slm and acquire image
     slm.showRaw(rawpattern);
-
-    % Get image of target
     im = cam.viewTarget();
-
-    % TODO: Extract the dark frindge from the image
-    error('Not yet implemented');
+    
+    % Extract the fringe
+    cslice = sum(im, 1);
+    fftcslice = fft(cslice);
+    phase(ii) = angle(fftcslice(sidx));
 
   end
+  
+  % Unwrap and normalize phase
+  phase = unwrap(-phase);
+  phase = phase - min(phase);
+  
+  lookupTable = {phase, valueTable};
 
 end
 
@@ -480,4 +516,33 @@ function rawpattern = generate_raw_pattern(slm, mask, base, value)
     rawpattern(:, :, jj) = layer;
   end
 
+end
+
+function rawpattern = add_masked_region(slm, base, mask, value)
+% Add masked region to raw image
+
+  rawpattern = base;
+
+  for jj = 1:length(value)
+    layer = rawpattern(:, :, jj);
+    layer(mask) = repmat(value(jj), size(layer(mask)));
+    rawpattern(:, :, jj) = layer;
+  end
+
+end
+
+function rawpattern = generate_random_pattern(slm)
+
+  % Generate random linear indexes
+  vals = randi(slm.valueRangeNumel(), slm.size);
+  
+  % Get lookup table for linear indexes
+  valueTable = slm.linearValueRange('structured', true);
+  
+  % Generate raw pattern
+  rawpattern = zeros([slm.size, length(slm.valueRange)]);
+  for ii = 1:length(slm.valueRange)
+    layer = valueTable(:, vals(:));
+    rawpattern(:, :, ii) = reshape(layer, slm.size);
+  end
 end
