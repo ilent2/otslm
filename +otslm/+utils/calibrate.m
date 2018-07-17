@@ -121,7 +121,7 @@ if ~ischar(p.Results.tablerange)
 
       sortedPhaseIdx = [idx];
       sortedPhase = [0.0];
-      candidates = phaseNd > sortedPhase(end) & phaseNd < p.Results.tablerange;
+      candidates = phaseNd > sortedPhase(end) & phaseNd <= p.Results.tablerange;
       lastCoord = ind2sub(size(phaseNd), idx);
       while any(candidates)
 
@@ -152,7 +152,7 @@ if ~ischar(p.Results.tablerange)
         sortedPhase(end+1) = phaseNd(idx);
 
         % Calculate new candidates
-        candidates = phaseNd > sortedPhase(end) & phaseNd < p.Results.tablerange;
+        candidates = phaseNd > sortedPhase(end) & phaseNd <= p.Results.tablerange;
       end
 
       % Retrieve corresponding values
@@ -374,46 +374,105 @@ function lookupTable = method_smichelson(slm, cam, varargin)
 end
 
 function lookupTable = method_linear(slm, cam, varargin)
+  
+  % TODO: Add an option to minimise voltage difference (value distance)
 
   % Parse method arguments
   p = inputParser;
   p.addParameter('grating', 'sinusoid');
   p.addParameter('max_iterations', 10000);
   p.addParameter('show_progress', true);
+  p.addParameter('method', 'polynomial');
+  p.addParameter('dof', 10);
+  p.addParameter('spacing', 10);
+  p.addParameter('initial_cond', 'rand');
+  p.addParameter('location', []);
   p.parse(varargin{:});
-
-  % TODO: Different optimisation methods (simulated annealing?)
 
   % Get the full range of values we can use
   fullTable = slm.linearValueRange('structured', true);
-  
-  % Assume the valueTable is in sequential order (might not be)
-  % and use this as an initial guess for the table
-  % TODO: Allow the user to pick an initial guess/range or other method (rand)
-  % TODO: Allow user to pick number of steps in output table
-  numsteps = 100;
-  valueTable = round(linspace(1, length(fullTable), numsteps));
-  
-  % Guess the phase corresponding to this valueTable
-  % The target is 2*pi, so we use 2*pi
-  phase = linspace(0, 2*pi, length(valueTable));
 
   % Generate linear grating with this phase mapping
   switch p.Results.grating
     case 'linear'
-      grating = otslm.simple.linear(slm.size, 10);
+      grating = otslm.simple.linear(slm.size, p.Results.spacing);
+      patterndof = p.Results.spacing;
     case 'sinusoid'
-      grating = otslm.simple.sinusoid(slm.size, 10);
+      grating = otslm.simple.sinusoid(slm.size, p.Results.spacing, 'type', '1d');
+      patterndof = p.Results.spacing/2;
     otherwise
       error('Unknown grating type');
   end
   
-  % Evaluate the initial guess and use as baseline
-  rawpattern = otslm.tools.finalize(grating, ...
-      'colormap', {phase, fullTable(:, valueTable)});
-  slm.showRaw(rawpattern);
-  im = cam.viewTarget();
-  goodness = sum(im(:));
+  % Check degrees of freedom
+  if p.Results.dof > patterndof
+    warning('otslm:utils:calibrate:linear:methoddof', ...
+      'More degrees of freedom than grating colour levels');
+  end
+  
+  % Generate normalized table for phase
+  nphase = linspace(0, 1, p.Results.dof);
+  
+  % Generate initial guess and normalized lookup table
+  switch p.Results.method
+    case 'polynomial'
+      
+      % Check for polynomial overfitting
+      if p.Results.dof > patterndof/2
+        warning('otslm:utils:calibrate:linear:methoddofpoly', ...
+          'Higher order polynomail may lead to overfitting');
+      end
+      
+      if ischar(p.Results.initial_cond)
+        switch p.Results.initial_cond
+          case 'rand'
+            coeffs = randn(p.Results.dof, 1);
+          case 'linear'
+            coeffs = zeros(p.Results.dof, 1);
+            if p.Results.dof >= 2
+              coeffs(2) = 1.0;
+            end
+          otherwise
+            error('Unknown initial condition parameter value');
+        end
+      else
+        % TODO: We could also do a polyfit if the initial condition
+        % is the initial phase guess instead?
+        coeffs = p.Results.initial_cond;
+        assert(length(coeffs) == p.Results.dof, ...
+            'not enough initial conditions');
+      end
+      
+      nvalueTable = polyval(coeffs, nphase);
+      stepsize = 0.01;
+      has_derivative = false;
+      
+    case 'stepped'
+      
+      if ischar(p.Results.initial_cond)
+        switch p.Results.initial_cond
+          case 'rand'
+            nvalueTable = rand(size(nphase));
+          case 'linear'
+            nvalueTable = nphase;
+          otherwise
+            error('Unknown initial condition parameter value');
+        end
+      else
+        nvalueTable = p.Results.initial_cond;
+        assert(length(nvalueTable) == p.Results.dof, ...
+            'not enough initial conditions');
+      end
+      
+      scale = 0.01;
+      
+    otherwise
+      error('Unknown method parameter in calibrage/method_linear');
+  end
+  
+  % Evaluate initial guess
+  goodness = method_linear_check(slm, cam, nvalueTable, ...
+      fullTable, nphase, grating, p.Results.location);
   bestgoodness = goodness(1);
   
   % Create a figure to track the progress
@@ -435,34 +494,63 @@ function lookupTable = method_linear(slm, cam, varargin)
   else
     figure_active = @() true;
   end
-  
-  scale = 1.0;
-  ii = 1;
 
   % Loop for some number of trials
+  ii = 1;
   while figure_active() && ii < p.Results.max_iterations
     
     % Increment ii
     ii = ii + 1;
+    
+    % Attempt to optimise the pattern
+    switch p.Results.method
+      case 'polynomial'
+        
+        if has_derivative
+          deriv = (goodness(ii-1) - goodness(ii-2))/stepsize;
+          newCoeffs(index) = newCoeffs(index) - goodness(ii-1)/deriv;
+          
+          has_derivative = false;
+        else
+          index = randi([1, length(coeffs)], 1);
+          newCoeffs = coeffs;
+          newCoeffs(index) = newCoeffs(index) + stepsize;
+          has_derivative = true;
+        end
+        
+        % Calculate new normalize value table from coefficients
+        nNewValueTable = polyval(newCoeffs, nphase);
+        
+      case 'stepped'
+        nNewValueTable = nvalueTable + scale*randn(size(nvalueTable));
 
-    % Randomly pick a point to shift (and apply periodic boundary condition)
-    newValueTable = valueTable + round(scale*randn(size(valueTable)));
-    newValueTable(newValueTable < 1) = mod(newValueTable(newValueTable < 1), ...
-        length(fullTable)) + length(fullTable);
-    newValueTable(newValueTable > length(fullTable)) = ...
-        1+mod(newValueTable(newValueTable > length(fullTable))-1, length(fullTable));
+      otherwise
+        error('Unknown method parameter in calibrage/method_linear');
+    end
+    
+    % Check the new pattern
+    goodness(ii) = method_linear_check(slm, cam, nNewValueTable, ...
+        fullTable, nphase, grating, p.Results.location);
+    
+    % Reject or keep the pattern
+    switch p.Results.method
+      case 'polynomial'
+        % If the shift improved the result, keep it
+        if goodness(ii) > bestgoodness
+          bestgoodness = goodness(ii);
+          nvalueTable = nNewValueTable;
+          coeffs = newCoeffs;
+        end
+        
+      case 'stepped'
+        % If the shift improved the result, keep it
+        if goodness(ii) > bestgoodness
+          bestgoodness = goodness(ii);
+          nvalueTable = nNewValueTable;
+        end
 
-    % Check the shift (display on slm and acquire image)
-    rawpattern = otslm.tools.finalize(grating, ...
-      'colormap', {phase, fullTable(:, newValueTable)});
-    slm.showRaw(rawpattern);
-    im = cam.viewTarget();
-    goodness(ii) = sum(im(:));
-
-    % If the shift improved the result, keep it
-    if goodness(ii) > bestgoodness
-      bestgoodness = goodness(ii);
-      valueTable = newValueTable;
+      otherwise
+        error('Unknown method parameter in calibrage/method_linear');
     end
     
     % Plot the progress
@@ -474,12 +562,54 @@ function lookupTable = method_linear(slm, cam, varargin)
 
   end
   
-  % TODO: Add an option to minimise voltage difference (value distance)
-  % TODO: Parametric curve optimisation (smoother for continuous devices)
+  % Get the output value table
+  valueTable = method_linear_valuetable(nvalueTable, fullTable);
 
   % Package the result
-  lookupTable = {phase, fullTable(:, newValueTable)};
+  lookupTable = {2*pi*nphase, valueTable};
 
+end
+
+function [valueTable, idx] = method_linear_valuetable(nvalueTable, fullTable)
+
+  idx = mod(nvalueTable, 1);
+  idx(idx < 0) = idx(idx < 0) + 1;
+  idx = round(idx*(length(fullTable)-1))+1;
+  
+  % Convert from index to values
+  valueTable = fullTable(:, idx);
+
+end
+
+function val = method_linear_check(slm, cam, nvalueTable, fullTable, ...
+    nphase, grating, location)
+  
+  if ~isfinite(nvalueTable)
+    val = 0;
+    return;
+  end
+
+  % Convert the new pattern to a raw pattern
+  valueTable = method_linear_valuetable(nvalueTable, fullTable);
+  rawpattern = otslm.tools.finalize(grating, ...
+      'colormap', {nphase, valueTable});
+
+  % Check the new pattern
+  slm.showRaw(rawpattern);
+  im = cam.viewTarget();
+  
+  % Calculate the intensity in the ROI
+  if isempty(location)
+    val = sum(im(:));
+  elseif numel(location) == 2
+    val = im(location(1), location(2));
+  elseif numel(location) == 4
+    val = im(location(1):location(3), location(2):location(4));
+    val = sum(val(:));
+  else
+    val = im(location);
+    val = sum(val(:));
+  end
 end
 
 function lookupTable = method_pinholes(slm, cam, varargin)

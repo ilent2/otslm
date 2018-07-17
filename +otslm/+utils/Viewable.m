@@ -54,7 +54,16 @@ classdef (Abstract) Viewable < handle
     function crop(obj, roi)
       % Crop the image to a specified ROI
       %
+      %  obj.crop([]) resets the roi to the full screen.
+      %
       %  obj.crop([rows cols yoffset xoffset])
+      
+      if isempty(roi)
+        obj.roioffset = [0,0];
+        obj.roisize = obj.size;
+        return;
+      end
+      
       assert(all(roi(1:2) <= obj.size), ...
           'ROI must be smaller or equal to image size');
       obj.roisize = roi(1:2);
