@@ -1,5 +1,5 @@
 function pattern = axicon(sz, gradient, varargin)
-% AXICON generates a axicon lens described by a gradient parmeter.
+% AXICON generates a axicon lens described by a gradient parmeter
 %
 % pattern = axicon(sz, gradient, ...)
 %

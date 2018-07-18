@@ -1,5 +1,5 @@
 function pattern = aperture(sz, dimension, varargin)
-% APERTURE creates an aperture mask
+% APERTURE generates an aperture mask
 %
 % pattern = aperture(sz, dimension, ...) creates a circular aperture with
 % radius given by parameter dimension.  Array is logical array.

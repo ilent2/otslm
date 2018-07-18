@@ -1,5 +1,5 @@
 function pattern = sinc(sz, radius, varargin)
-% SINC generate a sinc pattern
+% SINC generates a sinc pattern
 %
 % pattern = sinc(sz, radius, ...) generates a sinc pattern centred
 % in the image.

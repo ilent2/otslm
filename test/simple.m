@@ -1,4 +1,6 @@
 function tests = simple
+  % SIMPLE tests for otslm.simple.*
+  %
   % These tests are primarily to test everything runs, we should
   % write better tests in future.
 
@@ -122,4 +124,6 @@ function testZernike(testCase)
   sz = [512, 512];
   pattern = otslm.simple.zernike(sz, 4, 5);
 end
+
+
 

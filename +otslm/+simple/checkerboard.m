@@ -1,5 +1,5 @@
 function pattern = checkerboard(sz, varargin)
-% CHECKERBOARD creates a checkerboard pattern
+% CHECKERBOARD generates a checkerboard pattern
 %
 % pattern = checkerboard(sz, ...) creates a checkerboard with spacing
 % of 1 pixel and values of 0 and 0.5.

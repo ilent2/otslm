@@ -1,5 +1,5 @@
 function pattern = gaussian(sz, sigma, varargin)
-% GAUSSIAN generates a gaussian lens described by width parameter.
+% GAUSSIAN generates a gaussian lens described by width parameter
 %
 % pattern = gaussian(sz, sigma, ...)
 %

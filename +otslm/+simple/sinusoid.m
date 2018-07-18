@@ -1,5 +1,5 @@
 function pattern = sinusoid(sz, period, varargin)
-% SINUSOID generates a linear gradient
+% SINUSOID generates a sinusoidal grating
 %
 % pattern = sinusoid(sz, period, ...) generates a sinusoidal grating.
 % the output is in the range 0 to 1.

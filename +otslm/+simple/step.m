@@ -1,5 +1,5 @@
 function pattern = step(sz, varargin)
-% STEP generates a step.
+% STEP generates a step
 %
 % pattern = step(sz, ...) generates a step at the centre of the image.
 %

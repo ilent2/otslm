@@ -1,5 +1,5 @@
 function pattern = random(sz, varargin)
-% RANDOM creates a random pattern
+% RANDOM generates a random pattern
 %
 % pattern = random(sz, ...) creates a random pattern with values between
 % 0 and 1.
