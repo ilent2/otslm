@@ -13,6 +13,7 @@ classdef ScreenDevice < otslm.utils.Showable
     figure_handle;          % Matlab figure handle
     image_handle;           % Matlab image handle
     device_number;          % Screen number
+    value_order;            % Order of the pixel value columns
     doublebuffer;           % Double buffer the Matlab image
   end
 
@@ -39,7 +40,8 @@ classdef ScreenDevice < otslm.utils.Showable
       % Optional named parameters:
       %
       %   'target_size'   [r,c]   Size of the device within the window
-      %   'target_offset' [x,y]   Offset within the window
+      %   'target_offset' [x,y]   Offset within the window.  Negative
+      %       values are offset fro the top of the screen.
       %   'lookup_table'  table   Lookup table to use for device
       %       Default lookup table is value_range{1} repeated for each channel.
       %   'value_range'   table   Cell array of value ranges
@@ -55,12 +57,14 @@ classdef ScreenDevice < otslm.utils.Showable
       p.addParameter('value_range', { 0:255, 0:255, 0:255 });
       p.addParameter('pattern_type', 'amplitude');
       p.addParameter('doublebuffer', 'off');
+      p.addParameter('linear_order', []);
       p.parse(varargin{:});
 
       % Set-up dependent properties for java window
       obj.figure_handle = [];
       obj.device_number = p.Results.device_number;
       obj.doublebuffer = p.Results.doublebuffer;
+      obj.linear_order = p.Results.linear_order;
 
       % Store other properties
       obj.valueRange = p.Results.value_range;
@@ -83,6 +87,14 @@ classdef ScreenDevice < otslm.utils.Showable
         obj.size = obj.device_size;
       else
         obj.size = p.Results.target_size;
+      end
+      
+      % Conert from negative to positive offset
+      if obj.offset(1) < 0
+        obj.offset(1) = obj.device_size(2) + obj.offset(1);
+      end
+      if obj.offset(2) < 0
+        obj.offset(2) = obj.device_size(1) + obj.offset(2);
       end
 
       % Check target size is ok
@@ -154,12 +166,17 @@ classdef ScreenDevice < otslm.utils.Showable
 
       % Open the window if required
       if isempty(obj.figure_handle) || ~ishandle(obj.figure_handle)
+        
+        % Get the position of the desired monitor
+        monitor_positions = get(0, 'MonitorPositions');
+        oposition = monitor_positions(obj.device_number, :);
+        
         obj.figure_handle = figure( ...
             'WindowState', 'fullscreen', ...
             'menubar','none', ...
             'NumberTitle','off', ...
-            'units','normalized', ...
-            'outerposition',[0 0 1 1], ...
+            'units','pixels', ...
+            'outerposition',oposition, ...
             'doublebuffer', obj.doublebuffer);
       end
 

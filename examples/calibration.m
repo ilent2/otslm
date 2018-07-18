@@ -90,6 +90,9 @@ legend(ax, labels);
 % guess for the phase, however the method could be used to characterise
 % a device with spatially varying phase.
 
+% TODO: Example showing checkerboard with intensity noise combined
+% with pinhole method once rough phase is known.
+
 % Look at the zeroth order
 cam.crop(round([cam.size/2, cam.size/4]));
 

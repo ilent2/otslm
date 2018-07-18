@@ -199,6 +199,7 @@ function lookupTable = method_checker(slm, cam, varargin)
 
   % Parse method arguments
   p = inputParser;
+  p.addParameter('show_progress', true);
   p.parse(varargin{:});
 
   % For this method we do the same procedure twice to classify points
@@ -216,12 +217,44 @@ function lookupTable = method_checker(slm, cam, varargin)
 
   % Generate full value table
   valueTable = slm.linearValueRange('structured', true);
+  
+  % Create a figure to track the progress
+  if p.Results.show_progress
+    hf = figure();
+    h = axes(hf);
+    
+    % Create plots for each sample run
+    plt1 = plot(h, 0, 0);
+    hold on;
+    plt2 = plot(h, 0, 0);
+    hold off;
+    
+    xlabel(h, 'linear pixel range');
+    ylabel(h, 'Intensity');
+    title(h, 'Checker calibration progress');
+    
+    % Create a stop button
+    btn = uicontrol(hf, 'Style', 'pushbutton', 'String', 'Stop',...
+        'Position', [20 20 50 20]);  
+    btn.Enable = 'Inactive';
+    btn.UserData = true;
+    btn.ButtonDownFcn = @(src, event) set(btn, 'UserData', false);
+    drawnow;
+    
+    figure_active = @() ishandle(hf) && btn.UserData;
+  else
+    figure_active = @() true;
+  end
 
   % Rank everything in region 1
   idx1 = 1;
   value1 = valueTable(:, idx1);
   phase1 = zeros([size(valueTable, 2), 1]);
   for ii = 1:size(valueTable, 2)
+    
+    if ~figure_active()
+      error('Terminated by user');
+    end
 
     % Generate pattern
     rawpattern = generate_raw_pattern(slm, mask, ...
@@ -233,6 +266,13 @@ function lookupTable = method_checker(slm, cam, varargin)
 
     % Calculate intensity in target region
     phase1(ii) = sum(im(:));
+    
+    % Plot the progress
+    if p.Results.show_progress
+      plt1.XData = 1:ii;
+      plt1.YData = phase1(1:ii);
+      drawnow;
+    end
 
   end
   phase1 = phase1 - min(phase1);
@@ -242,6 +282,10 @@ function lookupTable = method_checker(slm, cam, varargin)
   value2 = valueTable(:, idx2);
   phase2 = zeros([size(valueTable, 2), 1]);
   for ii = 1:size(valueTable, 2)
+    
+    if ~figure_active()
+      error('Terminated by user');
+    end
 
     % Generate pattern
     rawpattern = generate_raw_pattern(slm, mask, ...
@@ -253,6 +297,13 @@ function lookupTable = method_checker(slm, cam, varargin)
 
     % Calculate intensity in target region
     phase2(ii) = sum(im(:));
+    
+    % Plot the progress
+    if p.Results.show_progress
+      plt2.XData = 1:ii;
+      plt2.YData = phase2(1:ii);
+      drawnow;
+    end
 
   end
   phase2 = phase2 - min(phase2);

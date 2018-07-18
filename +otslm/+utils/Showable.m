@@ -107,6 +107,11 @@ classdef (Abstract) Showable < handle
       p.addParameter('structured', false);
       p.parse(varargin{:});
       
+      valueRangeOrder = obj.linear_order;
+      if isempty(valueRangeOrder)
+        valueRangeOrder = 1:length(obj.valueRange);
+      end
+      
       valueRangeSz = obj.valueRangeSize();
       
       if p.Results.structured
@@ -116,21 +121,21 @@ classdef (Abstract) Showable < handle
         for ii = 1:length(obj.valueRange)
 
           % Get the value range column in row form
-          data = obj.valueRange{ii}(:).';
+          data = obj.valueRange{valueRangeOrder(ii)}(:).';
 
           % Repeate the values for every remaining column
           if ii+1 < length(obj.valueRange)
-            data = repmat(obj.valueRange{ii}(:).', [prod(valueRangeSz(ii+1:end)), 1]);
+            data = repmat(data, [prod(valueRangeSz(valueRangeOrder(ii+1:end))), 1]);
           end
 
           % Convert to column form
           data = reshape(data, [numel(data), 1]);
 
           % Repeate the values for all previous columns
-          data = repmat(data, [prod(valueRangeSz(1:ii-1)), 1]);
+          data = repmat(data, [prod(valueRangeSz(valueRangeOrder(1:ii-1))), 1]);
 
           % Store the column
-          values(ii, :) = data;
+          values(valueRangeOrder(ii), :) = data;
 
         end
       else
@@ -155,25 +160,30 @@ classdef (Abstract) Showable < handle
         end
         
         for ii = 1:length(mvalueRange)
+          
           % Get the value range column in row form
-          data = mvalueRange{ii}(:).';
+          data = mvalueRange{valueRangeOrder(ii)}(:).';
 
           % Repeate the values for every remaining column
           if ii+1 < length(mvalueRange)
-            data = repmat(mvalueRange{ii}(:).', [prod(valueRangeSz(ii+1:end)), 1]);
+            data = repmat(data, [prod(valueRangeSz(valueRangeOrder(ii+1:end))), 1]);
           end
 
           % Convert to column form
           data = reshape(data, [numel(data), 1]);
 
           % Repeate the values for all previous columns
-          data = repmat(data, [prod(valueRangeSz(1:ii-1)), 1]);
+          data = repmat(data, [prod(valueRangeSz(valueRangeOrder(1:ii-1))), 1]);
 
           % Store the result
-          values(:) = values(:) + data*prod(maxvalues(1:ii-1));
+          values(:) = values(:) + data*prod(maxvalues(valueRangeOrder(1:ii-1)));
         end
       end
     end
+  end
+  
+  properties (SetAccess=protected)
+    linear_order = []; % Significance of valueRange columns
   end
 
   properties (Abstract, SetAccess=protected)
