@@ -3,14 +3,25 @@
 % Add the toolbox to the path
 addpath('../');
 
-slm = otslm.utils.TestSlm();
+% Create the phase table
+table = linspace(0, 2*pi, 256);
+% table = polyval([0.7, -1.9, 1.5, -0.02]*20, linspace(0, 1, 256));
+% table = polyval([0.9, -1.9, 1.7, -0.02]*10, linspace(0, 1, 256));
+% table = 2*sin(linspace(0, 1, 256)*2*pi) + 7*linspace(0, 1, 256);
+
+% Compute the offset used by minvalue rangemethod
+offset = 0.5*(max(table) - min(table)) - pi + min(table);
+[~, idx] = min(abs(table - offset));
+offset = table(idx);
+
+slm = otslm.utils.TestSlm(table);
 cam = otslm.utils.TestCamera(slm);
 inf = otslm.utils.TestMichelson(slm);
 
 vis_target = false;    % True to show target graphs
 
 figure();
-plot(slm.linearValueRange(), slm.actualPhaseTable);
+plot(slm.linearValueRange(), slm.actualPhaseTable-offset);
 ax = gca;
 labels = {'actual'};
 legend(ax, labels);
@@ -20,6 +31,8 @@ ylabel('Phase offset');
 hold on;
 
 %% Use checkerboard pattern and zeroth order
+% This method sometimes identifies the phase as having the incorrect sign,
+% but otherwise it seems pretty good.
 
 % Modify the camera to look at the zeroth order
 cam.crop(round([cam.size/2, cam.size/4]));

@@ -27,12 +27,38 @@ classdef TestSlm < otslm.utils.TestShowable
   end
 
   methods
+    
+    function obj = TestSlm(actualPhaseTable)
+      % Create a new virtual SLM object for testing
+      %
+      % TestSlm() creates a device with a linear phase table from 0 to 2*pi
+      %
+      % TestSlm(table) creates a device with a custom phase table.
+      % table must contain 256 elements.
+      
+      if nargin == 0
+        actualPhaseTable = linspace(0, 2*pi, 256).';
+      end
+      
+      assert(length(actualPhaseTable) == 256, 'Incorrect table length');
+      
+      obj = obj@otslm.utils.TestShowable();
+      obj.actualPhaseTable = actualPhaseTable(:);
+    end
+    
     function showRaw(obj, pattern)
       % Simulate the pattern being shown, store result in obj.output
+      
+      % Check range of raw pattern
+      assert(max(pattern(:)) <= max(obj.valueRange{1}) ...
+          && min(pattern(:)) >= min(obj.valueRange{1}), ...
+          'Raw pattern must not have values outside valueRange');
 
       % Apply inverse lookupTable
-      obj.pattern = otslm.tools.finalize(pattern, ...
-          'colormap', {obj.lookupTable, obj.actualPhaseTable});
+      obj.pattern = interp1(obj.valueRange{1}, double(obj.actualPhaseTable), ...
+          pattern(:), 'nearest');
+      obj.pattern = reshape(obj.pattern, size(pattern));
+      obj.pattern = cast(obj.pattern, 'like', obj.actualPhaseTable);
 
       % Convert pattern to complex amplitude
       obj.pattern = complex(exp(1i*obj.pattern));

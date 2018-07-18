@@ -122,7 +122,7 @@ if ~ischar(p.Results.tablerange)
       sortedPhaseIdx = [idx];
       sortedPhase = [0.0];
       candidates = phaseNd > sortedPhase(end) & phaseNd <= p.Results.tablerange;
-      lastCoord = ind2sub(size(phaseNd), idx);
+      [lastCoord{1:length(slm.valueRange)}] = ind2sub(size(phaseNd), idx);
       while any(candidates)
 
         % Calculate distance^2 of all candidates (periodic boundaries)
@@ -132,7 +132,7 @@ if ~ischar(p.Results.tablerange)
         for ii = 1:length(coords)
 
           % Calculate relative coordinates
-          relCoords = coords{ii} - lastCoord;
+          relCoords = coords{ii} - lastCoord{ii};
 
           % Apply periodic condition
           relCoords(relCoords > valueRangeSz(ii)/2) = ...
@@ -143,11 +143,17 @@ if ~ischar(p.Results.tablerange)
           % Calculate distance^2
           distances = distances + relCoords.^2;
         end
+          
+        % Bias distance for nearby phase
+        % TODO: Allow user to specify phaseChangeScale
+        phaseChange = phaseNd(candidates) - sortedPhase(end);
+        phaseChangeScale = 1.5*numel(phase)/min(p.Results.tablerange, max(phase(:)));
+        distances = distances + (phaseChangeScale*phaseChange).^2;
 
         % Find and store nearest candidate
         [~, canidx] = min(distances);
         idx = indices(canidx);
-        lastCoord = ind2sub(size(phaseNd), idx);
+        [lastCoord{1:length(slm.valueRange)}] = ind2sub(size(phaseNd), idx);
         sortedPhaseIdx(end+1) = idx;
         sortedPhase(end+1) = phaseNd(idx);
 
