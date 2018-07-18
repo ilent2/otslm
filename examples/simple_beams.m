@@ -1,4 +1,8 @@
 % Example of simple beams (figure 2 in otslm paper)
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 sz = [512, 512];      % Size of pattern
 o = 50;              % Region of interest size in output

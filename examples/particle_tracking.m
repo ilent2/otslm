@@ -1,4 +1,20 @@
 % Simulate particles being imaged using SLM/QPD system
+%
+% This example is a more complete example of how the toolbox can be
+% used to simulate a complete optical system involving a SLM.
+%
+% In this example, a particle on a microscope slide is imaged
+% onto a SLM which displays a grating that deflects the light
+% onto a QPD located some distance away from the SLM (but not
+% necesarily in the Fourier plane.
+%
+% The example demonstrates: region sampling, spatial filtering,
+% visualisation using fourier transform and Rayleigh-Sommerfeld
+% integral, and simulating of absorbing and transparent particles.
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 % Add toolbox to the path
 addpath('../');

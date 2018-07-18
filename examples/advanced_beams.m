@@ -1,4 +1,8 @@
 % Example of more advanced beams (figure 3 in otslm paper)
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 % Add toolbox to the path
 addpath('../');

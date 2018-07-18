@@ -1,4 +1,8 @@
 % Demonstrate the SLM calibration stuff
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 % Add the toolbox to the path
 addpath('../');

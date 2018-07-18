@@ -1,5 +1,9 @@
 % Demonstrate the current DMD functionality of the toolbox
 %  This is for a DMD with tiling that gives it a 1:2 aspect ratio
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 % Add toolbox to path
 addpath('../');

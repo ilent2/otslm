@@ -2,7 +2,6 @@
 * Update citation in README.md
 * Write a license in LICENSE.md
 
-* 2-D GS algorithm (+iter)
 * 3-D GS algorithm (+iter)
 * Pattern from superposition of Gaussian beams (+iter)
 * Other iterative algorithms?
@@ -14,5 +13,4 @@
 * Aberration correction?
 
 * Generate figures for paper
-* Examples
 * Unit tests to verify that at least everything runs (code coverage)

@@ -1,4 +1,8 @@
 % Demonstration of the screen device class (used to control SLM/DMDs)
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 slm = otslm.utils.ScreenDevice(1, 'target_size', [512, 512], ...
   'target_offset', [100, 0]);
