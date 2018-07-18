@@ -1,6 +1,6 @@
 
 *.swp
 *.swo
-*.m~
+*~
 *.asv
 *.mexa64

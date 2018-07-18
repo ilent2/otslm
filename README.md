@@ -2,16 +2,27 @@ otslm - Optical Tweezers SLM Pattern Generator
 ==============================================
 
 A set of Matlab functions and graphical user interface for generating
-patterns for a phase based spatial light modulator (SLM), such as
-a liquid crystal type device.
+patterns for phase and amplitude spatial light modulators (SLMs) such as
+the digital micromirror device (DMD) and liquid crystal type device.
+The focus of this toolbox is on patterns for optical tweezers systems
+but the same functions can probably be used in other applications
+where amplitude or phase control of light is required.
+
+In the initial release we include functions our group currently
+uses or is interested in using, but we hope that others will also
+contribute codes for patterns they use in research publications.
+If you would like to contribute patterns, we would love to
+hear from you, see the Contributing section bellow.
+
+This toolbox is a work in progress.  It is likely, at least in the
+early versions, the functions will move around, change names and
+behaviour.
 
 Installation
 ------------
+
 To use the toolbox, download the repository, add the download directory
 to your path, and include the toolbox with `import otslm.*`.
-
-To use the user interface you will first need to compile the
-`mlapp` files, run `otslm.gui.package()`.
 
 For some functionality you may need to install the [optical tweezers
 toolbox](https://github.com/ilent2/ott).
@@ -23,9 +34,8 @@ The toolbox is split into 5 different sections:
 
 * `simple` includes simple beam generation functions.
 * `iter` includes iterative methods for generating patterns based
-    on a target beam
-* `tools` provides tools for combining beams and generating
-    the final output.
+    on a target beam.
+* `tools` provides tools for combining beams and visualising the output.
 * `utils` provides functions not necessarily related to pattern
     generation but things our group has found useful for displaying patterns.
 * `gui` is the graphical user interface, implementing most functions
@@ -33,11 +43,14 @@ The toolbox is split into 5 different sections:
 
 License
 -------
+
 If you publish work using this toolbox, please cite it as
 
 > I. C. D. Lenton, A. B. Stilgoe, T. A. Nieminen, H. Rubinsztein-Dunlop,
 > "Routine and simplified generation of SLM patterns for optical tweezers",
 > [Journal to be decided](link to the article)
+
+Further details can be found in LICENSE.md.
 
 Contributing
 ------------
