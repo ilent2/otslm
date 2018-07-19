@@ -87,6 +87,11 @@ if isempty(modv)
 end
 
 if ~isempty(p.Results.amplitude)
+  
+  % Handle omitted phase pattern
+  if isempty(pattern)
+    pattern = zeros(size(p.Results.amplitude));
+  end
 
   if strcmpi(p.Results.device, 'slm')
 

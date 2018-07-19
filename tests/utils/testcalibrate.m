@@ -9,13 +9,14 @@ function setupOnce(tests)
 
   % Create objects for testing
   tests.TestData.slm = otslm.utils.TestSlm();
-  tests.TestData.cam = otslm.utils.TestCamera(slm);
-  tests.TestData.inf = otslm.utils.TestMichelson(slm);
+  tests.TestData.cam = otslm.utils.TestCamera(tests.TestData.slm);
+  tests.TestData.inf = otslm.utils.TestMichelson(tests.TestData.slm);
 
 end
 
 function testChecker(tests)
-  lut = otslm.utils.calibrate(tests.TestData.slm, tests.TestData.cam, ...
+
+  lut = otslm.utils.calibrate(cam, tests.TestData.cam, ...
       'method', 'checker');
 end
 

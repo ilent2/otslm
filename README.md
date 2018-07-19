@@ -16,7 +16,8 @@ hear from you, see the Contributing section bellow.
 
 This toolbox is a work in progress.  It is likely, at least in the
 early versions, the functions will move around, change names and
-behaviour.
+behaviour.  Some functions still lack documentation and might be
+a bit unstable.
 
 Installation
 ------------

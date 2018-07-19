@@ -17,18 +17,7 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 %
 %   'radii'       [r, ...]      Radius of each SLM region
 %   'amplitude'   method        Specifies a method for amplitude modulation.
-%       Possible methods are:
-%           {'step'}              Sharp step between background and pattern
-%           {'gaussian_dither', ...}   Randomly mixes in background
-%           {'gaussian_noise', ...}   Adds noise to edge
-%               of the pattern.  The type must be 'uniform' or 'gaussian'
-%               for uniform noise or Gaussian noise.  The scale is the
-%               uniform noise range or Gaussian width.
-%           {'gaussian_scale', ...}  Scales the pattern by a gaussian
-%               and then uses the mix method to combine the pattern with
-%               the background.  The mix method must be 'add' for
-%               adding the result to the background, or 'step' for
-%               placing the scaled pattern on the background as a step.
+%   'ampliutdeargs', args       Amplitude method arguments.
 %   'background'  type          Specifies the background type.
 %       Possible values are:
 %           'zero'            Uses 0 phase as the background.
@@ -37,6 +26,35 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 %           'random'          Uses noise for the background.
 %           'randombin'       Uses binary noise for the background.
 %
+% Possible amplitude methods are:
+%   'step'              Sharp step between background and pattern
+%
+%   'gaussian_dither'   Randomly mixes in background
+%     Args:
+%       'offset'
+%       'noise'
+%
+%   'gaussian_noise'   Adds noise to edge
+%       of the pattern.  The type must be 'uniform' or 'gaussian'
+%       for uniform noise or Gaussian noise.  The scale is the
+%       uniform noise range or Gaussian width.
+%     Args:
+%       'offset'
+%       'scale'
+%       'type'
+%
+%   'gaussian_scale'  Scales the pattern by a Gaussian
+%       and then uses the mix method to combine the pattern with
+%       the background.  The mix method must be 'add' for
+%       adding the result to the background, or 'step' for
+%       placing the scaled pattern on the background as a step.
+%     Args:
+%       'mix'
+%       'mixargs'
+%       'scale'
+%
+% TODO: Documentation in this function
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -44,7 +62,8 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 % Parse inputs
 p = inputParser;
 p.addParameter('radii', 0.1*min(sz));
-p.addParameter('amplitude', {'step'});
+p.addParameter('amplitude', 'step');
+p.addParameter('amplitudeargs', {});
 p.addParameter('background', 'zero');
 p.parse(varargin{:});
 
@@ -64,6 +83,9 @@ assert(length(radii) == length(locations), 'Not enough radii');
 % Ensure the number of blur methods matches the number of locations
 bmethods = p.Results.amplitude;
 if ~isempty(bmethods)
+  if ischar(bmethods)
+    bmethods = {bmethods};
+  end
   if ischar(bmethods{1})
     [tbmethods{1:length(locations)}] = deal(bmethods);
     bmethods = tbmethods;
@@ -73,6 +95,26 @@ if ~isempty(bmethods)
   end
 end
 assert(length(bmethods) == length(locations), 'Not enough amplitude methods');
+
+% Ensure the number of blur method arguments matches the number of locations
+bmethodargs = p.Results.amplitudeargs;
+if ~isempty(bmethodargs)
+  if ischar(bmethodargs)
+    bmethodargs = {bmethodargs};
+  end
+  if ischar(bmethodargs{1})
+    [tbmethods{1:length(locations)}] = deal(bmethodargs);
+    bmethodargs = tbmethods;
+  elseif length(bmethodargs) == 1 && length(locations) ~= 1
+    [tbmethods{1:length(locations)}] = deal(bmethodargs);
+    bmethodargs = tbmethods;
+  end
+else
+  [tbmethods{1:length(locations)}] = deal({});
+  bmethodargs = tbmethods;
+end
+assert(length(bmethodargs) == length(locations), ...
+    'Not enough amplitude method arguments');
 
 % Generate background
 switch p.Results.background
@@ -98,6 +140,7 @@ for ii = 1:length(locations)
   target = detectors{ii};
   radius = radii(ii);
   method = bmethods{ii};
+  methodargs = bmethodargs{ii};
 
   linear = otslm.simple.linear(sz, norm(target), 'angle', atan2(target(2), target(1)));
   linear = otslm.tools.finalize(linear);
@@ -115,7 +158,7 @@ for ii = 1:length(locations)
       pa = inputParser;
       pa.addParameter('offset', 0.0);
       pa.addParameter('noise', 0.3);
-      pa.parse(method{2:end});
+      pa.parse(methodargs{:});
       
       % Create a gaussian image between 0 and 1
       gaussian = otslm.simple.gaussian(sz, radius, 'centre', loc);
@@ -135,7 +178,7 @@ for ii = 1:length(locations)
       pa.addParameter('offset', 0.0);
       pa.addParameter('scale', 1.0);
       pa.addParameter('type', 'uniform');
-      pa.parse(method{2:end});
+      pa.parse(methodargs{:});
       
       gaussian = otslm.simple.gaussian(sz, radius, 'centre', loc);
       
@@ -159,7 +202,7 @@ for ii = 1:length(locations)
       pa.addParameter('scale', 1.0);
       pa.addParameter('mix', 'add');
       pa.addParameter('mixargs', 1.5*radius);
-      pa.parse(method{2:end});
+      pa.parse(methodargs{:});
       
       gaussian = otslm.simple.gaussian(sz, radius, 'centre', loc);
       gaussian = gaussian ./ max(gaussian(:));
