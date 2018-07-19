@@ -50,7 +50,23 @@ If you publish work using this toolbox, please cite it as
 > "Routine and simplified generation of SLM patterns for optical tweezers",
 > [Journal to be decided](link to the article)
 
+This version of the code is licensed under the GNU GPLv3.
+
+> Copyright (C) 2018 Isaac Lenton
+>
+> This program is free software: you can redistribute it and/or modify
+> it under the terms of the GNU General Public License as published by
+> the Free Software Foundation, either version 3 of the License, or
+> (at your option) any later version.
+>
+> This program is distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> GNU General Public License for more details.
+
 Further details can be found in LICENSE.md.
+If you would like to use the toolbox for something not covered by
+the license, please contact us.
 
 Contributing
 ------------
