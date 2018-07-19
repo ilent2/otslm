@@ -1,5 +1,5 @@
 classdef (Abstract) Showable < handle
-% SHOWABLE represents objects that can be used to change the beam (slm/dmds)
+% SHOWABLE represents devices that can display a pattern
 %
 % Methods (abstract):
 %   showRaw(pattern)      Display the pattern on the device.  The pattern

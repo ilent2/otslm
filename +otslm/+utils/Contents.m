@@ -3,13 +3,21 @@
 %
 % Files
 %   calibrate     - method to calibrate phase-only SLM
-%   find_roi      - method to find region of camera SLM projects onto
-%   FrameReader   - non-physical slm/camera, reads frames from a file
 %   image_device  - method to generate image of slm
 %   load_colormap - loads a colormap from file, colormaps can be used
+%
+% Base classes of showable and viewable objects
+%   Showable      - represents devices that can display a pattern
+%   Viewable      - represents objects that can be viewed (cameras)
+%
+% Physical devices
 %   ScreenDevice  - represents a device controlled by full screen window
-%   Showable      - represents objects that can be used to change the beam (slm/dmds)
-%   TestCamera    - non-physical camera object for viewing Test* Showable objects
+%   GigeCamera    - connect to a gige camera connected to the computer
+%
+% Non-physical devices used for testing
 %   TestDmd       - non-physical dmd-like device for testing code
 %   TestSlm       - non-physical slm-like device for testing code
-%   Viewable      - represents objects that can be viewed (cameras)
+%   TestCamera    - non-physical camera for viewing Test* Showable objects
+%   TestMichelson - non-physical representation of Michelson interferometer
+%   TestShowable  - non-physical showable device for testing implementation
+
