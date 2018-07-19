@@ -4,6 +4,8 @@ end
 
 function testSimple(tests)
 
+  addpath('../../');
+
   slm = otslm.utils.TestSlm();
   pattern = otslm.simple.linear(slm.size, 10);
   slm.show(pattern);
