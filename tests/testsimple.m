@@ -50,6 +50,16 @@ function testHgmode(testCase)
   pattern = otslm.simple.hgmode(sz, 3, 2);
 end
 
+function testIgmode(testCase)
+  sz = [512, 512];
+
+  % Test even modes
+  pattern = otslm.simple.igmode(sz, true, 4, 2, 1.0);
+
+  % Test odd modes
+  pattern = otslm.simple.igmode(sz, false, 4, 2, 1.0);
+end
+
 function testLgmode(testCase)
   sz = [512, 512];
   pattern = otslm.simple.lgmode(sz, -3, 2);
