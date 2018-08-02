@@ -157,7 +157,7 @@ classdef ScreenDevice < otslm.utils.Showable
 
         % Convert image from double to uint8 (for speed)
         if isa(img, 'double')
-          img = uint8(img .* 255);
+          img = uint8(img);
         end
 
       elseif ~isa(img, 'struct')

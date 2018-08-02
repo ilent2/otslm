@@ -58,6 +58,8 @@ classdef (Abstract) Viewable < handle
       %
       %  obj.crop([rows cols yoffset xoffset])
       
+      % TODO: Make input consistent with the getrect function
+      
       if isempty(roi)
         obj.roioffset = [0,0];
         obj.roisize = obj.size;

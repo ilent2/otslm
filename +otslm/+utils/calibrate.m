@@ -200,6 +200,9 @@ function lookupTable = method_checker(slm, cam, varargin)
   % Parse method arguments
   p = inputParser;
   p.addParameter('show_progress', true);
+  p.addParameter('show_camera', true);
+  p.addParameter('spacing', 1);
+  p.addParameter('delay', []);
   p.parse(varargin{:});
 
   % For this method we do the same procedure twice to classify points
@@ -213,7 +216,8 @@ function lookupTable = method_checker(slm, cam, varargin)
   %   <     >   3pi/2 -> 2pi
 
   % Generate the checkerboard
-  mask = otslm.simple.checkerboard(slm.size, 'value', [false, true]);
+  mask = otslm.simple.checkerboard(slm.size, 'value', [false, true], ...
+      'spacing', p.Results.spacing);
 
   % Generate full value table
   valueTable = slm.linearValueRange('structured', true);
@@ -245,6 +249,11 @@ function lookupTable = method_checker(slm, cam, varargin)
   else
     figure_active = @() true;
   end
+  
+  if p.Results.show_camera
+    hcf = figure();
+    hc = axes(hcf);
+  end
 
   % Rank everything in region 1
   idx1 = 1;
@@ -262,7 +271,20 @@ function lookupTable = method_checker(slm, cam, varargin)
 
     % Show pattern and get image
     slm.showRaw(rawpattern);
+    
+    % Allow for a finite device response rate
+    if ~isempty(p.Results.delay)
+      pause(p.Results.delay);
+    end
+    
+    % Acquire image from camera
     im = cam.viewTarget();
+    
+    % Show the camera image
+    if p.Results.show_camera
+      imagesc(hc, im);
+      colorbar('peer', hc);
+    end
 
     % Calculate intensity in target region
     phase1(ii) = sum(im(:));
@@ -293,7 +315,20 @@ function lookupTable = method_checker(slm, cam, varargin)
 
     % Show pattern and get image
     slm.showRaw(rawpattern);
+    
+    % Allow for a finite device response rate
+    if ~isempty(p.Results.delay)
+      pause(p.Results.delay);
+    end
+
+    % Calculate intensity in target region
     im = cam.viewTarget();
+    
+    % Show the camera image
+    if p.Results.show_camera
+      imagesc(hc, im);
+      colorbar('peer', hc);
+    end
 
     % Calculate intensity in target region
     phase2(ii) = sum(im(:));
@@ -741,6 +776,12 @@ function lookupTable = method_step(slm, cam, varargin)
 
   % Parse method arguments
   p = inputParser;
+  p.addParameter('show_progress', true);
+  p.addParameter('show_camera', false);
+  p.addParameter('show_spectrum', false);
+  p.addParameter('delay', []);
+  p.addParameter('direction', 1);
+  p.addParameter('basevalue', 1);
   p.parse(varargin{:});
 
   % Generate pattern we will use
@@ -749,24 +790,92 @@ function lookupTable = method_step(slm, cam, varargin)
   % Generate full value table
   valueTable = slm.linearValueRange('structured', true);
   
-  sidx = round(0.9*cam.roisize(2)/2);
+%   sidx = round(0.9*cam.roisize(2)/2);
+  sidx = 9;
+  
+  % Create a figure to track the progress
+  if p.Results.show_progress
+    hf = figure();
+    h = axes(hf);
+    
+    % Create plots for each sample run
+    plt = plot(h, 0, 0);
+    
+    xlabel(h, 'linear pixel range');
+    ylabel(h, 'Phase');
+    title(h, 'Step calibration progress');
+    
+    % Create a stop button
+    btn = uicontrol(hf, 'Style', 'pushbutton', 'String', 'Stop',...
+        'Position', [20 20 50 20]);  
+    btn.Enable = 'Inactive';
+    btn.UserData = true;
+    btn.ButtonDownFcn = @(src, event) set(btn, 'UserData', false);
+    drawnow;
+    
+    figure_active = @() ishandle(hf) && btn.UserData;
+  else
+    figure_active = @() true;
+  end
+  
+  % Setup figure for show_camera
+  if p.Results.show_camera
+    hcf = figure();
+    hc = axes(hcf);
+  end
+  
+  % Setup figure for show_spectrum
+  if p.Results.show_spectrum
+    hsf = figure();
+    hs = axes(hsf);
+  end
   
   % Do full range test
   phase = zeros(size(valueTable, 2), 1);
   for ii = 2:size(valueTable, 2)
+    
+    if ~figure_active()
+      error('Terminated by user');
+    end
 
     % Generate raw pattern
     rawpattern = generate_raw_pattern(slm, pattern, ...
-        valueTable(:, 1), valueTable(:, ii));
+        valueTable(:, p.Results.basevalue), valueTable(:, ii));
 
     % Display on slm and acquire image
     slm.showRaw(rawpattern);
+    
+    % Allow for a finite device response rate
+    if ~isempty(p.Results.delay)
+      pause(p.Results.delay);
+    end
+
+    % Calculate intensity in target region
     im = cam.viewTarget();
     
+    % Show the camera image
+    if p.Results.show_camera
+      imagesc(hc, im);
+      colorbar('peer', hc);
+    end
+    
     % Extract the fringe
-    cslice = sum(im, 1);
+    cslice = sum(im, p.Results.direction);
     fftcslice = fft(cslice);
     phase(ii) = angle(fftcslice(sidx));
+    
+    % Plot the frequency spectrum
+    if p.Results.show_spectrum
+      loglog(hs, 1:numel(fftcslice), abs(fftcslice));
+      hold(hs, 'on');
+    end
+    
+    % Plot the progress
+    if p.Results.show_progress
+      plt.XData = 1:ii;
+      plt.YData = unwrap(phase(1:ii));
+      drawnow;
+    end
 
   end
   

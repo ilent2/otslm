@@ -124,7 +124,7 @@ classdef (Abstract) Showable < handle
           data = obj.valueRange{valueRangeOrder(ii)}(:).';
 
           % Repeate the values for every remaining column
-          if ii+1 < length(obj.valueRange)
+          if ii+1 <= length(obj.valueRange)
             data = repmat(data, [prod(valueRangeSz(valueRangeOrder(ii+1:end))), 1]);
           end
 
@@ -165,7 +165,7 @@ classdef (Abstract) Showable < handle
           data = mvalueRange{valueRangeOrder(ii)}(:).';
 
           % Repeate the values for every remaining column
-          if ii+1 < length(mvalueRange)
+          if ii+1 <= length(mvalueRange)
             data = repmat(data, [prod(valueRangeSz(valueRangeOrder(ii+1:end))), 1]);
           end
 
