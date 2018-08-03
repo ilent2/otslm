@@ -15,6 +15,16 @@ function testFft(tests)
 
 end
 
+function testFft3(tests)
+
+  % 2-D input
+  cim = otslm.tools.visualise(tests.TestData.pattern, 'method', 'fft3');
+  
+  % 3-D input
+  im = zeros(100, 100, 100);
+  cim = otslm.tools.visualise(im, 'method', 'fft3');
+end
+
 function testOtt(tests)
   cim = otslm.tools.visualise(tests.TestData.pattern, 'method', 'ott');
 

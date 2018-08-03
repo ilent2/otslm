@@ -5,7 +5,7 @@ function varargout = visualise(phase, varargin)
 % Some methods output additional parameters, such as the ott-toolbox beam.
 %
 % [output, ...] = visualise(complex_amplitude, ...) visualise the
-% plane 
+% field with complex amplitude.
 %
 % If phase is an empty array and one of the other images is supplied,
 % the phase is assumed to be an array of zeros the same size as one of
@@ -20,6 +20,9 @@ function varargout = visualise(phase, varargin)
 %     Current supported methods:
 %         'fft'         Use fourier transform approach described in
 %                       https://doi.org/10.1364/JOSAA.15.000857
+%         'fft3'        Use 3-D Fourier transform, if original image
+%             is 2-D, converts to volume and takes Fourier transform.
+%             If input is 3-D, directly applies 3-D Fourier transform.
 %         'ott'         Use optical tweezers toolbox
 %         'rs'          Rayleigh-Sommerfeld diffraction formula
 %         'rslens'      Use rs to propagate to a lens, apply the lens
@@ -72,12 +75,16 @@ if isreal(phase)
 
   % Handle default value for incident
   if isempty(incident)
-    [xx, yy] = meshgrid(1:size(phase, 2), 1:size(phase, 1));
-    xx = xx - size(phase, 2)/2;
-    yy = yy - size(phase, 1)/2;
-    sigma = 0.25 * min(size(phase));
-    incident = exp(-(xx.^2 + yy.^2)./(2*sigma^2));
-    incident = incident ./ max(incident(:));
+    psz = size(phase);
+    incident = otslm.simple.gaussian(psz(1:2), 0.25*100);
+  end
+  
+  % Ensure incident and amplitude are volumes if phase is a volume
+  if size(phase, 3) ~= size(incident, 3) && size(incident, 3) == 1
+    incident = repmat(incident, [1, 1, size(phase, 3)]);
+  end
+  if size(phase, 3) ~= size(amplitude, 3) && size(amplitude, 3) == 1
+    amplitude = repmat(amplitude, [1, 1, size(phase, 3)]);
   end
 
   % Check sizes of input images
@@ -104,6 +111,8 @@ end
 switch p.Results.method
   case 'fft'
     varargout{1} = fft_method(U, p);
+  case 'fft3'
+    varargout{1} = fft3_method(U, p);
   case 'ott'
     [varargout{1:nargout}] = ott_method(U, p);
   case 'rs'
@@ -181,6 +190,24 @@ function output = fft_method(U, p)
     output = ifft2(fftshift(U));
 
   end
+end
+
+function output = fft3_method(U, p)
+
+  % Ensure the input is a volume, if not, convert it
+  if size(U, 3) == 1
+    U = otslm.tools.hologram2volume(U);
+  end
+
+  if strcmpi(p.Results.type, 'farfield')
+    output = fftshift(fftn(U));
+  elseif strcmpi(p.Results.type, 'nearfield');
+    output = ifftn(fftshift(U));
+  else
+    error('OTSLM:TOOLS:VISUALISE:type_error', ...
+        'Unknown conversion type, must be farfield or nearfield');
+  end
+
 end
 
 function [output, beam] = ott_method(U, p)
