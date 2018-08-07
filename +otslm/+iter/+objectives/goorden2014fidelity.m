@@ -11,14 +11,11 @@ function f = goorden2014fidelity(target, trial, varargin)
 % using/distributing this file.
 
 p = inputParser;
+p.addParameter('roi', @otslm.iter.objectives.roiAll);
 p.parse(varargin{:});
 
 % Apply mask to target and trial
-roi = zeros(size(target), 'logical');
-roi(1+end/4:end-end/4, 1+end/4:end-end/4) = true;
-
-target = target(roi);
-trial = trial(roi);
+[target, trial] = p.Results.roi(target, trial);
 
 % Calculate fidelity
 F = abs(sum(conj(target(:)).*trial(:))).^2;

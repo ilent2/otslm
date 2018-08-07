@@ -10,10 +10,11 @@ function f = flatintensity(target, trial, varargin)
 
 p = inputParser;
 p.addParameter('flatness', 0.5);
+p.addParameter('roi', @otslm.iter.objectives.roiAll);
 p.parse(varargin{:});
 
-F = otslm.iter.objectives.flatness(target, trial);
-I = otslm.iter.objectives.intensity(target, trial);
+F = otslm.iter.objectives.flatness(target, trial, 'roi', p.Results.roi);
+I = otslm.iter.objectives.intensity(target, trial, 'roi', p.Results.roi);
 
 f = I + p.Results.flatness*F;
 

@@ -12,14 +12,11 @@ function f = bowman2017cost(target, trial, varargin)
 
 p = inputParser;
 p.addParameter('d', 9.0);
+p.addParameter('roi', @otslm.iter.objectives.roiAll);
 p.parse(varargin{:});
 
 % Apply mask to target and trial
-roi = zeros(size(target), 'logical');
-roi(1+end/4:end-end/4, 1+end/4:end-end/4) = true;
-
-target = target(roi);
-trial = trial(roi);
+[target, trial] = p.Results.roi(target, trial);
 
 % Calculate the target intensity and amplitude
 phi = angle(target);

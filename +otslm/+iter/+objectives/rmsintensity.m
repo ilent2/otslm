@@ -5,11 +5,12 @@ function f = rmsintensity(target, trial, varargin)
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
-roi = zeros(size(target), 'logical');
-roi(1+end/4:end-end/4, 1+end/4:end-end/4) = true;
+p = inputParser;
+p.addParameter('roi', @otslm.iter.objectives.roiAll);
+p.parse(varargin{:});
 
-target = target(roi);
-trial = trial(roi);
+% Apply mask to target and trial
+[target, trial] = p.Results.roi(target, trial);
 
 f = sqrt(mean((abs(target(:)).^2 - abs(trial(:)).^2).^2));
 
