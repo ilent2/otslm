@@ -12,7 +12,7 @@ sz = [512, 512];
 pattern = otslm.simple.linear(sz, 10, 'angle_deg', 45);
 pattern = otslm.tools.finalize(pattern);
 
-figure();
+hf = figure();
 
 %% Fourier-transoform
 
@@ -27,11 +27,38 @@ im2 = otslm.tools.visualise(pattern, 'method', 'fft', ...
 im1 = im1(630:670, 845:885);
 im2 = im2(630:670, 845:885);
 
+figure(hf);
 subplot(3, 2, 1);
 imagesc(abs(im1));
 axis image;
 subplot(3, 2, 2);
 imagesc(abs(im2));
+axis image;
+
+%% 3-D Fourier transform
+
+sz = [256, 256];
+pattern1 = otslm.simple.linear(sz, 10, 'angle_deg', 0);
+pattern2 = otslm.simple.linear(sz, 10, 'angle_deg', 90);
+pattern3 = otslm.simple.linear(sz, 10, 'angle_deg', 180);
+pattern4 = otslm.simple.linear(sz, 10, 'angle_deg', 270);
+pattern = otslm.tools.combine({pattern1, pattern2, pattern3, pattern4});
+pattern = otslm.tools.finalize(pattern);
+
+figure();
+imagesc(pattern);
+
+xpadding = 200;
+zpadding = 100;
+
+im = otslm.tools.visualise(pattern, 'method', 'fft3', ...
+    'padding', [xpadding, xpadding, zpadding], 'focal_length', size(pattern, 1)*2);
+  
+h3d = figure();
+outputGs = abs(im).^2;
+outputR = outputGs(end/4:end-end/4, end/4:end-end/4, end/4:end-end/4);
+% outputR = reducevolume(outputR, [2, 2, 2]);
+isosurface(abs(outputR), 1.0e4)
 axis image;
 
 %% Rayleigh-Sommerfeld integral with lens
@@ -46,6 +73,7 @@ runTime = toc();
 %     'focallength', 1000, 'z', 1000);
 % im2 = otslm.tools.visualise(pattern, 'method', 'rslens', 'z', z_offset);
 
+figure(hf);
 subplot(3, 2, 3);
 imagesc(abs(im1));
 axis image;

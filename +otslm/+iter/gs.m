@@ -48,7 +48,7 @@ for ii = 1:p.Results.iterations
 
   % Do adaptive-adaptive step
   a = p.Results.adaptive;
-  targetAmplitude = a.*abs(target) + (1 - a).*abs(output);
+  targetAmplitude = a.*abs(target) + (1 - a).*abs(output)./numel(output);
 
   % Calculate new guess
   D = targetAmplitude .* exp(1i*angle(output));

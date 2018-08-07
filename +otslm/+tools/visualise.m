@@ -51,6 +51,11 @@ p.addParameter('z', 0.0);
 p.addParameter('padding', 100);
 p.addParameter('methoddata', []);
 p.addParameter('focallength', 1000);  % [lambda]
+
+% Separate focal length parameter for fft3, hmm, should be merged
+% We should really have separate vis method specific parsers or something
+p.addParameter('focal_length', []);   % [pixel units]
+
 p.addParameter('axis', 'z');
 p.parse(varargin{:});
 
@@ -194,10 +199,29 @@ end
 
 function output = fft3_method(U, p)
 
+  % Handle multiple padding arguments
+  if numel(p.Results.padding) == 1
+    xpadding = p.Results.padding;
+    ypadding = p.Results.padding;
+    zpadding = p.Results.padding;
+  elseif numel(p.Results.padding) == 2
+    xpadding = p.Results.padding(1);
+    ypadding = p.Results.padding(1);
+    zpadding = p.Results.padding(2);
+  elseif numel(p.Results.padding) == 3
+    xpadding = p.Results.padding(1);
+    ypadding = p.Results.padding(2);
+    zpadding = p.Results.padding(3);
+  end
+
   % Ensure the input is a volume, if not, convert it
   if size(U, 3) == 1
-    U = otslm.tools.hologram2volume(U);
+    U = otslm.tools.hologram2volume(U, ...
+        'focal_length', p.Results.focal_length, ...
+        'padding', zpadding);
   end
+
+  U = padarray(U, [ypadding, xpadding, 0], 0, 'both');
 
   if strcmpi(p.Results.type, 'farfield')
     output = fftshift(fftn(U));

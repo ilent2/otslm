@@ -10,6 +10,8 @@ function volume = hologram2volume(hologram, varargin)
 % Optional named arguments:
 %   'interpolate'   value   Interpolate between the nearest two
 %       pixels in the z-direction.  Default: true.
+%   'padding'       value   Padding in the axial direction (default 0).
+%   'focal_length'  value   focal length in pixels (default: min(size)/2).
 %
 % See also: otslm.tools.volume2hologram, otslm.iter.gs3d
 %
@@ -19,20 +21,25 @@ function volume = hologram2volume(hologram, varargin)
 
 p = inputParser;
 p.addParameter('interpolate', true);
+p.addParameter('focal_length', min(size(hologram))/2);
+p.addParameter('padding', 0);
+p.addParameter('zlimit', []);
 p.parse(varargin{:});
 
 % Calculate the depth of the lens volume
 xsize = min(size(hologram));
-focallength = xsize/2;
-zsize = focallength - sqrt(focallength.^2 - (xsize/2).^2);
+focallength = p.Results.focal_length;
+
+zsize = p.Results.zlimit;
+if isempty(zsize)
+  zsize = focallength - sqrt(focallength.^2 - (xsize/2).^2);
+end
 
 % Allocate memory for the volume
 volume = zeros([size(hologram), round(zsize)]);
 
 % Compute the real an imaginary parts separately (optimisation, R2018a)
-if ~isreal(hologram)
-  volumeI = volume;
-end
+volumeI = volume;
 
 % Assign hologram values to the volume
 for ii = 1:size(hologram, 2)
@@ -82,3 +89,7 @@ end
 
 % Combine the real and imaginary components
 volume = complex(volume, volumeI);
+
+% Pad the array
+volume = padarray(volume, [0, 0, p.Results.padding], 0, 'both');
+

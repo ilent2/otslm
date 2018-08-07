@@ -10,6 +10,8 @@ function hologram = volume2hologram(volume, varargin)
 % Optional named arguments:
 %   'interpolate'   value   Interpolate between the nearest two
 %       pixels in the z-direction.  Default: true.
+%   'padding'       value   Padding in the axial direction (default 0).
+%   'focal_length'  value   focal length in pixels (default: estimated from z)
 %
 % See also: otslm.tools.hologram2volume, otslm.iter.gs3d
 %
@@ -19,12 +21,18 @@ function hologram = volume2hologram(volume, varargin)
 
 p = inputParser;
 p.addParameter('interpolate', true);
+p.addParameter('focal_length', []);
+p.addParameter('padding', 0);
 p.parse(varargin{:});
 
 % Calculate the focal length of the lens (assuming no padding)
 xsize = min(size(volume, 1), size(volume, 2));
-zsize = size(volume, 3);
-focallength = ((xsize/2).^2 + zsize.^2)/(2*zsize);
+zsize = size(volume, 3) - 2*p.Results.padding;
+
+focallength = p.Results.focal_length;
+if isempty(focallength)
+  focallength = ((xsize/2).^2 + zsize.^2)/(2*zsize);
+end
 
 % Allocate memory for hologram
 hologram = zeros(size(volume, 1), size(volume, 2));
@@ -47,8 +55,8 @@ for ii = 1:size(hologram, 2)
       if p.Results.interpolate
 
         % Interpolate between neighbouring pixels
-        zidx_low = floor(zidx + 1);
-        zidx_high = ceil(zidx + 1);
+        zidx_low = floor(zidx + 1) + p.Results.padding;
+        zidx_high = ceil(zidx + 1) + p.Results.padding;
         weight = mod(zidx, 1);
 
         if zidx_high <= size(volume, 3)
@@ -58,7 +66,7 @@ for ii = 1:size(hologram, 2)
           value = volume(jj, ii, zidx_low);
         end
       else
-        zidx = round(zidx + 1);
+        zidx = round(zidx + 1) + p.Results.padding;
 
         % If point within volume, assign it
         if zidx <= size(volume, 3)
