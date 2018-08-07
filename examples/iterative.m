@@ -19,6 +19,7 @@ im = insertText(im,[7 0; 0 25] + [ 115, 112 ], {'UQ', 'OMG'}, ...
 im = im(:, :, 1);
 
 hp = figure();
+Nf = 3;
 
 %% 2-D GS algorithm
 
@@ -26,10 +27,10 @@ pattern = otslm.iter.gs(im, 'incident', incident);
 
 figure(hp);
 
-subplot(2, 2, 1);
+subplot(Nf, 2, 1);
 imagesc(pattern);
 
-subplot(2, 2, 2);
+subplot(Nf, 2, 2);
 imagesc(visualize(pattern, 100));
 
 %% Direct search
@@ -39,18 +40,31 @@ pattern = otslm.iter.direct_search(im, ...
 
 figure(hp);
 
-subplot(2, 2, 3);
+subplot(Nf, 2, 3);
 imagesc(pattern);
 
-subplot(2, 2, 4);
+subplot(Nf, 2, 4);
+imagesc(visualize(pattern, 100));
+
+%% Simulated annealing
+
+pattern = otslm.iter.simulated_annealing(im, ...
+    'incident', incident);
+
+figure(hp);
+
+subplot(Nf, 2, 5);
+imagesc(pattern);
+
+subplot(Nf, 2, 6);
 imagesc(visualize(pattern, 100));
 
 %% Change properties of all figures
 
 figure(hp);
 
-for ii = 1:4
-  subplot(2, 2, ii);
+for ii = 1:2*Nf
+  subplot(Nf, 2, ii);
   axis('image');
   colormap('gray');
   set(gca,'YTickLabel', [], 'XTickLabels', []);

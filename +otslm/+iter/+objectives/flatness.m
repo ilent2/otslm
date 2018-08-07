@@ -15,6 +15,6 @@ T = abs(target(:)).^2;
 I = abs(trial(:)).^2 .* T;
 mI = mean(I);
 
-f = sqrt(mean((I - mI).^2)) .* mean(T) ./ mI;
+f = sum(T) .* sqrt( mean(( I - mI ).^2) ) ./ mI;
 
 end
