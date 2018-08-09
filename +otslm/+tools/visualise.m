@@ -168,7 +168,7 @@ function output = fft_method(U, p)
     %    .* fftshift(fft2(U));
 
     % Transform to the focal plane (missing scaling factor)
-    output = fftshift(fft2(U));
+    output = fftshift(fft2(U))./numel(U);
 
     [tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
     tx = tx - size(U, 2)/2;
@@ -224,7 +224,7 @@ function output = fft3_method(U, p)
   U = padarray(U, [ypadding, xpadding, 0], 0, 'both');
 
   if strcmpi(p.Results.type, 'farfield')
-    output = fftshift(fftn(U));
+    output = fftshift(fftn(U))./numel(U);
   elseif strcmpi(p.Results.type, 'nearfield');
     output = ifftn(fftshift(U));
   else

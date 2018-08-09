@@ -28,7 +28,7 @@ p.addParameter('levels', []);
 p.addParameter('objective', @otslm.iter.objectives.flatintensity);
 p.addParameter('iterations', 1000);
 p.addParameter('show_progress', true);
-p.addParameter('maxT', 10000);
+p.addParameter('maxT', 1000);
 p.addParameter('initialT', 300);
 p.parse(varargin{:});
 

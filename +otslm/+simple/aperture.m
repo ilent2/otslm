@@ -59,7 +59,10 @@ end
 % Scale the pattern (convert from logical to double)
 if ~isempty(p.Results.values)
   high = p.Results.values(2);
-  low = p.results.value(1);
+  low = p.Results.values(1);
   pattern = pattern .* (high - low) + low;
 end
+
+% Ensure type of output matches low/high
+pattern = cast(pattern, 'like', p.Results.values);
 
