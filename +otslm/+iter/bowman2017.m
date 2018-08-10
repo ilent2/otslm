@@ -51,12 +51,13 @@ end
 % end
 
 % Create a structure to store the relevent data
+% At the same time, flip the data for python
 data = struct();
-data.target = target;
-data.incident = p.Results.incident;
+data.target = target.';
+data.incident = p.Results.incident.';
 data.roisize = p.Results.roisize;
 data.steepness = p.Results.steepness;
-data.guess = guess;
+data.guess = guess.';
 data.iterations = p.Results.iterations;
 
 %% Method 1: Call the python wrapper for the method
@@ -99,8 +100,18 @@ save(dataname, '-struct', 'data');
 wrapper = fullfile(pypath, 'wrapper.py');
 system(['python ', wrapper, ' ', dataname]);
 
-% Get the data from the file and clean up
-pattern = load(dataname, 'pattern');
-pattern = pattern.pattern;
+% Get the data from the file
+try
+  datapattern = load(dataname, 'pattern');
+  pattern = datapattern.pattern;
+catch
+  pattern = [];
+end
+
+% Clean up the data file
 delete(dataname);
+
+if isempty(pattern)
+  error('There was an error in they python script, see terminal for info');
+end
 

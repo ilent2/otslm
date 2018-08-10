@@ -1,3 +1,7 @@
+The following license applies to most of the files in this project.
+Other libraries/files may have different conditions, check the
+documentation for the specific method for further information.
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

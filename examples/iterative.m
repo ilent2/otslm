@@ -20,7 +20,7 @@ im = insertText(im,[7 0; 0 25] + [ 115, 112 ], {'UQ', 'OMG'}, ...
 im = im(:, :, 1);
 
 hp = figure();
-Nf = 3;
+Nf = 4;
 
 objective = @(t, a) otslm.iter.objectives.bowman2017cost(t, a, ...
     'roi', @otslm.iter.objectives.roiAperture, 'd', 11);
@@ -66,17 +66,17 @@ imagesc(visualize(pattern, 100));
 
 %% Bowman 2017 conjugate gradient method
 
-addpath('../');
+pattern = otslm.iter.bowman2017(im, 'incident', incident, 'roisize', 100);
 
-pattern = otslm.simple.linear([256, 256], 10);
-targetOut = fft2(pattern, 256, 256);
-testOut = otslm.iter.bowman2017(pattern);
+figure(hp);
 
-figure();
-subplot(1, 2, 1);
-imagesc(abs(targetOut).^2);
-subplot(1, 2, 2);
-imagesc(abs(testOut).^2);
+subplot(Nf, 2, 7);
+imagesc(pattern);
+
+% TODO: There is a problem with scaling
+subplot(Nf, 2, 8);
+farfield = visualize(pattern, 100);
+imagesc(farfield(105:105+71, 80:80+120));
 
 %% Change properties of all figures
 

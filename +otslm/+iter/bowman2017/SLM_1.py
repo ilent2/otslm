@@ -10,37 +10,14 @@ Please cite Optics Express 25, 11692 (2017) - https://doi.org/10.1364/OE.25.0116
 
 #________________________________________________________________________________________________________________________________
 import numpy as np                          # Used for array manipulation
-import matplotlib.pyplot as plt             # Plotting  
+#import matplotlib.pyplot as plt             # Plotting  
 import theano                               # Symbolic representation of phase; gradient calculation
 import theano.tensor as T                   # Using tensor in symbolic calculation (differentiation)
 from theano.gradient import DisconnectedType
-import matplotlib.image as mpimg            # Reading images
-from mpl_toolkits.mplot3d import Axes3D     # 3D plotting
+#import matplotlib.image as mpimg            # Reading images
+#from mpl_toolkits.mplot3d import Axes3D     # 3D plotting
 import os, shutil                           # Folder/file manipulation
-
-
-try:
-    import pyfftw
-    pyfftw.interfaces.cache.enable()
-    
-    def wrap_fft(*args, **kwargs):
-        fft2 = pyfftw.interfaces.numpy_fft.fft2(threads=8, *args, **kwargs)
-        return fft2
-    
-    def wrap_ifft(*args, **kwargs):
-        ifft2 = pyfftw.interfaces.numpy_fft.ifft2(threads=8, *args, **kwargs)
-        return ifft2
-    
-    fft2_call = wrap_fft
-    ifft2_call = wrap_ifft
-    
-    # assert False
-    # pyfftw as implemented fails for currently unknown reasons on the last step?
-    
-except:
-    fft2_call = np.fft.fft2
-    ifft2_call = np.fft.ifft2
-    print("Warning: using numpy FFT implementation.  Consider using pyFFTW for faster Fourier transforms.")
+from fft2 import *                          # 2-D Fourier transform wrapper
 
 
 ########################################################################
@@ -48,7 +25,7 @@ except:
 class SLM(object):
     
     def __init__(self, NT, initial_phi=None, profile_s=None):
-        
+
         self.n_pixels = int(NT/2) # target should be 512x512, but SLM pattern calculated should be 256x256.
         self.intensity_calc = None
         
