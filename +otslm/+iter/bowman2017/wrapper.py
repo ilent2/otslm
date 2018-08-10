@@ -37,17 +37,16 @@ def run(sz, target, incident, roisize, steepness, guess, nb_iter, eng):
 
 if __name__ == '__main__':
 
-    # Get the workspace name
+    # Get the data file name
     import sys
     if len(sys.argv) == 2:
-        engname = sys.argv[1]
+        dataname = sys.argv[1]
     else:
-        engname = None
+        raise Exception("No data filename provided")
 
     # Get the data from the workspace
-    dataname = "bowman2017data";
-    eng = matlab.engine.connect_matlab(engname)
-    data = eng.workspace[dataname];
+    eng = matlab.engine.start_matlab()
+    data = eng.load(dataname);
 
     sz = data['target'].size
 
@@ -75,5 +74,6 @@ if __name__ == '__main__':
     # Store the result
     data["pattern"] = matlab.double(pattern.tolist(),
         size=sz, is_complex=True);
-    eng.workspace[dataname] = data;
+    eng.workspace['data'] = data;
+    eng.save(dataname, '-struct', 'data', nargout=0);
 

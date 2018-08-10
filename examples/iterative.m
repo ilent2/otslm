@@ -64,6 +64,20 @@ imagesc(pattern);
 subplot(Nf, 2, 6);
 imagesc(visualize(pattern, 100));
 
+%% Bowman 2017 conjugate gradient method
+
+addpath('../');
+
+pattern = otslm.simple.linear([256, 256], 10);
+targetOut = fft2(pattern, 256, 256);
+testOut = otslm.iter.bowman2017(pattern);
+
+figure();
+subplot(1, 2, 1);
+imagesc(abs(targetOut).^2);
+subplot(1, 2, 2);
+imagesc(abs(testOut).^2);
+
 %% Change properties of all figures
 
 figure(hp);
