@@ -6,7 +6,10 @@ function [target, trial] = roiAperture(target, trial, varargin)
 %
 % Optional named parameters:
 %   'fftshift'    boolean   Apply fftshift to the mask
+%   'dimensions'  dims      Dimension argument for otslm.simple.aperture
 %   For other optional parameters, see otslm.simple.aperture
+%
+% The default ROI is a circle with diameter min(size(target))/2
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

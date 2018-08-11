@@ -30,6 +30,7 @@ p.addParameter('iterations', 1000);
 p.addParameter('show_progress', true);
 p.addParameter('maxT', 1000);
 p.addParameter('initialT', 300);
+p.addParameter('padding', round(max(size(target))/2));
 p.parse(varargin{:});
 
 % Generate lookup table if required
@@ -41,7 +42,9 @@ end
 % Generate guess if required
 guess = p.Results.guess;
 if isempty(guess)
-  guess = angle(ifft2(fftshift(target)));
+  guess = angle(otslm.tools.visualise(complex(target), 'method', 'fft', ...
+      'padding', p.Results.padding, 'trim_padding', true, ...
+      'type', 'nearfield'));
   if ~isempty(lookuptable)
     guess = interp1(lookuptable, lookuptable, guess, 'nearest');
     guess(isnan(guess)) = lookuptable(1);
@@ -70,12 +73,10 @@ else
   figure_active = @() true;
 end
 
-padding = 100;
-
 % Calculate the original fitness
 trial = otslm.tools.visualise(guess, 'method', p.Results.vismethod, ...
-    'incident', p.Results.incident, 'padding', padding);
-trial = trial(padding+1:end-padding, padding+1:end-padding);
+    'incident', p.Results.incident, ...
+    'padding', p.Results.padding, 'trim_padding', true);
 oldFitness = p.Results.objective(target, trial);
 
 fitnessScores = zeros(p.Results.iterations+1, 1);
@@ -96,9 +97,8 @@ while ii <= p.Results.iterations && figure_active()
 
   % Calculate the resulting field
   trial = otslm.tools.visualise(newGuess, 'method', p.Results.vismethod, ...
-      'incident', p.Results.incident, 'padding', padding);
-
-  trial = trial(padding+1:end-padding, padding+1:end-padding);
+      'incident', p.Results.incident, ...
+      'padding', p.Results.padding, 'trim_padding', true);
 
   % Calculate the fitness
   fitness = p.Results.objective(target, trial);

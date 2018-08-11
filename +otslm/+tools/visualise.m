@@ -37,6 +37,7 @@ function varargout = visualise(phase, varargin)
 %       is an offset from the focal plane.  For rs/rslens, this is the
 %       distance along the beam axis.
 %   'padding'   p         Add padding to the outside of the image.
+%   'trim_padding', bool  Trim padding before returning result (default: 0)
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -49,6 +50,7 @@ p.addParameter('amplitude', ones(size(phase)));
 p.addParameter('incident', []);
 p.addParameter('z', 0.0);
 p.addParameter('padding', 100);
+p.addParameter('trim_padding', false);
 p.addParameter('methoddata', []);
 p.addParameter('focallength', 1000);  % [lambda]
 
@@ -194,6 +196,11 @@ function output = fft_method(U, p)
     % Calculate pattern at DOE
     output = ifft2(fftshift(U));
 
+  end
+
+  % Remove padding if requested
+  if p.Results.trim_padding
+    output = output(padding+1:end-padding, padding+1:end-padding);
   end
 end
 
