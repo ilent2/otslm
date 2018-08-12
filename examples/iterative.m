@@ -29,7 +29,7 @@ im = insertText(im,[0 -12; 0 12] + sz/2, {'UQ', 'OMG'}, ...
 im = im(:, :, 1);
 
 hp = figure();
-Nf = 5;
+Nf = 6;
 
 subplot(Nf, 2, 2);
 imagesc(zoom(im, zm));
@@ -92,6 +92,24 @@ imagesc(pattern);
 subplot(Nf, 2, 10);
 imagesc(visualize(pattern, zm));
 caxis([1e-9, 1e-5]);
+
+%% BSC optimisation
+% Attempt to optimise beam shape coefficients for tightly focussed fields
+
+addpath('../../ott');
+
+bscim = zoom(im, 30);
+[pattern, beam] = otslm.iter.bsc(size(incident), bscim, ...
+    'incident', incident, 'objective', objective, ...
+    'verbose', true, 'basis_size', 20);
+
+figure(hp);
+
+subplot(Nf, 2, 11);
+imagesc(pattern);
+
+subplot(Nf, 2, 12);
+imagesc(visualize(pattern, zm));
 
 %% Change properties of all figures
 

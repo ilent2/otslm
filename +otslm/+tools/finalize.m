@@ -101,12 +101,19 @@ if ~isempty(p.Results.amplitude)
         % Use a checkerboard background
         background = otslm.simple.checkerboard(size(pattern), ...
             'value', [-1, 1]);
+          
+        % Normalize the amplitude to a controlable range (if outside)
+        amplitude = p.Results.amplitude;
+        if max(abs(amplitude(:))) > 1.0
+          warning('Amplitude > 1.0, normalizing to range 0 to 1');
+          amplitude = amplitude ./ max(abs(amplitude(:)));
+        end
 
         % This ratio depends on the background level
-        mixratio = 2/pi*acos(abs(p.Results.amplitude));
+        mixratio = 2/pi*acos(abs(amplitude));
 
         % Add the amplitude and mix with the background
-        pattern = pattern + angle(p.Results.amplitude)/(2*pi)+0.5;
+        pattern = pattern + angle(amplitude)/(2*pi)+0.5;
         pattern = pattern + mixratio.*angle(background)/(2*pi)+0.5;
 
       case 'grating'

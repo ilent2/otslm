@@ -242,58 +242,18 @@ function output = fft3_method(U, p)
 end
 
 function [output, beam] = ott_method(U, p)
+% Calculate the irradiance, does not calculate phase
 
-  axis = p.Results.axis;
-
-  z = p.Results.z;
+  % Generate the beam if not supplied
   beam = p.Results.methoddata;
-
-  % TODO: We should choose this based on the output range
-  % TODO: We should warn when Nmax gets much larger, memory/time
-  Nmax = 20;
-
-  % TODO: Set the output range to other values
-
-  % TODO: Set the NA to other values
-  NA = 1.02;
-
-  % TODO: Lower resolution for output image
-
-  % Calculate the beam shape coefficients of focussed beam
-  polarisation = [ 1, 1i ];
-  nMedium = 1.33;
-
   if isempty(beam)
-    beam = ott.BscPmParaxial(NA, U, 'index_medium', nMedium, ...
-        'polarisation', polarisation, 'Nmax', Nmax);
+    beam = otslm.tools.hologram2bsc(U);
   end
 
-  xrange = linspace(-3, 3, round(size(U, 2)/5))/nMedium;
-  yrange = linspace(-3, 3, round(size(U, 1)/5))/nMedium;
-
-  switch axis
-    case 'x'
-      [X1,Y1,Z1]=meshgrid(z, xrange, yrange);
-    case 'y'
-      [X1,Y1,Z1]=meshgrid(xrange, z, yrange);
-    case 'z'
-      [X1,Y1,Z1]=meshgrid(xrange, yrange, z);
-    otherwise
-      error('Unknown axis direction specified');
-  end
-
-  % Calculate the E field
-  E = beam.emFieldXyz([X1(:),Y1(:),Z1(:)].');
-
-  % Add the irradiance to the output
-  output = sum(abs(E).^2, 1);
-
-  % Add the z-phase to the output (is this a good idea?)
-%   output = output .* exp(1i*angle(E(3, :)));
-
-  % Turn the output back into an image
-  output = reshape(output, [round(size(U, 1)/5), round(size(U, 2)/5)]);
-
+  % Calculate the irradiance
+  output = beam.visualise('offset', p.Results.z, ...
+      'axis', p.Results.axis, 'field', 'irradiance', ...
+      'size', round(size(U)/5));
 end
 
 function [output] = rs_method(U, p)
