@@ -86,12 +86,14 @@ if p.Results.verbose
     num2str(p.Results.basis_size*(p.Results.basis_size+1)/2), ' beams']);
   disp('Calculating fields for basis functions');
   tic
+  lastTic = toc();
 end
 
 % Calculate locations for target
 xrange = (1:size(target, 2)) - 0.5 - size(target, 2)/2;
 yrange = (1:size(target, 1)) - 0.5 - size(target, 1)/2;
-[xx, yy, zz] = meshgrid(xrange, yrange, 0.0);
+zrange = (1:size(target, 3)) - 0.5 - size(target, 3)/2;
+[xx, yy, zz] = meshgrid(xrange, yrange, zrange);
 xyz = [xx(:).'; yy(:).'; zz(:).'].*p.Results.pixel_size;
 
 % Calculate the fields for these beams
@@ -99,6 +101,12 @@ xyz = [xx(:).'; yy(:).'; zz(:).'].*p.Results.pixel_size;
 %   spherical wave functions for all beams in advance
 modes = zeros(3*numel(target), length(beams));
 for ii = 1:length(beams)
+  
+  if p.Results.verbose && toc()-lastTic > 10
+    disp(['... mode ' num2str(ii)]);
+    lastTic = toc();
+  end
+  
   E = beams(ii).emFieldXyz(xyz);
   modes(:, ii) = E(:);
 end
