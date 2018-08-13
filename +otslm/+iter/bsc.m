@@ -16,6 +16,7 @@ function [pattern, beam, coeffs] = bsc(sz, target, varargin)
 %   'NA'        num      Numberical aperture of objective
 %   'pixel_size' num     Size of pixels in target [m]
 %   'method'    str      Optimisation method to use
+%   'radius'    num      Radius for hologram unwrapping (default: 1.0)
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -27,6 +28,8 @@ p.addParameter('objective', @otslm.iter.objectives.bowman2017cost);
 p.addParameter('basis', 'vswf_lg');     % Not used yet
 p.addParameter('basis_size', 40);
 p.addParameter('polarisation', [1 1i]);
+p.addParameter('radius', 1.0);
+p.addParameter('guess', []);
 
 p.addParameter('wavelength0', 1064e-9);
 p.addParameter('speed0', 3.0e8);
@@ -124,13 +127,57 @@ end
 
 target = target .* (Mtotals(1) ./ Ttotal).^0.5;
 
-% Calculate the decomposition of the target in the basis
-optopts = optimoptions(@fsolve,'Display','iter','FunctionTolerance',1e-10,...
-  'Algorithm', 'levenberg-marquardt', 'MaxFunctionEvaluations', 2000);
+% Calculate the initial guess for the coefficients
+if ischar(p.Results.guess)
+  guessType = 'rand';
+  switch guessType
+    case 'xypol'
+
+      % Use the X/Y field amplitudes
+      smodes = zeros(numel(target), length(beams));
+      for ii = 1:length(beams)
+        smodes(:, ii) = modes(1:3:end, ii)*conj(p.Results.polarisation(1)) ...
+            + modes(2:3:end, ii)*conj(p.Results.polarisation(2));
+      end
+      guess = smodes \ target(:);
+
+    case 'zpol'
+      % Use the Z field amplitudes
+      guess = modes(3:3:end, :) \ target(:);
+    case 'xpol'
+      % Use the X field amplitudes
+      guess = modes(1:3:end, :) \ target(:);
+    case 'ypol'
+      % Use the Y field amplitudes
+      guess = modes(2:3:end, :) \ target(:);
+
+    case 'rand'
+      % Use a random guess
+      guess = complex(2*rand(size(beams)) - 1, 2*rand(size(beams)) - 1).';
+    otherwise
+      error('Unknown guess type option');
+  end
+else
+  guess = p.Results.guess(:);
+end
+
+% Generate the optimisation function
 optfun = @(x) p.Results.objective(target, ...
   reshape(sqrt(sum(abs(reshape(modes * x, [3, size(modes, 1)/3])).^2, 1)), size(target)));
-guess = complex(2*rand(size(beams)) - 1, 2*rand(size(beams)) - 1);
-coeffs = fsolve(optfun, guess(:), optopts);
+
+% Attempt to optimise using fminsearch
+% optopts = optimset('PlotFcns', @optimplotfval);
+% coeffs = fminsearch(optfun, guess, optopts);
+
+% Attempt to optimise using fminunc
+optopts = optimset('PlotFcns', @optimplotfval);
+coeffs = fminunc(optfun, guess, optopts);
+
+% % Calculate the decomposition of the target in the basis
+% optopts = optimoptions(@fsolve,'Display','iter','FunctionTolerance',1e-10,...
+%   'Algorithm', 'levenberg-marquardt', 'MaxFunctionEvaluations', 80000, ...
+%   'ScaleProblem', 'jacobian');
+% coeffs = fsolve(optfun, guess, optopts);
 
 % Calculate the farfield amplitude of the beam
 beam = beams(1)*coeffs(1);
@@ -145,5 +192,6 @@ end
 
 % Calculate hologram from bsc for incident beam
 pattern = otslm.tools.bsc2hologram(sz, beam, ...
-    'incident', p.Results.incident, 'polarisation', p.Results.polarisation);
+    'incident', p.Results.incident, 'polarisation', p.Results.polarisation, ...
+    'radius', p.Results.radius);
 

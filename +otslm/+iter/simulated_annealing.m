@@ -26,6 +26,7 @@ p.addParameter('incident', []);
 p.addParameter('vismethod', 'fft');
 p.addParameter('levels', []);
 p.addParameter('objective', @otslm.iter.objectives.flatintensity);
+p.addParameter('objtype', 'intensity');
 p.addParameter('iterations', 1000);
 p.addParameter('show_progress', true);
 p.addParameter('maxT', 1000);
@@ -77,7 +78,7 @@ end
 trial = otslm.tools.visualise(guess, 'method', p.Results.vismethod, ...
     'incident', p.Results.incident, ...
     'padding', p.Results.padding, 'trim_padding', true);
-oldFitness = p.Results.objective(target, trial);
+oldFitness = evaluate(p.Results.objtype, target, trial);
 
 fitnessScores = zeros(p.Results.iterations+1, 1);
 fitnessScores(1) = oldFitness;
@@ -101,7 +102,7 @@ while ii <= p.Results.iterations && figure_active()
       'padding', p.Results.padding, 'trim_padding', true);
 
   % Calculate the fitness
-  fitness = p.Results.objective(target, trial);
+  fitness = evaluate(p.Results.objtype, target, trial);
 
   % Determine if this trial is satisfactory to keep
   if fitness < oldFitness || exp(-(fitness-oldFitness)/T) < rand()
@@ -122,3 +123,17 @@ end
 
 end
 
+function fitness = evaluate(type, target, trial)
+
+% TODO: This should really be part of the obejctive function class
+
+switch type
+  case 'intensity'
+    fitness = p.Results.objective(target, abs(trial).^2);
+  case 'camp'
+    fitness = p.Results.objective(target, trial);
+  otherwise
+    error('Unknown option');
+end
+
+end

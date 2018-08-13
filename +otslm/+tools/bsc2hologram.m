@@ -10,6 +10,7 @@ function [pattern, cpattern] = bsc2hologram(sz, beam, varargin)
 %   'incident'      im      Incident beam complex amplitude (default: ones)
 %   'polarisation'  [x y]   Polarisation of incident beam (default: [1 1i])
 %   'encodemethod'  str     Amplitude encode method (see tools.finalize)
+%   'radius'        r       Radius of the hologram pattern (default: 1.0)
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
