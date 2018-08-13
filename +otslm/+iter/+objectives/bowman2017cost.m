@@ -3,8 +3,12 @@ function f = bowman2017cost(target, trial, varargin)
 %
 %   C = 10^d * (1.0 - \sum_{nm} sqrt(I_nm T_nm) cos(phi_nm - psi_nm)).^2
 %
+% target and trial should be the complex field amplitudes.
+%
 % Optional named arguments:
 %     d     value     hyper-parameter of cost function (default: d = 9).
+%     normalize  bool Normalize target/trial every evaluation (default=true).
+%     roi   func      Region of interest mask to apply to target/trial.
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -13,6 +17,7 @@ function f = bowman2017cost(target, trial, varargin)
 p = inputParser;
 p.addParameter('d', 9.0);
 p.addParameter('roi', @otslm.iter.objectives.roiAll);
+p.addParameter('normalize', true);
 p.parse(varargin{:});
 
 % Apply mask to target and trial
@@ -27,5 +32,9 @@ psi = angle(trial);
 I = abs(trial).^2;
 
 % Calculate cost
-f = (1.0 - sum(sqrt(T(:).*I(:)) .* cos(psi(:) - phi(:)))).^2;
+overlap = sum(sqrt(T(:).*I(:)) .* cos(psi(:) - phi(:)));
+if p.Results.normalize
+  overlap = overlap / sqrt(sum(T(:)) * sum(I(:)));
+end
+f = 10^p.Results.d * (1.0 - overlap).^2;
 
