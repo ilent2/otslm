@@ -4,16 +4,22 @@
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
-slm = otslm.utils.ScreenDevice(1, 'target_size', [512, 512], ...
-  'target_offset', [100, 0]);
+% Add toolbox to the path
+addpath('../');
 
-%% Generate a simple pattern and who
+%% Create a test device to fill monitor 1
+
+slm = otslm.utils.ScreenDevice(1, 'target_size', [1200, 1920], ...
+  'target_offset', [0, 0]);
+
+%% Generate a simple pattern and show for 10 seconds
+
 pattern = otslm.simple.linear(slm.size, 50);
 slm.show(pattern);
-pause(2);
+pause(10);
 slm.close();
 
-%% Generate a movie of images
+%% Generate a movie of images and display on the device
 
 % Generate images first
 patterns = struct('cdata', {}, 'colormap', {});
@@ -22,7 +28,34 @@ for ii = 1:100
       'colormap', slm.lookupTable));
 end
 
-% Show the display first (takes longer)
+% Then display the animation
 slm.showRaw(patterns, 'framerate', 100);
 slm.close();
 
+%% Create a device by loading a lookup table
+
+% First generate the 'fake' lookup table and write it to a file
+% The first column is junk, the second column is the 16 bit table
+fake_lookup_table = [rand(2^16-1, 1), (0:(2^16-2)).'];
+fname = [tempname, '.txt'];
+fp = fopen(fname, 'w');
+fprintf(fp, 'The header line...\n');
+fprintf(fp, '%f\t%f\n', fake_lookup_table.');
+fclose(fp);
+
+% Load the lookup table from file
+%   Both the red and green channels use the second column of the
+%   data file.  The column has uint16 format.  Red uses the lower
+%   8 bits, green uses the upper 8 bits.  The bits are ordered 1:8.
+lookup_table = otslm.utils.load_colormap(fname, ...
+  'channels', [2, 2, 0], 'phase', [], 'format', @uint16, ...
+  'mask', [hex2dec('00ff'), hex2dec('ff00')], 'morder',  1:8);
+
+% Create a SLM screen object to control the screen
+slm = otslm.utils.ScreenDevice(1, 'target_size', [1200, 1920], ...
+    'target_offset', [0, 0], 'lookup_table', lookup_table);
+
+% Show the pattern for 10 seconds
+slm.show(pattern);
+pause(10);
+slm.close();

@@ -160,7 +160,7 @@ classdef ScreenDevice < otslm.utils.Showable
           img = uint8(img);
         end
 
-      elseif ~isa(img, 'struct')
+      elseif nargin == 1
         img = zeros(obj.size, 'uint8');
       end
 

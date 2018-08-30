@@ -48,8 +48,12 @@ classdef (Abstract) Showable < handle
       %
       % Default behaviour is to apply the colour map and call showRaw.
 
-      pattern = otslm.tools.finalize(pattern, 'colormap', obj.lookupTable);
-      obj.showRaw(pattern);
+      if nargin == 2
+        pattern = otslm.tools.finalize(pattern, 'colormap', obj.lookupTable);
+        obj.showRaw(pattern);
+      else
+        obj.showRaw();
+      end
     end
 
     function showComplex(obj, pattern)

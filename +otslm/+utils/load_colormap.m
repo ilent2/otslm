@@ -34,9 +34,20 @@ function lookupTable = load_colormap(filename, varargin)
 % The output value is then calculated as a uint8 from the bits
 % that were masked using the morder argument.
 %
+% Examples:
+%
+%   Load a 16-bit lookup table with values assigned to the first two
+%   channels.  The input file has two columns, we use the second.
+%     lookup_table = 'LookupTable.txt';
+%     colormap = otslm.utils.load_colormap(lookup_table, ...
+%       'channels', [2, 2, 0], 'phase', [], 'format', @uint16, ...
+%       'mask', [hex2dec('00ff'), hex2dec('ff00')]);
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
+
+% TODO: Different morder for each channel
 
 p = inputParser;
 p.addParameter('channels', [ -1, 0, 0 ]);
@@ -83,8 +94,8 @@ for ii = 1:length(p.Results.channels)
     ch = ch*0;
     numBits = 0;
     for jj = 1:64
-      if bitand(p.Results.mask, 2^(jj-1))
-        ch = bitor(ch, logical(bitand(usch, 2^(jj-1)))*2^(numBits));
+      if bitand(p.Results.mask(ii), 2^(jj-1))
+        ch = bitor(ch, cast(logical(bitand(usch, 2^(jj-1)))*2^(numBits), 'like', usch));
         numBits = numBits + 1;
       end
     end
@@ -95,13 +106,16 @@ for ii = 1:length(p.Results.channels)
 
   % Select the bits required for the output column
   for jj = 1:length(p.Results.morder)
-    if p.Results.order(jj) <= 0
+    if p.Results.morder(jj) <= 0
+      % Add an off bit at this location
       % Nothing to do
-    elseif p.Results.order(jj) > numBits
-      lookupTable(:, ii) = bitor(lookupTable(:, ii), 2^(jj-1));
+    elseif p.Results.morder(jj) > numBits
+      % Add an on bit at this location
+      lookupTable(:, ii) = bitor(lookupTable(:, ii), cast(2^(jj-1), p.Results.oformat));
     else
+      % Add the bit from the lookup table to this location
       lookupTable(:, ii) = bitor(lookupTable(:, ii), ...
-          logical(bitand(ch, 2^(p.Results.order(jj)-1)))*2^(jj-1));
+          cast(logical(bitand(ch, 2^(p.Results.morder(jj)-1)))*2^(jj-1), p.Results.oformat));
     end
   end
 end
