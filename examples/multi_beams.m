@@ -12,11 +12,11 @@ sz = [512, 512];
 
 %% Generate a couple of simple diffraction grating patterns
 
-pattern1 = linear(sz, 'angle_deg', 90, 'spacing', 20);
+pattern1 = linear(sz, 20, 'angle_deg', 90);
 
-pattern2 = linear(sz, 'angle_deg', 90, 'spacing', 40);
+pattern2 = linear(sz, 40, 'angle_deg', 90);
 
-pattern3 = linear(sz, 'angle_deg', 45, 'spacing', 20) ...
+pattern3 = linear(sz, 20, 'angle_deg', 45) ...
     + spherical(sz, 100, 'imag_value', 0);
 
 figure(1);

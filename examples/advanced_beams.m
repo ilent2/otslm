@@ -29,7 +29,7 @@ figure();
 %% Adding beam phase to shift beams
 
 pattern = otslm.simple.lgmode(sz, 3, 2, 'radius', 50);
-pattern = pattern + otslm.simple.linear(sz, 'spacing', 30);
+pattern = pattern + otslm.simple.linear(sz, 30);
 pattern = otslm.tools.finalize(pattern);
 
 subplot(4, 4, 1);
@@ -40,8 +40,8 @@ imagesc(visualize(pattern, 100));
 
 %% Mixing beams with superposition
 
-pattern1 = otslm.simple.linear(sz, 'spacing', 30, 'angle_deg', 90);
-pattern2 = otslm.simple.linear(sz, 'spacing', 30, 'angle_deg', 0);
+pattern1 = otslm.simple.linear(sz, 30, 'angle_deg', 90);
+pattern2 = otslm.simple.linear(sz, 30, 'angle_deg', 0);
 
 pattern = otslm.tools.combine({pattern1, pattern2}, ...
     'method', 'super');
@@ -123,7 +123,7 @@ aspect = 2;
     'aspect', aspect, 'radius', 100);
 
 % Shift the pattern away from the zero-th order (rotate away from artifacts)
-phase = phase + otslm.simple.linear(dmdsz, 'spacing', 40, ...
+phase = phase + otslm.simple.linear(dmdsz, 40, ...
     'angle_deg', 62, 'aspect', aspect);
   
 % Finalize the pattern: encoding amplitude and phase into amplitude pattern
@@ -154,7 +154,7 @@ imagesc(visOutput);
 loc1 = [ 170, 150 ];
 radius1 = 75;
 pattern1 = otslm.simple.lgmode(sz, 3, 0, 'centre', loc1);
-pattern1 = pattern1 + otslm.simple.linear(sz, 'spacing', 20);
+pattern1 = pattern1 + otslm.simple.linear(sz, 20);
 pattern1 = otslm.tools.finalize(pattern1, 'amplitude', beamCorrection, ...
     'colormap', 'gray');
 
@@ -164,7 +164,7 @@ pattern2 = zeros(sz);
 
 loc3 = [ 270, 300 ];
 radius3 = 50;
-pattern3 = otslm.simple.linear(sz, 'spacing', -20, 'angle_deg', 45);
+pattern3 = otslm.simple.linear(sz, -20, 'angle_deg', 45);
 pattern3 = otslm.tools.finalize(pattern3, 'amplitude', 0.4, ...
     'colormap', 'gray');
 

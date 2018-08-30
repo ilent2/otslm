@@ -48,7 +48,7 @@ rmode = 3;
     'aspect', aspect, 'radius', 50, 'p0', 0.5);
 
 % Shift the pattern away from the zero-th order (rotate away from artifacts)
-phase = phase + otslm.simple.linear(dmdsz, 'spacing', 30, ...
+phase = phase + otslm.simple.linear(dmdsz, 30, ...
     'angle_deg', 45, 'aspect', aspect);
 
 % Finalize the pattern: encoding amplitude and phase into amplitude pattern

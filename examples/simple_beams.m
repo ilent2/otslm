@@ -32,7 +32,7 @@ imagesc(visualize(pattern));
 
 %% Linear grating (xy displacement)
 
-pattern = otslm.simple.linear(sz, 'spacing', 40, 'angle_deg', 45);
+pattern = otslm.simple.linear(sz, 40, 'angle_deg', 45);
 pattern = otslm.tools.finalize(pattern);
 
 subplot(4, 4, 5);
