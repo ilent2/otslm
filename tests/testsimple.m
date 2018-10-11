@@ -1,4 +1,4 @@
-function tests = simple
+function tests = testsimple
   % SIMPLE tests for otslm.simple.*
   %
   % These tests are primarily to test everything runs, we should
@@ -18,6 +18,10 @@ function testAperture(testCase)
   pattern = otslm.simple.aperture(sz, 100, 'type', 'square');
   pattern = otslm.simple.aperture(sz, [100, 200], 'type', 'rect');
   pattern = otslm.simple.aperture(sz, [100, 200], 'type', 'ring');
+  assert(islogical(pattern));
+
+  pattern = otslm.simple.aperture(sz, 100, 'value', [0, 1]);
+  assert(isnumeric(pattern));
 end
 
 function testAspheric(testCase)
@@ -71,6 +75,16 @@ function testLinear(testCase)
 
   % Test multiple spacings for different directions
   pattern = otslm.simple.linear([512, 512], [10, 20]);
+
+  % Test negative spacing
+  pattern1 = otslm.simple.linear([512, 512], 10);
+  pattern2 = otslm.simple.linear([512, 512], -10);
+  assert(all(pattern1(:) + pattern2(:) == pattern1(1) + pattern2(1)));
+
+  % Test negative spacing with angle
+  pattern1 = otslm.simple.linear([512, 512], 10, 'angle_deg', 0);
+  pattern2 = otslm.simple.linear([512, 512], -10, 'angle_deg', 0);
+  assert(all(pattern1(:) + pattern2(:) == pattern1(1) + pattern2(1)));
 end
 
 function testGrid(testCase)

@@ -13,7 +13,7 @@ function pattern = aperture(sz, dimension, varargin)
 %           'ring'      [r1, r2]    Ring specified by inner and outer radius
 %   'centre'      [x, y]      centre location for pattern
 %   'offset'      [x, y]      offset in rotated coordinate system
-%   'values'      [l, h]      values for off and on regions (default: [])
+%   'value'       [l, h]      values for off and on regions (default: [])
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
@@ -26,7 +26,7 @@ p = inputParser;
 p.addParameter('type', 'circle');
 p.addParameter('centre', [sz(2), sz(1)]/2.0);
 p.addParameter('offset', [0, 0]);
-p.addParameter('values', []);
+p.addParameter('value', []);
 p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
@@ -57,12 +57,12 @@ switch p.Results.type
 end
 
 % Scale the pattern (convert from logical to double)
-if ~isempty(p.Results.values)
-  high = p.Results.values(2);
-  low = p.Results.values(1);
+if ~isempty(p.Results.value)
+  high = p.Results.value(2);
+  low = p.Results.value(1);
   pattern = pattern .* (high - low) + low;
 
   % Ensure type of output matches low/high
-  pattern = cast(pattern, 'like', p.Results.values);
+  pattern = cast(pattern, 'like', p.Results.value);
 end
 
