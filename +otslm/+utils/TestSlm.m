@@ -8,6 +8,7 @@ classdef TestSlm < otslm.utils.TestShowable
 %   size          device resolution [rows, columns]
 %
 %   pattern       pattern currently being displayed
+%   incident      incident illumination
 %   output        resulting pattern in far-field (may move to TestCamera)
 %
 % See also: otslm.utils.TestCamera
@@ -15,6 +16,10 @@ classdef TestSlm < otslm.utils.TestShowable
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
+
+  properties
+    incident      % Incident illumination profile
+  end
 
   properties (SetAccess=protected)
     pattern       % Pattern currently displayed on the device
@@ -44,6 +49,7 @@ classdef TestSlm < otslm.utils.TestShowable
       
       obj = obj@otslm.utils.TestShowable();
       obj.actualPhaseTable = actualPhaseTable(:);
+      obj.incident = ones(obj.size);
     end
     
     function showRaw(obj, pattern)
@@ -61,7 +67,14 @@ classdef TestSlm < otslm.utils.TestShowable
       obj.pattern = cast(obj.pattern, 'like', obj.actualPhaseTable);
 
       % Convert pattern to complex amplitude
-      obj.pattern = complex(exp(1i*obj.pattern));
+      obj.pattern = complex(exp(1i*obj.pattern)) .* obj.incident;
+    end
+    
+    function set.incident(slm, newincident)
+      % Check the new incident pattern
+      assert(all(size(newincident) == slm.size), ...
+        'Incident pattern size must match SLM size');
+      slm.incident = newincident;
     end
   end
 

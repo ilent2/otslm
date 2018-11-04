@@ -4,6 +4,9 @@ classdef TestCamera < otslm.utils.Viewable
 % TODO: This functionality should be combined with TestDmd and TestSlm,
 %   i.e. these device should inherit from Viewable too
 %
+% Methods:
+%   view()    show the image currently displayed on the linked device
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -39,8 +42,13 @@ classdef TestCamera < otslm.utils.Viewable
       oldstate = warning('query', 'otslm:tools:visualise:range');
       warning('off', 'otslm:tools:visualise:range');
 
+      p = 200;
+
       im = abs(otslm.tools.visualise(obj.showable.pattern, ...
-          'method', 'fft', 'padding', 200)).^2;
+          'method', 'fft', 'padding', p)).^2;
+
+      % Crop image (remove padding)
+      im = im(p+1:end-p, p+1:end-p);
 
       % Restore original range warning
       warning(oldstate);
