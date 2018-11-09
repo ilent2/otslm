@@ -31,24 +31,44 @@ classdef (Abstract) Viewable < handle
       obj.roioffset = [0, 0];
     end
 
-    function im = viewTarget(obj)
+    function im = viewTarget(obj, varargin)
       % View the target, applies a ROI to the result of view()
+      %
+      % im = viewTarget(...)
+      %
+      % Optional named arguments:
+      %   roi     array     Specified which roi to return
+
+      p = inputParser;
+      p.addParameter('roi', 1);
+      p.parse(varargin{:});
 
       % Acquire the image in the normal way
       im = obj.view();
-      
+
       % Handle default roi properties
       if isempty(obj.roisize)
         obj.roisize = obj.size;
       end
-      
+
       if isempty(obj.roioffset)
         obj.roioffset = [0,0];
       end
 
       % Crop the image to the ROI
-      im = im(1+obj.roioffset(1):obj.roioffset(1)+obj.roisize(1), ...
-          1+obj.roioffset(2):obj.roioffset(2)+obj.roisize(2));
+      if ~isempty(p.Results.roi)
+        oim = im;
+        im = cell(1, numel(p.Results.roi));
+        for ii = 1:numel(p.Results.roi)
+          idx = p.Results.roi(ii);
+          im{ii} = oim(1+obj.roioffset(idx, 1):obj.roioffset(idx, 1)+obj.roisize(idx, 1), ...
+              1+obj.roioffset(idx, 2):obj.roioffset(idx, 2)+obj.roisize(idx, 2));
+        end
+
+        if length(im) == 1
+          im = im{1};
+        end
+      end
     end
 
     function crop(obj, roi)
@@ -57,19 +77,31 @@ classdef (Abstract) Viewable < handle
       %  obj.crop([]) resets the roi to the full screen.
       %
       %  obj.crop([rows cols yoffset xoffset])
-      
+
       % TODO: Make input consistent with the getrect function
-      
+
       if isempty(roi)
         obj.roioffset = [0,0];
         obj.roisize = obj.size;
         return;
+      elseif ~iscell(roi)
+        roi = {roi};
       end
-      
-      assert(all(roi(1:2) <= obj.size), ...
-          'ROI must be smaller or equal to image size');
-      obj.roisize = roi(1:2);
-      obj.roioffset = roi(3:4);
+
+      obj.roisize = zeros(numel(roi), 2);
+      obj.roioffset = zeros(numel(roi), 2);
+
+      for ii = 1:numel(roi)
+        assert(all(roi{ii}(1:2) <= obj.size), ...
+            'ROI must be smaller or equal to image size');
+        obj.roisize(ii, :) = roi{ii}(1:2);
+        obj.roioffset(ii, :) = roi{ii}(3:4);
+      end
+    end
+
+    function num = get.numroi(obj)
+      % Get the number of ROIs that have been set
+      num = size(obj.roisize, 1);
     end
   end
 
@@ -80,6 +112,10 @@ classdef (Abstract) Viewable < handle
 
   properties (Abstract, SetAccess=protected)
     size        % Size of the device [rows, columns]
+  end
+
+  properties (Dependent)
+    numroi      % Number of ROI that have been set
   end
 
 end

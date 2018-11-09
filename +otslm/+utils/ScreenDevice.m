@@ -155,6 +155,10 @@ classdef ScreenDevice < otslm.utils.Showable
         assert(size(img, 3) == 1 || size(img, 3) == 3, ...
             'Number of channels in image must be 1 or 3');
 
+        % Replace NAN with first value from lookup table
+        img(isnan(img)) = repmat(obj.lookupTable{2}(1, :), ...
+            [sum(sum(isnan(img(:, :, 1)))), 1]);
+
         % Convert image from double to uint8 (for speed)
         if isa(img, 'double')
           img = uint8(img);

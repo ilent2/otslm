@@ -54,7 +54,10 @@ else
   % Allow for non-linear color maps
   if iscell(cmap)
     crange = cmap{1}(:);
-    cmap = cmap{2}(:);
+    cmap = cmap{2};
+    assert(size(crange, 1) == size(cmap, 1), ...
+        'otslm:tools:colormap:size', ...
+        'Colour map must have same number of rows as crange values');
   else
     % TODO: This case could be faster, we don't need to use interp1
     crange = linspace(0, 1, size(cmap, 1));
