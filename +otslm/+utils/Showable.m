@@ -15,6 +15,9 @@ classdef (Abstract) Showable < handle
 %       to the patternType of the device.  Conversion is done by calling
 %       otslm.tools.finalize with for amplitude, phase target.
 %
+%   showIndexed(pattern)  Display a pattern with integers describing
+%       entries in the lookup table.
+%
 % Properties (abstract):
 %   valueRange          Values that the device patterns can contain.
 %       This should be a 1-d array, or cell array of 1-d arrays for
@@ -80,7 +83,28 @@ classdef (Abstract) Showable < handle
       % Call the show method to display the function
       obj.show(pattern);
     end
-    
+
+    function showIndexed(slm, pattern)
+      % Display a pattern described by linear indexes on the device
+
+      assert(min(pattern(:)) >= 1 ...
+          && max(pattern(:)) <= slm.valueRangeNumel(), ...
+          'Indicies must be between 1 and valueRangeNumel');
+
+      % Get lookup table for linear indexes
+      valueTable = slm.linearValueRange('structured', true);
+
+      % Generate the raw pattern
+      rawpattern = zeros([slm.size, length(slm.valueRange)]);
+      for ii = 1:length(slm.valueRange)
+        layer = valueTable(:, pattern(:));
+        rawpattern(:, :, ii) = reshape(layer, slm.size);
+      end
+
+      % Display the raw pattern
+      slm.showRaw(rawpattern);
+    end
+
     function valueRangeSz = valueRangeSize(obj, idx)
       % Calculate the size of the lookup table
       valueRangeSz = zeros([1, length(obj.valueRange)]);

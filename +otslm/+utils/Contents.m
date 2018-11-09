@@ -1,10 +1,12 @@
 % +OTSLM/+UTILS utility functions for controlling, interacting with
 % and simulating hardware
 %
-% Files
-%   calibrate     - method to calibrate phase-only SLM
-%   image_device  - method to generate image of slm
-%   load_colormap - loads a colormap from file, colormaps can be used
+% Classes
+%   LookupTable   - represents the phase and pixel values of a lookup table
+%
+% Sub-packages
+%   imaging       - functions for imaging the device surface
+%   calibration   - functions for calibrating a device
 %
 % Base classes of showable and viewable objects
 %   Showable      - represents devices that can display a pattern
@@ -13,6 +15,7 @@
 % Physical devices
 %   ScreenDevice  - represents a device controlled by full screen window
 %   GigeCamera    - connect to a gige camera connected to the computer
+%   WebcamCamera  - connect to a webcam camera connected to the computer
 %
 % Non-physical devices used for testing
 %   TestDmd       - non-physical dmd-like device for testing code

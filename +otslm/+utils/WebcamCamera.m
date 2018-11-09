@@ -1,5 +1,5 @@
 classdef WebcamCamera < otslm.utils.Viewable
-%GIGECAMERA connect to a webcam camera connected to the computer
+%WEBCAMCAMERA connect to a webcam camera connected to the computer
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
