@@ -2,7 +2,7 @@
 %
 % Interfaces
 %   aperture     - generates an aperture mask
-% #  aspheric     - spherical, parabolic and aspherical lens patterns
+%   aspheric     - spherical, parabolic and aspherical lens patterns
 %   axicon       - generates a axicon lens described by a gradient parmeter
 %   bessel       - generates the phase and amplitude patterns for Bessel beams
 %   checkerboard - generates a checkerboard pattern
@@ -16,4 +16,4 @@
 %   Sinc         - generates a sinc pattern
 %   sinusoid     - generates a sinusoidal grating
 %   step         - generates a step
-% #  zernike      - generates a pattern based on the zernike polynomials
+%   zernike      - generates a pattern based on the zernike polynomials
