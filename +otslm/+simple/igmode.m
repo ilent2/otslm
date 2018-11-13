@@ -1,7 +1,7 @@
 function [pattern, amplitude] = igmode(sz, even, modep, modem, elipticity, varargin)
 % IGMODE generates phase and amplitude patterns for Ince-Gaussian beams
 %
-% pattern = igmode(sz, e, p, m, ...) generates the phase
+% pattern = igmode(sz, e, p, m, elipticity, ...) generates the phase
 % pattern with parity even and polynomial order modep and degree modem.
 % p = 0,1,2,3... and 0 <= m <= p.
 % elipticity is the elipticity of the coordinates.
@@ -25,6 +25,8 @@ function [pattern, amplitude] = igmode(sz, even, modep, modem, elipticity, varar
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
+
+warning('igmode may not produce clean output/needs work');
 
 % Check inputs
 assert(even == true || even == false, 'e (even) must be true or false');
