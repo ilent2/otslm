@@ -15,7 +15,8 @@ function pattern = sinusoid(sz, period, varargin)
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'scale'       scale       Scale for the final result
+%   'scale'       scale       Scale for the final result (default: 1)
+%   'offset'      num         Offset for pattern (default: 0.5)
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -28,6 +29,7 @@ p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);
 p.addParameter('scale', 1.0);
+p.addParameter('offset', 0.5);
 p.parse(varargin{:});
 
 % Calculate radial coordinates
@@ -51,5 +53,5 @@ else
 end
 
 % Scale the pattern
-pattern = (pattern+1)*0.5*p.Results.scale;
+pattern = pattern*0.5*p.Results.scale + p.Results.offset;
 

@@ -148,12 +148,12 @@ function output = fft_method(U, p)
 
   z = p.Results.z;
   padding = p.Results.padding;
+  if numel(padding) == 1
+    padding = [padding, padding];
+  end
 
   % Apply padding to the image
-  img = zeros(size(U)+2*[padding, padding]);
-  img(padding+(1:size(U, 1)), padding+(1:size(U, 2))) = U;
-  U = img;
-
+  U = padarray(U, padding, 0);
 
   if strcmpi(p.Results.type, 'farfield')
 
