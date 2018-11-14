@@ -4,6 +4,7 @@
 %   Combine      - combines multiple patterns
 %   Dither       - creates a binary patter from gray pattern
 %   Encode1d     - encode the target pattern amplitude into the phase
+%   Finalize     - finalize a pattern, applying a color map and taking the modulo
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
