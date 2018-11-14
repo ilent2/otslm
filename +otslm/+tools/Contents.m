@@ -10,7 +10,10 @@
 %   sample_region   - generates a pattern for sampling regions on SLM.
 %   spatial_filter  - applies a spatial filter to the image spectrum
 %   visualise       - generates far-field plane images of the phase pattern
-%   visualise3d     - 3-dimensional visualisation of pattern
+%   bsc2hologram    - calculates the far-field hologram for a BSC beam
+%   colormap        - applies a colormap to a pattern
+%   hologram2bsc    - convert pattern to beam shape coefficients
+%   phaseblur       - simulate pixel phase blurring
 %   volume2hologram - generate hologram from 3-D volume
 %
 % Copyright 2018 Isaac Lenton

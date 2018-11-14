@@ -1,6 +1,9 @@
 function [pattern, assigned] = encode1d(target, varargin)
 % Encode the target pattern amplitude into the phase pattern size
 %
+% [pattern, assigned] = encode1d(target, ...) encodes the complex
+% target pattern into a 1-D phase mask.
+%
 % Optional named arguments:
 %
 %   'scale'       scale       Scale for the height of the pattern

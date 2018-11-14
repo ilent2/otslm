@@ -42,6 +42,9 @@ p.addParameter('method', 'super');
 p.addParameter('weights', []);
 p.parse(varargin{:});
 
+% Check that we have work to do
+assert(~isempty(inputs), 'Inputs must have at least one element');
+
 switch p.Results.method
   case 'super'
 

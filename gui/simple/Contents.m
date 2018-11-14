@@ -17,3 +17,7 @@
 %   sinusoid     - generates a sinusoidal grating
 %   step         - generates a step
 %   zernike      - generates a pattern based on the zernike polynomials
+%
+% Copyright 2018 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
