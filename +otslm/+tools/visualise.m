@@ -56,73 +56,13 @@ p.addParameter('trim_padding', false);
 p.addParameter('methoddata', []);
 p.addParameter('NA', 0.1);
 p.addParameter('resample', []);
-
-% Separate focal length parameter for fft3, hmm, should be merged
-% We should really have separate vis method specific parsers or something
-p.addParameter('focal_length', []);   % [pixel units]
-
 p.addParameter('axis', 'z');
 p.parse(varargin{:});
 
-amplitude = p.Results.amplitude;
-incident = p.Results.incident;
-
-% Handle default value for amplitude
-if isempty(amplitude) && ~isempty(phase)
-  amplitude = ones(size(phase));
-end
-
-% Handle default value for phase
-if isempty(phase)
-  if ~isempty(amplitude)
-    phase = zeros(size(amplitude));
-  elseif ~isempty(incident)
-    phase = zeros(size(incident));
-    amplitude = ones(size(incident));
-  else
-    error('Must have at least one input image');
-  end
-end
-
-% Allow the user to pass in a single complex amplitude or
-% separate phase and amplitude matrices
-if isreal(phase)
-
-  % Handle default value for incident
-  if isempty(incident)
-    psz = size(phase);
-    incident = ones(psz(1:2));
-%     incident = otslm.simple.gaussian(psz(1:2), 0.25*100);
-  end
-  
-  % Ensure incident and amplitude are volumes if phase is a volume
-  if size(phase, 3) ~= size(incident, 3) && size(incident, 3) == 1
-    incident = repmat(incident, [1, 1, size(phase, 3)]);
-  end
-  if size(phase, 3) ~= size(amplitude, 3) && size(amplitude, 3) == 1
-    amplitude = repmat(amplitude, [1, 1, size(phase, 3)]);
-  end
-
-  % Check sizes of input images
-  assert(all(size(incident) == size(phase)), ...
-    'Incident size must match phase size');
-  assert(all(size(amplitude) == size(phase)), ...
-    'Amplitude size must match phase size');
-
-  % Check phase range
-  if abs(1 - max(phase(:)) - min(phase(:))) < eps(1)
-    warning('otslm:tools:visualise:range', 'Phase range should be 2*pi');
-  end
-
-  % Generate combined pattern
-  U = amplitude .* exp(1i*phase) .* incident;
-
-else
-
-  % The input is a complex amplitude
-  U = phase;
-
-end
+% Create a beam object from the inputs
+U = otslm.tools.make_beam(phase, ...
+    'incident', p.Results.incident, ...
+    'amplitude', p.Results.amplitude);
 
 % Resample the image at a higher resolution
 if ~isempty(p.Results.resample)
@@ -231,28 +171,29 @@ end
 function output = fft3_method(U, p)
 
   % Handle multiple padding arguments
-  if numel(p.Results.padding) == 1
-    xpadding = p.Results.padding;
-    ypadding = p.Results.padding;
-    zpadding = p.Results.padding;
+  if isempty(p.Results.padding)
+    padding = [0, 0, 0];
+  elseif numel(p.Results.padding) == 1
+    padding = [1, 1, 1].*p.Results.padding;
   elseif numel(p.Results.padding) == 2
-    xpadding = p.Results.padding(1);
-    ypadding = p.Results.padding(1);
-    zpadding = p.Results.padding(2);
+    padding = [p.Results.padding(1), ...
+        p.Results.padding(1), p.Results.padding(2)];
   elseif numel(p.Results.padding) == 3
-    xpadding = p.Results.padding(1);
-    ypadding = p.Results.padding(2);
-    zpadding = p.Results.padding(3);
+    padding = p.Results.padding;
+  else
+    error('Padding must be 1, 2, or 3 elements');
   end
 
   % Ensure the input is a volume, if not, convert it
   if size(U, 3) == 1
+    diameter = sqrt(size(U, 1).^2 + size(U, 2).^2);
+    focal_length = diameter./tan(asin(p.Results.NA)).*2;
     U = otslm.tools.hologram2volume(U, ...
-        'focal_length', p.Results.focal_length, ...
-        'padding', zpadding);
+        'focal_length', focal_length, ...
+        'padding', padding(3));
   end
 
-  U = padarray(U, [ypadding, xpadding, 0], 0, 'both');
+  U = padarray(U, [padding(1:2), 0], 0, 'both');
 
   if strcmpi(p.Results.type, 'farfield')
     output = fftshift(fftn(U))./numel(U);
