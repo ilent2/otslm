@@ -1,4 +1,4 @@
-% OTSLM/GUI/EXAMPLES examples showing how to use user interface components
+% OTSLM/UI/EXAMPLES examples showing how to use user interface components
 %
 % Interfaces
 %   MixingTwoBeams    - demonstrating showing how to describe an incident
