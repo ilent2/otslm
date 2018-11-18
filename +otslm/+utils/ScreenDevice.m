@@ -155,9 +155,16 @@ classdef ScreenDevice < otslm.utils.Showable
         assert(size(img, 3) == 1 || size(img, 3) == 3, ...
             'Number of channels in image must be 1 or 3');
 
-        % Replace NAN with first value from lookup table
-        img(isnan(img)) = repmat(obj.lookupTable{2}(1, :), ...
-            [sum(sum(isnan(img(:, :, 1)))), 1]);
+        % Replace NAN with first value from colourspace
+        if any(isnan(img))
+          
+          % Get the first linear index value
+          valueTable = slm.linearValueRange('structured', true);
+          nanvalue = valueTable(:, 1);
+          
+          img(isnan(img)) = repmat(nanvalue.', ...
+              [sum(sum(isnan(img(:, :, 1)))), 1]);
+        end
 
         % Convert image from double to uint8 (for speed)
         if isa(img, 'double')

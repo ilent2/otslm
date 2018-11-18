@@ -52,7 +52,13 @@ if ischar(cmap)
 else
 
   % Allow for non-linear color maps
-  if iscell(cmap)
+  if isa(cmap, 'otslm.utils.LookupTable')
+    crange = cmap.phase(:);
+    cmap = cmap.value;
+    assert(size(crange, 1) == size(cmap, 1), ...
+        'otslm:tools:colormap:size', ...
+        'Colour map must have same number of rows as crange values');
+  elseif iscell(cmap)
     crange = cmap{1}(:);
     cmap = cmap{2};
     assert(size(crange, 1) == size(cmap, 1), ...

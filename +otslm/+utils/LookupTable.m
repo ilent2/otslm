@@ -154,12 +154,12 @@ classdef LookupTable
 			end
 
       % Package into a lookup table
-      lt = LookupTable(phase, values);
+      lt = otslm.utils.LookupTable(phase, values);
     end
   end
 
   methods
-    function lt = LookupTable(phsae, value)
+    function lt = LookupTable(phase, value)
       % Construct a new LookupTable instance
       %
       % lt = LookupTable(phase, value)
@@ -256,7 +256,7 @@ classdef LookupTable
           % TODO: Should we have additional checking on values?
 
           fprintf(fp, '%f%f\n', [lt.phase, ...
-              lt.values(:, idx(1)) + lt.values(:, idx(2).*2^8].');
+              lt.values(:, idx(1)) + lt.values(:, idx(2)).*2^8].');
 
         case 'none'
           fprintf(fp, '%f\n', lt.phase.');

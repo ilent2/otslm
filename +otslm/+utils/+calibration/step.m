@@ -13,6 +13,7 @@ function lt = step(slm, cam, varargin)
 %		delay							num			delay after pattern is displayed
 %		direction					num			1 or 2 for the direction to sum along
 %		basevalue					num			value to use for the first region
+%   sidx              num     slice index to calculate angle from
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -26,6 +27,7 @@ p.addParameter('show_spectrum', false);
 p.addParameter('delay', []);
 p.addParameter('direction', 1);
 p.addParameter('basevalue', 1);
+p.addParameter('sidx', min(cam.roisize/2));
 p.parse(varargin{:});
 
 % Generate pattern we will use
@@ -33,9 +35,6 @@ pattern = logical(otslm.simple.step(slm.size, 'value', [0, 1]));
 
 % Generate full value table
 valueTable = slm.linearValueRange('structured', true);
-
-%   sidx = round(0.9*cam.roisize(2)/2);
-sidx = 9;
 
 % Create a figure to track the progress
 if p.Results.show_progress
@@ -106,7 +105,7 @@ for ii = 2:size(valueTable, 2)
 	% Extract the fringe
 	cslice = sum(im, p.Results.direction);
 	fftcslice = fft(cslice);
-	phase(ii) = angle(fftcslice(sidx));
+	phase(ii) = angle(fftcslice(p.Results.sidx));
 	
 	% Plot the frequency spectrum
 	if p.Results.show_spectrum

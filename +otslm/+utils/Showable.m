@@ -53,6 +53,11 @@ classdef (Abstract) Showable < handle
 
       if nargin == 2
         pattern = otslm.tools.finalize(pattern, 'colormap', obj.lookupTable);
+        
+        % Remove NANs, replace with first value from lookupTable
+        pattern(isnan(pattern)) = repmat(obj.lookupTable(1, :), ...
+              [sum(sum(isnan(pattern(:, :, 1)))), 1]);
+        
         obj.showRaw(pattern);
       else
         obj.showRaw();
@@ -97,7 +102,7 @@ classdef (Abstract) Showable < handle
       % Generate the raw pattern
       rawpattern = zeros([slm.size, length(slm.valueRange)]);
       for ii = 1:length(slm.valueRange)
-        layer = valueTable(:, pattern(:));
+        layer = valueTable(ii, pattern(:));
         rawpattern(:, :, ii) = reshape(layer, slm.size);
       end
 
