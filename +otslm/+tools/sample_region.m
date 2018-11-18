@@ -117,19 +117,25 @@ assert(length(bmethodargs) == length(locations), ...
     'Not enough amplitude method arguments');
 
 % Generate background
-switch p.Results.background
-  case 'zero'
-    pattern = zeros(sz);
-  case 'nan'
-    pattern = zeros(sz) * NaN;
-  case 'random'
-    pattern = otslm.simple.random(sz);
-  case 'randombin'
-    pattern = otslm.simple.random(sz, 'type', 'binary');
-  case 'checkerboard'
-    pattern = otslm.simple.checkerboard(sz);
-  otherwise
-    error('Unknown background type specified');
+if ischar(p.Results.background)
+  switch p.Results.background
+    case 'zero'
+      pattern = zeros(sz);
+    case 'nan'
+      pattern = zeros(sz) * NaN;
+    case 'random'
+      pattern = otslm.simple.random(sz);
+    case 'randombin'
+      pattern = otslm.simple.random(sz, 'type', 'binary');
+    case 'checkerboard'
+      pattern = otslm.simple.checkerboard(sz);
+    otherwise
+      error('Unknown background type specified');
+  end
+else
+  % Allow pattern to be scalar or matrix
+  pattern = zeros(sz);
+  pattern(:, :) = p.Results.background;
 end
 
 % Generate the pattern for each location

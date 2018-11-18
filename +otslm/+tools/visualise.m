@@ -32,12 +32,14 @@ function varargout = visualise(phase, varargin)
 %
 %   'amplitude' image     Specifies the amplitude pattern
 %   'incident'  image     Specifies the incident illumination
-%       Default illumination is a Gaussian beam (w0 = 0.25*min(size(phase))
+%       Default illumination is uniform intensity and phase.
 %   'z'         z         z-position of output plane.  For fft/ott this
 %       is an offset from the focal plane.  For rs/rslens, this is the
 %       distance along the beam axis.
 %   'padding'   p         Add padding to the outside of the image.
 %   'trim_padding', bool  Trim padding before returning result (default: 0)
+%   NA          num       Numerical aparture of the lens
+%   resample    num       Number of samples per each pixel
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -46,73 +48,41 @@ function varargout = visualise(phase, varargin)
 p = inputParser;
 p.addParameter('method', 'fft');
 p.addParameter('type', 'farfield');
-p.addParameter('amplitude', ones(size(phase)));
+p.addParameter('amplitude', []);
 p.addParameter('incident', []);
 p.addParameter('z', 0.0);
 p.addParameter('padding', 100);
 p.addParameter('trim_padding', false);
 p.addParameter('methoddata', []);
-p.addParameter('focallength', 1000);  % [lambda]
-
-% Separate focal length parameter for fft3, hmm, should be merged
-% We should really have separate vis method specific parsers or something
-p.addParameter('focal_length', []);   % [pixel units]
-
+p.addParameter('NA', 0.1);
+p.addParameter('resample', []);
 p.addParameter('axis', 'z');
 p.parse(varargin{:});
 
-amplitude = p.Results.amplitude;
-incident = p.Results.incident;
+% Create a beam object from the inputs
+U = otslm.tools.make_beam(phase, ...
+    'incident', p.Results.incident, ...
+    'amplitude', p.Results.amplitude);
 
-% Handle default value for phase
-if isempty(phase)
-  if ~isempty(amplitude)
-    phase = zeros(size(amplitude));
-  elseif ~isempty(incident)
-    phase = zeros(size(incident));
-    amplitude = ones(size(incident));
-  else
-    error('Must have at least one input image');
-  end
-end
+% Resample the image at a higher resolution
+if ~isempty(p.Results.resample)
 
-% Allow the user to pass in a single complex amplitude or
-% separate phase and amplitude matrices
-if isreal(phase)
+  sampling = p.Results.resample;
 
-  % Handle default value for incident
-  if isempty(incident)
-    psz = size(phase);
-    incident = otslm.simple.gaussian(psz(1:2), 0.25*100);
-  end
-  
-  % Ensure incident and amplitude are volumes if phase is a volume
-  if size(phase, 3) ~= size(incident, 3) && size(incident, 3) == 1
-    incident = repmat(incident, [1, 1, size(phase, 3)]);
-  end
-  if size(phase, 3) ~= size(amplitude, 3) && size(amplitude, 3) == 1
-    amplitude = repmat(amplitude, [1, 1, size(phase, 3)]);
-  end
+  sz = size(U);
 
-  % Check sizes of input images
-  assert(all(size(incident) == size(phase)), ...
-    'Incident size must match phase size');
-  assert(all(size(amplitude) == size(phase)), ...
-    'Amplitude size must match phase size');
+  % Generate original grid
+  x0 = 1:sz(2);
+  y0 = 1:sz(1);
+  [xx0, yy0] = meshgrid(x0, y0);
 
-  % Check phase range
-  if abs(1 - max(phase(:)) - min(phase(:))) < eps(1)
-    warning('otslm:tools:visualise:range', 'Phase range should be 2*pi');
-  end
+  % Generate re-sampled grid
+  x1 = (1:1/sampling:sz(2)) + rem((sz(2)-1), 1/sampling)/2;
+  y1 = (1:1/sampling:sz(2)) + rem((sz(1)-1), 1/sampling)/2;
+  [xx1, yy1] = meshgrid(x1, y1);
 
-  % Generate combined pattern
-  U = amplitude .* exp(1i*phase) .* incident;
-
-else
-
-  % The input is a complex amplitude
-  U = phase;
-
+  % Resample
+  U = interp2(xx0, yy0, U, xx1, yy1);
 end
 
 switch p.Results.method
@@ -148,87 +118,82 @@ function output = fft_method(U, p)
 
   z = p.Results.z;
   padding = p.Results.padding;
+  if numel(padding) == 1
+    padding = [padding, padding];
+  end
 
   % Apply padding to the image
-  img = zeros(size(U)+2*[padding, padding]);
-  img(padding+(1:size(U, 1)), padding+(1:size(U, 2))) = U;
-  U = img;
-
+  U = padarray(U, padding, 0);
+  
+  % Set rscale from inputs, this is determined by the
+  % focal length/numerical aparture of the lens (for z-shift)
+  rscale = 1.0./p.Results.NA;
 
   if strcmpi(p.Results.type, 'farfield')
 
-    % This should work, perhaps x and y are the wrong size
-    %[tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
-    %tx = tx - size(U, 2)/2;
-    %ty = ty - size(U, 1)/2;
-    %x = tx ./ size(U, 2);
-    %y = ty ./ size(U, 1);
-    %lambda = 1e-6;
-    %d = 1.0;
-    %f = (1.0 + z)*d;
-    %output = exp(i*pi*(1 - d/f).*(x.^2 + y.^2)/(lambda*f)) ...
-    %    .* fftshift(fft2(U));
+    lens = otslm.simple.spherical(size(U), ...
+        rscale*sqrt(sum((size(U)/2).^2)), ...
+        'background', 'checkerboard');
+    
+    % Apply z-shift using a lens in the far-field
+    U = U .* exp(-1i*z*lens);
 
     % Transform to the focal plane (missing scaling factor)
     output = fftshift(fft2(U))./numel(U);
 
-    [tx, ty] = meshgrid(1:size(U, 2), 1:size(U, 1));
-    tx = tx - size(U, 2)/2;
-    ty = ty - size(U, 1)/2;
-
-    % Currently guessing a range for these values
-    tx = tx ./ size(U, 2);
-    ty = ty ./ size(U, 1);
-
-    ax = sin(tx);
-    ay = sin(ty);
-
-    % Shift the plane in the z direction
-    output = ifft2(fft2(output) .* ...
-        fftshift(exp(-1i*z*sqrt(1 - ax.^2 + ay.^2))));
-
-    % TODO: z-shift should be its own function
-
   elseif strcmpi(p.Results.type, 'nearfield')
-
-    % TODO: inverse z-shift
 
     % Calculate pattern at DOE
     output = ifft2(fftshift(U));
+    
+    lens = otslm.simple.spherical(size(output), ...
+        rscale*sqrt(sum((size(output)/2).^2)), ...
+        'background', 'checkerboard');
+    
+    % Remove the z-shift using a negative lens in far-field
+    output = output .* exp(1i*z*lens);
 
   end
 
   % Remove padding if requested
   if p.Results.trim_padding
-    output = output(padding+1:end-padding, padding+1:end-padding);
+    
+    % Hmm, we could also resample at the original resolution
+    
+    szOutput = size(output);
+    opadding = floor(szOutput/4);
+    
+    output = output(opadding(1)+1:end-opadding(1), ...
+        opadding(2)+1:end-opadding(2));
   end
 end
 
 function output = fft3_method(U, p)
 
   % Handle multiple padding arguments
-  if numel(p.Results.padding) == 1
-    xpadding = p.Results.padding;
-    ypadding = p.Results.padding;
-    zpadding = p.Results.padding;
+  if isempty(p.Results.padding)
+    padding = [0, 0, 0];
+  elseif numel(p.Results.padding) == 1
+    padding = [1, 1, 1].*p.Results.padding;
   elseif numel(p.Results.padding) == 2
-    xpadding = p.Results.padding(1);
-    ypadding = p.Results.padding(1);
-    zpadding = p.Results.padding(2);
+    padding = [p.Results.padding(1), ...
+        p.Results.padding(1), p.Results.padding(2)];
   elseif numel(p.Results.padding) == 3
-    xpadding = p.Results.padding(1);
-    ypadding = p.Results.padding(2);
-    zpadding = p.Results.padding(3);
+    padding = p.Results.padding;
+  else
+    error('Padding must be 1, 2, or 3 elements');
   end
 
   % Ensure the input is a volume, if not, convert it
   if size(U, 3) == 1
+    diameter = sqrt(size(U, 1).^2 + size(U, 2).^2);
+    focal_length = diameter./tan(asin(p.Results.NA)).*2;
     U = otslm.tools.hologram2volume(U, ...
-        'focal_length', p.Results.focal_length, ...
-        'padding', zpadding);
+        'focal_length', focal_length, ...
+        'padding', padding(3));
   end
 
-  U = padarray(U, [ypadding, xpadding, 0], 0, 'both');
+  U = padarray(U, [padding(1:2), 0], 0, 'both');
 
   if strcmpi(p.Results.type, 'farfield')
     output = fftshift(fftn(U))./numel(U);
@@ -247,7 +212,8 @@ function [output, beam] = ott_method(U, p)
   % Generate the beam if not supplied
   beam = p.Results.methoddata;
   if isempty(beam)
-    beam = otslm.tools.hologram2bsc(U);
+    beam = otslm.tools.hologram2bsc(U, ...
+        'NA', p.Results.NA, 'index_medium', 1.0);
   end
 
   % Calculate the irradiance

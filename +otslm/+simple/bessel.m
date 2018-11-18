@@ -4,7 +4,7 @@ function [pattern, amplitude] = bessel(sz, mode, varargin)
 % pattern = bessel(sz, mode, ...) generates the phase
 % pattern for a particular order Bessel beam.
 %
-% [phase, amplitude] = hgmode(...) also calculates the signed
+% [phase, amplitude] = bessel(...) also calculates the signed
 % amplitude of the pattern in addition to the phase.
 %
 % Optional named parameters:

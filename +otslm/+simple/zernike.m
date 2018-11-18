@@ -32,39 +32,10 @@ assert(n >= abs(m), 'Invalid n, n must satisfy n >= |m|');
 assert(floor(n) == n, 'n must be an integer');
 assert(floor(m) == m, 'm must be an integer');
 
-% Generate grid
-[xx, yy] = meshgrid(1:sz(2), 1:sz(1));
-
-% Move centre of pattern
-xx = xx - p.Results.centre(1);
-yy = yy - p.Results.centre(2);
-
-% Apply rotation to pattern
-
-angle = [];
-if ~isempty(p.Results.angle)
-  assert(isempty(angle), 'Angle set multiple times');
-  angle = p.Results.angle;
-end
-if ~isempty(p.Results.angle_deg)
-  assert(isempty(angle), 'Angle set multiple times');
-  angle = p.Results.angle_deg * pi/180.0;
-end
-if isempty(angle)
-  angle = 0.0;
-end
-
-xxr = cos(angle).*xx - sin(angle).*yy;
-yyr = sin(angle).*xx + cos(angle).*yy;
-xx = xxr;
-yy = yyr;
-
-% Apply aspect ratio
-yy = yy * p.Results.aspect;
-
-% Calculate rho and phi
-rho = sqrt(xx.^2 + yy.^2);
-phi = atan2(yy, xx);
+% Calculate radial coordinates
+[~, ~, rho, phi] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
+    'type', '2d', 'aspect', p.Results.aspect, ...
+    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
 
 % Scale rho and selection region of interest
 rho = rho ./ p.Results.rscale;

@@ -7,7 +7,8 @@ function pattern = random(sz, varargin)
 % Optional named parameters:
 %
 %   'range'   [low, high]  Range of values (default: [0, 1)).
-%   'type'    type         Type of noise: 'uniform' or 'gaussian'
+%   'type'    type         Type of noise.  Can be 'uniform',
+%       'gaussian', or 'binary'.  (default: 'uniform')
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -25,10 +26,12 @@ switch p.Results.type
   case 'uniform'
     pattern = rand(sz) * (high-low) + low;
   case 'gaussian'
-    pattern = randn(sz) * (high-low) + low;
+    pattern = randn(sz) * (high-low) + (high + low)/2.0;
   case 'binary'
     pattern = (randi(2, sz) - 1) * (high-low) + low;
   otherwise
     error('Unknown noise type');
 end
 
+% Ensure resulting pattern has correct type
+pattern = cast(pattern, 'like', p.Results.range);

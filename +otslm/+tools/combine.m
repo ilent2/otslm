@@ -30,8 +30,6 @@ function pattern = combine(inputs, varargin)
 %       Default method: super.
 %
 %   'weights'   [weights] Array of weights for each pattern.
-%       If the method is dither, this is the percentage of each pattern
-%       to include in the result.  Not yet used by other methods.
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -42,13 +40,24 @@ p.addParameter('method', 'super');
 p.addParameter('weights', []);
 p.parse(varargin{:});
 
+% Check that we have work to do
+assert(~isempty(inputs), 'Inputs must have at least one element');
+
+% Get weights and calculate normalized weights
+weights = p.Results.weights;
+if isempty(weights)
+  weights = ones(length(inputs), 1);
+end
+nweights = weights ./ sum(weights);
+
+
 switch p.Results.method
   case 'super'
 
     pattern = zeros(size(inputs{1}));
 
     for ii = 1:length(inputs)
-      pattern = pattern + exp(1i*2*pi*inputs{ii});
+      pattern = pattern + nweights(ii).*exp(1i*2*pi*inputs{ii});
     end
 
     pattern = (angle(pattern)/pi+1)/2;
@@ -60,7 +69,7 @@ switch p.Results.method
     pattern = zeros(size(inputs{1}));
 
     for ii = 1:length(inputs)
-      pattern = pattern + exp(1i*2*pi*inputs{ii} + 1i*offsets(ii));
+      pattern = pattern + nweights(ii).*exp(1i*2*pi*inputs{ii} + 1i*offsets(ii));
     end
 
     pattern = (angle(pattern)/pi+1)/2;
@@ -78,8 +87,9 @@ switch p.Results.method
     for ii = 1:length(inputs)
       padding = 0;
       vis = otslm.tools.visualise(2*pi*inputs{ii}, ...
-          'incident', incident, 'method', 'fft', 'padding', padding);
-      target = target + abs(vis(padding+1:end-padding, padding+1:end-padding));
+          'incident', incident, 'method', 'fft', 'padding', padding, ...
+          'trim_padding', false);
+      target = target + nweights(ii).*abs(vis);
     end
     target = target ./ length(inputs);
 
@@ -94,7 +104,7 @@ switch p.Results.method
     pattern = zeros(size(inputs{1}));
 
     for ii = 1:length(inputs)
-      pattern = pattern + inputs{ii};
+      pattern = pattern + weights(ii).*inputs{ii};
     end
 
   case 'average'
@@ -130,21 +140,21 @@ switch p.Results.method
     pattern = (angle(pattern)/pi+1)/2;
 
   case 'dither'
-
-    % Get weights and normalize
-    weights = p.Results.weights;
-    if isempty(weights)
-      weights = ones(length(inputs), 1);
-    end
-    weights = weights ./ sum(weights);
+    
+    cweights = cumsum(nweights);
 
     % Generate the pattern
     pattern = zeros(size(inputs{1}));
-    idxs = randi(length(inputs), size(pattern));
-
+    
+    % Deterimine which pixels are which index
+    idxs = rand(size(pattern));
+    idxs = idxs(:) - cweights(:).';
+    idxs(idxs >= 0) = NaN;
+    [~, idxs] = max(idxs, [], 2);
+    
+    % Merge the images
     for ii = 1:length(inputs)
-      layer = inputs{ii};
-      pattern(idxs == ii) = layer(idxs == ii);
+      pattern(idxs == ii) = inputs{ii}(idxs == ii);
     end
 
   otherwise

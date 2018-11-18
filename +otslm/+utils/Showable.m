@@ -18,6 +18,10 @@ classdef (Abstract) Showable < handle
 %   showIndexed(pattern)  Display a pattern with integers describing
 %       entries in the lookup table.
 %
+%   view(pattern)         Calculate the raw pattern.
+%   viewComplex(pattern)  Calculate the raw pattern from complex
+%   viewIndexed(pattern)  Calculate the raw pattern from indexed
+%
 % Properties (abstract):
 %   valueRange          Values that the device patterns can contain.
 %       This should be a 1-d array, or cell array of 1-d arrays for
@@ -46,18 +50,65 @@ classdef (Abstract) Showable < handle
   end
 
   methods
+    function im = view(slm, pattern)
+      % Convert the pattern to a raw pattern
+      im = otslm.tools.finalize(pattern, 'colormap', slm.lookupTable);
+
+        % Remove NANs, replace with first value from lookupTable
+        im(isnan(im)) = repmat(slm.lookupTable(1, :), ...
+              [sum(sum(isnan(im(:, :, 1)))), 1]);
+    end
+
+    function im = viewComplex(slm, pattern)
+      % Convert the complexp attern to a raw pattern
+
+      % Split the pattern
+      phase = angle(pattern);
+      amplitude = abs(pattern);
+
+      % Convert the pattern
+      switch slm.patternType
+        case 'amplitude'
+          pattern = otslm.tools.finalize(phase, 'amplitude', amplitude, ...
+              'device', 'dmd', 'rpack', 'none', 'colormap', 'gray');
+        case 'phase'
+          pattern = otslm.tools.finalize(phase, 'amplitude', amplitude, ...
+              'device', 'slm', 'rpack', 'none', 'colormap', 'gray');
+        case 'complex'
+          % Nothing to do
+        otherwise
+          error('Unknown pattern type for class');
+      end
+      
+      % Generate the raw pattern
+      im = slm.view(pattern);
+    end
+    
+    function rawpattern = viewIndexed(slm, pattern)
+      % Convert the indexed pattern to a raw pattern
+
+      assert(min(pattern(:)) >= 1 ...
+          && max(pattern(:)) <= slm.valueRangeNumel(), ...
+          'Indicies must be between 1 and valueRangeNumel');
+
+      % Get lookup table for linear indexes
+      valueTable = slm.linearValueRange('structured', true);
+
+      % Generate the raw pattern
+      rawpattern = zeros([slm.size, length(slm.valueRange)]);
+      for ii = 1:length(slm.valueRange)
+        layer = valueTable(ii, pattern(:));
+        rawpattern(:, :, ii) = reshape(layer, slm.size);
+      end
+    end
+
     function show(obj, pattern)
       % Method to show device type pattern
       %
       % Default behaviour is to apply the colour map and call showRaw.
 
       if nargin == 2
-        pattern = otslm.tools.finalize(pattern, 'colormap', obj.lookupTable);
-        
-        % Remove NANs, replace with first value from lookupTable
-        pattern(isnan(pattern)) = repmat(obj.lookupTable(1, :), ...
-              [sum(sum(isnan(pattern(:, :, 1)))), 1]);
-        
+        pattern = obj.view(pattern);
         obj.showRaw(pattern);
       else
         obj.showRaw();
@@ -91,22 +142,7 @@ classdef (Abstract) Showable < handle
 
     function showIndexed(slm, pattern)
       % Display a pattern described by linear indexes on the device
-
-      assert(min(pattern(:)) >= 1 ...
-          && max(pattern(:)) <= slm.valueRangeNumel(), ...
-          'Indicies must be between 1 and valueRangeNumel');
-
-      % Get lookup table for linear indexes
-      valueTable = slm.linearValueRange('structured', true);
-
-      % Generate the raw pattern
-      rawpattern = zeros([slm.size, length(slm.valueRange)]);
-      for ii = 1:length(slm.valueRange)
-        layer = valueTable(ii, pattern(:));
-        rawpattern(:, :, ii) = reshape(layer, slm.size);
-      end
-
-      % Display the raw pattern
+      rawpattern = obj.viewIndexed(pattern);
       slm.showRaw(rawpattern);
     end
 
