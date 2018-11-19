@@ -66,6 +66,8 @@ U = otslm.tools.make_beam(phase, ...
 
 % Resample the image at a higher resolution
 if ~isempty(p.Results.resample)
+  
+  assert(~any(isnan(U(:))), 'Beam must be non-nan');
 
   sampling = p.Results.resample;
 
@@ -78,11 +80,13 @@ if ~isempty(p.Results.resample)
 
   % Generate re-sampled grid
   x1 = (1:1/sampling:sz(2)) + rem((sz(2)-1), 1/sampling)/2;
-  y1 = (1:1/sampling:sz(2)) + rem((sz(1)-1), 1/sampling)/2;
+  y1 = (1:1/sampling:sz(1)) + rem((sz(1)-1), 1/sampling)/2;
   [xx1, yy1] = meshgrid(x1, y1);
 
   % Resample
   U = interp2(xx0, yy0, U, xx1, yy1);
+  
+  assert(~any(isnan(U(:))), 'Interpolation failed with nans');
 end
 
 switch p.Results.method
