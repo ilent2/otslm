@@ -1,5 +1,5 @@
 function f = bowman2017cost(target, trial, varargin)
-% BOWMAN2017cost cost function used in Bowman et al. 2017 paper.
+% BOWMAN2017COST cost function used in Bowman et al. 2017 paper.
 %
 %   C = 10^d * (1.0 - \sum_{nm} sqrt(I_nm T_nm) cos(phi_nm - psi_nm)).^2
 %

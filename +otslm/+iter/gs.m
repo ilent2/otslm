@@ -1,5 +1,5 @@
 function pattern = gs(target, varargin)
-% GS Gerchberg-Saxton algorithm and Adaptive-Adaptive algorithm
+%GS Gerchberg-Saxton and Adaptive-Adaptive algorithms
 %
 % pattern = gs(target, ...) attempts to recreate the target using
 % the Gerchberg-Saxton algorithm.
@@ -62,4 +62,5 @@ pattern = angle(guess);
 % Remove padding from result
 pattern = pattern(1+p.Results.padding:end-p.Results.padding, ...
     1+p.Results.padding:end-p.Results.padding);
+
 

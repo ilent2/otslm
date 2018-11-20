@@ -1,5 +1,5 @@
 function pattern = gs3d(target, varargin)
-% GS3D 3-D Gerchberg-Saxton algorithm and Adaptive-Adaptive algorithm
+%GS3D 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
 %
 % pattern = gs(target, ...) attempts to recreate the target volume using
 % the 3-D analog of the Gerchberg-Saxton algorithm.
@@ -156,4 +156,5 @@ pattern = angle(otslm.tools.volume2hologram(guess, ...
 
 % Remove the padding from the results
 pattern = pattern(1+ypadding:end-ypadding, 1+xpadding:end-xpadding);
+
 

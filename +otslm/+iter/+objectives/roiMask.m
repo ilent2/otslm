@@ -1,5 +1,5 @@
 function [target, trial] = roiMask(target, trial, mask, varargin)
-% ROIAPERTURE creates a aperture mask in the centre of the space
+% ROIMASK applies a mask as the region of interest selector
 %
 % [target, trial] = ROIAPERTURE(target, trial, mask, ...)
 % signature for otslm.iter.objectives.roi* functions with mask argument.

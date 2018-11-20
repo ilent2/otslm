@@ -1,5 +1,5 @@
 function [pattern, beam, coeffs] = bsc(sz, target, varargin)
-% BSC optimise beam in beam shape coefficient basis
+% BSC optimisation in vector spherical wave function basis
 %
 % [pattern, beam, coeffs] = bsc(target, ...) attempt to produce
 % target using a phase pattern.  Returns the phase pattern matched

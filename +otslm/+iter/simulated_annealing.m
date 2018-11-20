@@ -1,5 +1,5 @@
 function guess = simulated_annealing(target, varargin)
-% SIMULATED_ANNEALING change multiple pixels 
+% SIMULATED_ANNEALING optimise the pattern using simulated annealing
 %
 % This method chooses a new pixel value for each pixel according to
 % a normal distribution centred at the old pixel value.  The width
