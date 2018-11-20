@@ -52,6 +52,9 @@ If you publish work using this toolbox, please cite it as
 > [Journal to be decided](link to the article)
 
 This version of the code is licensed under the GNU GPLv3.
+Parts of the toolbox incorporate third party open source code,
+see the documentation and code for details about licensing of these
+parts.
 
 > Copyright (C) 2018 Isaac Lenton
 >
