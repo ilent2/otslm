@@ -286,9 +286,8 @@ classdef LookupTable
       % at the specified phases.  Values assigned to new phases correspond
       % to the nearest values in the old table.
 
-      oldclass = class(value);
-      lookupTable = interp1(lt.phase, double(lt.value), nphase, 'nearest');
-      lookupTable = cast(lookupTable, oldclass);
+      nlt = interp1(lt.phase, double(lt.value), nphase, 'nearest');
+      nlt = cast(nlt, 'like', lt.value);
     end
 
     function nlt = linearised(lt, numpts, varargin)
