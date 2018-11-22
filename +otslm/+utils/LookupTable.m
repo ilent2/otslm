@@ -82,9 +82,21 @@ classdef LookupTable
       p.addParameter('nheaderlines', 1);
       p.parse(varargin{:});
 
+      % Check file exists
+      if ~isfile(filename)
+        error(['File does not exist: ' filename]);
+      end
+
       % Read data file
       data_struct = importdata(filename, p.Results.delim, ...
           p.Results.nheaderlines);
+
+      % Check file was read
+      if isempty(data_struct)
+        error('File exists but unable to import data from file');
+      end
+
+      % Get data from structure
       data = data_struct.data;
 
 			% Allocate space for lookup table
