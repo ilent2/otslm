@@ -45,13 +45,22 @@ classdef IterBase < handle
       p = inputParser;
       p.addParameter('incident', []);
       p.parse(varargin{:});
-
-      incident = p.Results.incident;
-      if isempty(incident)
-        incident = ones(size(input));
+      
+      if isreal(input)
+        error('input must be complex');
       end
+      
+      output = otslm.tools.visualise(input, ...
+          'incident', p.Results.incident, ...
+          'padding', size(input)/2, 'trim_padding', true, ...
+          'method', 'fft');
 
-      output = fftshift(fft2(incident .* input))./numel(input);
+%       incident = p.Results.incident;
+%       if isempty(incident)
+%         incident = ones(size(input));
+%       end
+% 
+%       output = fftshift(fft2(incident .* input))./numel(input);
     end
 
     function output = defaultInvMethod(input, varargin)
@@ -111,6 +120,12 @@ classdef IterBase < handle
 
     function result = run(mtd, num_iterations, varargin)
       % Run the method for a specified number of iterations
+      %
+      % result = mtd.run(num_iterations, ...) run for the specified
+      % number of iterations.
+      %
+      % Optional named arguments:
+      %   show_progress   bool    display a figure with optimisation progress
 
       % Parse optional inputs
       p = inputParser;
@@ -163,7 +178,7 @@ classdef IterBase < handle
       p.parse(varargin{:});
 
 			% Setup the figure for progress
-      if ~ishandle(mtd.fitnessPlot)
+      if isempty(mtd.fitnessPlot) || ~ishandle(mtd.fitnessPlot)
 
         ax = p.Results.axes;
         if isempty(ax)
@@ -180,6 +195,8 @@ classdef IterBase < handle
 				xlabel(ax, 'Iteration');
 				ylabel(ax, 'Fitness');
 				title(ax, 'Iterative method progress');
+        set(ax, 'YScale', 'log');
+        drawnow;
 
 				% Create a stop button
         if p.Results.show_stop_button
@@ -201,20 +218,22 @@ classdef IterBase < handle
       mtd.running = false;
     end
 
-    function score = evaluateFitness(mtd, trial)
+    function score = evaluateFitness(mtd, varargin)
       % Evaluate the fitness of the current guess
       %
       % score = mtd.evaluateFitness() visualises the current guess and
       % evaluate the fitness.
       %
-      % score = mtd.evaluateFitness(trial) evaluate the fitness of the
-      % given trial.  If trial is a stack of matrices, the returned
+      % score = mtd.evaluateFitness(guess) evaluate the fitness of the
+      % given guess.  If guess is a stack of matrices, the returned
       % score is a vector with size(trial, 3) elements.
 
-      % Visualise the current best guess if no trial
-      if nargin == 1
-        trial = mtd.vismethod(exp(1i*mtd.guess), mtd.visdata{:});
-      end
+      p = inputParser;
+      p.addOptional('guess', mtd.guess);
+      p.parse(varargin{:});
+
+      % Evaluate guess
+      trial = mtd.vismethod(exp(1i*p.Results.guess), mtd.visdata{:});
 
       % Evaluate the score or multiple scores
       if size(mtd.target, 3) ~= size(trial, 3)

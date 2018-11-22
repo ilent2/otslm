@@ -91,8 +91,7 @@ classdef DirectSearch < otslm.iter.IterBase
         pixelGuess(loc) = mtd.levels(jj);
 
         % Evaluate the fitness of this guess
-        trial = mtd.vismethod(exp(1i*pixelGuess), mtd.visdata{:});
-        pixelFitness(jj) = mtd.evaluateFitness(trial);
+        pixelFitness(jj) = mtd.evaluateFitness(pixelGuess);
 
       end
 
