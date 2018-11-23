@@ -55,8 +55,11 @@ classdef (Abstract) Showable < handle
       im = otslm.tools.finalize(pattern, 'colormap', slm.lookupTable);
 
         % Remove NANs, replace with first value from lookupTable
-        im(isnan(im)) = repmat(slm.lookupTable.value(1, :), ...
-              [sum(sum(isnan(im(:, :, 1)))), 1]);
+        if any(isnan(im(:)))
+          warning('Replacing nans with first value from lookup table');
+          im(isnan(im)) = repmat(slm.lookupTable.value(1, :), ...
+                [sum(sum(isnan(im(:, :, 1)))), 1]);
+        end
     end
 
     function im = viewComplex(slm, pattern)
