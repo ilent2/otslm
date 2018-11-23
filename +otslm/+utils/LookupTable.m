@@ -10,6 +10,7 @@ classdef LookupTable
 % Properties:
 %   phase       phase values in lookup table [Nx1 matrix]
 %   value       pixel values in lookup table [NxM matrix]
+%   range       range of the lookup table (for phase based tables)
 %
 % See also otslm.tools.finalize and otslm.utils.Showable
 %
@@ -20,6 +21,7 @@ classdef LookupTable
   properties
     phase       % phase values in lookup table [Nx1 matrix]
     value       % pixel values in lookup table [NxM matrix]
+    range       % range of the lookup table (for phase based tables)
   end
 
   methods (Static)
@@ -166,15 +168,24 @@ classdef LookupTable
 			end
 
       % Package into a lookup table
-      lt = otslm.utils.LookupTable(phase, values);
+      lt = otslm.utils.LookupTable(phase, values, 'range', 2*pi);
     end
   end
 
   methods
-    function lt = LookupTable(phase, value)
+    function lt = LookupTable(phase, value, varargin)
       % Construct a new LookupTable instance
       %
-      % lt = LookupTable(phase, value)
+      % lt = LookupTable(phase, value, ...)
+      %
+      % Optional named arguments:
+      %   range    num    The range of the look up table.  This will
+      %      typically be either 1 or 2*pi depending on if the lookup
+      %      table is normalized or un-normalized.  The actual ranges
+      %      of phase values may be less or greater than this range.
+      
+      p = inputParser;
+      p.addParameter('range', 2*pi);
 
       assert(size(phase, 1) == numel(phase), 'Phase must be column vector');
       assert(size(phase, 1) == size(value, 1), ...
@@ -182,6 +193,7 @@ classdef LookupTable
 
       lt.phase = phase;
       lt.value = value;
+      lt.range = p.Results.range;
     end
 
     function save(lt, filename, varargin)

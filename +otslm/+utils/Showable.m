@@ -56,9 +56,13 @@ classdef (Abstract) Showable < handle
 
         % Remove NANs, replace with first value from lookupTable
         if any(isnan(im(:)))
-          warning('Replacing nans with first value from lookup table');
-          im(isnan(im)) = repmat(slm.lookupTable.value(1, :), ...
-                [sum(sum(isnan(im(:, :, 1)))), 1]);
+          if ~isempty(slm.lookupTable)
+            warning('Replacing nans with first value from lookup table');
+            im(isnan(im)) = repmat(slm.lookupTable.value(1, :), ...
+                  [sum(sum(isnan(im(:, :, 1)))), 1]);
+          else
+            warning('Leaving nans in pattern');
+          end
         end
     end
 

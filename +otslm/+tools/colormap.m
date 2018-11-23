@@ -1,10 +1,14 @@
 function pattern = colormap(pattern, cmap, varargin)
 % COLORMAP applies a colormap to a pattern
 %
-% pattern = colormap(pattern, colormap, ...)
+% pattern = colormap(pattern, colormap, ...) applies the colormap to
+% the pattern.  The input pattern should have a typical range from 0 to 1.
+% If the colormap is a LookupTable, the input pattern is scaled by the
+% lookup table range.
 %
 % Optional named parameters:
-%   'inverse'   bool    Apply inverse colormap
+%   'inverse'   bool    Apply inverse colormap.  The output will have
+%       a typical range from 0 to 1.
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -53,7 +57,7 @@ else
 
   % Allow for non-linear color maps
   if isa(cmap, 'otslm.utils.LookupTable')
-    crange = cmap.phase(:);
+    crange = cmap.phase(:)./cmap.range;
     cmap = cmap.value;
     assert(size(crange, 1) == size(cmap, 1), ...
         'otslm:tools:colormap:size', ...
