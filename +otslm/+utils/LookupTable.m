@@ -186,6 +186,7 @@ classdef LookupTable
       
       p = inputParser;
       p.addParameter('range', 2*pi);
+      p.parse(varargin{:});
 
       assert(size(phase, 1) == numel(phase), 'Phase must be column vector');
       assert(size(phase, 1) == size(value, 1), ...
