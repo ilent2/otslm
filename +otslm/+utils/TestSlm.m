@@ -9,7 +9,6 @@ classdef TestSlm < otslm.utils.TestShowable
 %
 %   pattern       pattern currently being displayed
 %   incident      incident illumination
-%   output        resulting pattern in far-field (may move to TestCamera)
 %
 % See also: otslm.utils.TestCamera
 %
@@ -45,9 +44,6 @@ classdef TestSlm < otslm.utils.TestShowable
       %    value_range   cell   Cell array with channel values for raw
       %       pattern.  Default: {0:255}.  Use {0:255, 0:255, 0:255} for
       %       three channel device with 256 levels on each channel.
-      %
-      % TestSlm(table) creates a device with a custom phase table.
-      % table must contain 256 elements.
       
       % Parse inputs
       p = inputParser;
@@ -98,7 +94,7 @@ classdef TestSlm < otslm.utils.TestShowable
       slm.pattern = otslm.tools.colormap(pattern, slm.lookupTable, 'inverse', true);
       
       % Convert colormap to complex amplitude
-      slm.pattern = exp(1i*2*pi*slm.pattern) .* slm.incident;
+      slm.pattern = complex(exp(1i*2*pi*slm.pattern) .* slm.incident);
     end
     
     function set.incident(slm, newincident)

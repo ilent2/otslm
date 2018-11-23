@@ -20,7 +20,7 @@
 % Non-physical devices used for testing
 %   TestDmd       - non-physical dmd-like device for testing code
 %   TestSlm       - non-physical slm-like device for testing code
-%   TestCamera    - non-physical camera for viewing Test* Showable objects
+%   TestFarfield  - non-physical camera for viewing Test* Showable objects
 %   TestMichelson - non-physical representation of Michelson interferometer
 %   TestShowable  - non-physical showable device for testing implementation
 

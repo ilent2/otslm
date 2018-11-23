@@ -51,8 +51,23 @@ classdef (Abstract) Showable < handle
 
   methods
     function im = view(slm, pattern)
+      % Generate the raw pattern that is displayed on the device
+
+      % Determine if we should apply a modulo
+      switch slm.patternType
+        case 'amplitude'
+          modulo = 'none';
+        case 'phase'
+          modulo = 1;
+        case 'complex'
+          % Nothing to do
+        otherwise
+          error('Unknown pattern type for class');
+      end
+      
       % Convert the pattern to a raw pattern
-      im = otslm.tools.finalize(pattern, 'colormap', slm.lookupTable);
+      im = otslm.tools.finalize(pattern, 'colormap', slm.lookupTable, ...
+        'modulo', modulo);
 
         % Remove NANs, replace with first value from lookupTable
         if any(isnan(im(:)))
