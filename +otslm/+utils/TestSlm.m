@@ -18,56 +18,87 @@ classdef TestSlm < otslm.utils.TestShowable
 % using/distributing this file.
 
   properties
-    incident      % Incident illumination profile
+    incident                % Incident illumination profile
   end
 
   properties (SetAccess=protected)
-    pattern       % Pattern currently displayed on the device
-
-    valueRange = {linspace(0, 1, 256).'};
-    lookupTable = linspace(0, 1, 256).';
-    actualPhaseTable = linspace(0, 2*pi, 256).';
-    patternType = 'phase';
-    size = [512, 512];
+    pattern                 % Pattern currently displayed on the device
+    
+    valueRange              % Range of values for raw pattern
+    lookupTable             % Lookup table for raw values
+    patternType = 'phase';  % Type of pattern show() expects
+    size                    % Size of the device
   end
 
   methods
     
-    function obj = TestSlm(actualPhaseTable)
+    function slm = TestSlm(varargin)
       % Create a new virtual SLM object for testing
       %
-      % TestSlm() creates a device with a linear phase table from 0 to 2*pi
+      % TestSlm(...) creates a device with a linear phase lookup table
+      % from 0 to 2*pi.
+      %
+      % Optional named arguments:
+      %    size      [row, col] Size of the device
+      %    incident      im     Incident illumination
+      %    lookup_table  tbl    Lookup table for colormap
+      %    value_range   cell   Cell array with channel values for raw
+      %       pattern.  Default: {0:255}.  Use {0:255, 0:255, 0:255} for
+      %       three channel device with 256 levels on each channel.
       %
       % TestSlm(table) creates a device with a custom phase table.
       % table must contain 256 elements.
       
-      if nargin == 0
-        actualPhaseTable = linspace(0, 2*pi, 256).';
+      % Parse inputs
+      p = inputParser;
+      p.addParameter('lookup_table', []);
+      p.addParameter('incident', []);
+      p.addParameter('size', [512, 512]);
+      p.addParameter('value_range', {0:255});
+      p.parse(varargin{:});
+      
+      % Call base constructor
+      slm = slm@otslm.utils.TestShowable();
+      
+      % Store value range and size
+      slm.valueRange = p.Results.value_range;
+      slm.size = p.Results.size;
+      
+      % Default argument for incident
+      if isempty(p.Results.incident)
+        slm.incident = ones(slm.size);
+      else
+        slm.incident = p.Results.incident;
       end
       
-      assert(length(actualPhaseTable) == 256, 'Incorrect table length');
+      % Default argument for lookup table
+      slm.lookupTable = p.Results.lookup_table;
+      if isempty(slm.lookupTable)
+        value = slm.linearValueRange('structured', true).';
+        phase = linspace(0, 2*pi, size(value, 1)).';
+        slm.lookupTable = otslm.utils.LookupTable(...
+            phase, value, 'range', 2*pi);
+      end
       
-      obj = obj@otslm.utils.TestShowable();
-      obj.actualPhaseTable = actualPhaseTable(:);
-      obj.incident = ones(obj.size);
+      % Show the device, ensures pattern is initialized
+      slm.show();
     end
     
-    function showRaw(obj, pattern)
+    function showRaw(slm, pattern)
       % Simulate the pattern being shown, store result in obj.output
       
-      % Check range of raw pattern
-      assert(max(pattern(:)) <= max(obj.valueRange{1}) ...
-          && min(pattern(:)) >= min(obj.valueRange{1}), ...
-          'Raw pattern must not have values outside valueRange');
-
-      % Apply inverse lookupTable
-      obj.pattern = interp1(obj.valueRange{1}, double(obj.actualPhaseTable), ...
-          pattern(:), 'nearest');
-      obj.pattern = reshape(obj.pattern, size(pattern));
-      obj.pattern = cast(obj.pattern, 'like', obj.actualPhaseTable);
-
-      % Convert pattern to complex amplitude
-      obj.pattern = complex(exp(1i*obj.pattern)) .* obj.incident;
+      % If no work, display a empty screen
+      if nargin == 1
+        pattern = zeros(slm.size);
+      end
+      
+      % TODO: Support for multi-channel devices
+      
+      % Apply inverse lookupTable (colormap returns a normalized pattern)
+      slm.pattern = otslm.tools.colormap(pattern, slm.lookupTable, 'inverse', true);
+      
+      % Convert colormap to complex amplitude
+      slm.pattern = exp(1i*2*pi*slm.pattern) .* slm.incident;
     end
     
     function set.incident(slm, newincident)

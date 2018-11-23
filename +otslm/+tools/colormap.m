@@ -85,13 +85,15 @@ else
   end
 
   % Check range of inputs
-  if max(pattern(:)) > 2
-    warning('Capping max value to 1');
-    pattern(pattern > 1) = 1.0;
-  end
-  if min(pattern(:)) < 0
-    warning('Capping min value to 0');
-    pattern(pattern < 0) = 0.0;
+  if ~p.Results.inverse
+    if max(pattern(:)) > 1
+      warning('Capping max value to 1');
+      pattern(pattern > 1) = 1.0;
+    end
+    if min(pattern(:)) < 0
+      warning('Capping min value to 0');
+      pattern(pattern < 0) = 0.0;
+    end
   end
 
   % Apply colour map

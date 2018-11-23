@@ -26,15 +26,25 @@ classdef TestMichelson < otslm.utils.Viewable
 
   methods
 
-    function obj = TestMichelson(showable)
+    function obj = TestMichelson(showable, varargin)
       % Create the new interferometer-like device
+      %
+      % obj = TestMichelson(showable, ...) construct a new michelson
+      % interferometer to view the TestShowable device.
+      %
+      % Optional named arguments:
+      %   tilt   num   tilt factor (default: 0.0)
+      
+      p = inputParser;
+      p.addParameter('tilt', 0.0);
+      p.parse(varargin{:});
       
       % Call base constructor
       obj = obj@otslm.utils.Viewable();
       
       obj.showable = showable;
       obj.size = showable.size;
-      obj.tilt = 0.0;
+      obj.tilt = p.Results.tilt;
     end
 
     function im = view(obj)
