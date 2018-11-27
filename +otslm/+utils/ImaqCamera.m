@@ -1,6 +1,9 @@
 classdef ImaqCamera < otslm.utils.Viewable
 %IMAQCAMERA connect to a image acquisition toolbox camera
 %
+% This call can be used to create a otslm.utils.Viewable instance for
+% a videoinput source.  This requires the Image Acquisition Toolbox.
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -13,18 +16,33 @@ classdef ImaqCamera < otslm.utils.Viewable
   methods
     function obj = ImaqCamera(varargin)
       % Connect to the camera
+      %
+      % cam = ImaqCamera(adaptor, id, ...) conntect to the specified
+      % webcam camera.  For the device id, imaqhwinfo.
+      %
+      % For cameras that support multiple formats, a 'format' named
+      % argument can be supplied with the format to use.
       
       % Parse inputs
       p = inputParser;
       p.addRequired('device_adaptor');
       p.addRequired('device_id');
+      p.addParameter('format', []);
       p.parse(varargin{:});
       
       % Call base class constructor
       obj = obj@otslm.utils.Viewable();
       
+      % Handle default value for supported formats
+      format = p.Results.format;
+      if isempty(format)
+        device_info = imaqhwinfo(p.Results.device_adaptor, p.Results.device_id);
+        format = device_info.SupportedFormats{1};
+      end
+      
       % Connect to the device
-      obj.device = videoinput(p.Results.device_adaptor, p.Results.device_id);
+      obj.device = videoinput(p.Results.device_adaptor, ...
+          p.Results.device_id, format);
       
       % Acquire the device size
       width = imaqhwinfo(obj.device, 'MaxWidth');

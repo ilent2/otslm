@@ -1,6 +1,9 @@
 classdef WebcamCamera < otslm.utils.Viewable
 %WEBCAMCAMERA connect to a webcam camera connected to the computer
 %
+% This call can be used to create a otslm.utils.Viewable instance for
+% a videoinput source.  This requires the Image Acquisition Toolbox.
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -16,6 +19,9 @@ classdef WebcamCamera < otslm.utils.Viewable
   methods
     function obj = WebcamCamera(varargin)
       % Connect to the camera
+      %
+      % cam = WebcamCamera(device_id) conntect to the specified
+      % webcam camera.  For the device id, imaqhwinfo.
       
       % Parse inputs
       p = inputParser;

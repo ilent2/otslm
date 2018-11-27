@@ -7,6 +7,8 @@ classdef (Abstract) Viewable < handle
 % Methods:
 %   viewTarget()  Show an image of the target region from the device.
 %       The default behaviour is just to call view().
+%   crop(roi)     Create a region of interest that is returned by
+%       viewTarget.  Can have multiple regions.
 %
 % Properties (Abstract)
 %   size          Size of the device [rows, columns]
