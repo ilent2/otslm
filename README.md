@@ -39,7 +39,7 @@ The toolbox is split into 5 different sections:
 * `tools` provides tools for combining beams and visualising the output.
 * `utils` provides functions not necessarily related to pattern
     generation but things our group has found useful for displaying patterns.
-* `gui` is the graphical user interface, implementing most functions
+* `ui` contains graphical user interfaces for most of the functionality
     in the toolbox.
 
 License
@@ -53,8 +53,8 @@ If you publish work using this toolbox, please cite it as
 
 This version of the code is licensed under the GNU GPLv3.
 Parts of the toolbox incorporate third party open source code,
-see the documentation and code for details about licensing of these
-parts.
+see the documentation, thirdparty folder and code for details
+about licensing of these parts.
 
 > Copyright (C) 2018 Isaac Lenton
 >

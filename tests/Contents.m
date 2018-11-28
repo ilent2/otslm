@@ -4,8 +4,11 @@
 % runs.
 %
 % Files
-%   simple  - tests for otslm.simple.*
-%   utils/* - tests for otslm.utils.*
+%   testsimple  - tests for otslm.simple.*
+%   coverage    - helper for running coverage reports
+%   utils/*     - tests for otslm.utils.*
+%   iter/*      - tests for otslm.iter.*
+%   tools/*     - tests for otslm.tools.*
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
