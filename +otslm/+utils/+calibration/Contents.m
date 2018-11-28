@@ -3,7 +3,7 @@
 % This sub-package includes a collection of methods for determining
 % the phase-colour lookup table for a phase based SLM.
 % Some of these methods may only work for particular systems.
-% If you are unsure about your SLM, start with step or michelson.
+% If you are unsure about your SLM, start with step or smichelson.
 %
 % Calibration methods
 %   checker       - uses a checkerboard to maximally scatter light

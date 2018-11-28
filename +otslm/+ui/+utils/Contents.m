@@ -2,9 +2,13 @@
 %
 % Interfaces
 %   LoadColormap  - load a colormap from a file for use with a SLM
-%   Calibration   - calibrate a phase based SLM (create a colormap)
-%   ImageDevice   - determine the light profile incident on a SLM
-%   Camera        - setup a camear device
+%   CalibrationStepFarfield   - use farfield imaging and a step function to
+%     attempt to calibrate the SLM
+%   CalibrationSMichelson     - use a Michelson interferometer and a step
+%     function to calibrate the SLM
+%   ImageScan1d   - image the device using a 1-D scan
+%   ImageScan2d   - image the device using a 2-D raster scan
+%   SetupImaqCamera - setup a camear device
 %   ScreenDevice  - setup a SLM that appears as a monitor screen
 %   TestFarfield  - setup a virtual camera/slm for far-field visualisation
 %   TestMichelson - setup a virtual camera/slm for Michelson visualisation

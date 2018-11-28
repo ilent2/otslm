@@ -22,6 +22,8 @@ classdef (Abstract) Showable < handle
 %   viewComplex(pattern)  Calculate the raw pattern from complex
 %   viewIndexed(pattern)  Calculate the raw pattern from indexed
 %
+%   valueRangeNumel()     Total number of values device can display
+%
 % Properties (abstract):
 %   valueRange          Values that the device patterns can contain.
 %       This should be a 1-d array, or cell array of 1-d arrays for
@@ -164,7 +166,7 @@ classdef (Abstract) Showable < handle
 
     function showIndexed(slm, pattern)
       % Display a pattern described by linear indexes on the device
-      rawpattern = obj.viewIndexed(pattern);
+      rawpattern = slm.viewIndexed(pattern);
       slm.showRaw(rawpattern);
     end
 
