@@ -6,3 +6,4 @@
 *.mexa64
 *.pyc
 
+.DS_Store
