@@ -3,7 +3,8 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 %
 % pattern = sample_region(sz, locations, detectors, ...) generates
 % the patterns for sampling regions at different SLM locations
-% onto detectors located at detector locations.
+% onto detectors located at detector locations.  The range for the pattern
+% is 0 to 1, so the output should be passed to otslm.tools.finalize.
 %
 % If detectors is a single location, all the patterns will point to
 % the same detector.
@@ -126,7 +127,7 @@ if ischar(p.Results.background)
     case 'random'
       pattern = otslm.simple.random(sz);
     case 'randombin'
-      pattern = otslm.simple.random(sz, 'type', 'binary');
+      pattern = otslm.simple.random(sz, 'type', 'binary')*0.5;
     case 'checkerboard'
       pattern = otslm.simple.checkerboard(sz);
     otherwise
@@ -149,7 +150,7 @@ for ii = 1:length(locations)
   methodargs = bmethodargs{ii};
 
   linear = otslm.simple.linear(sz, norm(target), 'angle', atan2(target(2), target(1)));
-  linear = otslm.tools.finalize(linear);
+%   linear = otslm.tools.finalize(linear);
 
   switch method{1}
     case 'step'
