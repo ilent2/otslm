@@ -5,6 +5,7 @@
 %  iter     - iterative algorithms for pattern generation
 %  tools    - functions for working with patterns
 %  utils    - functions for interacting with hardware
+%  ui       - graphical user interface components
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
