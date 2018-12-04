@@ -1,7 +1,10 @@
 classdef GerchbergSaxton < otslm.iter.IterBase
 % Implementation of Gerchberg-Saxton and Adaptive-Adaptive algorithms
 %
-% Properties:
+% Methods
+%   run()         Run the iterative method
+%
+% Properties
 %   adaptive      Adaptive-adaptive factor (1 for Gerchberg-Saxton)
 %   guess         Best guess at hologram pattern
 %   target        Target pattern the method tries to approximate
@@ -40,6 +43,8 @@ classdef GerchbergSaxton < otslm.iter.IterBase
       %   invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
       %   objective fcn    Objective function to measure fitness.
+      %   visdata   cell   Cell array of arguments to pass to vismethod.
+      %   invdata   cell   Cell array of arguments to pass to invmethod.
 
       % Parse inputs
       p = inputParser;

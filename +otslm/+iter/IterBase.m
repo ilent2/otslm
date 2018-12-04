@@ -1,7 +1,10 @@
 classdef IterBase < handle
 % ITERBASE base class for iterative algorithm classes
 %
-% Properties:
+% Methods
+%   run()         Run the iterative method
+%
+% Properties
 %   guess         Best guess at hologram pattern
 %   target        Target pattern the method tries to approximate
 %   vismethod     Method used to do the visualisation
@@ -65,7 +68,13 @@ classdef IterBase < handle
 
     function output = defaultInvMethod(input, varargin)
       % Calculate the near-field of the device from the far-field
-      output = ifft2(fftshift(input));
+      
+      pad = size(input)/2;
+      
+      input = padarray(input, pad);
+      input = fftshift(input);
+      output = ifft2(input);
+      output = output(pad(1):end-pad(1)-1, pad(2):end-pad(2)-1);
     end
   end
 
@@ -191,7 +200,11 @@ classdef IterBase < handle
         end
 
         % Setup the plot
-				mtd.fitnessPlot = plot(ax, 1:length(mtd.fitness), mtd.fitness);
+        data = mtd.fitness;
+        if isempty(data)
+          data = NaN;
+        end
+				mtd.fitnessPlot = plot(ax, 1:length(data), data);
 				xlabel(ax, 'Iteration');
 				ylabel(ax, 'Fitness');
 				title(ax, 'Iterative method progress');
@@ -208,9 +221,11 @@ classdef IterBase < handle
       end
 
       % Update the content of the figure
-      mtd.fitnessPlot.XData = 1:length(mtd.fitness);
-      mtd.fitnessPlot.YData = mtd.fitness;
-      drawnow;
+      if ~isempty(mtd.fitness)
+        mtd.fitnessPlot.XData = 1:length(mtd.fitness);
+        mtd.fitnessPlot.YData = mtd.fitness;
+        drawnow;
+      end
     end
 
     function stopIterations(mtd, src, event)
