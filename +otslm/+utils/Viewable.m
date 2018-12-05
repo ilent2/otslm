@@ -73,31 +73,47 @@ classdef (Abstract) Viewable < handle
       end
     end
 
-    function crop(obj, roi)
+    function crop(cam, roi)
       % Crop the image to a specified ROI
       %
-      %  obj.crop([]) resets the roi to the full screen.
+      % cam.crop([]) resets the roi to the full screen.
       %
-      %  obj.crop([rows cols yoffset xoffset])
-
-      % TODO: Make input consistent with the getrect function
+      % cam.crop(rect) creates a single region of
+      % interest described by the rect [xmin ymin width height].
+      %
+      % cam.crop({rect1, rect2, ...}) creates multiple regions of
+      % interest described by separate rects.
+      
+      % Old format: [height width ymin xmin]
 
       if isempty(roi)
-        obj.roioffset = [0,0];
-        obj.roisize = obj.size;
+        cam.roioffset = [0,0];
+        cam.roisize = cam.size;
         return;
       elseif ~iscell(roi)
         roi = {roi};
       end
 
-      obj.roisize = zeros(numel(roi), 2);
-      obj.roioffset = zeros(numel(roi), 2);
+      cam.roisize = zeros(numel(roi), 2);
+      cam.roioffset = zeros(numel(roi), 2);
 
       for ii = 1:numel(roi)
-        assert(all(roi{ii}(1:2) <= obj.size), ...
-            'ROI must be smaller or equal to image size');
-        obj.roisize(ii, :) = roi{ii}(1:2);
-        obj.roioffset(ii, :) = roi{ii}(3:4);
+        
+        % Check type and size of rect
+        assert(all(roi{ii} == round(roi{ii})), ...
+          'all rect values must be integer');
+        assert(numel(roi{ii}) == 4, ...
+          'rect must be 4 element vector');
+        
+        % Check ROI is within device size
+        assert(all(roi{ii}(1:2) >= 0), ...
+          'xmin/ymin must be greater or equal to zero');
+        assert(all(roi{ii}(1:2) + roi{ii}(3:4) <= cam.size(2:-1:1)), ...
+            'ROI must be within device image');
+          
+        % Store the ROI
+        cam.roisize(ii, :) = roi{ii}(4:-1:3);
+        cam.roioffset(ii, :) = roi{ii}(2:-1:1);
       end
     end
 

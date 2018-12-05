@@ -24,7 +24,7 @@ zoom = @(im, o) im(round(size(im, 1)/2)+(-o:o), round(size(im, 2)/2)+(-o:o));
 visualize = @(pattern, o) zoom(abs(otslm.tools.visualise(pattern, ...
     'method', 'fft', 'padding', padding, 'incident', incident)).^2, o);
 
-figure();
+hf = figure();
 
 %% Adding beam phase to shift beams
 
@@ -32,6 +32,7 @@ pattern = otslm.simple.lgmode(sz, 3, 2, 'radius', 50);
 pattern = pattern + otslm.simple.linear(sz, 30);
 pattern = otslm.tools.finalize(pattern);
 
+figure(hf);
 subplot(4, 4, 1);
 imagesc(pattern);
 
@@ -48,6 +49,7 @@ pattern = otslm.tools.combine({pattern1, pattern2}, ...
 
 pattern = otslm.tools.finalize(pattern);
 
+figure(hf);
 subplot(4, 4, 5);
 imagesc(pattern);
 
@@ -58,12 +60,20 @@ imagesc(visualize(pattern, 100));
 
 % Generate the target image
 im = zeros(sz);
-im = insertText(im,[7 0; 0 25] + [ 230, 225 ], {'UQ', 'OMG'}, ...
-    'FontSize', 18, 'BoxColor', 'black', 'TextColor', 'white', 'BoxOpacity', 0);
-im = im(:, :, 1);
+if exist('insertText')
+  im = insertText(im,[7 0; 0 25] + [ 230, 225 ], {'UQ', 'OMG'}, ...
+      'FontSize', 18, 'BoxColor', 'black', 'TextColor', 'white', 'BoxOpacity', 0);
+  im = im(:, :, 1);
+else
+  im = otslm.simple.aperture(sz, sz(1)/20);
+end
 
-pattern = otslm.iter.gs(im, 'incident', incident);
+% Setup the GS object and then run for 20 iterations
+gs = otslm.iter.GerchbergSaxton(im, 'adaptive', 1.0, ...
+    'visdata', {'incident', incident});
+pattern = gs.run(20);
 
+figure(hf);
 subplot(4, 4, 9);
 imagesc(pattern);
 
@@ -77,6 +87,7 @@ imagesc(visualize(pattern, 100));
 pattern = otslm.tools.finalize(pattern, ...
     'amplitude', beamCorrection.*abs(amplitude));
 
+figure(hf);
 subplot(4, 4, 13);
 imagesc(pattern);
 
@@ -93,6 +104,7 @@ pattern = pattern .* beamCorrection;
 % Finalize pattern
 pattern = otslm.tools.finalize(zeros(sz), 'amplitude', pattern);
 
+figure(hf);
 subplot(4, 4, 3);
 imagesc(pattern);
 
@@ -107,6 +119,7 @@ grating = otslm.simple.sinusoid(sz, 50, 'type', '2dcart');
 pattern = lgpattern + grating;
 pattern = otslm.tools.finalize(pattern, 'amplitude', beamCorrection);
 
+figure(hf);
 subplot(4, 4, 7);
 imagesc(pattern);
 
@@ -139,6 +152,7 @@ patternVis = otslm.tools.finalize(pattern, ...
 
 dmdincident = ones(size(patternVis));
 
+figure(hf);
 subplot(4, 4, 11);
 imagesc(pattern);
 
@@ -176,6 +190,7 @@ pattern = otslm.tools.mask_regions(background, ...
   
 pattern = otslm.tools.finalize(pattern);
 
+figure(hf);
 subplot(4, 4, 15);
 imagesc(pattern);
 
@@ -188,8 +203,14 @@ for ii = 1:16
   subplot(4, 4, ii);
   axis('image');
   colormap('gray');
+  if mod(ii, 2) == 1
+    caxis([-pi, pi]);
+  end
   set(gca,'YTickLabel', [], 'XTickLabels', []);
 end
+
+subplot(4, 4, 11);
+caxis([0, 1]);
 
 % function imagesc(im)
 % 

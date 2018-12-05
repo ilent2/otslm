@@ -58,6 +58,9 @@ end
 
 % Scale the pattern (convert from logical to double)
 if ~isempty(p.Results.value)
+  
+  assert(numel(p.Results.value) == 2, 'Length of value must be 2');
+  
   high = p.Results.value(2);
   low = p.Results.value(1);
   pattern = pattern .* (high - low) + low;

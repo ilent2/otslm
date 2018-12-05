@@ -22,7 +22,8 @@ function testColormap(tests)
   sz = [512, 512];
   p = otslm.simple.linear(sz, 10);
 
-  colormap = {linspace(0, 1, 100), linspace(0, 2*pi, 100)};
+  colormap = otslm.utils.LookupTable(linspace(0, 1, 100).', ...
+    linspace(0, 2*pi, 100).', 'range', 2*pi);
   
   fp = otslm.tools.finalize(p, 'colormap', colormap);
 

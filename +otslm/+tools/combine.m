@@ -85,18 +85,20 @@ switch p.Results.method
     % Calculate the target using fft
     target = zeros(size(inputs{1}));
     for ii = 1:length(inputs)
-      padding = 0;
+      padding = size(target)./2;
       vis = otslm.tools.visualise(2*pi*inputs{ii}, ...
           'incident', incident, 'method', 'fft', 'padding', padding, ...
-          'trim_padding', false);
-      target = target + nweights(ii).*abs(vis);
+          'trim_padding', true);
+      target = target + nweights(ii).*abs(vis).^2;
     end
     target = target ./ length(inputs);
 
     % Calculate the pattern with GS algorithm
-    pattern = otslm.iter.gs(target, 'guess', guess, ...
-        'incident', incident);
+    gs = otslm.iter.GerchbergSaxton(target, 'guess', 2*pi*guess, ...
+        'visdata', {'incident', incident});
+    pattern = gs.run(20, 'show_progress', false);
 
+    % Convert pattern to 0-1 range
     pattern = (pattern/pi+1)/2;
 
   case 'add'

@@ -1,6 +1,9 @@
 classdef SimulatedAnnealing < otslm.iter.IterBase
 % Optimise the pattern using simulated annealing
 %
+% Methods
+%   run()         Run the iterative method
+%
 % Properties
 %   levels         Discrete levels that will be search in optimisation
 %   temperature    Current temperature of the system
@@ -74,6 +77,7 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
       p.addParameter('visdata', {});
       p.addParameter('invdata', {});
       p.addParameter('objective', @otslm.iter.objectives.flatintensity);
+      p.addParameter('objective_type', 'min');
       p.parse(varargin{:});
 
       % Call base class for most handling
@@ -83,7 +87,8 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
           'invmethod', p.Results.invmethod, ...
           'visdata', p.Results.visdata, ...
           'invdata', p.Results.invdata, ...
-          'objective', p.Results.objective);
+          'objective', p.Results.objective, ...
+          'objective_type', p.Results.objective_type);
 
       % Store parameters
       mtd.temperature = p.Results.temperature;
@@ -138,10 +143,23 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
       mtd.fitness(end+1) = mtd.evaluateFitness(newGuess);
 
       % Determine if this trial is satisfactory to keep
-      if mtd.fitness(end) <= mtd.lastFitness ...
-          || exp(-(mtd.fitness(end)-mtd.lastFitness)/mtd.temperature) > rand()
-        mtd.guess = newGuess;
-        mtd.lastFitness = mtd.fitness(end);
+      if strcmpi(mtd.objective_type, 'min')
+        if mtd.fitness(end) <= mtd.lastFitness ...
+            || exp(-(mtd.fitness(end)-mtd.lastFitness)/mtd.temperature) > rand()
+          mtd.guess = newGuess;
+          mtd.lastFitness = mtd.fitness(end);
+        end
+      elseif strcmpi(mtd.objective_type, 'max')
+        if mtd.fitness(end) >= mtd.lastFitness ...
+            || exp((mtd.fitness(end)-mtd.lastFitness)/mtd.temperature) > rand()
+          mtd.guess = newGuess;
+          mtd.lastFitness = mtd.fitness(end);
+        end
+      end
+      
+      % Provide the result if requested
+      if nargout ~= 0
+        result = mtd.guess;
       end
     end
   end

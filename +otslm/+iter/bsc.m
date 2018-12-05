@@ -193,6 +193,9 @@ for ii = 2:length(beams)
   beam = beam + beams(ii)*coeffs(ii);
 end
 
+% Make the beam incomming
+beam.basis = 'incoming';
+
 if p.Results.verbose
   disp(['... took ', num2str(toc), ' seconds']);
   disp('Calculating phase pattern');

@@ -9,8 +9,11 @@ addpath('../');
 
 %% Create a test device to fill monitor 1
 
-slm = otslm.utils.ScreenDevice(1, 'target_size', [1200, 1920], ...
-  'target_offset', [0, 0]);
+scsz = get(0,'ScreenSize');
+target_size = fliplr(scsz(1, 3:4));
+
+slm = otslm.utils.ScreenDevice(1, 'target_size', target_size, ...
+  'target_offset', [0, 0], 'pattern_type', 'phase', 'fullscreen', true);
 
 %% Generate a simple pattern and show for 10 seconds
 
@@ -47,13 +50,14 @@ fclose(fp);
 %   Both the red and green channels use the second column of the
 %   data file.  The column has uint16 format.  Red uses the lower
 %   8 bits, green uses the upper 8 bits.  The bits are ordered 1:8.
-lookup_table = otslm.utils.load_colormap(fname, ...
+lookup_table = otslm.utils.LookupTable.load(fname, ...
   'channels', [2, 2, 0], 'phase', [], 'format', @uint16, ...
   'mask', [hex2dec('00ff'), hex2dec('ff00')], 'morder',  1:8);
 
 % Create a SLM screen object to control the screen
-slm = otslm.utils.ScreenDevice(1, 'target_size', [1200, 1920], ...
-    'target_offset', [0, 0], 'lookup_table', lookup_table);
+slm = otslm.utils.ScreenDevice(1, 'target_size', target_size, ...
+    'target_offset', [0, 0], 'lookup_table', lookup_table, ...
+    'pattern_type', 'phase', 'fullscreen', true);
 
 % Show the pattern for 10 seconds
 slm.show(pattern);

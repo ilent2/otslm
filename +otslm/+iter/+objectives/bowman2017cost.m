@@ -9,6 +9,7 @@ function f = bowman2017cost(target, trial, varargin)
 %     d     value     hyper-parameter of cost function (default: d = 9).
 %     normalize  bool Normalize target/trial every evaluation (default=true).
 %     roi   func      Region of interest mask to apply to target/trial.
+%     type  str       Values to compare (both, phase, amplitude)
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -18,6 +19,7 @@ p = inputParser;
 p.addParameter('d', 9.0);
 p.addParameter('roi', @otslm.iter.objectives.roiAll);
 p.addParameter('normalize', true);
+p.addParameter('type', 'both');
 p.parse(varargin{:});
 
 % Apply mask to target and trial
@@ -30,6 +32,20 @@ T = abs(target).^2;
 % Calculate the current intensity and amplitude
 psi = angle(trial);
 I = abs(trial).^2;
+
+% Switch between the different types
+switch p.Results.type
+  case 'amplitude'
+    % Throw away phase information
+    phi = zeros(size(phi));
+    psi = zeros(size(psi));
+  case 'phase'
+    % Throw away amplitude information
+    I = ones(size(I));
+    T = ones(size(T));
+  otherwise
+    % Keep both
+end
 
 % Calculate cost
 overlap = sum(sqrt(T(:).*I(:)) .* cos(psi(:) - phi(:)));

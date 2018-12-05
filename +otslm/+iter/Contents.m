@@ -9,15 +9,17 @@
 % starting with a bad initial guess.  bsc is a work in progress.
 %
 % Files
-%   gs            - Gerchberg-Saxton and Adaptive-Adaptive algorithms
-%   gs3d          - 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
-%   direct_search - search through each pixel value to optimise hologram
-%   bsc           - optimisation in vector spherical wave function basis
-%   bowman2017    - wrapper for Bowman 2017 conjugate gradient implementation
-%   simulated_annealing - optimise the pattern using simulated annealing
+%   GerchbergSaxton    - Implementation of Gerchberg-Saxton and Adaptive-Adaptive algorithms
+%   DirectSearch       - search through each pixel value to optimise hologram
+%   IterBase           - base class for iterative algorithm classes
+%   SimulatedAnnealing - Optimise the pattern using simulated annealing
+%   GerchbergSaxton3d  - Implementation of 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
+%   IterBase3d         - base class for 3-D iterative algorithm classes
+%   bsc                - optimisation in vector spherical wave function basis
+%   bowman2017         - wrapper for Bowman 2017 conjugate gradient implementation
 %
 % Sub-packages
-%   +objectives   - objective functions for use with optimisation algorithms
+%   +objectives        - objective functions for use with optimisation algorithms
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

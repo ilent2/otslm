@@ -5,17 +5,26 @@ function lt = michelson(slm, cam, varargin)
 % setup where the screen is perpendicular to the incident beam and
 % so is the reference beam mirror.
 %
-% This method allows calibration of individual pixels on the device
-% but requires the incident illumination to be uniform.
+% This method could be extended to allow calibration of individual
+% pixels on the device but requires the uniform illumination.
 %
 % lt = michelson(slm, cam, ...) calibrate the slm using the Michelson
 % interferometer method.
+%
+% Optional named arguments:
+%     delay           num     delay after displaying slm image
+%     stride          num     number of linear indexes to step
+%
+%     verbose         bool    display progress in console
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 p = inputParser;
+p.addParameter('delay', []);
+p.addParameter('stride', 1);
+p.addParameter('verbose', true);
 p.parse(varargin{:});
 
 % Generate full value table
@@ -23,21 +32,37 @@ valueTable = slm.linearValueRange('structured', true);
 
 % TODO: Calibration for each pixel
 
+idx = 1:p.Results.stride:size(valueTable, 2);
 intensity = zeros(size(valueTable, 2), 1);
+for ii = 1:p.Results.stride:size(valueTable, 2)
 
-for ii = 1:size(valueTable, 2)
-
+  % Display output to terminal
+  if p.Results.verbose
+    disp(['Michelson calibration: ', num2str(ii), ...
+        '/', num2str(size(valueTable, 2))]);
+  end
+  
   % Generate pattern with same value everywhere
   ipattern = ones(slm.size).*ii;
 
-  % Show pattern and get image
+  % Display on slm
   slm.showIndexed(ipattern);
+
+  % Allow for a finite device response rate
+  if ~isempty(p.Results.delay)
+    pause(p.Results.delay);
+  end
+
+  % Acquire image
   im = cam.viewTarget();
 
   % Calculate intensity in target region
   intensity(ii) = sum(im(:));
 
 end
+
+% Discard phases we didn't evaluate
+intensity = intensity(idx);
 
 % Calculate phase from intensity
 intensity = intensity - min(intensity);
@@ -49,9 +74,10 @@ phase = acos(2*intensity - 1);
 deriv = [0; diff(phase)];
 phase(deriv < 0) = 2*pi - phase(deriv < 0);
 
+% Unwrap and normalize phase
 phase = unwrap(phase);
 phase = phase - min(phase);
 
-% Package into lookupTable
-lt = otslm.utils.LookupTable(phase, valueTable);
+% Wrap lookup table
+lt = otslm.utils.LookupTable(phase, valueTable(:, idx).');
 

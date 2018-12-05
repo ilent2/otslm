@@ -32,7 +32,13 @@ zsize = size(volume, 3) - 2*p.Results.padding;
 focallength = p.Results.focal_length;
 if isempty(focallength)
   focallength = ((xsize/2).^2 + zsize.^2)/(2*zsize);
+  zsize_min = zsize;
+else
+  zsize_min = focallength - sqrt(focallength.^2 - (xsize/2).^2);
 end
+
+% Calculate padding due to zsize
+zoffset = max((zsize - zsize_min)/2, 0);
 
 % Allocate memory for hologram
 hologram = zeros(size(volume, 1), size(volume, 2));
@@ -50,7 +56,7 @@ for ii = 1:size(hologram, 2)
 
     if isreal(zloc)
 
-      zidx = focallength - zloc;
+      zidx = focallength - zloc + zoffset;
 
       if p.Results.interpolate
 

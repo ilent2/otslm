@@ -6,12 +6,11 @@ function testSimple(tests)
 
   addpath('../../');
 
-  sz = [512, 512];
+  sz = [256, 256];
   incident = ones(sz);
   target = otslm.simple.aperture(sz, sz(1)/2);
 
-  method = otslm.iter.GerchbergSaxton(target, ...
-    'visdata', {'incident', incident});
-  pattern = method.run(2, 'show_progress', false);
+  pattern = otslm.iter.bowman2017(target, ...
+    'incident', incident, 'iterations', 2);
 
 end

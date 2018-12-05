@@ -10,7 +10,7 @@
 %   particle_tracking    - Simulate particles being imaged using SLM/QPD system
 %   iterative            - Demonstrate different iterative algorithms
 %   phaseblur            - Demonstration of effects of phase blur
-%   line_trap_3d         - Attempt to generate a line trap in 3-D using BSC iterative optimisation
+%   interative_3d        - Demonstration of 3-D iterative algorithms
 %
 % +tools demonstrations
 %   multi_beams          - Example to demonstrate combining multiple beams
@@ -20,7 +20,7 @@
 % +utils demonstrations
 %   calibration          - Demonstrate the SLM calibration stuff
 %   screen_device        - Demonstration of the screen device class (used to control SLM/DMDs)
-%   imaging              - Demonstration of +imaging script to generate
+%   imaging              - Demonstration of +utils/+imaging scripts
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

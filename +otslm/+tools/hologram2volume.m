@@ -12,6 +12,8 @@ function volume = hologram2volume(hologram, varargin)
 %       pixels in the z-direction.  Default: true.
 %   'padding'       value   Padding in the axial direction (default 0).
 %   'focal_length'  value   focal length in pixels (default: min(size)/2).
+%   'zsize'         value   size for z depth (default: [])
+%       The total z size is zsize + 2*padding.
 %
 % See also: otslm.tools.volume2hologram, otslm.iter.gs3d
 %
@@ -23,17 +25,30 @@ p = inputParser;
 p.addParameter('interpolate', true);
 p.addParameter('focal_length', min(size(hologram))/2);
 p.addParameter('padding', 0);
-p.addParameter('zlimit', []);
+p.addParameter('zsize', []);
 p.parse(varargin{:});
+
+% Hologram should already be complex (for most cases)
+if isreal(hologram)
+  warning('otslm:tools:hologram2volume:real_pattern', ...
+      'Hologram should be complex');
+end
 
 % Calculate the depth of the lens volume
 xsize = min(size(hologram));
 focallength = p.Results.focal_length;
 
-zsize = p.Results.zlimit;
+zsize_min = focallength - sqrt(focallength.^2 - (xsize/2).^2);
+zsize = p.Results.zsize;
 if isempty(zsize)
-  zsize = focallength - sqrt(focallength.^2 - (xsize/2).^2);
+  zsize = zsize_min;
+elseif zsize < zsize_min
+  warning('otslm:tools:hologram2volume:zsize_small', ...
+    'Part of lens is not captured by volume size');
 end
+
+% Calculate padding due to zsize
+zoffset = max((zsize - zsize_min)/2, 0);
 
 % Allocate memory for the volume
 volume = zeros([size(hologram), round(zsize)]);
@@ -55,7 +70,7 @@ for ii = 1:size(hologram, 2)
     zloc = sqrt(focallength.^2 - xloc.^2 - yloc.^2);
 
     if isreal(zloc)
-      zidx = focallength - zloc;
+      zidx = focallength - zloc + zoffset;
 
       if p.Results.interpolate
 

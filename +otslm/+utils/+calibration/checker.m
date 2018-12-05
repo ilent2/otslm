@@ -7,10 +7,13 @@ function lt = checker(slm, cam, varargin)
 % 2*pi phase range.
 %
 % Optional named arguments:
-%   show_progress     bool    display progress of the method
-%   show_camera       bool    show what the camera sees
 %   spacing           num     size of checkerboard grid
 %   delay             num     delay after updating slm
+%   stride            num     number of linear indexes to step
+%
+%   verbose           bool    display progress in console
+%   show_progress     bool    display progress of the method
+%   show_camera       bool    show what the camera sees
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -18,10 +21,12 @@ function lt = checker(slm, cam, varargin)
 
 % Parse method arguments
 p = inputParser;
-p.addParameter('show_progress', true);
-p.addParameter('show_camera', true);
 p.addParameter('spacing', 1);
 p.addParameter('delay', []);
+p.addParameter('stride', 1);
+p.addParameter('verbose', true);
+p.addParameter('show_progress', false);
+p.addParameter('show_camera', false);
 p.parse(varargin{:});
 
 % For this method we do the same procedure twice to classify points
@@ -74,14 +79,22 @@ if p.Results.show_camera
 	hc = axes(hcf);
 end
 
+idx = 1:p.Results.stride:size(valueTable, 2);
+
 % Rank everything in region 1
 idx1 = 1;
-phase1 = zeros([size(valueTable, 2), 1]);
-for ii = 1:size(valueTable, 2)
+phase1 = zeros(size(valueTable, 2), 1);
+for ii = 1:p.Results.stride:size(valueTable, 2)
 
 	if ~figure_active()
 		error('Terminated by user');
 	end
+
+  % Display output to terminal
+  if p.Results.verbose
+    disp(['Checker calibration (part 1): ', num2str(ii), ...
+        '/', num2str(size(valueTable, 2))]);
+  end
 
 	% Generate pattern
   ipattern = ones(slm.size).*idx1;
@@ -115,16 +128,23 @@ for ii = 1:size(valueTable, 2)
 	end
 
 end
-phase1 = phase1 - min(phase1);
+phase1 = phase1(idx) - min(phase1(idx));
 
 % Choose a region 2 and rank everything in this region
 [~, idx2] = min(abs(phase1 - max(phase1)/2));
-phase2 = zeros([size(valueTable, 2), 1]);
-for ii = 1:size(valueTable, 2)
+idx2 = (idx2-1)*p.Results.stride + 1;
+phase2 = zeros(size(valueTable, 2), 1);
+for ii = 1:p.Results.stride:size(valueTable, 2)
 
 	if ~figure_active()
 		error('Terminated by user');
 	end
+
+  % Display output to terminal
+  if p.Results.verbose
+    disp(['Checker calibration (part 2): ', num2str(ii), ...
+        '/', num2str(size(valueTable, 2))]);
+  end
 
 	% Generate pattern
   ipattern = ones(slm.size).*idx2;
@@ -158,7 +178,7 @@ for ii = 1:size(valueTable, 2)
 	end
 
 end
-phase2 = phase2 - min(phase2);
+phase2 = phase2(idx) - min(phase2(idx));
 
 % Determine which region points are in
 phase2small = phase2 - max(phase2)/2 < 0;
@@ -167,7 +187,8 @@ phase2small = phase2 - max(phase2)/2 < 0;
 phase = sqrt(phase1./max(phase1));
 phase(~phase2small) = -phase(~phase2small);
 phase = unwrap(2*acos(-phase));
+phase = phase - min(phase);
 
-% Package into lookupTable
-lt = otslm.utils.LookupTable(phase, valueTable);
+% Wrap lookup table
+lt = otslm.utils.LookupTable(phase, valueTable(:, idx).');
 

@@ -4,6 +4,9 @@ classdef DirectSearch < otslm.iter.IterBase
 % The algorithm is described in
 % Di Leonardo, et al., Opt. Express 15, 1913-1922 (2007)
 %
+% Methods
+%   run()         Run the iterative method
+%
 % Properties
 %   levels        Discrete levels that will be search in optimisation
 %   guess         Best guess at hologram pattern
@@ -37,6 +40,7 @@ classdef DirectSearch < otslm.iter.IterBase
       %   levels    num    Number of discrete levels or array of
       %     levels between -pi and pi.  Default: 256.
       %   objective fcn    Objective function to measure fitness.
+      %   objective_type str Objective type (min or max).
       %   vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
       %   invmethod fcn    Function to calculate near-field.  Takes one
@@ -52,6 +56,7 @@ classdef DirectSearch < otslm.iter.IterBase
       p.addParameter('visdata', {});
       p.addParameter('invdata', {});
       p.addParameter('objective', @otslm.iter.objectives.flatintensity);
+      p.addParameter('objective_type', 'min');
       p.parse(varargin{:});
 
       % Call base class for most handling
@@ -61,7 +66,8 @@ classdef DirectSearch < otslm.iter.IterBase
           'invmethod', p.Results.invmethod, ...
           'visdata', p.Results.visdata, ...
           'invdata', p.Results.invdata, ...
-          'objective', p.Results.objective);
+          'objective', p.Results.objective, ...
+          'objective_type', p.Results.objective_type);
 
       % Store levels and create array if needed
       mtd.levels = p.Results.levels;
@@ -96,7 +102,11 @@ classdef DirectSearch < otslm.iter.IterBase
       end
 
       % Update the guess
-      [bestFittness, idx] = min(pixelFitness);
+      if strcmpi(mtd.objective_type, 'min')
+        [bestFittness, idx] = min(pixelFitness);
+      elseif strcmpi(mtd.objective_type, 'max')
+        [bestFittness, idx] = max(pixelFitness);
+      end
       mtd.guess(loc) = mtd.levels(idx);
       mtd.fitness(end+1) = bestFittness;
 

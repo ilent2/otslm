@@ -77,7 +77,8 @@ for ii = 1:length(offsetx)
 	for jj = 1:length(offsety)
 
 		if p.Results.verbose
-			disp(['Iteration: [' num2str(jj) ', ' num2str(ii) ']']);
+			disp(['Scan2d: [' num2str(jj) ', ' num2str(ii) '] / [' ...
+        num2str(length(offsety)) ', ' num2str(length(offsetx)) ']']);
 		end
 
 		% Generate pattern

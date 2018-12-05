@@ -149,5 +149,15 @@ function testZernike(testCase)
   pattern = otslm.simple.zernike(sz, 4, 5);
 end
 
+function testAperture3d(testCase)
+
+  sz = [100, 100, 100];
+  radius = 50;
+  
+  pattern = otslm.simple.aperture3d(sz, radius, ...
+    'type', 'sphere', 'value', [0, 10]);
+
+end
+
 
 

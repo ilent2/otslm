@@ -61,7 +61,7 @@ im = zeros(length(offset), 1);
 for ii = 1:length(offset)
 
 	if p.Results.verbose
-		disp(['Iteration: ' num2str(ii) ]);
+		disp(['Scan1d: ' num2str(ii) ' / ' num2str(length(offset)) ]);
 	end
 
 	% Generate pattern

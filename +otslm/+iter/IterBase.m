@@ -29,6 +29,7 @@ classdef IterBase < handle
     visdata     % Additional arguments to pass to vismethod
     invdata     % Additional arguments to pass to invmethod
     objective   % Objective function used to evaluate fitness
+    objective_type  % Type of objective function (min or max)
     fitness     % Fitness evaluated after every iteration
   end
 
@@ -48,29 +49,22 @@ classdef IterBase < handle
       p = inputParser;
       p.addParameter('incident', []);
       p.parse(varargin{:});
-      
+
       if isreal(input)
         error('input must be complex');
       end
-      
+
       output = otslm.tools.visualise(input, ...
           'incident', p.Results.incident, ...
           'padding', size(input)/2, 'trim_padding', true, ...
           'method', 'fft');
-
-%       incident = p.Results.incident;
-%       if isempty(incident)
-%         incident = ones(size(input));
-%       end
-% 
-%       output = fftshift(fft2(incident .* input))./numel(input);
     end
 
     function output = defaultInvMethod(input, varargin)
       % Calculate the near-field of the device from the far-field
-      
+
       pad = size(input)/2;
-      
+
       input = padarray(input, pad);
       input = fftshift(input);
       output = ifft2(input);
@@ -105,6 +99,7 @@ classdef IterBase < handle
       p.addParameter('visdata', {});
       p.addParameter('invdata', {});
       p.addParameter('objective', @otslm.iter.objectives.flatintensity);
+      p.addParameter('objective_type', 'min');
       p.parse(varargin{:});
 
       % Store inputs
@@ -115,6 +110,7 @@ classdef IterBase < handle
       mtd.visdata = p.Results.visdata;
       mtd.invdata = p.Results.invdata;
       mtd.objective = p.Results.objective;
+      mtd.objective_type = p.Results.objective_type;
 
       % Handle default argument for guess
       if isempty(mtd.guess)
@@ -161,7 +157,7 @@ classdef IterBase < handle
 
 				% Report the current fitness
 				if p.Results.show_progress
-          mtd.showFitness();
+          mtd.showFitness('show_stop_button', true);
 				end
       end
 
@@ -259,6 +255,13 @@ classdef IterBase < handle
       else
         score = mtd.objective(mtd.target, trial);
       end
+    end
+
+    function set.objective_type(mtd, val)
+      % Check and set objective_type value
+      assert(any(strcmpi(val, {'min', 'max'})), ...
+        'Objective type must be ''min'' or ''max''');
+      mtd.objective_type = val;
     end
   end
 end

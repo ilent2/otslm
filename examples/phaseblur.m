@@ -4,7 +4,7 @@
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
-sz = [512, 512];
+sz = [128, 128];
 
 overdrive = 1.0;   % Overdrive voltages of device
 % overdrive = 2.0;   % Overdrive voltages of device
@@ -80,11 +80,13 @@ imagesc(pattern);
 subplot(Nr, 3, 12);
 visualise(pattern);
 
+%% Function for visualisation
+
 function visualise(pattern)
 % Generate visualisation of pattern and display in current figure
 
-  im = otslm.tools.visualise(pattern, 'padding', size(pattern, 1)/4, ...
-      'method', 'fft');
+  im = otslm.tools.visualise(pattern, 'padding', size(pattern)./2, ...
+      'trim_padding', true, 'method', 'fft');
 
   imagesc(abs(im).^2);
   axis image;

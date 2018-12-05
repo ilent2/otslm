@@ -23,6 +23,13 @@ p.addParameter('radius', 1.0);
 p.addParameter('encodemethod', 'checker');
 p.parse(varargin{:});
 
+% The beam must be incomming or outgoing, convert if needed
+if strcmpi(beam.basis, 'regular')
+  warning('otslm:tools:bsc2hologram:beam_basis_change', ...
+      'Beam basis must be incomming or outgoing, converting');
+  beam.basis = 'incoming';
+end
+
 % Calculate xy coordinates for each hologram pixel
 xrange = linspace(-1, 1, sz(2));
 yrange = linspace(-1, 1, sz(1));

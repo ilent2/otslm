@@ -28,6 +28,10 @@ classdef ScreenDevice < otslm.utils.Showable
     size                    % Target screen size [rows, columns]
     offset                  % Offset for target screen [x, y]
   end
+  
+  properties
+    default_fullscreen  logical % Should showRaw use fullscreen by default
+  end
 
   methods
     function obj = ScreenDevice(varargin)
@@ -48,6 +52,7 @@ classdef ScreenDevice < otslm.utils.Showable
       %       Default is 256x3 for a RGB screen
       %   'pattern_type'  type    Type of pattern the device displays.
       %       Default is amplitude.
+      %   'fullscreen'    bool    Default value for showRaw/fullscreen
 
       p = inputParser;
       p.addRequired('device_number');
@@ -58,6 +63,7 @@ classdef ScreenDevice < otslm.utils.Showable
       p.addParameter('pattern_type', 'amplitude');
       p.addParameter('doublebuffer', 'off');
       p.addParameter('linear_order', []);
+      p.addParameter('fullscreen', false);
       p.parse(varargin{:});
 
       % Set-up dependent properties for java window
@@ -70,6 +76,7 @@ classdef ScreenDevice < otslm.utils.Showable
       obj.valueRange = p.Results.value_range;
       obj.patternType = p.Results.pattern_type;
       obj.offset = p.Results.target_offset;
+      obj.default_fullscreen = p.Results.fullscreen;
 
       % Store or generate the lookup table
       if isempty(p.Results.lookup_table)
@@ -129,7 +136,7 @@ classdef ScreenDevice < otslm.utils.Showable
       end
     end
 
-    function showRaw(obj, img, varargin)
+    function showRaw(obj, varargin)
       % Show the window and (optionally) display an image
       %
       % showRaw() display a blank screen.
@@ -143,12 +150,18 @@ classdef ScreenDevice < otslm.utils.Showable
       % showRaw(frame, 'play', times) specifies time to play (see movie).
 
       p = inputParser;
+      p.addOptional('pattern', [], @(x)isnumeric(x)||isstruct(x));
       p.addParameter('framerate', 20);
       p.addParameter('play', 1);
-      p.addParameter('fullscreen', false);
+      p.addParameter('fullscreen', obj.default_fullscreen);
       p.parse(varargin{:});
+      
+      img = p.Results.pattern;
+      if isempty(img)
+        img = zeros([obj.size, 3], 'uint8');
+      end
 
-      if nargin >= 2 && ~isa(img, 'struct')
+      if ~isa(img, 'struct')
 
         % Check size of image is ok
         assert(all([size(img, 1), size(img, 2)] == obj.size), ...
@@ -171,9 +184,6 @@ classdef ScreenDevice < otslm.utils.Showable
         if isa(img, 'double')
           img = uint8(img);
         end
-
-      elseif nargin == 1
-        img = zeros(obj.size, 'uint8');
       end
 
       % Open the window if required
@@ -222,7 +232,7 @@ classdef ScreenDevice < otslm.utils.Showable
         % Set the axes properties
         set(axes_handle, ...
             'units', 'pixels', ...
-            'position', [obj.offset, obj.size(2), obj.size(1)], ...
+            'position', [obj.offset + [1,1], obj.size(2), obj.size(1)], ...
             'YTickLabel', [], ...
             'XTickLabel', [], ...
             'YTick', [], ...

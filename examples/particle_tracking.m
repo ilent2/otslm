@@ -9,8 +9,8 @@
 % necesarily in the Fourier plane.
 %
 % The example demonstrates: region sampling, spatial filtering,
-% visualisation using fourier transform and Rayleigh-Sommerfeld
-% integral, and simulating of absorbing and transparent particles.
+% visualisation using fourier transform and simulating of
+% absorbing and transparent particles.
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -21,13 +21,12 @@ addpath('../');
 
 % Declare parameters for simulation
 sz = [512, 512];        % Pattern size (pixels)
-r_particle = 5;        % Radius of particle (pixels)
-x_particle = 0;         % Particle offset from centre (pixels)
-z_qpd = 1000;           % Offset of qpd plane from lens (wavelengths)
-r_slm = 30;             % Size of SLM ROI (pixels)
+r_particle = 10;        % Radius of particle (pixels)
+x_particle = 5;         % Particle offset from centre (pixels)
+r_slm = 60;             % Size of SLM ROI (pixels)
 r_pinhole = 100;         % Size of spatial filter (pixels)
 padding = 800;          % Padding for FT (pixels)
-particle_type = 'spherical';
+particle_type = 'absorbing';
 
 %% Generate incident illumination
 incident = ones(sz);
@@ -71,14 +70,14 @@ imagesc(abs(image_fp));
 % imagesc(angle(image_fp));
 title('Light at focal plane');
 axis image;
-subplot(3, 2, 2);
+subplot(3, 2, 3);
 imagesc(abs(image_slm));
 title('Light at SLM plane');
 axis image;
 
-subplot(3, 2, 3);
+subplot(3, 2, 2);
 imagesc(pinhole);
-title('Pinhole');
+title('Pinhole (objective)');
 axis image;
 
 %% Generate sampling pattern for slm
@@ -98,21 +97,34 @@ imagesc(slm_pattern);
 title('SLM Pattern');
 axis image;
 
-%% Generate image in plane of QPD
+%% Generate far-field image of SLM
 
-image_qpdplane = otslm.tools.visualise(slm_pattern, ...
-    'incident', image_slm, 'z', z_qpd, ...
-    'method', 'rslens');
+image_slmfarfield = otslm.tools.visualise(slm_pattern, ...
+    'incident', image_slm, 'padding', size(slm_pattern)/2, ...
+    'method', 'fft', 'trim_padding', true);
   
-%% Display QPD plane image and QPD ROI
-
-image_qpd = image_qpdplane(padding+55+(1:100), padding+355+(1:100));
-
 subplot(3, 2, 5);
-imagesc(abs(image_qpdplane));
-title('QPD plane intensity');
+imagesc(log10(abs(image_slmfarfield).^2));
+title('SLM Far-field (log)');
 axis image;
+  
+%% Add a QPD with a lenslet and view image on the QPD surface
+
+% The lenslet only sample light from a small region
+qpd_lens_aperture = otslm.simple.aperture(sz, 50, ...
+  'centre', [330, 184], 'value', [true, false]);
+
+image_qpdfarfield = image_slmfarfield;
+image_qpdfarfield(qpd_lens_aperture) = 0.0;
+
+% figure(), imagesc(abs(image_qpdfarfield).^2);
+
+% Simualte the lenslet, calculate the farfield (i.e. the qpd plane)
+image_qpdplane = otslm.tools.visualise(image_qpdfarfield, ...
+    'padding', size(image_qpdfarfield)/2, ...
+    'method', 'fft', 'trim_padding', true, 'type', 'nearfield');
+  
 subplot(3, 2, 6);
-imagesc(abs(image_qpd));
-title('QPD region of interest');
+imagesc(abs(image_qpdplane).^2);
+title('QPD plane image');
 axis image;

@@ -26,6 +26,7 @@ function testFft3(tests)
 end
 
 function testOtt(tests)
+
   cim = otslm.tools.visualise(tests.TestData.pattern, 'method', 'ott');
 
 end

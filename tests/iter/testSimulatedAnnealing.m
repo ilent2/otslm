@@ -1,4 +1,4 @@
-function tests = testgs
+function tests = testSimulatedAnnealing
   tests = functiontests(localfunctions);
 end
 
@@ -10,7 +10,7 @@ function testSimple(tests)
   incident = ones(sz);
   target = otslm.simple.aperture(sz, sz(1)/2);
 
-  method = otslm.iter.GerchbergSaxton(target, ...
+  method = otslm.iter.SimulatedAnnealing(target, ...
     'visdata', {'incident', incident});
   pattern = method.run(2, 'show_progress', false);
 

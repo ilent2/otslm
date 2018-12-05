@@ -126,21 +126,35 @@ classdef (Abstract) Showable < handle
       end
     end
 
-    function show(obj, pattern)
+    function show(obj, varargin)
       % Method to show device type pattern
       %
-      % Default behaviour is to apply the colour map and call showRaw.
-
-      if nargin == 2
-        pattern = obj.view(pattern);
-        obj.showRaw(pattern);
+      % slm.show(...) with no pattern opens the window with an empty
+      % pattern.
+      %
+      % slm.show(pattern, ...) displays the pattern after applying the
+      % color map.
+      %
+      % Additional arguments are passed to showRaw.
+      
+      p = inputParser;
+      p.KeepUnmatched = true;
+      p.addOptional('pattern', []);
+      p.parse(varargin{:});
+      
+      if isempty(p.Results.pattern)
+        obj.showRaw(varargin{:});
       else
-        obj.showRaw();
+        pattern = obj.view(p.Results.pattern);
+        obj.showRaw(pattern, varargin{2:end})
       end
     end
 
-    function showComplex(obj, pattern)
+    function showComplex(obj, pattern, varargin)
       % Default function to display a complex pattern on a device
+      %
+      % slm.showComplex(pattern, ...)
+      % Additional arguments are passed to showRaw.
 
       % Split the pattern
       phase = angle(pattern);
@@ -161,13 +175,16 @@ classdef (Abstract) Showable < handle
       end
 
       % Call the show method to display the function
-      obj.show(pattern);
+      obj.show(pattern, varargin{:});
     end
 
-    function showIndexed(slm, pattern)
+    function showIndexed(slm, pattern, varargin)
       % Display a pattern described by linear indexes on the device
+      %
+      % slm.showIndexed(pattern, ...)
+      % Additional arguments are passed to showRaw.
       rawpattern = slm.viewIndexed(pattern);
-      slm.showRaw(rawpattern);
+      slm.showRaw(rawpattern, varargin{:});
     end
 
     function valueRangeSz = valueRangeSize(obj, idx)

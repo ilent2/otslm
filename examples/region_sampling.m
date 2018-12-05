@@ -20,6 +20,7 @@ amplitude_opts = {'gaussian_dither'};
 % Generate pattern
 pattern = otslm.tools.sample_region(sz, locations, detectors, ...
     'radii', radii, 'background', 'random', 'amplitude', amplitude_opts);
+pattern = otslm.tools.finalize(pattern);
 
 % Show pattern
 figure(1);
@@ -27,13 +28,14 @@ imagesc(pattern);
 title('Phase pattern');
 
 % Calculate the farfield
-farfield = otslm.tools.visualise(pattern*2*pi);
+farfield = otslm.tools.visualise(pattern, 'method', 'fft', ...
+  'trim_padding', true);
 
 % Mask the zero-th order
 % farfield = farfield .* ~otslm.simple.aperture(size(farfield), 10);
 
 % Show far-field amplitude
 figure(2);
-imagesc(abs(farfield(100:end-100, 100:end-100)));
+imagesc(abs(farfield).^2);
 title('Far-field amplitude');
 

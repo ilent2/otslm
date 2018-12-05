@@ -4,6 +4,8 @@ end
 
 function testSimple(tests)
 
+addpath('../../');
+
   slm = otslm.utils.ScreenDevice(1, 'target_size', [512, 512], 'target_offset', [100, 0]);
   pattern = otslm.simple.linear(slm.size, 50);
 %   slm.show(pattern);

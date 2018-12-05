@@ -1,8 +1,5 @@
 % Demonstrate different iterative algorithms
 %
-% TODO: Some of these algorithms may need a scaling factor for the
-% incident or target fields to match the objective function.
-%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -19,14 +16,19 @@ incident = otslm.simple.gaussian(sz, 0.5*sz(1));
 % Functions used for generating figures
 zoom = @(im, o) im(round(size(im, 1)/2)+(-o+1:o), round(size(im, 2)/2)+(-o+1:o));
 % zoom = @(im, o) im(1+padding:end-padding, 1+padding:end-padding);
-visualize = @(pattern) zoom(abs(otslm.tools.visualise(pattern, ...
-    'method', 'fft', 'padding', padding, 'incident', incident)).^2, padding);
+visualize = @(pattern) otslm.tools.visualise(pattern, ...
+  'method', 'fft', 'padding', size(pattern)./2, 'trim_padding', true, ...
+  'incident', incident);
 
 im = zeros(sz);
-im = insertText(im,[0 -12; 0 12] + sz/2, {'UQ', 'OMG'}, ...
-    'FontSize', 18, 'BoxColor', 'black', 'TextColor', 'white', ...
-    'BoxOpacity', 0, 'AnchorPoint', 'Center');
-im = im(:, :, 1);
+if exist('insertText', 'file')
+  im = insertText(im,[0 -12; 0 12] + sz/2, {'UQ', 'OMG'}, ...
+      'FontSize', 18, 'BoxColor', 'black', 'TextColor', 'white', ...
+      'BoxOpacity', 0, 'AnchorPoint', 'Center');
+  im = im(:, :, 1);
+else
+  im = otslm.simple.aperture(sz, sz(1)/20);
+end
 
 hp = figure();
 Nf = 6;
@@ -37,12 +39,21 @@ imagesc(zoom(im, zm));
 roi = @(t, a) otslm.iter.objectives.roiAperture(t, a, ...
   'dimensions', 50);
 objective = @(t, a) otslm.iter.objectives.bowman2017cost(t, a, ...
-    'roi', roi, 'd', 9);
+    'roi', roi, 'd', 9, 'type', 'amplitude');
+objtype = 'min';
 
+% Guess from Gerchberg-Saxton method (computed in 2-D GS)
+gsguess = [];
+  
 %% 2-D GS algorithm
 
-pattern = otslm.iter.gs(im, 'incident', incident, 'padding', padding, ...
-    'iterations', 500);
+mtd = otslm.iter.GerchbergSaxton(im, 'adaptive', 1.0, ...
+    'visdata', {'incident', incident}, ...
+    'objective', objective, 'objective_type', objtype);
+pattern = mtd.run(500);
+
+% Store gsguess for later
+gsguess = pattern;
 
 figure(hp);
 
@@ -51,15 +62,16 @@ imagesc(pattern);
 
 subplot(Nf, 2, 4);
 output = visualize(pattern);
-imagesc(zoom(output, zm));
+imagesc(zoom(abs(output).^2, zm));
 
 disp(['GS score: ', num2str(objective(im, output))]);
 
 %% Direct search
 
-pattern = otslm.iter.direct_search(im, ...
-    'incident', incident, 'levels', 8, 'iterations', prod(sz), ...
-    'padding', padding, 'objective', objective);
+mtd = otslm.iter.DirectSearch(im, 'levels', 8, ...
+    'visdata', {'incident', incident}, 'guess', gsguess, ...
+    'objective', objective, 'objective_type', objtype);
+pattern = mtd.run(prod(sz));
 
 figure(hp);
 
@@ -68,28 +80,27 @@ imagesc(pattern);
 
 subplot(Nf, 2, 6);
 output = visualize(pattern);
-imagesc(zoom(output, zm));
+imagesc(zoom(abs(output).^2, zm));
 
 disp(['DS score: ', num2str(objective(im, output))]);
 
 %% Simulated annealing
 
-guess = otslm.iter.gs(im, 'incident', incident, 'padding', padding, ...
-    'iterations', 10);
+mtd = otslm.iter.SimulatedAnnealing(im, ...
+    'temperature', 1000, 'maxTemperature', 10000, ...
+    'visdata', {'incident', incident}, 'guess', gsguess, ...
+    'objective', objective, 'objective_type', objtype, ...
+    'temperatureFcn', otslm.iter.SimulatedAnnealing.simpleTemperatureFcn(1000, 1000));
+pattern = mtd.run(1000);
 
-pattern = otslm.iter.simulated_annealing(im, ...
-    'incident', incident, 'objective', objective, ...
-    'initialT', 100, 'maxT', 10000, 'guess', guess, ...
-    'iterations', 1000, 'padding', padding);
-
-figure(hp);
+if ishandle(hp), figure(hp), else, figure(), end
 
 subplot(Nf, 2, 7);
 imagesc(mod(pattern+pi, 2*pi)-pi);
 
 subplot(Nf, 2, 8);
 output = visualize(pattern);
-imagesc(zoom(output, zm));
+imagesc(zoom(abs(output).^2, zm));
 
 disp(['SA score: ', num2str(objective(im, output))]);
 
@@ -104,7 +115,7 @@ imagesc(pattern);
 
 subplot(Nf, 2, 10);
 output = visualize(pattern);
-imagesc(zoom(output, zm));
+imagesc(zoom(abs(output).^2, zm));
 caxis([1e-9, 0.5e-5]);
 
 disp(['Bowman 2017 score: ', num2str(objective(im, output))]);
@@ -128,7 +139,7 @@ imagesc(pattern);
 
 subplot(Nf, 2, 12);
 output = visualize(pattern);
-imagesc(zoom(output, zm));
+imagesc(zoom(abs(output).^2, zm));
 
 disp(['BSC1 score: ', num2str(objective(im, output))]);
 

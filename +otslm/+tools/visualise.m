@@ -38,7 +38,7 @@ function varargout = visualise(phase, varargin)
 %       distance along the beam axis.
 %   'padding'   p         Add padding to the outside of the image.
 %   'trim_padding', bool  Trim padding before returning result (default: 0)
-%   NA          num       Numerical aparture of the lens
+%   NA          num       Numerical aparture of the lens (default: 0.1)
 %   resample    num       Number of samples per each pixel
 %
 % Copyright 2018 Isaac Lenton
@@ -161,12 +161,12 @@ function output = fft_method(U, p)
 
   % Remove padding if requested
   if p.Results.trim_padding
-    
+
     % Hmm, we could also resample at the original resolution
-    
+
     szOutput = size(output);
     opadding = floor(szOutput/4);
-    
+
     output = output(opadding(1)+1:end-opadding(1), ...
         opadding(2)+1:end-opadding(2));
   end
@@ -195,6 +195,8 @@ function output = fft3_method(U, p)
     U = otslm.tools.hologram2volume(U, ...
         'focal_length', focal_length, ...
         'padding', padding(3));
+  elseif padding(3) ~= 0
+    U = padarray(U, [0, 0, padding(3)], 0, 'both');
   end
 
   U = padarray(U, [padding(1:2), 0], 0, 'both');
@@ -206,6 +208,19 @@ function output = fft3_method(U, p)
   else
     error('OTSLM:TOOLS:VISUALISE:type_error', ...
         'Unknown conversion type, must be farfield or nearfield');
+  end
+
+  % Remove padding if requested
+  if p.Results.trim_padding
+
+    % Hmm, we could also resample at the original resolution
+
+    szOutput = size(output);
+    opadding = floor(szOutput/4);
+
+    output = output(opadding(1)+1:end-opadding(1), ...
+        opadding(2)+1:end-opadding(2), ...
+        opadding(3)+1:end-opadding(3));
   end
 
 end
@@ -234,6 +249,18 @@ function [output] = rs_method(U, p)
 
   % Repeat elements for multi-sampling
   U = repelem(U, uscale, uscale);
+  
+  % Check for a compiler
+  ccs = mex.getCompilerConfigurations('C++');
+  assert(~isempty(ccs), 'No C++ compilers installed');
+  
+  % Check for a compiled mex file
+  % This feels like a little bit of kludge (wasn't there a better way?)
+  if exist('+otslm\+tools\vis_rsmethod.mexw64') == 0
+    warning('No mex file found, compiling mex file');
+    [toolpath, ~, ~] = fileparts(mfilename('fullpath'));
+    mex('-R2018a', [toolpath, '\vis_rsmethod.cpp'], '-outdir', toolpath);
+  end
 
   output = otslm.tools.vis_rsmethod(U, pixelsize, p.Results.z, scale*uscale);
 

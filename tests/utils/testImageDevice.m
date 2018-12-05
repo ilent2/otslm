@@ -8,8 +8,8 @@ function setupOnce(tests)
   addpath('../../');
 
   % Create objects for testing
-  tests.TestData.slm = otslm.utils.TestSlm();
-  tests.TestData.cam = otslm.utils.TestCamera(tests.TestData.slm);
+  tests.TestData.slm = otslm.utils.TestSlm('size', [20, 20]);
+  tests.TestData.cam = otslm.utils.TestFarfield(tests.TestData.slm);
 
 end
 
@@ -17,7 +17,7 @@ function testScan1d(tests)
 
   slm = tests.TestData.slm;
   cam = tests.TestData.cam;
-  im = otslm.utils.image_device(slm, cam, 'method', 'scan1d');
+  im = otslm.utils.imaging.scan1d(slm, cam, 'verbose', false);
 
 end
 
@@ -25,6 +25,6 @@ function testScan2d(tests)
 
   slm = tests.TestData.slm;
   cam = tests.TestData.cam;
-  im = otslm.utils.image_device(slm, cam, 'method', 'scan2d');
+  im = otslm.utils.imaging.scan2d(slm, cam, 'verbose', false);
   
 end

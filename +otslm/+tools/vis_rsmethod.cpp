@@ -32,6 +32,10 @@
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
 #endif
 
+#if !defined(M_PI)
+#define M_PI 3.14159265358
+#endif
+
 class Point
 {
 public:

@@ -8,7 +8,7 @@
 addpath('../');
 import otslm.simple.*;
 
-sz = [512, 512];
+sz = [256, 256];
 
 %% Generate a couple of simple diffraction grating patterns
 
@@ -17,24 +17,29 @@ pattern1 = linear(sz, 20, 'angle_deg', 90);
 pattern2 = linear(sz, 40, 'angle_deg', 90);
 
 pattern3 = linear(sz, 20, 'angle_deg', 45) ...
-    + spherical(sz, 100, 'imag_value', 0);
+    + spherical(sz, 100, 'background', 0);
 
 figure(1);
-subplot(1, 3, 1);
-imagesc(pattern1);
-subplot(1, 3, 2);
-imagesc(pattern2);
-subplot(1, 3, 3);
-imagesc(pattern3);
+subplot(2, 3, 1);
+imagesc(otslm.tools.finalize(pattern1));
+subplot(2, 3, 2);
+imagesc(otslm.tools.finalize(pattern2));
+subplot(2, 3, 3);
+imagesc(otslm.tools.finalize(pattern3));
+
+subplot(2, 3, 4);
+imagesc(vismethod(otslm.tools.finalize(pattern1)));
+subplot(2, 3, 5);
+imagesc(vismethod(otslm.tools.finalize(pattern2)));
+subplot(2, 3, 6);
+imagesc(vismethod(otslm.tools.finalize(pattern3)));
 
 %% Combine patterns: angle(\sum_i exp(1i*2*pi*pattern_i))
 
 combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
     'method', 'super');
-  
-farfield = otslm.tools.visualise(2*pi*combined);
-farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
-    floor(size(farfield, 2)/2)+(-50:50));
+combined = otslm.tools.finalize(combined);
+farfield = vismethod(combined);
 
 figure(2);
 subplot(1, 2, 1);
@@ -47,10 +52,8 @@ title('super');
 
 combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
     'method', 'rsuper');
-  
-farfield = otslm.tools.visualise(2*pi*combined);
-farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
-    floor(size(farfield, 2)/2)+(-50:50));
+combined = otslm.tools.finalize(combined);
+farfield = vismethod(combined);
 
 figure(3);
 subplot(1, 2, 1);
@@ -63,10 +66,8 @@ title('rsuper');
 
 combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
     'method', 'gs');
-  
-farfield = otslm.tools.visualise(2*pi*combined);
-farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
-    floor(size(farfield, 2)/2)+(-50:50));
+combined = otslm.tools.finalize(combined);
+farfield = vismethod(combined);
 
 figure(4);
 subplot(1, 2, 1);
@@ -80,10 +81,8 @@ title('GS');
 
 combined = otslm.tools.combine({pattern1, pattern2, pattern3}, ...
     'method', 'dither');
-  
-farfield = otslm.tools.visualise(2*pi*combined);
-farfield = farfield(floor(size(farfield, 1)/2)+(-50:50), ...
-    floor(size(farfield, 2)/2)+(-50:50));
+combined = otslm.tools.finalize(combined);
+farfield = vismethod(combined);
 
 figure(5);
 subplot(1, 2, 1);
@@ -91,3 +90,14 @@ imagesc(combined);
 subplot(1, 2, 2);
 imagesc(abs(farfield));
 title('Dither');
+
+%% Function for visualisation
+
+function im = vismethod(pattern)
+  im = otslm.tools.visualise(pattern, 'method', 'fft', ...
+    'trim_padding', true, 'padding', size(pattern));
+  im = abs(im).^2;
+  o = 60;
+  im = im(end/2-o:end/2+o, end/2-o:end/2+o);
+end
+  

@@ -209,7 +209,7 @@ function lt = linear(slm, cam, varargin)
   valueTable = method_linear_valuetable(nvalueTable, fullTable);
 
   % Package the result
-  lookupTable = {2*pi*nphase, valueTable};
+  lt =  otslm.utils.LookupTable(2*pi*nphase.', valueTable.');
 
 end
 
@@ -235,7 +235,7 @@ function val = method_linear_check(slm, cam, nvalueTable, fullTable, ...
   % Convert the new pattern to a raw pattern
   valueTable = method_linear_valuetable(nvalueTable, fullTable);
   rawpattern = otslm.tools.finalize(grating, ...
-      'colormap', {nphase, valueTable});
+      'colormap', {nphase.', valueTable.'});
 
   % Check the new pattern
   slm.showRaw(rawpattern);

@@ -2,15 +2,29 @@ function tests = testslm
   tests = functiontests(localfunctions);
 end
 
-function testSimple(tests)
+function setupOnce(tests)
 
   addpath('../../');
 
-  slm = otslm.utils.TestSlm();
+  % Create objects for testing
+  tests.TestData.slm = otslm.utils.TestSlm();
+  tests.TestData.cam = otslm.utils.TestFarfield(tests.TestData.slm);
+end
+
+function testSimple(tests)
+
+  slm = tests.TestData.slm;
   pattern = otslm.simple.linear(slm.size, 10);
   slm.show(pattern);
 
-  cam = otslm.utils.TestCamera(slm);
+  cam = tests.TestData.cam;
   im = cam.viewTarget();
+
+end
+
+function testShowComplex(tests)
+
+  slm = tests.TestData.slm;
+  im = slm.viewComplex(zeros(slm.size));
 
 end

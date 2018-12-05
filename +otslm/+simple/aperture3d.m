@@ -7,7 +7,7 @@ function pattern = aperture3d(sz, dimension, varargin)
 %           'rect'      [w, h, d]   Rectangle with width and height
 %           'shell'     [r1, r2]    Ring specified by inner and outer radius
 %   'centre'      [x, y, z]   centre location for pattern
-%   'values'      [l, h]      values for off and on regions (default: [])
+%   'value'       [l, h]      values for off and on regions (default: [])
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -15,10 +15,13 @@ function pattern = aperture3d(sz, dimension, varargin)
 
 % TODO: Rotation and offset after rotation
 
+assert(isnumeric(sz) && numel(sz) == 3, ...
+  'sz must be numeric with have 3 elements');
+
 p = inputParser;
-p.addParameter('type', 'circle');
+p.addParameter('type', 'sphere');
 p.addParameter('centre', [sz(2), sz(1), sz(3)]/2.0);
-p.addParameter('values', []);
+p.addParameter('value', []);
 p.parse(varargin{:});
 
 % Calculate grid
@@ -51,12 +54,15 @@ switch p.Results.type
 end
 
 % Scale the pattern (convert from logical to double)
-if ~isempty(p.Results.values)
-  high = p.Results.values(2);
-  low = p.Results.values(1);
+if ~isempty(p.Results.value)
+  
+  assert(numel(p.Results.value) == 2, 'Length of value must be 2');
+  
+  high = p.Results.value(2);
+  low = p.Results.value(1);
   pattern = pattern .* (high - low) + low;
-end
 
-% Ensure type of output matches low/high
-pattern = cast(pattern, 'like', p.Results.values);
+  % Ensure type of output matches low/high
+  pattern = cast(pattern, 'like', p.Results.value);
+end
 

@@ -6,6 +6,10 @@ classdef LookupTable
 % Methods:
 %   load        load a human readable lookup table from a file
 %   save        save a human readable lookup table to a file
+%   sorted      Returns a new lookup table sorted by phase
+%   resample    Re-sampled lookup table at the specified phases
+%   linearised  New re-sampled lookup with evenly spaced phase values
+%   valueMinimised Arrange lookup table so values are ascending
 %
 % Properties:
 %   phase       phase values in lookup table [Nx1 matrix]
@@ -112,7 +116,7 @@ classdef LookupTable
 
 				% Select the channel
 				if chidx < 0
-					ch = data(:, end-chidx+1);
+					ch = data(:, end-(chidx+1));
 				elseif chidx == 0
 					% Nothing to do
 					continue
@@ -220,7 +224,7 @@ classdef LookupTable
       %         multi   write one column for each value channel
 
       p = inputParser;
-      p.addParameter('header', ['SLM lookup table generated at ' datetime()]);
+      p.addParameter('header', ['SLM lookup table generated at ' char(datetime())]);
       p.addParameter('format', 'multi');
       p.addParameter('cols', []);
       p.parse(varargin{:});
@@ -230,7 +234,7 @@ classdef LookupTable
       % Get column orders
       cols = p.Results.cols;
       if isempty(cols)
-        cols = 1:size(lt.values, 2);
+        cols = 1:size(lt.value, 2);
       end
 
       % Open file
@@ -240,8 +244,8 @@ classdef LookupTable
       % Handle different file formats
       switch p.Results.format
         case 'multi'
-          cols = repmat('\t%f', [1, length(cols)]);
-          fprintf(fp, ['%f' cols '\n'], [lt.phase, lt.values(:, cols)].');
+          cols_str = repmat('\t%f', [1, length(cols)]);
+          fprintf(fp, ['%f' cols_str '\n'], [lt.phase, lt.value(:, cols)].');
 
         case '8bit'
 
@@ -249,7 +253,7 @@ classdef LookupTable
           if isempty(p.Results.cols)
             mm = minmax(lt.values(:, cols).');
             idx = mm(:, 1) ~= mm(:, 2);
-            assert(sum(idx) == 1 || size(lt.values, 2) == 1, ...
+            assert(sum(idx) == 1 || size(lt.value, 2) == 1, ...
                 'Unable to determine which column to output');
             if sum(idx) ~= 1
               idx = 1;
@@ -260,14 +264,14 @@ classdef LookupTable
 
           % TODO: Should we have additional checking on values?
 
-          fprintf(fp, '%f%f\n', [lt.phase, lt.values(:, idx)].');
+          fprintf(fp, '%f%f\n', [lt.phase, lt.value(:, idx)].');
 
         case '16bit'
 
           if isempty(p.Results.cols)
             mm = minmax(lt.values(:, cols).');
             idx = mm(:, 1) ~= mm(:, 2);
-            assert(sum(idx) == 2 || size(lt.values, 2) == 2, ...
+            assert(sum(idx) == 2 || size(lt.value, 2) == 2, ...
                 'Unable to determine which column to output');
             if sum(idx) ~= 2
               idx = [1, 2];
@@ -281,7 +285,7 @@ classdef LookupTable
           % TODO: Should we have additional checking on values?
 
           fprintf(fp, '%f%f\n', [lt.phase, ...
-              lt.values(:, idx(1)) + lt.values(:, idx(2)).*2^8].');
+              lt.value(:, idx(1)) + lt.value(:, idx(2)).*2^8].');
 
         case 'none'
           fprintf(fp, '%f\n', lt.phase.');
@@ -301,7 +305,8 @@ classdef LookupTable
       [sortedPhase, idx] = sort(lt.phase);
       sortedValue = lt.value(idx, :);
 
-      nlt = LookupTable(sortedPhase, sortedValue);
+      import otslm.utils.LookupTable;
+      nlt = LookupTable(sortedPhase, sortedValue, 'range', lt.range);
     end
 
     function nlt = resample(lt, nphase)
@@ -310,15 +315,20 @@ classdef LookupTable
       % nlt = lt.resample(nphase) returns a new lookup table re-sampled
       % at the specified phases.  Values assigned to new phases correspond
       % to the nearest values in the old table.
+      
+      assert(size(nphase, 1) == numel(nphase), 'nphase must be column vector');
 
-      nlt = interp1(lt.phase, double(lt.value), nphase, 'nearest');
-      nlt = cast(nlt, 'like', lt.value);
+      nvalue = interp1(lt.phase, double(lt.value), nphase, 'nearest');
+      nvalue = cast(nvalue, 'like', lt.value);
+
+      import otslm.utils.LookupTable;
+      nlt = LookupTable(nphase, nvalue, 'range', lt.range);
     end
 
     function nlt = linearised(lt, numpts, varargin)
       % Generates a new lookup table with evenly spaced values
       %
-      % nlt = lt.linearised(lt, numpts, ...) generates a resampled
+      % nlt = lt.linearised(numpts, ...) generates a resampled
       % lookup table with evenly spaced values.
       %
       % Optional named arguments
@@ -327,17 +337,17 @@ classdef LookupTable
       %       so, the end points count as the same point.  Default false.
 
       p = inputParser;
-      p.addParameter('range', minmax(lt.phase));
+      p.addParameter('range', [min(lt.phase), max(lt.phase)]);
       p.addParameter('periodic', false);
       p.parse(varargin{:});
 
       if p.Results.periodic
         % TODO: What if values at other end are closer?
         range = linspace(p.Results.range(1), p.Results.range(2), numpts+1);
-        nlt = lt.resample(range(1:end-1));
+        nlt = lt.resample(range(1:end-1).');
       else
         range = linspace(p.Results.range(1), p.Results.range(2), numpts);
-        nlt = lt.resample(range);
+        nlt = lt.resample(range.');
       end
     end
 
@@ -345,7 +355,7 @@ classdef LookupTable
       % Arranges lookup table so phase values are ascending but
       % attempts to minimise change in linear index between steps.
       %
-      % nlt = lt.valueMinimised(lt, valueRangeSz) requires information
+      % nlt = lt.valueMinimised(valueRangeSz) requires information
       % about the size of each valueRange dimension (vector).
       %
       % See also otslm.utils.Showable.valueRangeSize()
@@ -370,7 +380,7 @@ classdef LookupTable
 
       sortedPhaseIdx = [idx];
       sortedPhase = [0.0];
-      candidates = phaseNd > sortedPhase(end)
+      candidates = phaseNd > sortedPhase(end);
       [lastCoord{1:length(valueRangeSz)}] = ind2sub(size(phaseNd), idx);
       while any(candidates)
 
@@ -413,7 +423,8 @@ classdef LookupTable
       % Retrieve corresponding values
       sortedValue = lt.value(sortedPhaseIdx, :);
 
-      nlt = LookupTable(sortedPhase, sortedValue);
+      import otslm.utils.LookupTable;
+      nlt = LookupTable(sortedPhase.', sortedValue, 'range', lt.range);
     end
   end
 end
