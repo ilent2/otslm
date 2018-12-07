@@ -1,5 +1,5 @@
-otslm - Optical Tweezers SLM Pattern Generator
-==============================================
+otslm - OTSLM Toolbox for Structured Light Methods
+====================================================
 
 A set of Matlab functions and graphical user interface for generating
 patterns for phase and amplitude spatial light modulators (SLMs) such as
