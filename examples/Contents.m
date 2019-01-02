@@ -10,12 +10,13 @@
 %   particle_tracking    - Simulate particles being imaged using SLM/QPD system
 %   iterative            - Demonstrate different iterative algorithms
 %   phaseblur            - Demonstration of effects of phase blur
-%   interative_3d        - Demonstration of 3-D iterative algorithms
+%   iterative_3d         - Demonstration of 3-D iterative algorithms
 %
 % +tools demonstrations
 %   multi_beams          - Example to demonstrate combining multiple beams
 %   region_sampling      - Demonstrating of otslm.tools.sample_region function
 %   visualise            - Demonstrate different visualisation methods
+%   \tools               - Additional examples of ott.tools features
 %
 % +utils demonstrations
 %   calibration          - Demonstrate the SLM calibration stuff
