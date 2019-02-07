@@ -5,6 +5,8 @@ classdef ScreenDevice < otslm.utils.Showable
 % The actual target device size may be smaller than the size
 % reported by the device.
 %
+% See also ScreenDevice, show, otslm.utils.Showable.
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -64,7 +66,11 @@ classdef ScreenDevice < otslm.utils.Showable
       p.addParameter('doublebuffer', 'off');
       p.addParameter('linear_order', []);
       p.addParameter('fullscreen', false);
+      p.addParameter('prescaledPatterns', false);
       p.parse(varargin{:});
+      
+      % Call base class constructor
+      obj = obj@otslm.utils.Showable('prescaledPatterns', p.Results.prescaledPatterns);
 
       % Set-up dependent properties for java window
       obj.figure_handle = [];

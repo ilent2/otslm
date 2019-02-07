@@ -43,6 +43,8 @@ classdef (Abstract) Showable < handle
 % the abstract methods and properties described above.
 % You can also override the other methods if needed.
 %
+% See also otslm.utils.ScreenDevice.
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -52,8 +54,26 @@ classdef (Abstract) Showable < handle
   end
 
   methods
+    function slm = Showable(varargin)
+      % Constructor for Showable objects, provides options for default vals
+      %
+      % Optional named arguments
+      %   prescaledPatterns   bool   Default value for prescaled argument
+      %       in show.  Default: false.
+      
+      p = inputParser;
+      p.addParameter('prescaledPatterns', false);
+      p.parse(varargin{:});
+      
+      slm.prescaledPatterns = p.Results.prescaledPatterns;
+    end
+    
     function im = view(slm, pattern)
       % Generate the raw pattern that is displayed on the device
+      %
+      % im = slm.view(pattern) apply the modulo (if phase device)
+      % and apply the lookup table.  Any nans remaining in the image
+      % are replaced by the first value in the lookup table.
 
       % Determine if we should apply a modulo
       switch slm.patternType
@@ -133,19 +153,32 @@ classdef (Abstract) Showable < handle
       % pattern.
       %
       % slm.show(pattern, ...) displays the pattern after applying the
-      % color map.
+      % color map.  For phase based devices, the pattern should not be
+      % scalled by 2*pi (i.e. mod(pattern, 1)*2*pi should give the angle).
+      %
+      % Optional named arguments:
+      %   prescaled  bool  If the pattern is already scalled by 2*pi.
+      %         Default: false.
       %
       % Additional arguments are passed to showRaw.
+      %
+      % See also view, showRaw, showComplex.
       
       p = inputParser;
       p.KeepUnmatched = true;
       p.addOptional('pattern', []);
+      p.addParameter('prescaled', obj.prescaledPatterns);
       p.parse(varargin{:});
       
       if isempty(p.Results.pattern)
         obj.showRaw(varargin{:});
       else
-        pattern = obj.view(p.Results.pattern);
+        pattern = p.Results.pattern;
+        if p.Results.prescaled
+          pattern = pattern ./ (2*pi);
+        end
+        
+        pattern = obj.view(pattern);
         obj.showRaw(pattern, varargin{2:end})
       end
     end
@@ -294,6 +327,10 @@ classdef (Abstract) Showable < handle
   
   properties (SetAccess=protected)
     linear_order = []; % Significance of valueRange columns
+  end
+  
+  properties
+    prescaledPatterns; % Default prescaled argument for slm.show
   end
 
   properties (Abstract, SetAccess=protected)
