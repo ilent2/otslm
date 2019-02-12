@@ -16,7 +16,7 @@
 %   GerchbergSaxton3d  - Implementation of 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
 %   IterBase3d         - base class for 3-D iterative algorithm classes
 %   bsc                - optimisation in vector spherical wave function basis
-%   bowman2017         - wrapper for Bowman 2017 conjugate gradient implementation
+%   bowman2017         - wrapper for Bowman 2017 conjugate gradient implementation (see also bowman2017/README.md)
 %
 % Sub-packages
 %   +objectives        - objective functions for use with optimisation algorithms
