@@ -41,6 +41,9 @@ The toolbox is split into 5 different sections:
     generation but things our group has found useful for displaying patterns.
 * `ui` contains graphical user interfaces for most of the functionality
     in the toolbox.
+    
+The easiest way to get started is to run the examples provided under
+the `examples` directory.  
 
 License
 -------
@@ -104,7 +107,7 @@ tests/        - Unit tests to verify toolbox features function correctly
 +otslm/       - The toolbox
 ```
 
-+otslm package, as well as tests/ and examples/ directories
+`+otslm` package, as well as `tests/` and `examples/` directories
 and sub-directories contain Contents.m files which list the files
 and packages in each directory.
 These files can be viewed in Matlab by typing `help otslm`
