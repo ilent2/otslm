@@ -17,7 +17,7 @@ hear from you, see the Contributing section bellow.
 This toolbox is a work in progress.  It is likely, at least in the
 early versions, the functions will move around, change names and
 behaviour.  Some functions still lack documentation and might be
-a bit unstable.
+a bit unstable.  Comments and suggestions welcome.
 
 Installation
 ------------
@@ -43,7 +43,8 @@ The toolbox is split into 5 different sections:
     in the toolbox.
     
 The easiest way to get started is to run the examples provided under
-the `examples` directory.  
+the `examples` directory or launch the user interface Launcher.mlapp
+found in the `+otslm/+ui` directory.
 
 License
 -------
