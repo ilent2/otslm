@@ -94,6 +94,7 @@ is [Timo Nieminen](mailto:timo@physics.uq.edu.au)
 File listing
 ------------
 
+```
 README.md     - Overview of toolbox (this file)
 LICENSE.md    - License information for OTSLM original code
 TODO          - Future changes/additions to the toolbox
@@ -101,6 +102,7 @@ thirdparty/   - Third party licenses (multiple files)
 examples/     - Example files showing different toolbox features
 tests/        - Unit tests to verify toolbox features function correctly
 +otslm/       - The toolbox
+```
 
 +otslm package, as well as tests/ and examples/ directories
 and sub-directories contain Contents.m files which list the files
