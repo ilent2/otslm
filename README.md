@@ -17,7 +17,7 @@ hear from you, see the Contributing section bellow.
 This toolbox is a work in progress.  It is likely, at least in the
 early versions, the functions will move around, change names and
 behaviour.  Some functions still lack documentation and might be
-a bit unstable.
+a bit unstable.  Comments and suggestions welcome.
 
 Installation
 ------------
@@ -41,6 +41,10 @@ The toolbox is split into 5 different sections:
     generation but things our group has found useful for displaying patterns.
 * `ui` contains graphical user interfaces for most of the functionality
     in the toolbox.
+    
+The easiest way to get started is to run the examples provided under
+the `examples` directory or launch the user interface Launcher.mlapp
+found in the `+otslm/+ui` directory.
 
 License
 -------
@@ -48,8 +52,8 @@ License
 If you publish work using this toolbox, please cite it as
 
 > I. C. D. Lenton, A. B. Stilgoe, T. A. Nieminen, H. Rubinsztein-Dunlop,
-> "Routine and simplified generation of SLM patterns for optical tweezers",
-> [Journal to be decided](link to the article)
+> "OTSLM toolbox for structured light methods",
+> Computer Physics Communications, 2019.
 
 This version of the code is licensed under the GNU GPLv3.
 Parts of the toolbox incorporate third party open source code,
@@ -77,7 +81,7 @@ Contributing
 
 If you would like to contribute a feature, report a bug or request
 we add something to the toolbox, the easiest way is by creating
-a new issue on the GitHub page.
+a new issue on the OTSLM GitHub page.
 
 If you have code you would like to submit, fork the repository,
 add the code and open a new issue.
@@ -90,4 +94,23 @@ Contact us
 
 The best person to contact for inquiries about the toolbox or licensing
 is [Timo Nieminen](mailto:timo@physics.uq.edu.au)
+
+File listing
+------------
+
+```
+README.md     - Overview of toolbox (this file)
+LICENSE.md    - License information for OTSLM original code
+TODO          - Future changes/additions to the toolbox
+thirdparty/   - Third party licenses (multiple files)
+examples/     - Example files showing different toolbox features
+tests/        - Unit tests to verify toolbox features function correctly
++otslm/       - The toolbox
+```
+
+`+otslm` package, as well as `tests/` and `examples/` directories
+and sub-directories contain Contents.m files which list the files
+and packages in each directory.
+These files can be viewed in Matlab by typing `help otslm`
+or `help otslm.subpackage`.
 
