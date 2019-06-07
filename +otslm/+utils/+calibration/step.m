@@ -136,7 +136,7 @@ for ii = 1:p.Results.stride:size(valueTable, 2)
   end
 
   % Acquire image
-  im = cam.viewTarget();
+  im = double(cam.viewTarget());
 
   % Show the camera image
   if p.Results.show_camera
