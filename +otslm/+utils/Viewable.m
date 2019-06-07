@@ -33,13 +33,18 @@ classdef (Abstract) Viewable < handle
       obj.roioffset = [0, 0];
     end
 
-    function im = viewTarget(obj, varargin)
+    function varargout = viewTarget(obj, varargin)
       % View the target, applies a ROI to the result of view()
       %
-      % im = viewTarget(...)
+      % im = viewTarget(...) acquire one or more target regions and
+      % return them to an cell array of images.  Specify target
+      % regions using the crop function.  If no output is requiested,
+      % the image will be displayed in the current axes.
       %
       % Optional named arguments:
       %   roi     array     Specified which roi to return
+      %
+      % See also otslm.Viewable.crop.
 
       p = inputParser;
       p.addParameter('roi', 1);
@@ -70,6 +75,13 @@ classdef (Abstract) Viewable < handle
         if length(im) == 1
           im = im{1};
         end
+      end
+      
+      % Display result if no output requested
+      if nargout == 0 && ~iscell(im)
+        imagesc(im);
+      else
+        varargout{1} = im;
       end
     end
 

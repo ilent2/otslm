@@ -10,6 +10,11 @@ classdef GigeCamera < otslm.utils.Viewable
     size        % Resolution of the device
   end
   
+  properties (Dependent=true)
+    Exposure     % Camera exposure
+    %Gain         % Camera Gain
+  end
+  
   methods
     function obj = GigeCamera(varargin)
       % Connect to the camera
@@ -40,6 +45,15 @@ classdef GigeCamera < otslm.utils.Viewable
       % Acquire a single frame from the device
       im = snapshot(obj.device);
     end
+    
+    function set.Exposure(cam, val)
+      cam.device.ExposureTimeAbs = val;
+    end
+    
+    function val = get.Exposure(cam)
+      val = cam.device.ExposureTimeAbs;
+    end
+    
   end
 end
 

@@ -16,12 +16,21 @@ classdef WebcamCamera < otslm.utils.Viewable
     device      % The physical device (gige object)
   end
   
+  properties (Dependent=true)
+    Exposure     % Camera exposure
+    Gain         % Camera Gain
+    FrameRate    % Frame rate for device
+  end
+  
   methods
     function obj = WebcamCamera(varargin)
       % Connect to the camera
       %
       % cam = WebcamCamera(device_id) conntect to the specified
       % webcam camera.  For the device id, imaqhwinfo.
+      %
+      % If the device you are interested in is not listed, try
+      % resetting/clearing all devices with imaqreset.
       
       % Parse inputs
       p = inputParser;
@@ -59,11 +68,62 @@ classdef WebcamCamera < otslm.utils.Viewable
       delete(obj.device);
     end
     
-    function im = view(obj)
+    function set.Exposure(cam, val)
+      stop(cam.device);
+      src = getselectedsource(cam.device);
+      src.ExposureMode = 'manual';
+      src.Exposure = val;
+      start(cam.device);
+    end
+    
+    function val = get.Exposure(cam)
+      stop(cam.device);
+      src = getselectedsource(cam.device);
+      src.ExposureMode = 'manual';
+      val = src.Exposure;
+      start(cam.device);
+    end
+    
+    function set.Gain(cam, val)
+      stop(cam.device);
+      src = getselectedsource(cam.device);
+      src.Gain = val;
+      start(cam.device);
+    end
+    
+    function val = get.Gain(cam)
+      stop(cam.device);
+      src = getselectedsource(cam.device);
+      val = src.Gain;
+      start(cam.device);
+    end
+    
+    function set.FrameRate(cam, val)
+      stop(cam.device);
+      src = getselectedsource(cam.device);
+      src.FrameRate = val;
+      start(cam.device);
+    end
+    
+    function val = get.FrameRate(cam)
+      stop(cam.device);
+      src = getselectedsource(cam.device);
+      val = src.FrameRate;
+      start(cam.device);
+    end
+    
+    function varargout = view(obj)
       % Acquire a single frame from the device
 %       im = snapshot(obj.device);
         im = getsnapshot(obj.device);
 %       im = getdata(obj.device, 1, 'uint16');
+
+        % Display result if no output requested
+        if nargout == 0
+          imagesc(im);
+        else
+          varargout{1} = im;
+        end
     end
   end
 end
