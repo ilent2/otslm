@@ -16,7 +16,7 @@ classdef LookupTable
 %   value       pixel values in lookup table [NxM matrix]
 %   range       range of the lookup table (for phase based tables)
 %
-% See also otslm.tools.finalize and otslm.utils.Showable
+% See also LookupTable, otslm.tools.finalize and otslm.utils.Showable
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
