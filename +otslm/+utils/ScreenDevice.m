@@ -262,6 +262,12 @@ classdef ScreenDevice < otslm.utils.Showable
 
       else
         set(obj.image_handle, 'CData', img);
+          
+        % If single chanel range, set grayscale colormap
+        if size(img, 3) == 1
+          colormap(imgca(obj.figure_handle), gray);
+        end
+
         drawnow nocallbacks;
       end
     end
