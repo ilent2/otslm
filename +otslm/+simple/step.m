@@ -5,7 +5,7 @@ function pattern = step(sz, varargin)
 %
 % Optional named parameters:
 %
-%   'centre'    [ x, y ]    centre location for rotation (default: [1, 1])
+%   'centre'    [ x, y ]    centre location for rotation (default: centre)
 %   'angle'     theta       angle in radians for gradient (from +x to +y)
 %   'angle_deg' theta       angle in degrees for gradient
 %   'value'     [ l, h ]    low and high values of step (default: [0, 0.5])

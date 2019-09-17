@@ -5,7 +5,7 @@ function pattern = axicon(sz, gradient, varargin)
 %
 % The equation describing the lens is
 %
-%    z(r) = -gradient*r
+%    z(r) = -gradient*abs(r)
 %
 % Optional named parameters:
 %

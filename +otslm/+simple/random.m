@@ -1,8 +1,8 @@
 function pattern = random(sz, varargin)
 % RANDOM generates a random pattern
 %
-% pattern = random(sz, ...) creates a random pattern with values between
-% 0 and 1.
+% pattern = random(sz, ...) creates a pattern with uniform random
+% noise values between 0 and 1.
 %
 % Optional named parameters:
 %

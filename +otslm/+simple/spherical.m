@@ -3,6 +3,11 @@ function pattern = spherical(sz, radius, varargin)
 %
 % pattern = spherical(sz, radius, ...) generates a spherical pattern
 % with values from 0 (at the edge) and 1*sign(radius) (at the centre).
+% The equation for the centre of the lens is
+%
+% z(r) = A/r sqrt(R^2 - r^2)
+%
+% where A is a scaling factor and R is the lens radius.
 %
 % Optional named arguments:
 %   'background'   img   Specifies a background pattern to use for
