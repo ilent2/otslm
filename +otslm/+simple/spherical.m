@@ -11,6 +11,13 @@ function pattern = spherical(sz, radius, varargin)
 %
 % Optional named arguments:
 %
+%   'delta'       offset      offset for pattern (default: -sign(radius))
+%   'scale'       scale       scaling value for the final pattern
+%   'background'  img         Specifies a background pattern to use for
+%       values outside the lens.  Can also be a scalar, in which case
+%       all values are replaced by this value; or a string with
+%       'random' or 'checkerboard' for these patterns.
+%
 %   'centre'      [x, y]      centre location for lens
 %   'offset'      [x, y]      offset after applying transformations
 %   'type'        type        is the lens cylindrical or spherical (1d or 2d)
@@ -18,22 +25,19 @@ function pattern = spherical(sz, radius, varargin)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
 %   'gpuArray'    bool        If the result should be a gpuArray
-%   'background'   img   Specifies a background pattern to use for
-%       values outside the lens.  Can also be a scalar, in which case
-%       all values are replaced by this value; or a string with
-%       'random' or 'checkerboard' for these patterns.
 %
-% See simple.aspheric for more information and named arguments.
+% See otslm.simple.aspheric.
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 p = inputParser;
-p.KeepUnmatched = true;
-p.addParameter('scale', 1.0);
-p.addParameter('offset', 0.0);
+addAsphericParameters(p, sz, 'skip', {'alpha'}, 'delta', -sign(radius));
 p.parse(varargin{:});
 
-pattern = otslm.simple.aspheric(sz, radius, 0, varargin{:}, ...
-    'scale', p.Results.scale/radius, 'offset', -sign(radius));
+kappa = 0;
+asphericParameters = expandAsphericParameters(p);
+pattern = otslm.simple.aspheric(sz, radius, kappa, ...
+    asphericParameters{:}, ...
+    'scale', p.Results.scale/radius, 'offset', p.Results.delta);

@@ -30,26 +30,29 @@ function p = addAsphericParameters(p, sz, varargin)
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
-p = addGridParameters(p, sz, varargin{:});
-
-
-
-parameters = {'alpha', 'delta', 'scale', 'background'};
+parameters = {'centre', 'offset', 'type', 'aspect', 'angle', ...
+  'angle_deg', 'gpuArray', 'alpha', 'delta', 'scale', 'background'};
 
 % Allow user to change input parser defaults
 ip = inputParser;
-addGridParameters(ip, sz, varargin{:});
+
+% Grid parameters
+ip.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
+ip.addParameter('offset', [0, 0]);
+ip.addParameter('type', '2d');
+ip.addParameter('aspect', 1.0);
+ip.addParameter('angle', []);
+ip.addParameter('angle_deg', []);
+ip.addParameter('gpuArray', false);
+
+% Aspheric parameters
 ip.addParameter('alpha', []);
 ip.addParameter('delta', 0.0);
 ip.addParameter('scale', 1.0);
 ip.addParameter('background', 0.0);
+
 ip.addParameter('skip', {});
 ip.parse(varargin{:});
-
-
-% Start with grid parameters
-gridParameters = expandGridParameters(varargin
-p = addGridParameters(p, gridParameters);
 
 % Add parameters to result input parser
 for ii = 1:length(parameters)

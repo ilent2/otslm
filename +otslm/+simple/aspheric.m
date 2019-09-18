@@ -60,7 +60,7 @@ end
 
 % Offset and scale result
 
-pattern = pattern .* p.Results.scale + p.Results.offset;
+pattern = pattern .* p.Results.scale + p.Results.delta;
 
 % Ensure result is real
 imag_parts = imag(pattern) ~= 0;
