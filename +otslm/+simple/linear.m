@@ -6,26 +6,24 @@ function pattern = linear(sz, spacing, varargin)
 %
 % Optional named parameters:
 %
-%   'centre'    [ x, y ]    centre location for zero value
-%   'aspect'    aspect      aspect ratio for coordinates
-%   'angle'     theta       angle in radians for gradient (from +x to +y)
-%   'angle_deg' theta       angle in degrees for gradient
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 p = inputParser;
-p.addParameter('centre', [ 1, 1 ]);
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
+p = addGridParameters(p, sz, 'skip', 'type', 'centre', [ 1, 1 ]);
 p.parse(varargin{:});
 
 % Generate grid of points
-[xx, yy] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
-    'aspect', p.Results.aspect, 'angle', p.Results.angle, ...
-    'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[xx, yy] = otslm.simple.grid(sz, gridParameters{:});
 
 % Check for valid spacing
 if any(spacing == 0)

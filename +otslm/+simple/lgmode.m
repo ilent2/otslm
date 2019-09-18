@@ -7,11 +7,12 @@ function [phase, amplitude] = lgmode(sz, amode, rmode, varargin)
 % [phase, amplitude] = lgmode(...) also generates the amplitude pattern.
 %
 % Optional named parameters:
-%
-%   'centre'    [ x, y ]    centre location (default: pattern centre)
-%   'aspect'    aspect      aspect ratio of generated pattern
-%   'angle'     angle       Rotation angle about axis (radians)
-%   'angle_deg' angle       Rotation angle about axis (degrees)
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %   'radius'    radius      scaling factor for radial mode rings
 %   'p0'        p0          incident amplitude correction factor
 %       Should be 1.0 (default) for plane wave illumination (w_i = Inf),
@@ -28,30 +29,34 @@ assert(floor(amode) == amode, 'Azimuthal mode must be integer');
 
 % Parse inputs
 p = inputParser;
-p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
+p = addGridParameters(p, sz, 'skip', 'type');
 p.addParameter('radius', min(sz(1), sz(2))/10);
 p.addParameter('p0', 1.0);
 p.parse(varargin{:});
 
 % Generate coordinates
-[~, ~, rho, phi] = otslm.simple.grid(sz, ...
-    'centre', p.Results.centre, 'aspect', p.Results.aspect, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[~, ~, rho, phi] = otslm.simple.grid(sz, gridParameters{:});
 
 % Calculate azimuthal part of pattern
 phase = amode .* phi ./ (2.0*pi);
 
 % Calculate laguerre polynomials in radial direction
 maxrho = max(rho(:));
-rr = linspace(0.0, maxrho, 2*maxrho);
+if p.Results.gpuArray
+  maxrho = gather(maxrho);
+end
+rr = linspace(0.0, maxrho, round(2*maxrho));
 Lpoly_rr = laguerreL(rmode, abs(amode), (rr./p.Results.radius).^2);
 
 % Interpolate between points using splines
-Lpoly_rho = interp1((rr./p.Results.radius).^2, Lpoly_rr, ...
-    (rho./p.Results.radius).^2, 'spline');
+if p.Results.gpuArray
+  Lpoly_rho = interp1((rr./p.Results.radius).^2, Lpoly_rr, ...
+    (rho./p.Results.radius).^2, 'linear');
+else
+  Lpoly_rho = interp1((rr./p.Results.radius).^2, Lpoly_rr, ...
+      (rho./p.Results.radius).^2, 'spline');
+end
 
 % Calculate radial part of phase
 phase = phase + (sign(Lpoly_rho) > 0)*0.5;

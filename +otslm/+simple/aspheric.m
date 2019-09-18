@@ -7,7 +7,7 @@ function pattern = aspheric(sz, radius, kappa, varargin)
 % The equation describing the lens is
 %
 %    z(r) = r^2 / ( R ( 1 + sqrt(1 - (1 + kappa) r^2/R^2)))
-%               + \sum_{i=2}^N  alpha_i * r^(2*i)
+%               + \sum_{i=2}^N  alpha_i * r^(2*i) + delta
 %
 % Where kappa is
 %   < -1	    hyperbola
@@ -16,43 +16,38 @@ function pattern = aspheric(sz, radius, kappa, varargin)
 %   0	        sphere
 %   > 0	      ellipse (surface is an oblate spheroid)
 %
-% The alpha terms provide higher order parabolic corrections.
+% The alpha terms provide higher order parabolic corrections and
+% delta is a phase offset term.
 %
 % Optional named parameters:
 %
-%   'centre'      [x, y]      centre location for lens
 %   'alpha'       [a1, ...]   additional parabolic correction terms
+%   'delta'       offset      offset for the final pattern (default: 0.0)
 %   'scale'       scale       scaling value for the final pattern
-%   'offset'      offset      offset for the final pattern (default: 0.0)
-%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
 %   'background'  img         Specifies a background pattern to use for
 %       values outside the lens.  Can also be a scalar, in which case
 %       all values are replaced by this value; or a string with
 %       'random' or 'checkerboard' for these patterns.
+%
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
+%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 p = inputParser;
-p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
-p.addParameter('alpha', []);
-p.addParameter('scale', 1.0);
-p.addParameter('offset', 0.0);
-p.addParameter('type', '2d');
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
-p.addParameter('background', 0.0);
+addAsphericParameters(p, sz);
 p.parse(varargin{:});
 
 % Calculate radial coordinates
-[~, ~, rr] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
-    'type', p.Results.type, 'aspect', p.Results.aspect, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[~, ~, rr] = otslm.simple.grid(sz, gridParameters{:});
 rr2 = rr.^2;
 
 % Calculate pattern

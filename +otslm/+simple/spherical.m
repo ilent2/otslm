@@ -10,6 +10,14 @@ function pattern = spherical(sz, radius, varargin)
 % where A is a scaling factor and R is the lens radius.
 %
 % Optional named arguments:
+%
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
+%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %   'background'   img   Specifies a background pattern to use for
 %       values outside the lens.  Can also be a scalar, in which case
 %       all values are replaced by this value; or a string with
