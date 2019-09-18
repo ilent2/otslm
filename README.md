@@ -19,32 +19,46 @@ early versions, the functions will move around, change names and
 behaviour.  Some functions still lack documentation and might be
 a bit unstable.  Comments and suggestions welcome.
 
-Installation
+To get started using the toolbox, take a look at the documentation.
+You can access the documentation [online](https://github.com/ilent2/otslm/wiki),
+or in the `docs` directory.
+Or, for quick installation instructions and dependendices, see bellow.
+
+Installation and usage
+----------------------
+
+To use the toolbox, download the repository and add the download directory
+to your path.  Functions can be accessed by prefixing function names with
+`otslm.`, for example
+```matlab
+im = otslm.simple.linear([10, 10], 3);
+```
+
+To find out information about the functions contained in the toolbox,
+you can access the documentation [here](https://github.com/ilent2/otslm/wiki),
+in the Matlab `doc` browser, or access short documentation using the matlab
+`help` browser.
+For example
+```matlab
+help otslm
+help otslm.simple.linear
+```
+
+To launch the graphical user interfacces you can navigate to the corresponding
+file in `+otslm/+ui` or run the Launcher from the Matlab command line:
+
+Dependencies
 ------------
 
-To use the toolbox, download the repository, add the download directory
-to your path, and include the toolbox with `import otslm.*`.
+Some functionality requires the following dependencies:
 
-For some functionality you may need to install the [optical tweezers
-toolbox](https://github.com/ilent2/ott).
-
-Usage
------
-
-The toolbox is split into 5 different sections:
-
-* `simple` includes simple beam generation functions.
-* `iter` includes iterative methods for generating patterns based
-    on a target beam.
-* `tools` provides tools for combining beams and visualising the output.
-* `utils` provides functions not necessarily related to pattern
-    generation but things our group has found useful for displaying patterns.
-* `ui` contains graphical user interfaces for most of the functionality
-    in the toolbox.
-    
-The easiest way to get started is to run the examples provided under
-the `examples` directory or launch the user interface Launcher.mlapp
-found in the `+otslm/+ui` directory.
+* Matlab (2018a or newer)
+* [Optical Tweezers Toolbox](https://github.com/ilent2/ott) (1.5.1 or newer)
+* Python (2.7 or newer)
+    * numpy (tested on 1.13.3)
+    * theano (tested on 0.9)
+    * scipy (tested on 1.0)
+    * pyfftw (optional, for fourier transform)
 
 License
 -------
