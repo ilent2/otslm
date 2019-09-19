@@ -1,6 +1,8 @@
 function pattern = aperture3d(sz, dimension, varargin)
 % APERTURE3D generate a 3-D volume similar to otslm.simple.aperture
 %
+%   pattern = aperture3d(sz, dimension, ...)
+%
 %   'type'    type      Type of aperture to generate. Supported types:
 %           'sphere'    [radius]    Pinhole/circular aperture
 %           'cube'      [width]     Square with equal sides

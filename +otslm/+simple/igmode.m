@@ -9,7 +9,7 @@ function [pattern, amplitude] = igmode(sz, even, modep, modem, elipticity, varar
 % [phase, amplitude] = igmode(...) also calculates the signed
 % amplitude of the pattern in addition to the phase.
 %
-% Ince-Gaussian beams are described in Bandres and Gutiérrez-Vega (2004).
+% Ince-Gaussian beams are described in Bandres and Gutirrez-Vega (2004).
 %
 % Optional named parameters:
 %

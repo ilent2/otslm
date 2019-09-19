@@ -1,8 +1,11 @@
-% Example of simple beams (figure 2 in otslm paper)
+% Example of simple beams
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
+
+% Add toolbox to the path
+addpath('../');
 
 sz = [512, 512];      % Size of pattern
 o = 50;              % Region of interest size in output
@@ -20,6 +23,8 @@ visualize = @(pattern) zoom(abs(otslm.tools.visualise(pattern, ...
 figure();
 
 %% Zero phase pattern (no modification to input beam)
+% This is figure 2 (a) from the OTSLM paper.
+% The incident beam is not modified
 
 pattern = zeros(sz);
 pattern = otslm.tools.finalize(pattern);
@@ -31,6 +36,9 @@ subplot(4, 4, 2);
 imagesc(visualize(pattern));
 
 %% Linear grating (xy displacement)
+% This is figure 2 (b) from the OTSLM paper.
+% Adds a linear grating to the beam, this produces a transverse
+% displacement to the beam in the far-field of the SLM.
 
 pattern = otslm.simple.linear(sz, 40, 'angle_deg', 45);
 pattern = otslm.tools.finalize(pattern);
@@ -42,6 +50,9 @@ subplot(4, 4, 6);
 imagesc(visualize(pattern));
 
 %% Spherical grating (z displacement)
+% This is figure 2 (c) from the OTSLM paper.
+% Adds a spherical phase function to the beam, this produces a axial
+% displacement to the beam in the far-field of the SLM.
 
 pattern = otslm.simple.spherical(sz, 200, 'scale', 5, ...
     'background', 'checkerboard');
@@ -54,8 +65,17 @@ subplot(4, 4, 10);
 imagesc(visualize(pattern));
 
 %% LG Beam
+% This is figure 2 (d) from the OTSLM paper.
+% If the incident beam is a Gaussian beam (LG00), this generates a
+% LG-like beam with the specified azimuthal and radial mode indices.
+%
+% This isn't a pure LG beam.  In order to achieve a pure beam we
+% also need to modify the amplitude.  See examples/advanced_beams.m.
 
-pattern = otslm.simple.lgmode(sz, 3, 2, 'radius', 50);
+amode = 3;  % Azimuthal mode
+rmode = 2;  % Radial mode
+
+pattern = otslm.simple.lgmode(sz, amode, rmode, 'radius', 50);
 pattern = otslm.tools.finalize(pattern);
 
 subplot(4, 4, 13);
@@ -65,6 +85,11 @@ subplot(4, 4, 14);
 imagesc(visualize(pattern));
 
 %% HG Beam
+% If the incident beam has uniform phase and amplitude, this generates a
+% HG-like beam with the specified mode indices.
+%
+% This isn't a pure HG beam.  In order to achieve a pure beam we
+% also need to modify the amplitude.  See examples/advanced_beams.m.
 
 pattern = otslm.simple.hgmode(sz, 3, 2, 'scale', 70);
 pattern = otslm.tools.finalize(pattern);
@@ -76,6 +101,8 @@ subplot(4, 4, 4);
 imagesc(visualize(pattern));
 
 %% Sinc pattern (line trap)
+% Encodes a 1D sinc amplitude pattern in the height of the phase
+% pattern, similar to Roichman and Grier, Opt. Lett. 31, 1675-1677 (2006).
 
 radius = 50;
 sinc = otslm.simple.sinc(sz, radius, 'type', '1d');
@@ -94,6 +121,7 @@ subplot(4, 4, 8);
 imagesc(visualize(pattern));
 
 %% Axicon lens (non-diffracting ring-beam)
+% Applies a cone shaped phase pattern to generate a Bessel-like beam.
 
 radius = 200;
 
@@ -114,6 +142,7 @@ subplot(4, 4, 12);
 imagesc(visualize(pattern));
 
 %% Cubic lens (airy beam)
+% Applies a cubic lens function to the beam
 
 pattern = otslm.simple.cubic(sz);
 pattern = otslm.tools.finalize(pattern);

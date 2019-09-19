@@ -8,7 +8,7 @@ function pattern = sinusoid(sz, period, varargin)
 %
 %   'centre'      [x, y]      centre location for lens
 %   'type'        type        the type of sinusoid pattern to generate
-%       '1d'      one dimensional
+%       '1d'      one dimensional (default)
 %       '2d'      circular coordinates
 %       '2dcart'  multiple of two sinusoid functions at 90 degree angle
 %           supports two period values [ Px, Py ].
@@ -24,7 +24,7 @@ function pattern = sinusoid(sz, period, varargin)
 
 p = inputParser;
 p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
-p.addParameter('type', '2d');
+p.addParameter('type', '1d');
 p.addParameter('aspect', 1.0);
 p.addParameter('angle', []);
 p.addParameter('angle_deg', []);

@@ -4,6 +4,9 @@
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+% Add toolbox to the path
+addpath('../');
+
 sz = [128, 128];
 
 overdrive = 1.0;   % Overdrive voltages of device

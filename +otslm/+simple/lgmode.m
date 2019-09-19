@@ -17,6 +17,7 @@ function [phase, amplitude] = lgmode(sz, amode, rmode, varargin)
 %   'p0'        p0          incident amplitude correction factor
 %       Should be 1.0 (default) for plane wave illumination (w_i = Inf),
 %       for Gaussian beams should be p0 = 1 - radius^2/w_i^2.
+%       See Lerner et al. (2012) for details.
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

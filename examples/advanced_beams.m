@@ -1,4 +1,6 @@
-% Example of more advanced beams (figure 3 in otslm paper)
+% Example of more advanced beams (using iterative methods, 
+%
+% (figure 3 in otslm paper)
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -8,7 +10,6 @@
 addpath('../');
 
 sz = [512, 512];      % Size of pattern
-% o = 100;               % Region of interest size in output
 padding = 500;        % Padding for FFT
 
 % incident = [];        % Incident beam (use default in visualize)
