@@ -1,4 +1,5 @@
 
+addpath('../');
 
 sz = logspace(1, 4, 20);
 times = zeros(size(sz));
