@@ -16,6 +16,9 @@
 %   phaseblur       - simulate pixel phase blurring
 %   volume2hologram - generate hologram from 3-D volume
 %
+% Subpackages
+%   +prop           - propogation methods (used by visualise and iter)
+%
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
