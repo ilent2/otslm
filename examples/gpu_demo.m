@@ -83,7 +83,7 @@ title('Slow gratings and lenses?');
 
 %% Use the gratings and lenses function
 
-sz = logspace(1, 4, 20);
+sz = logspace(1, 3.5, 20);
 times = zeros(size(sz));
 timesGpu = zeros(size(sz));
 timesGpuG = timesGpu;
@@ -148,6 +148,9 @@ end
 
 figure();
 loglog(numt, [times; timesGpu; timesGpuG]);
+hold on;
+loglog([min(numt), max(numt)], 1/60 * [1,1]);
+hold off;
 legend({'CPU', 'GPU', 'GPUwG'});
 xlabel('Number of traps');
 title('Dedicated gratings and lenses');
