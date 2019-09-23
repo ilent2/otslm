@@ -5,7 +5,7 @@ const vec4 white = vec4(1,1,1,1);
 uniform int n;                     //number of spots
 uniform float totalA;         //total of the "intensity" parameters (used for intensity shaping)
 
-// This uniform is either of the following (depending on if n > 5
+// This uniform is either of the following (depending on if n > 50)
 // (1) sampler2D spots
 // (2) vec4 spots[200]
 
