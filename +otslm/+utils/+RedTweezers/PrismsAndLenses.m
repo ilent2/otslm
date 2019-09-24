@@ -53,11 +53,7 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       glsl_fullpath = [our_path, filesep, rt.glsl_filename];
       
       % Load the GLSL file
-      assert(2 == exist(glsl_fullpath, 'file'), ...
-        'Unable to file GLSL file');
-      fid = fopen(glsl_fullpath, 'r');
-      rt.shader_text = fread(fid, 'uint8=>char');
-      fclose(fid);
+      rt.shader_text = rt.readGlslFile(glsl_fullpath);
     end
     
     function addSpot(rt, varargin)

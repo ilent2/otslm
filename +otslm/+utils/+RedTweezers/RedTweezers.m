@@ -45,6 +45,23 @@ classdef RedTweezers < handle
     network_reply
   end
   
+  methods (Static)
+    function contents = readGlslFile(filename)
+      % Read a GLSL file into a character array
+      
+      % Check file exists
+      assert(2 == exist(filename, 'file'), 'Unable to find GLSL file');
+      
+      % Read contents of file
+      fid = fopen(filename, 'r');
+      contents = fread(fid, 'uint8=>char');
+      fclose(fid);
+      
+      % Make the rows go across the page (string style)
+      contents = contents.';
+    end
+  end
+  
   methods
     function rt = RedTweezers(address, port)
       % RedTweezers construct a new RedTweezers interface

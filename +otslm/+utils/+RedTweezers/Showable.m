@@ -76,11 +76,7 @@ classdef Showable < otslm.utils.RedTweezers.RedTweezers & otslm.utils.Showable
       glsl_fullpath = [our_path, filesep, rt.glsl_filename];
       
       % Load the GLSL file
-      assert(2 == exist(glsl_fullpath, 'file'), ...
-        'Unable to file GLSL file');
-      fid = fopen(glsl_fullpath, 'r');
-      rt.shader_text = fread(fid, 'uint8=>char');
-      fclose(fid);
+      rt.shader_text = rt.readGlslFile(glsl_fullpath);
       
       % Load the shader
       rt.sendShader(rt.shader_text);
