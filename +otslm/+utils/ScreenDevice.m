@@ -27,12 +27,12 @@ classdef ScreenDevice < otslm.utils.Showable
     valueRange              % Range of values for screen
     lookupTable             % Lookup table for colour mapping
     patternType             % Pattern type
-    size                    % Target screen size [rows, columns]
     offset                  % Offset for target screen [x, y]
   end
   
   properties
     default_fullscreen  logical % Should showRaw use fullscreen by default
+    size                    % Target screen size [rows, columns]
   end
 
   methods
@@ -270,6 +270,13 @@ classdef ScreenDevice < otslm.utils.Showable
 
         drawnow nocallbacks;
       end
+    end
+    
+    function set.size(slm, value)
+      % Change the size of the window
+      
+      % TODO: Implement this
+      error('Not yet implemented');
     end
   end
 end

@@ -3,20 +3,29 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
   %
   % Implements the Prisms and Lenses algorithm in an OpenGl shader.
   %
-  % Copyright 2018 Isaac Lenton
+  % Copyright 2019 Isaac Lenton
   % This file is part of OTSLM, see LICENSE.md for information about
   % using/distributing this file.
   
+  % TODO: Need to change set methods to use callbacks
+  
   properties
-    num_spots     % number of spots in the pattern
+    spots           % Array of PrismsAndLenses spots
+    total_intensity % Total intensity parameter used for intensity shaping
+    centre          % Centre of the hologram as a function of its size
+    size            % Size of the hologram (in microns)
+    focal_length    % Focal length (in microns)
+    wavenumber      % Wavenumber (inverse microns)
+    blazing         % Blazing table for colourmap (32 numbers)
+    zernike         % Zernike coefficients (12 numbers)
   end
   
-  properties (Access=protected)
-    shader_text   % Contents of the GLSL file
+  properties (SetAccess=protected)
+    shader_text   % Contents of the GLSL file before substitution
   end
   
   properties (Constant)
-    glsl_filename = 'PrismsAndLenses.glsl';
+    glsl_filename = 'PrismsAndLenses.glsl';   % Filename for GLSL source
   end
   
   methods
@@ -30,40 +39,63 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       
       ip = inputParser();
       ip.addOptional('address', '127.0.0.1');
-      ip.addOptional('port', 61556);
+      ip.addOptional('port', 61557);
       ip.addParameter('nspots', 2);
       ip.parse(varargin{:});
       
-      % Load the prisms and lenses algorithm from the file
+      % Call base class constructor
+      rt = rt@otslm.utils.RedTweezers.RedTweezers(...
+        ip.Results.address, ip.Results.port);
+      
+      % Generate the file path for the GLSL file
       our_filename = mfilename('fullpath');
       [our_path, ~, ~] = fileparts(our_filename);
       glsl_fullpath = [our_path, filesep, rt.glsl_filename];
-      assert(exist(glsl_fullpath, 'file'), ...
+      
+      % Load the GLSL file
+      assert(2 == exist(glsl_fullpath, 'file'), ...
         'Unable to file GLSL file');
-      rt.shader_text = load(glsl_fullpath, '-ascii');
+      fid = fopen(glsl_fullpath, 'r');
+      rt.shader_text = fread(fid, 'uint8=>char');
+      fclose(fid);
+    end
+    
+    function addSpot(rt, varargin)
+      % Add a spot to the pattern
+      
+      error('Not yet implemented');
+    end
+    
+    function removeSpot(rt, index)
+      % Remove the specified spot from the pattern
+      %
+      % Can also directly modify the Spot array
+      
+      error('Not yet implemented');
     end
     
     function set.num_spots(rt, value)
       % Update the number of spots and send to the device
       
+      error('Function will be replaced');
+      
       assert(isnumeric(value) && isscalar(value), ...
         'Value must be numeric and scalar');
       
       rt.num_spots = value;
-      rt.sendUniform(rt, 0, value)
-    end
-    
-    function set.total_intensity(rt, value)
-      % Update the total intensity and send to the device
       
-      assert(isnumeric(value) && isscalar(value), ...
-        'Value must be numeric and scalar');
-      
-      rt.total_intensity = value;
-      rt.sendUniform(rt, 1, value)
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 0, value);
+      end
     end
     
     function updateSpots(rt)
+      
+      % We should add a similarly named function and put it in private
+      
+      error('Function will be replaced');
+      
       % Update the spots uniform
       
       % spot parameters- each spot corresponds to 4 vec4, first one is x,y,z,l, second one is amplitude, -,-,-
@@ -78,15 +110,103 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       error('Not yet implemented');
     end
     
-uniform vec2 centre;        //=vec2(0.5,0.5);//centre of the hologram as a fraction of its size (usually 0.5,0.5)
-uniform vec2 size;            //=vec2(7000,7000);//size of the hologram in microns
-uniform float f;                 //=1600; //focal length in microns
-uniform float k;                //=9.36; //wavevector in 1/microns
-uniform float blazing[32]; //blazing function
-uniform float zernikeCoefficients[12]; //zernike coefficients, matching the modes defined below
-uniform vec3 zernx;        //=vec3(0.0,0.0,0.0);
-uniform vec3 zerny;        //=vec3(0.0,0.0,0.0);
-uniform vec3 zernz;        //=vec3(0.0,0.0,0.0);
+    function set.total_intensity(rt, value)
+      % Update the total intensity and send to the device
+      
+      assert(isnumeric(value) && isscalar(value), ...
+        'Value must be numeric and scalar');
+      
+      rt.total_intensity = value;
+      
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 1, value);
+      end
+    end
+    
+    function set.centre(rt, value)
+      % Set the centre location of the pattern
+      
+      assert(numel(value) == 2, 'value must be 2 element vector');
+      assert(isnumeric(value), 'value must be a pair of numbers');
+      assert(all(value <= 1 && value >= 0), 'value must be between 0 and 1');
+      
+      rt.centre = value;
+      
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 3, value);
+      end
+    end
+    
+    function set.size(rt, value)
+      % Set the size of the hologram (in microns)
+      
+      assert(numel(value) == 2, 'value must be 2 element vector');
+      assert(isnumeric(value), 'value must be a pair of numbers');
+      
+      rt.size = value;
+      
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 4, value);
+      end
+    end
+    
+    function set.focal_length(rt, value)
+      % Set the focal length (in microns)
+      
+      assert(isnumeric(value) && isscalar(value), 'value must be numeric scalar');
+      
+      rt.focal_length = value;
+      
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 5, value);
+      end
+    end
+    
+    function set.wavenumber(rt, value)
+      % Set the wavenumber (inverse microns)
+      
+      assert(isnumeric(value) && isscalar(value), 'value must be numeric scalar');
+      
+      rt.wavenumber = value;
+      
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 6, value);
+      end
+    end
+    
+    function set.blazing(rt, value)
+      % Set the blazing (lookup) table (must be 32 numbers)
+      
+      assert(numel(value) == 32, 'value must be a 32 element vector');
+      assert(isnumeric(value), 'value must be numeric');
+      assert(all(value <= 1 && value >= 0), 'values must be between 0 and 1');
+      
+      rt.blazing = value;
+      
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 7, value);
+      end
+    end
+    
+    function set.zernike(rt, value)
+      % Set the zernike coefficients for aberation correction (12 numbers)
+      
+      assert(numel(value) == 12, 'value must be a 32 element vector');
+      assert(isnumeric(value), 'value must be numeric');
+      
+      rt.zernike = value;
+      
+      % Update the device
+      if rt.live_update
+        rt.sendUniform(rt, 8, value);
+      end
+    end
     
     function updateShader(rt)
       
@@ -109,6 +229,15 @@ uniform vec3 zernz;        //=vec3(0.0,0.0,0.0);
       % Send the shader
       rt.sendShader(shader);
       
+    end
+    
+    function set.spots(rt, value)
+      % Update the spots array
+      
+      assert(all(isa(value, 'ott.utils.PrismsAndLensesSpot')), ...
+        'value must be an array of spots');
+      
+      rt.spots = value;   % TODO: Add a callback for sending the spots
     end
   end
 end

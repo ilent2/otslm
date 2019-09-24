@@ -332,12 +332,17 @@ classdef (Abstract) Showable < handle
   properties
     prescaledPatterns; % Default prescaled argument for slm.show
   end
+  
+  properties (Abstract)
+    size              % Size of the device
+  end
 
+  % TODO: These should all probably be SetAccess=public
+  % and they should have set methods which verify the type
   properties (Abstract, SetAccess=protected)
     valueRange        % Range of values for raw pattern
     lookupTable       % Lookup table for raw values
     patternType       % Type of pattern show() expects
-    size              % Size of the device
   end
 
 end

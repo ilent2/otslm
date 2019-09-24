@@ -21,9 +21,10 @@ uniform float f;                 //=1600; //focal length in microns
 uniform float k;                //=9.36; //wavevector in 1/microns
 uniform float blazing[32]; //blazing function
 uniform float zernikeCoefficients[12]; //zernike coefficients, matching the modes defined below
-uniform vec3 zernx;        //=vec3(0.0,0.0,0.0);
-uniform vec3 zerny;        //=vec3(0.0,0.0,0.0);
-uniform vec3 zernz;        //=vec3(0.0,0.0,0.0);
+
+// uniform vec3 zernx;        //=vec3(0.0,0.0,0.0);
+// uniform vec3 zerny;        //=vec3(0.0,0.0,0.0);
+// uniform vec3 zernz;        //=vec3(0.0,0.0,0.0);
 
 //
 // Standarf cuntion definitions (separate VI, added by substitution)
