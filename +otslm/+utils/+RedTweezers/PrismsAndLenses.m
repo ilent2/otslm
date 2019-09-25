@@ -7,10 +7,11 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
   % This file is part of OTSLM, see LICENSE.md for information about
   % using/distributing this file.
   
-  % TODO: Need to change set methods to use callbacks
-  
-  properties
-    spots           % Array of PrismsAndLenses spots
+  properties (SetObservable)
+    
+    % Array of PrismsAndLenses spots
+    spots otslm.utils.RedTweezers.PrismsAndLensesSpot
+    
     total_intensity % Total intensity parameter used for intensity shaping
     centre          % Centre of the hologram as a function of its size
     size            % Size of the hologram (in microns)
@@ -18,6 +19,11 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
     wavenumber      % Wavenumber (inverse microns)
     blazing         % Blazing table for colourmap (32 numbers)
     zernike         % Zernike coefficients (12 numbers)
+    
+    % (bool) True if the texture should always be used to represent
+    % the array of spots.  This defaults to numel(spots) > 50 unless
+    % explicitly set.
+    use_texture
   end
   
   properties (SetAccess=protected)
@@ -54,56 +60,82 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       
       % Load the GLSL file
       rt.shader_text = rt.readGlslFile(glsl_fullpath);
+      
+      % Add callbacks for set methods
+      addlistener(rt, 'spots', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'total_intensity', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'centre', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'size', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'focal_length', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'wavenumber', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'blazing', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'zernike', 'PostSet', @rt.handleSetEvents);
+      addlistener(rt, 'use_texture', 'PostSet', @rt.handleSetEvents);
+      
+      % Send the shader so the device is ready for other paramters
+      rt.sendShader();
     end
     
     function addSpot(rt, varargin)
       % Add a spot to the pattern
+      %
+      % rt.addSpot(position, ...) declares a new spot at
+      % the specified position [x, y, z].  Uses the PrismsAndLensesSpot
+      % class to create the spot.
+      %
+      % Optional named parameters:
+      %   'oam'    int    Vortex charge
+      %   'phase'  float  Phase offset for the spot
+      %   'intensity' float  Intensity for the spot
+      %   'aperture'  [x, y, R]  Position and radius of aperture
+      %   'line'   [x, y, z, phase] Direction, length and phase of line
       
-      error('Not yet implemented');
+      % Create a spot
+      spot = otslm.utils.RedTweezers.PrismsAndLensesSpot(varargin{:});
+      
+      % Add it to the array
+      rt.spots = [rt.spots, spot];
     end
     
     function removeSpot(rt, index)
       % Remove the specified spot from the pattern
       %
+      % rt.removeSpot() removes a spot from the end of the array;
+      %
       % Can also directly modify the Spot array
       
-      error('Not yet implemented');
-    end
-    
-    function set.num_spots(rt, value)
-      % Update the number of spots and send to the device
-      
-      error('Function will be replaced');
-      
-      assert(isnumeric(value) && isscalar(value), ...
-        'Value must be numeric and scalar');
-      
-      rt.num_spots = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 0, value);
+      % Handle default spot (last spot)
+      if nargin < 2
+        index = numel(rt.spots);
       end
+      
+      if islogical(index)
+        assert(numel(index) == numel(rt.spots), ...
+          'Number of logical indices must match number of spots');
+      else
+        assert(all(index > 0 & index <= numel(rt.spots)), ...
+          'Numeric indices must be between 1 and numel(spots)');
+      end
+      
+      rt.spots(index) = [];
     end
     
-    function updateSpots(rt)
+    function set.spots(rt, value)
+      % Update the spots array
       
-      % We should add a similarly named function and put it in private
+      assert(all(isa(value, 'otslm.utils.RedTweezers.PrismsAndLensesSpot')), ...
+        'value must be an array of spots');
       
-      error('Function will be replaced');
+      rt.spots = value(:);
+    end
+    
+    function set.use_texture(rt, value)
+      % Set the use_texture boolean
       
-      % Update the spots uniform
+      assert(islogical(value) || isempty(value), ...
+        'value must be logical or empty');
       
-      % spot parameters- each spot corresponds to 4 vec4, first one is x,y,z,l, second one is amplitude, -,-,-
-      % element 0 x  y  z  l    (x,y,z in um and l is an integer)
-      % element 1 intensity (I) phase -  -
-      % element 2 na.x na.y na.r -  (the x, y position, and radius, of the spot on the SLM- useful for Shack-Hartmann holograms)
-      % element 3 line trapping x y z and phase gradient.  xyz define the size and angle of the line, phase gradient (between +/-1) is the
-      % scattering force component along the line.  Zero is usually a good choice for in-plane line traps
-      
-      % ID: 2
-      
-      error('Not yet implemented');
+      rt.use_texture = value;
     end
     
     function set.total_intensity(rt, value)
@@ -113,11 +145,6 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
         'Value must be numeric and scalar');
       
       rt.total_intensity = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 1, value);
-      end
     end
     
     function set.centre(rt, value)
@@ -128,11 +155,6 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       assert(all(value <= 1 && value >= 0), 'value must be between 0 and 1');
       
       rt.centre = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 3, value);
-      end
     end
     
     function set.size(rt, value)
@@ -142,11 +164,6 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       assert(isnumeric(value), 'value must be a pair of numbers');
       
       rt.size = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 4, value);
-      end
     end
     
     function set.focal_length(rt, value)
@@ -155,11 +172,6 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       assert(isnumeric(value) && isscalar(value), 'value must be numeric scalar');
       
       rt.focal_length = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 5, value);
-      end
     end
     
     function set.wavenumber(rt, value)
@@ -168,11 +180,6 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       assert(isnumeric(value) && isscalar(value), 'value must be numeric scalar');
       
       rt.wavenumber = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 6, value);
-      end
     end
     
     function set.blazing(rt, value)
@@ -183,11 +190,6 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       assert(all(value <= 1 && value >= 0), 'values must be between 0 and 1');
       
       rt.blazing = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 7, value);
-      end
     end
     
     function set.zernike(rt, value)
@@ -197,25 +199,31 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       assert(isnumeric(value), 'value must be numeric');
       
       rt.zernike = value;
-      
-      % Update the device
-      if rt.live_update
-        rt.sendUniform(rt, 8, value);
-      end
     end
     
-    function updateShader(rt)
+    function varargout = sendShader(rt, send)
+      % Send shader to the device
+      %
+      % rt.sendShader(send) sends the text string to the device.
+      %
+      % If send is false, the command isn't sent.  Default value for
+      % send is nargout == 0
+      
+      % Default send value
+      if nargin < 2
+        send = nargout == 0;
+      end
       
       % Get the shader text
       shader = rt.shader_text;
       
       % Determine data type strings based on number of spots
-      if rt.num_spots < 50
-        spotsdecl = 'vec4 spots[200]';
-        spotsret = 'spots[4*i +j]';
-      else
+      if numel(rt.spots) > 50 || (~isempty(rt.use_texture) && rt.use_texture)
         spotsdecl = 'sampler2D spots';
         spotsret = 'texture(spots, vec2( (float(j) +0.5) / 4.0, ( float(i) + 0.5) / float(n) ))*500.0 -250.0';
+      else
+        spotsdecl = 'vec4 spots[200]';
+        spotsret = 'spots[4*i +j]';
       end
       
       % Insert strings for the spot declarations
@@ -223,17 +231,90 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       shader = strrep(shader, '%%spotsret%%', spotsret);
       
       % Send the shader
-      rt.sendShader(shader);
+      [varargout{1:nargout}] = ...
+        sendShader@otslm.utils.RedTweezers.RedTweezers(rt, shader, send);
+    end
+  end
+  
+  methods (Hidden)
+    
+    function sendSpots(rt)
+      % Send the spots array and shader to the device
+      
+      % First send the shader
+      rt.sendShader();
+      
+      % Then send the data, from the GLSL source code:
+      % spot parameters- each spot corresponds to 4 vec4, first one is x,y,z,l, second one is amplitude, -,-,-
+      % element 0 x  y  z  l    (x,y,z in um and l is an integer)
+      % element 1 intensity (I) phase -  -
+      % element 2 na.x na.y na.r -  (the x, y position, and radius, of the spot on the SLM- useful for Shack-Hartmann holograms)
+      % element 3 line trapping x y z and phase gradient.  xyz define the size and angle of the line, phase gradient (between +/-1) is the
+      % scattering force component along the line.  Zero is usually a good choice for in-plane line traps
+      
+      % Check there is work to do
+      if numel(rt.spots) == 0
+        return;
+      end
+      
+      data = [rt.spots.position; rt.spots.oam];
+      data(:, :, 2) = [rt.spots.intensity; rt.spots.phase; zeros(2, numel(rt.spots))];
+      data(:, :, 3) = [rt.spots.aperture; zeros(1, numel(rt.spots))];
+      data(:, :, 4) = [rt.spots.line];
+      
+      % Id for the uniform
+      id = 2;
+      
+      % Send the data (could be large so send it separately)
+      if numel(rt.spots) > 50 || (~isempty(rt.use_texture) && rt.use_texture)
+        data = permute(data, [3, 2, 1]);
+        rt.sendTexture(id, data);
+      else
+        rt.sendUniform(id, data(:));
+      end
       
     end
     
-    function set.spots(rt, value)
-      % Update the spots array
+    function handleSetEvents(rt, src, ev)
+      % Handle send events for properties
       
-      assert(all(isa(value, 'ott.utils.PrismsAndLensesSpot')), ...
-        'value must be an array of spots');
+      if ~rt.live_update
+        return;   % Nothing to do
+      end
       
-      rt.spots = value;   % TODO: Add a callback for sending the spots
+      switch src.Name
+        case 'spots'
+          
+          % Send number of spots
+          rt.sendUniform(0, numel(rt.spots));
+          
+          % Send the spots (also sends the shader)
+          rt.sendSpots();
+          
+        case 'total_intensity'
+          rt.sendUniform(1, rt.total_intensity);
+        case 'centre'
+          rt.sendUniform(3, rt.centre);
+        case 'size'
+          rt.sendUniform(4, rt.size);
+        case 'focal_length'
+          rt.sendUniform(5, rt.focal_length);
+        case 'wavenumber'
+          rt.sendUniform(6, rt.wavenumber);
+        case 'blazing'
+          rt.sendUniform(7, rt.blazing);
+        case 'zernike'
+          rt.sendUniform(8, rt.zernike);
+          
+        case 'use_texture'
+          
+          % Send shader and spots
+          rt.sendSpots();
+          
+        otherwise
+          % Let the base class do everything else
+          handleSetEvents@ott.utils.RedTweezers.RedTweezers(rt, src, ev);
+      end
     end
   end
 end

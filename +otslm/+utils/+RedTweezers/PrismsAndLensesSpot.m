@@ -3,15 +3,15 @@ classdef PrismsAndLensesSpot
   %   This class is for use with PrismsAndLenses.
   
   properties
-    position      % Position of spot [x, y, z]
+    position      % Position of spot [x; y; z]
     oam           % Orbital angular momentum charge number (int)
     
     phase         % Phase of the spot
     intensity     % Intensity of the spot
     
-    aperture      % Aperture to define hologram within [x, y, radius]
+    aperture      % Aperture to define hologram within [x; y; radius]
     
-    line          % Line trap direction and phase [x, y, z, phase]
+    line          % Line trap direction and phase [x; y; z; phase]
   end
   
   methods
@@ -52,7 +52,7 @@ classdef PrismsAndLensesSpot
       assert(isnumeric(value), 'value must be numeric');
       assert(numel(value) == 3, 'value must be 3 element vector');
       
-      obj.position = value;
+      obj.position = value(:);
     end
     
     function obj = set.oam(obj, value)
@@ -86,7 +86,7 @@ classdef PrismsAndLensesSpot
       assert(isnumeric(value), 'value must be numeric');
       assert(numel(value) == 3, 'value must be 3 element vector');
       
-      obj.aperture = value;
+      obj.aperture = value(:);
     end
     
     function obj = set.line(obj, value)
@@ -96,7 +96,7 @@ classdef PrismsAndLensesSpot
       assert(numel(value) == 4, 'value must be 3 element vector');
       assert(value(4) >= -1 && value(4) <= 1, 'phase must be between -1 and 1');
       
-      obj.line = value;
+      obj.line = value(:);
     end
 
   end

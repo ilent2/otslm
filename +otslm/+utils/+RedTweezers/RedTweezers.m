@@ -32,7 +32,7 @@ classdef RedTweezers < handle
     live_update   % If changing properties should update the device
   end
   
-  properties (SetObservable)  
+  properties (SetObservable)
     
     % (bool) Synchronise updating with monitors refresh rate
     vsync
@@ -236,40 +236,71 @@ classdef RedTweezers < handle
       rt.network_reply = value;
     end
     
-    function cmd = sendTexture(rt, id, texture, send)
+    function cmd = sendTexture(rt, id, texture, varargin)
       % Send a texture blob to the device
       %
       % sendTexture(id, texture, send) sends the texture to the uniform
       % with the specified id.  The texture should be a 4*w*h in RGBA
       % order.
       %
+      % If the texture is a 3*w*h uint8 matrix, adds 255 for the A channel.
+      %
       % If send is false, the command isn't sent.  Default value for
       % send is nargout == 0
+      %
+      % Optional arguments:
+      %   endian    'L' or 'B'    endian-ness of byte stream (for float)
+      
+      % Get the default endian-ness (our endianness)
+      [~,~,our_endian] = computer();
+      
+      ip = inputParser;
+      ip.addOptional('send', nargout == 0);
+      ip.addParameter('endian', our_endian);
+      ip.parse(varargin{:});
       
       % Handle default send argument
       if nargin < 4
         send = nargout == 0;
       end
       
-      assert(isa(texture, 'uint8'), 'texture must be uint8 matrix');
+      assert(isa(texture, 'uint8') || isfloat(texture), ...
+        'texture must be uint8 or float matrix');
       assert(ndims(texture) == 3, 'texture must be 3 dimensional matrix');
-      assert(size(texture, 3) == 3 || size(texture, 3) == 4, ...
-        'texture must be NxMx4 or NxMx3 matrix');
+      assert((size(texture, 3) == 3 && isa(texture, 'uint8')) || size(texture, 3) == 4, ...
+        'texture must be NxMx4 or NxMx3 uint8 matrix');
       
       % Add alpha channel to array
-      if size(texture, 3) == 3
-        texture(:, :, 4) = 255;
+      if size(texture, 3) == 3 && ~isfloat(texture)
+        texture(:, :, 4) = uint8(255);
       end
       
-      % Convert texture to uint8 blob
-      data = cast(texture, 'char');
+      % Ensure data is uint8 or float
+      if isfloat(texture)
+        texture = single(texture);
+      end
       
       % Change order of numbers to RGBAxNxM and convert to vector
-      data = permute(data, [3, 2, 1]);
-      data = data(:);
+      data = permute(texture, [3, 2, 1]);
       
       % We only support one format (RedTweezers has packedfloat too)
-      format = 'packedu8';
+      if isfloat(texture)
+        format = 'packedfloat';
+        
+        % Change byte order if needed
+        if ip.Results.endian ~= our_endian
+          
+          % Convert texture to uint32 and swap
+          data = typecast(data, 'uint32');
+          data = swapbytes(data);
+        end
+        
+      else
+        format = 'packedu8';
+      end
+      
+      % Convert texture to uint8
+      data = typecast(data(:), 'uint8');
       
       % Generate the command string
       cmd = sprintf(['<texture id="%d" width="%d" height="%d" format="%s">', ...
@@ -285,7 +316,7 @@ classdef RedTweezers < handle
     function cmd = sendShader(rt, shader, send)
       % Send a shader to the device
       %
-      % rt.sendShader(shader) sends the text string for a custom
+      % rt.sendShader(shader, send) sends the text string for a custom
       % shader to the device.
       %
       % If send is false, the command isn't sent.  Default value for
@@ -421,6 +452,9 @@ classdef RedTweezers < handle
           
         case 'network_reply'
           rt.setNetworkReply(value);
+          
+        otherwise
+          warning('Unhandled set event');
       end
     end
   end
