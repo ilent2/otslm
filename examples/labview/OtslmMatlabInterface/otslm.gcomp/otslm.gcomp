@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Checksum="90CF2B34B7B728B0071D8690E44AA5AD8000254E5290F13536B52271707A9A9483F186A3F592A342641E386A828276D89048A322CD79D806D17D80799B2CFBC3" Timestamp="1D5743474942730" xmlns="http://www.ni.com/PlatformFramework">
+	<SourceModelFeatureSet>
+		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="GComponentFeatureSet" Name="http://www.ni.com/GComponent.xsd" OldestCompatibleVersion="6.1.0.1" Version="6.2.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Interface for MATLAB®" Name="http://www.ni.com/Matlab" OldestCompatibleVersion="5.3.1.49152" Version="5.3.1.49152" />
+		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="6.2.0.49154" Version="6.2.0.49154" />
+		<ApplicationVersionInfo Build="6.4.0.49504" Name="LabVIEW NXG" Version="3.1.0" />
+	</SourceModelFeatureSet>
+	<ComponentDefinition DefaultConfigurationName="Configuration1" Id="4ac1219f7d224ffa91ce3a8009ffc9f8" RootNamespaceId="7439bcf559d24e19b3146054bdd5cb69" xmlns="http://www.ni.com/GComponent.xsd">
+		<Icon Id="8119e7534132499baf683cd6ca9df0a8" ListViewIconCrop="0 0 40 40" xmlns="http://www.ni.com/PlatformFramework">
+			<IconPanel Height="[float]40" Id="c0d5c81292d34e0a80a1efc801c526b3" Left="[float]0" MinHeight="[float]0" MinWidth="[float]0" PanelSizeMode="Resize" Top="[float]0" Width="[float]40">
+				<IconTemplate Height="[float]40" Id="249c31cc30c94b8eb6adc7a12f5ec9e5" Left="[float]0" TemplateName="[string]Blank" Top="[float]0" Width="[float]40" />
+			</IconPanel>
+		</Icon>
+		<CompilerSymbolTable Id="208c7fbc57d24f62b702afaf3e1f7ae6" xmlns="http://www.ni.com/PlatformFramework" />
+		<ComponentConfiguration Id="a5486d61f989469e88b92533c387e32d" Name="Configuration1">
+			<CompilerSymbolTable Id="2c1d3fa8560546b6823caf955d22e1ce" xmlns="http://www.ni.com/PlatformFramework" />
+			<ComponentItemProperties AssociatedEnvoyId="e9bafd3520ce454c87196d2d538742e8" Exported="True" Id="3ca083b065c04e4d85def7849e015646" />
+		</ComponentConfiguration>
+	</ComponentDefinition>
+	<EnvoyManagerFile Id="7470c07c65a940cc883b4ca3dc5cbb62" xmlns="http://www.ni.com/PlatformFramework">
+		<ProjectSettings Id="35edacf96cdb43788d0004565686f633" ModelDefinitionType="ProjectSettings" Name="ZProjectSettings" />
+		<EmbeddedDefinitionReference Id="102414f545274dcfab2a28f7b6a78e56" ModelDefinitionType="{http://www.ni.com/GComponent.xsd}ComponentDefinitionEnvoyHierarchyRoot" Name="Global namespace">
+			<ComponentDefinitionEnvoyHierarchyRoot xmlns="http://www.ni.com/GComponent.xsd" />
+			<NameScopingEnvoy AutomaticallyResolveUp="True" Id="7439bcf559d24e19b3146054bdd5cb69" Name="otslm">
+				<NameScopingEnvoy AutomaticallyResolveUp="True" Id="d2f1b6b8f28c4379a8bce40f5eb60271" Name="simple" />
+				<NameScopingEnvoy AutomaticallyResolveUp="True" Id="f5f8560b2ec470e98326f3315728278" Name="tools" />
+				<NameScopingEnvoy AutomaticallyResolveUp="True" Id="a443c12683564e9c9acbe6ec88b45124" Name="utils" />
+				<NameScopingEnvoy AutomaticallyResolveUp="True" Id="bdac9e6a44254ba2951e16e7e7e85e1d" Name="iter" />
+				<SourceFileReference Bindings="EnvoyManager" Id="e9bafd3520ce454c87196d2d538742e8" ModelDefinitionType="{http://www.ni.com/Matlab}MatlabDefinition" Name="initOtslm.mli" StoragePath="initOtslm.mli" />
+			</NameScopingEnvoy>
+		</EmbeddedDefinitionReference>
+		<NameScopingEnvoy Id="6b4a4392858f47ccbd3537952d0e201f" ModelDefinitionType="{http://www.ni.com/GComponent.xsd}ComponentDefinitionContentReferenceRoot" Name="otslm.gcomp" NameTracksFileName="True">
+			<ComponentDefinitionContentReferenceRoot xmlns="http://www.ni.com/GComponent.xsd" />
+			<ContentReference ContentIdentifier="a5486d61f989469e88b92533c387e32d" Id="2a21b1c1a50f439287b816ebd8dfbace" Name="Configuration1" OverridingModelDefinitionType="{http://www.ni.com/GComponent.xsd}ComponentConfiguration" />
+		</NameScopingEnvoy>
+	</EnvoyManagerFile>
+</SourceFile>
