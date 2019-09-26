@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="0B3E2E68E736F00ACEA10FAAAF67DFF756658683C85F5D7CE2BDF9AA9B91B449CF6E47B4C6F3646B63FB01A04A8020F82C9932B74EE72347B93F5CC851B66ABA" Timestamp="1D57439B3598FA1" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="D1EF63ED159EB6775537666F5232E223C8D6F48B8328C7BA53E3F611E5D5B1C90D12D7E4777CDB7E6505D6A0D98B75EE8D201581966090CD78AEECF84382EE92" Timestamp="1D5744119270ADC" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="6.2.0.49152" Version="6.2.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="LabVIEW Virtual Instrument" Name="http://www.ni.com/LabVIEW.VI" OldestCompatibleVersion="6.2.0.49152" Version="6.2.0.49152" />
@@ -60,7 +60,7 @@
 				<StringControl AcceptsReturn="[bool]True" Height="[float]95" Id="94068f1459a24cd8b7fb51ac04604d82" IsReadOnly="[bool]True" Label="[UIModel]f36f570b32f14330808076d071c2ed9e" Left="[float]3" MinHeight="[float]24" TabIndex="[int]2" Text="{ClusterBinding FieldName=source}" Top="[float]70" Width="[float]162" WordWrap="[bool]True" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 				<p4:Label Height="[float]16" Id="f36f570b32f14330808076d071c2ed9e" LabelOwner="[UIModel]94068f1459a24cd8b7fb51ac04604d82" Left="[float]3" Text="[string]source" Top="[float]50" Width="[float]35" />
 			</Cluster>
-			<ArrayViewer ArrayElement="[UIModel]ba40876d347242849c85e013d98c98cb" BaseName="[string]Array" Columns="[int]1" Dimensions="[int]1" FixedSize="[ArrayElementIndex]2" Height="[float]126" Id="84dc0f2eef2c4d03923bd639fe2b06a8" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]True" Left="[float]0" Name="[string]sz" Orientation="[SMOrientation]Vertical" Rows="[int]4" TabIndex="[int]2" Top="[float]20" Value="{DataItemBinding Id=d46245e597b040f4a06a7c55ff1b973c}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]111" xmlns="http://www.ni.com/PanelCommon">
+			<ArrayViewer ArrayElement="[UIModel]ba40876d347242849c85e013d98c98cb" BaseName="[string]Array" Columns="[int]1" Dimensions="[int]1" FixedSize="[ArrayElementIndex]2" Height="[float]126" Id="84dc0f2eef2c4d03923bd639fe2b06a8" IndexVisibility="[Visibility]Collapsed" IsFixedSize="[bool]False" Left="[float]0" Name="[string]sz" Orientation="[SMOrientation]Vertical" Rows="[int]4" TabIndex="[int]2" Top="[float]20" Value="{DataItemBinding Id=d46245e597b040f4a06a7c55ff1b973c}" VerticalScrollBarVisibility="[ScrollBarVisibility]Visible" Width="[float]111" xmlns="http://www.ni.com/PanelCommon">
 				<p.DefaultElementValue>0x0</p.DefaultElementValue>
 				<NumericText BaseName="[string]Numeric" Height="[float]24" Id="ba40876d347242849c85e013d98c98cb" IsReadOnly="[bool]False" MinHeight="[float]24" Width="[float]72" xmlns="http://www.ni.com/Controls.LabVIEW.Design" />
 			</ArrayViewer>
@@ -144,7 +144,7 @@
 			</NodeLabel>
 			<Wire Id="66cd0f43d6a642019a8b54cf5ff7b8ba" Joints="N(c347ba2fdfb345a5b1763071a10b6b81:Out)|(530,320) N(278f6dbcd08542e49da5bc045c8c86f3:L3)|(560,320)" xmlns="http://www.ni.com/PlatformFramework" />
 			<DataAccessor Bounds="490 295 40 15" DataItem="d46245e597b040f4a06a7c55ff1b973c" Id="f7263e22cc52476398e89cefa4fbeda0" Label="f6f010aa8bc64ecf88d68713c8c5feab" xmlns="http://www.ni.com/MocCommon">
-				<Terminal DataType="Double[2]" Direction="Output" Hotspot="40 5" Id="Value" xmlns="http://www.ni.com/PlatformFramework" />
+				<Terminal DataType="Double[]" Direction="Output" Hotspot="40 5" Id="Value" xmlns="http://www.ni.com/PlatformFramework" />
 			</DataAccessor>
 			<NodeLabel AttachedTo="f7263e22cc52476398e89cefa4fbeda0" Bounds="473 295 12 14" Id="f6f010aa8bc64ecf88d68713c8c5feab" xmlns="http://www.ni.com/PlatformFramework">
 				<p.Text>sz</p.Text>
@@ -213,7 +213,7 @@
 				<TypeDefinitionTarget TargetName="NI::G Core::Error::Error.gtype" />
 			</p.TypeDefinitionTargets>
 		</DataItem>
-		<DataItem AdaptToDiagramType="True" CallDirection="Input" CallIndex="1" DataType="Double[2]" Id="d46245e597b040f4a06a7c55ff1b973c" Name="sz" xmlns="http://www.ni.com/MocCommon">
+		<DataItem AdaptToDiagramType="True" CallDirection="Input" CallIndex="1" DataType="Double[]" Id="d46245e597b040f4a06a7c55ff1b973c" Name="sz" xmlns="http://www.ni.com/MocCommon">
 			<p.DefaultValue>null</p.DefaultValue>
 		</DataItem>
 		<DataItem AdaptToDiagramType="True" CallDirection="Input" CallIndex="2" DataType="Double" Id="636964f95d6545009b30452ee18e4d82" Name="radius" xmlns="http://www.ni.com/MocCommon">

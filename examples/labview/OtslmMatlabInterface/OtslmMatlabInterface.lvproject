@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="FB87D8F89B702D1975B07DACEF11194DE2B33E6AC8CD627D3DDFFCFC9D1C71550DB99FED57DC344AA7C9FE359E144848DDBBB00E6B1CB3D33E0B8F04A184F801" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="E8105C1B6DF85297D238C65779313E06B56CA8EFC72DDCC8E860B4968FA4221BF6378CCA542D6A989E69794465B973913EA97D9277962180EF55FF9E1412D517" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="GComponentFeatureSet" Name="http://www.ni.com/GComponent.xsd" OldestCompatibleVersion="6.1.0.1" Version="6.2.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Common language components" Name="http://www.ni.com/MocCommon" OldestCompatibleVersion="6.2.0.49153" Version="6.2.0.49153" />
@@ -174,6 +174,7 @@
 						<WeakDefaultComponentConfigurationReference Id="def2002b567e414e9d98a0ab3eb49f8a" PackageName="ni-usrprio-syncv1fpga-src-19.0.0.niaddon" Target="SyncV1FPGA.gcomp" />
 						<WeakDefaultComponentConfigurationReference Id="d85ea920ad064f4f8beda67486ffbdfd" PackageName="ni-modulation-modulation-src-3.0.0.niaddon" Target="Modulation.gcomp" />
 						<ComponentConfigurationReferenceDependencySource Id="1d1f52eaa9784409b0d3a6ec95d70617" Target="otslm.gcomp::Configuration1" />
+						<ComponentConfigurationReferenceDependencySource Id="11089938e8ad49ee941bbc816da2d1d7" Target="PrismsAndLenses.gcomp::Configuration1" />
 					</BuildSpecificationDefinition>
 					<EmbeddedDefinitionReference Id="32" ModelDefinitionType="PackageReferencesDefinition" Name="ProjectReferences">
 						<PackageReferencesDefinition />
@@ -254,6 +255,7 @@
 						<RepositoryManagerDefinition Location="&quot;&lt;AppDir&gt;\\Resources\\vi.lib\\Native&quot;" />
 					</EmbeddedDefinitionReference>
 					<SourceFileReference Bindings="EnvoyManager,ComponentMoC,{http://www.ni.com/GComponent.xsd}ComponentBaseType_Library,ContentKind_{http://www.ni.com/Builders/SystemDesigner/SystemModel}Process.LibraryComponent,{http://www.ni.com/SystemDesigner/EnvoyManagement}ProcessBackedEnvoyServiceMetaFactory" Id="b078329e2b134570a803a30a3d45d0fc" ModelDefinitionType="ComponentDefinition" Name="otslm.gcomp" StoragePath="otslm.gcomp\otslm.gcomp" />
+					<SourceFileReference Bindings="EnvoyManager,ComponentMoC,{http://www.ni.com/GComponent.xsd}ComponentBaseType_Application,ContentKind_{http://www.ni.com/Builders/SystemDesigner/SystemModel}Process.ApplicationComponent,{http://www.ni.com/SystemDesigner/EnvoyManagement}ProcessBackedEnvoyServiceMetaFactory" Id="413a8b7fd75644fb8b6e09871c8cab1f" ModelDefinitionType="ComponentDefinition" Name="PrismsAndLenses.gcomp" StoragePath="PrismsAndLenses.gcomp\PrismsAndLenses.gcomp" />
 				</NameScopingEnvoy>
 				<EmbeddedDefinitionReference Id="37" ModelDefinitionType="RepositoryManagerDefinition" Name="vi.lib.Fpga" Reparentable="False">
 					<RepositoryManagerDefinition Location="&quot;&lt;AppDir&gt;\\Resources\\vi.lib\\Fpga&quot;" />

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="8813FC1E7049F03238352065747379A9DC9E265A597D7943DD037A2FCD9EF4B5138B8F2CCC1EAD7E7F517307D6DD8D5A9AF560031C254F058242A496637F75AE" Timestamp="1D57434A50B5001" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="F0F545A5EEB7D62254CF75691F4ADB2BA99AB34E3D666C62503C257873584091487EB368BF0F4E424A07FCCA328B703CE73B419708BC95C34595D1B9A5EC0C8F" Timestamp="1D574415A05426E" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="GComponentFeatureSet" Name="http://www.ni.com/GComponent.xsd" OldestCompatibleVersion="6.1.0.1" Version="6.2.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="6.2.0.49154" Version="6.2.0.49154" />
@@ -24,6 +24,7 @@
 			<ComponentDefinitionEnvoyHierarchyRoot xmlns="http://www.ni.com/GComponent.xsd" />
 			<NameScopingEnvoy AutomaticallyResolveUp="True" Id="2a75d43317cc4f6ea9fb98212f0c0a12" Name="PrismsAndLenses">
 				<SourceFileReference Id="560548dde34a44878de04701315498ef" ModelDefinitionType="NationalInstruments.LabVIEW.VI.Modeling.VirtualInstrument" Name="FrontPanel.gvi" StoragePath="FrontPanel.gvi" />
+				<SourceFileReference Id="9314ca2af1e7457f8d308dfe55d0da29" ModelDefinitionType="NationalInstruments.LabVIEW.VI.Modeling.VirtualInstrument" Name="GenerateImages.gvi" StoragePath="GenerateImages.gvi" />
 			</NameScopingEnvoy>
 		</EmbeddedDefinitionReference>
 		<NameScopingEnvoy Id="6790a81c98141c794c33c3bc297a2d0" ModelDefinitionType="{http://www.ni.com/GComponent.xsd}ComponentDefinitionContentReferenceRoot" Name="PrismsAndLenses.gcomp" NameTracksFileName="True">

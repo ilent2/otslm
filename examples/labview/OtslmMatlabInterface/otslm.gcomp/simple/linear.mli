@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="A30E5E6B880596A31541FC06A799616684E4BF440F604280BCC04BC7B26D5404C185416CC305CFADCD2B38EC47EFFDA669A0AB92D89765F4F151288BEF4698C4" Timestamp="1D57435CF62A3BC" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="FEB1DCFBECEA13EF44E5D3C815AE614F10D13679C11A097FAE98538434792436374373E1B5A8A6436FB4F59B453EB63B0C35193175CBC9A63777AC30382DA0E0" Timestamp="1D5743D92690741" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Interface for MATLAB®" Name="http://www.ni.com/Matlab" OldestCompatibleVersion="5.3.1.49152" Version="5.3.1.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="6.2.0.49154" Version="6.2.0.49154" />
@@ -33,25 +33,25 @@
 							</IconTemplate>
 						</IconPanel>
 					</Icon>
-					<ConnectorPane Height="40" Id="36aad8f6379e496cb4a395825ac4d7c4" ListViewHeight="115" ListViewWidth="150" Width="40" xmlns="http://www.ni.com/PlatformFramework">
-						<ConnectorPaneTerminal ListViewHotspot="0 65" Parameter="8541c6e038134a34a0e0819598f8a502" />
-						<ConnectorPaneTerminal Hotspot="0 15" ListViewHotspot="0 80" Parameter="df7ed5cee6c942beac14620338247dc6" />
-						<ConnectorPaneTerminal Hotspot="0 25" ListViewHotspot="0 95" Parameter="100f7359c6974f5a8a35ee0d82e2cdcb" />
-						<ConnectorPaneTerminal Hotspot="0 35" ListViewHotspot="0 35" Parameter="ddba2e3578d1424cadae7d7514a5c035" />
+					<ConnectorPane Height="40" Id="36aad8f6379e496cb4a395825ac4d7c4" ListViewHeight="85" ListViewWidth="150" Width="40" xmlns="http://www.ni.com/PlatformFramework">
+						<ConnectorPaneTerminal />
+						<ConnectorPaneTerminal Hotspot="0 15" ListViewHotspot="0 35" Parameter="df7ed5cee6c942beac14620338247dc6" />
+						<ConnectorPaneTerminal Hotspot="0 25" ListViewHotspot="0 50" Parameter="100f7359c6974f5a8a35ee0d82e2cdcb" />
+						<ConnectorPaneTerminal Hotspot="0 35" ListViewHotspot="0 5" Parameter="ddba2e3578d1424cadae7d7514a5c035" />
 						<ConnectorPaneTerminal Hotspot="15 0" />
 						<ConnectorPaneTerminal Hotspot="25 0" />
-						<ConnectorPaneTerminal Hotspot="40 5" />
+						<ConnectorPaneTerminal Hotspot="40 5" ListViewHotspot="150 65" Parameter="f433d397341f43f78ff6563acafbe75a" />
 						<ConnectorPaneTerminal Hotspot="40 15" />
 						<ConnectorPaneTerminal Hotspot="40 25" />
-						<ConnectorPaneTerminal Hotspot="40 35" ListViewHotspot="150 50" Parameter="6bec0f917afd49b18597c7826d400da1" />
+						<ConnectorPaneTerminal Hotspot="40 35" ListViewHotspot="150 20" Parameter="6bec0f917afd49b18597c7826d400da1" />
 						<ConnectorPaneTerminal Hotspot="15 40" />
 						<ConnectorPaneTerminal Hotspot="25 40" />
 					</ConnectorPane>
 					<MatlabErrorDiagramParameter CallDirection="Input" Id="ddba2e3578d1424cadae7d7514a5c035" Name="error in" />
 					<MatlabErrorDiagramParameter CallDirection="Output" Id="6bec0f917afd49b18597c7826d400da1" Name="error out" />
 					<MatlabParameter DataType="Double[,]" Id="16612e4c67b0485eaa7e3511385e759a" Name="im">
-						<MatlabDiagramParameter CallDirection="Input" Id="8541c6e038134a34a0e0819598f8a502" Name="im" />
-						<MatlabDiagramParameter CallDirection="Output" Id="f433d397341f43f78ff6563acafbe75a" Name="im out" Visible="False" />
+						<MatlabDiagramParameter CallDirection="Input" Id="8541c6e038134a34a0e0819598f8a502" Name="im in" Visible="False" />
+						<MatlabDiagramParameter CallDirection="Output" Id="f433d397341f43f78ff6563acafbe75a" Name="im" />
 					</MatlabParameter>
 					<MatlabParameter DataType="Double[]" Id="cd70ffb1d17643d9b52005b847c14093" Name="sz">
 						<MatlabDiagramParameter CallDirection="Input" Id="df7ed5cee6c942beac14620338247dc6" Name="sz" />
