@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="6844B7074F852251891CE28A57B09AACFAA6ABDC174C2083A99F25038EF654E6AE9CFED752F5A0F99A818DFD9024CF3EAA133F7DD89D6206A584982E30B3A524" Timestamp="1D574415A09BB1E" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="07C713416D0DAFD229D81FA09E0EA2D035E30AD4911F4DA77906322CD75101D93EDBD6346C0CD72F55854330D09FA8DD0CD20D91A0A42D09AF367476766228DE" Timestamp="1D57443478ABEC5" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="6.2.0.49152" Version="6.2.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="LabVIEW Virtual Instrument" Name="http://www.ni.com/LabVIEW.VI" OldestCompatibleVersion="6.2.0.49152" Version="6.2.0.49152" />
@@ -74,21 +74,21 @@
 		<BlockDiagram Id="e23252d848c748db9c50197b9e09c82c">
 			<ForLoop Bounds="3 193 525 350" DiagramId="e0dd66a4f8fe4b968a82af851a8da025" Id="51c3b6a381e0499384754b3ac8ab76f0">
 				<LoopIteration Bounds="0 320 15 15" Id="a68a4bc4e2584af1ab27a63999cc7b00" />
-				<MethodCall Bounds="310 155 40 40" Id="1d1a9476fc424e9486b13362ff8b0954" ResolveFailedHint="&quot;C:\\Users\\uqilento\\Documents\\Research2017\\otslm\\examples\\labview\\OtslmMatlabInterface\\otslm.gcomp\\simple\\linear.gvi&quot;" Signature="@d36c4c8b83934308a3136052fd6c4361" Target="otslm::simple::linear.gvi" xmlns="http://www.ni.com/MocCommon">
+				<MethodCall Bounds="310 155 40 50" Id="1d1a9476fc424e9486b13362ff8b0954" ResolveFailedHint="&quot;C:\\Users\\uqilento\\Documents\\Research2017\\otslm\\examples\\labview\\OtslmMatlabInterface\\otslm.gcomp\\simple\\linear.gvi&quot;" Signature="@23271d0d5d6249e786ae8a8681276168" Target="otslm::simple::linear.gvi" xmlns="http://www.ni.com/MocCommon">
 					<p.MethodDeclaration>
 						<MethodDeclaration xmlns="http://www.ni.com/PlatformFramework">
 							<Parameter Id="L0" Desc="sz" />
 							<Parameter Id="L1" Desc="spacing" />
-							<Parameter Id="L3" Desc="error in" />
+							<Parameter Id="L4" Desc="error in" />
 							<Parameter Id="R0" Desc="im" />
-							<Parameter Id="R3" Desc="error out" />
+							<Parameter Id="R4" Desc="error out" />
 						</MethodDeclaration>
 					</p.MethodDeclaration>
 					<Terminal DataType="Double[]" Direction="Input" Id="L0" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="Double[]" Direction="Input" Hotspot="0 15" Id="L1" xmlns="http://www.ni.com/PlatformFramework" />
-					<Terminal DataType="Error" Direction="Input" Hotspot="0 35" Id="L3" xmlns="http://www.ni.com/PlatformFramework" />
+					<Terminal DataType="Error" Direction="Input" Hotspot="0 45" Id="L4" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="Double[,]" Direction="Output" Hotspot="40 5" Id="R0" xmlns="http://www.ni.com/PlatformFramework" />
-					<Terminal DataType="Error" Direction="Output" Hotspot="40 35" Id="R3" xmlns="http://www.ni.com/PlatformFramework" />
+					<Terminal DataType="Error" Direction="Output" Hotspot="40 45" Id="R4" xmlns="http://www.ni.com/PlatformFramework" />
 				</MethodCall>
 				<MethodCall Bounds="400 110 40 50" Id="a3d817df9ecc4a38afb0f599a109b29a" ResolveFailedHint="&quot;C:\\Users\\uqilento\\Documents\\Research2017\\otslm\\examples\\labview\\OtslmMatlabInterface\\otslm.gcomp\\simple\\spherical.gvi&quot;" Signature="@df64c95f24964fb8a71affe7fde1433e" Target="otslm::simple::spherical.gvi" xmlns="http://www.ni.com/MocCommon">
 					<p.MethodDeclaration>
@@ -112,8 +112,6 @@
 					<Terminal DataType="Double[,]" Direction="Output" Hotspot="40 5" Id="R0" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="Error" Direction="Output" Hotspot="40 45" Id="R4" xmlns="http://www.ni.com/PlatformFramework" />
 				</MethodCall>
-				<Wire Id="6a5a7a362fd24f3a9a04f7bfdab83ccd" Joints="N(1d1a9476fc424e9486b13362ff8b0954:R3)|(350,190) h(20) v(-35) N(a3d817df9ecc4a38afb0f599a109b29a:L4)|(400,155)" xmlns="http://www.ni.com/PlatformFramework" />
-				<Wire Id="b340c0d62b5d4f74b72bda3971a035c1" Joints="N(494e988bb3443d8b6d52c65a12bda65:i0)|(6,155) h(19) v(135) h(265) v(-100) N(1d1a9476fc424e9486b13362ff8b0954:L3)|(310,190)" xmlns="http://www.ni.com/PlatformFramework" />
 				<Add Bounds="460 95 30 30" Id="d433cb0481664e958acd17422b3b8929" Terminals="o=30de8481101e4b94b4141db099211e44, c0t0v=48f7e913abed42428b203dc242697831, c1t0v=14be066c119e49b4be0045e8adbb8b78" />
 				<Wire Id="48f7e913abed42428b203dc242697831" Joints="N(1d1a9476fc424e9486b13362ff8b0954:R0)|(350,160) h(10) v(-60) N(d433cb0481664e958acd17422b3b8929:c0t0v)|(460,100)" xmlns="http://www.ni.com/PlatformFramework" />
 				<Wire Id="14be066c119e49b4be0045e8adbb8b78" Joints="N(a3d817df9ecc4a38afb0f599a109b29a:R0)|(440,115) N(d433cb0481664e958acd17422b3b8929:c1t0v)|(460,115)" xmlns="http://www.ni.com/PlatformFramework" />
@@ -160,7 +158,7 @@
 					<ArrayBehavior ElementType="Double" IndexEditorWidth="42" Orientation="Horizontal" VisibleColumns="2">
 						<p.DefaultElementValue>0x0</p.DefaultElementValue>
 					</ArrayBehavior>
-					<Literal Bounds="91 4 40 15" DataType="Double" Id="53ef2e3c7f1148d5ba1a14471411ee78">
+					<Literal Bounds="49.5 3.5 40 15" DataType="Double" Id="53ef2e3c7f1148d5ba1a14471411ee78">
 						<NumericBehavior Interpretation="Exact" ValueFormatter="LV:G6" />
 					</Literal>
 				</ArrayLiteral>
@@ -184,10 +182,12 @@
 				<Wire Id="5d127bf6c9814ae8b4da5a0bb2cf4b90" Joints="N(4c5ff48f57a144cbaa165fbf8c1e4b8a:x/y)|(280,95) h(20) B(1) h(80) v(30) N(a3d817df9ecc4a38afb0f599a109b29a:L1)|(400,125) B(1) v(30) B(5) N(24675a746a8d4bccad4255ac5a493a25:c0t0v)|(310,125) B(5) v(10) N(24675a746a8d4bccad4255ac5a493a25:c1t0v)|(310,135)" xmlns="http://www.ni.com/PlatformFramework" />
 				<BuildArray Bounds="310 120 40 20" Id="24675a746a8d4bccad4255ac5a493a25" Terminals="outArray=4cf2e561ea3b4c8ea3d3286395f2c71b, c0t0v=5d127bf6c9814ae8b4da5a0bb2cf4b90, c1t0v=5d127bf6c9814ae8b4da5a0bb2cf4b90" />
 				<Wire Id="4cf2e561ea3b4c8ea3d3286395f2c71b" Joints="N(24675a746a8d4bccad4255ac5a493a25:outArray)|(350,125) h(30) v(10) N(a3d817df9ecc4a38afb0f599a109b29a:L2)|(400,135)" xmlns="http://www.ni.com/PlatformFramework" />
+				<Wire Id="3165e955b8c545c89d08386fcf0f5efc" Joints="N(494e988bb3443d8b6d52c65a12bda65:i0)|(6,155) h(19) v(135) h(265) v(-90) N(1d1a9476fc424e9486b13362ff8b0954:L4)|(310,200)" xmlns="http://www.ni.com/PlatformFramework" />
+				<Wire Id="c2f2eeeffd6b405cac5d4f3740e3445e" Joints="N(1d1a9476fc424e9486b13362ff8b0954:R4)|(350,200) h(5) v(-10) h(15) v(-35) N(a3d817df9ecc4a38afb0f599a109b29a:L4)|(400,155)" xmlns="http://www.ni.com/PlatformFramework" />
 				<LoopCount Bounds="1 1 15 15" Docking="Left" Id="8ce69fb5a1b54f689e40b41459b0c1df" Terminals="51c3b6a381e0499384754b3ac8ab76f0, e0dd66a4f8fe4b968a82af851a8da025" />
 				<LoopTunnel AutoIndex="True" Bounds="515 107 13 10" Docking="Right" Id="f468857c303545eebde4dbb03df687de" Terminals="o0=badff814c0b24bb68a4f01a685bec46a, i0=30de8481101e4b94b4141db099211e44" TunnelMode="0" />
 				<RightShiftRegister Bounds="515 152 13 10" Docking="Right" Id="2b5a4d7a80bc47dbb15eeb2c1c035e5e" Terminals="51c3b6a381e0499384754b3ac8ab76f0=90d4d49ba3414d02b268d2db3bab423e, e0dd66a4f8fe4b968a82af851a8da025=6e5d101488144250be56c30f4eba7160" />
-				<LeftShiftRegister Bounds="-5 152 13 10" Docking="Left" Id="494e988bb3443d8b6d52c65a12bda65" RightRegister="2b5a4d7a80bc47dbb15eeb2c1c035e5e" Terminals="o0=fbc852556dbb4bce9ae1f0fadf957456, i0=b340c0d62b5d4f74b72bda3971a035c1" />
+				<LeftShiftRegister Bounds="-5 152 13 10" Docking="Left" Id="494e988bb3443d8b6d52c65a12bda65" RightRegister="2b5a4d7a80bc47dbb15eeb2c1c035e5e" Terminals="o0=fbc852556dbb4bce9ae1f0fadf957456, i0=3165e955b8c545c89d08386fcf0f5efc" />
 				<LoopTunnel Bounds="-5 67 13 10" Docking="Left" Id="378d2f1329874973a777d988e66da491" Terminals="o0=a464a181cc7e44c8809e73b1f89feb99, i0=b014ad723e6d4ab7b7ee3ec5791c57bf" />
 				<LoopTunnel AutoIndex="True" Bounds="-5 137 13 10" Docking="Left" Id="4e088fa37a474cb49aac66e8cc132623" Terminals="o0=149a573df06b4135a9711e954ba78117, i0=9bd3dcb0ec694549a96f1c225b11ffc3" TunnelMode="0" />
 			</ForLoop>
@@ -265,10 +265,10 @@
 		</DataItem>
 	</VirtualInstrument>
 	<DataTypeReferenceTable xmlns="http://www.ni.com/PlatformFramework">
-		<p.TypeReference TypeId="d36c4c8b83934308a3136052fd6c4361">
-			<Attributed AttributedType="@0722b6ee24364fb9a8b4375c44acae01">
+		<p.TypeReference TypeId="23271d0d5d6249e786ae8a8681276168">
+			<Attributed AttributedType="@70e8e09267a94c48a692c851b3a0457b">
 				<AttributeValues>
-					<AttributeValue Name="NI.ConnectorPaneHeight" Value="[int]40" />
+					<AttributeValue Name="NI.ConnectorPaneHeight" Value="[int]50" />
 					<AttributeValue Name="NI.ConnectorPaneWidth" Value="[int]40" />
 				</AttributeValues>
 			</Attributed>
@@ -281,7 +281,7 @@
 				</AttributeValues>
 			</Attributed>
 		</p.TypeReference>
-		<p.TypeReference TypeId="0722b6ee24364fb9a8b4375c44acae01">
+		<p.TypeReference TypeId="70e8e09267a94c48a692c851b3a0457b">
 			<Function Id="1" IsStatic="True" IsConstructor="False" Name="linear.gvi" ReturnType="Void" GenericTypeDefinition="Void">
 				<Parameters>
 					<Attributed AttributedType="@9112f5f38dde46219acd6bfb55855de2">
@@ -294,7 +294,7 @@
 							<AttributeValue Name="NI.UserDefinedName" Value="[string]spacing" />
 						</AttributeValues>
 					</Attributed>
-					<Attributed AttributedType="@8cb1a72915b349b68581c76fbe41dc1d">
+					<Attributed AttributedType="@552d21a2c9ff444bb9cd27773dc9b03c">
 						<AttributeValues>
 							<AttributeValue Name="NI.UserDefinedName" Value="[string]error in" />
 						</AttributeValues>
@@ -304,7 +304,7 @@
 							<AttributeValue Name="NI.UserDefinedName" Value="[string]im" />
 						</AttributeValues>
 					</Attributed>
-					<Attributed AttributedType="@1eba082d63f24c64856cade5336c9707">
+					<Attributed AttributedType="@03d435bc817c4118b12e5a14792b70c1">
 						<AttributeValues>
 							<AttributeValue Name="NI.UserDefinedName" Value="[string]error out" />
 						</AttributeValues>
@@ -364,14 +364,14 @@
 		<p.TypeReference TypeId="c67646744f0e4d77bcf5c2368a834aaf">
 			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="L1" DataType="Double[]" />
 		</p.TypeReference>
-		<p.TypeReference TypeId="8cb1a72915b349b68581c76fbe41dc1d">
-			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="L3" DataType="Error" />
+		<p.TypeReference TypeId="552d21a2c9ff444bb9cd27773dc9b03c">
+			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="L4" DataType="Error" />
 		</p.TypeReference>
 		<p.TypeReference TypeId="c49bc0ee935c46e7a87199a0be40e2b5">
 			<Parameter InputParameterPassingRule="NotAllowed" OutputParameterPassingRule="Recommended" Name="R0" DataType="Double[,]" />
 		</p.TypeReference>
-		<p.TypeReference TypeId="1eba082d63f24c64856cade5336c9707">
-			<Parameter InputParameterPassingRule="NotAllowed" OutputParameterPassingRule="Recommended" Name="R3" DataType="Error" />
+		<p.TypeReference TypeId="03d435bc817c4118b12e5a14792b70c1">
+			<Parameter InputParameterPassingRule="NotAllowed" OutputParameterPassingRule="Recommended" Name="R4" DataType="Error" />
 		</p.TypeReference>
 		<p.TypeReference TypeId="2a70052fb8954d5084f026e0845d675f">
 			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="L1" DataType="Double" />
@@ -382,30 +382,25 @@
 		<p.TypeReference TypeId="85a046dcd555451cbc1e62951bfa19d9">
 			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="L3" DataType="Double" />
 		</p.TypeReference>
-		<p.TypeReference TypeId="552d21a2c9ff444bb9cd27773dc9b03c">
-			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="L4" DataType="Error" />
-		</p.TypeReference>
 		<p.TypeReference TypeId="7f3b935c734048d3ab422fe221fff645">
 			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="T0" DataType="String" />
-		</p.TypeReference>
-		<p.TypeReference TypeId="03d435bc817c4118b12e5a14792b70c1">
-			<Parameter InputParameterPassingRule="NotAllowed" OutputParameterPassingRule="Recommended" Name="R4" DataType="Error" />
 		</p.TypeReference>
 	</DataTypeReferenceTable>
 	<IconTable xmlns="http://www.ni.com/PlatformFramework">
 		<p.IconModel Target="otslm::simple::linear.gvi">
 			<MergeScript>
 				<MergeItem Path="." IsPrimary="True">
-					<Icon ListViewIconCrop="0 0 40 40">
-						<IconPanel Height="[float]40" Left="[float]0" MinHeight="[float]0" MinWidth="[float]0" PanelSizeMode="Resize" Top="[float]0" Width="[float]40">
-							<IconTemplate ClipMargin="[SMThickness]3,3,3,3" Height="[float]40" Left="[float]0" TemplateName="[string]Gray" Top="[float]0" Width="[float]40">
+					<Icon ListViewIconCrop="0 0 40 50">
+						<IconPanel Height="[float]50" Left="[float]0" MinHeight="[float]0" MinWidth="[float]0" PanelSizeMode="Resize" Top="[float]0" Width="[float]40">
+							<IconTemplate ClipMargin="[SMThickness]3,3,3,3" Height="[float]50" Left="[float]0" TemplateName="[string]Gray" Top="[float]0" Width="[float]40">
 								<Rectangle Fill="[SMSolidColorBrush]#ff727272" IsHitTestVisible="[bool]False" Left="[float]0" MinHeight="[float]1" MinWidth="[float]1" RadiusX="[float]4" RadiusY="[float]4" Top="[float]0" />
 								<Rectangle Fill="[SMSolidColorBrush]#ffe5e5e5" IsHitTestVisible="[bool]False" Left="[float]0" Margin="[SMThickness]1,1,1,1" MinHeight="[float]1" MinWidth="[float]1" RadiusX="[float]2.5" RadiusY="[float]2.5" Stroke="[SMSolidColorBrush]#fff2f2f2" Top="[float]0" />
-								<FileNameText Attached="[bool]True" Height="[float]36" Left="[float]0" Margin="[SMThickness]2,2,2,2" SizeMode="[TextModelSizeMode]AutoFont" Text="[string]linear" TextAlignment="[TextAlignment]Center" TextWrapping="[TextWrapping]Wrap" Top="[float]0" VerticalScrollBarVisibility="[ScrollBarVisibility]Hidden" Width="[float]36">
+								<FileNameText Attached="[bool]True" Height="[float]46" Left="[float]0" Margin="[SMThickness]2,2,2,2" SizeMode="[TextModelSizeMode]AutoFont" Text="[string]linear" TextAlignment="[TextAlignment]Center" TextWrapping="[TextWrapping]Wrap" Top="[float]0" VerticalScrollBarVisibility="[ScrollBarVisibility]Hidden" Width="[float]36">
 									<FontSetting FontFamily="Verdana" FontSize="9" />
 								</FileNameText>
 							</IconTemplate>
-							<IconTemplate Height="[float]40" IsHitTestVisible="[bool]False" Left="[float]0" TemplateName="[string][Comp]otslm.gcomp" Top="[float]0" Width="[float]40" />
+							<Image BaseName="[string]Image" Height="[float]31" Left="[float]5" MinHeight="[float]13" MinWidth="[float]13" Source="[SMEmbeddedImageSource]iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAACzSURBVGhD7c8xDoJAAAXRL4UYAnSc0cZDYeHtiA0HwJXERKJ4gHFeskB+wWYOw7AsXZe0bfJ8v59f2+02ZhyvSU7llDFl3Jy9rV+/q6pJXR/X//Vl+nbH3tY0yTzfcz5fMk1z+V8ZNne8vj+3qjz/isF0BtMZTGcwncF0BtMZTGcwncF0BtMZTGcwncF0BtMZTGcwncF0BtMZTGcwncF0BtMZTGcwncF0BtMZTGcwncFsyQOpbhFNqyc2VQAAAABJRU5ErkJggg==" Stretch="[SMStretch]Uniform" Top="[float]16" Width="[float]31" />
+							<IconTemplate Height="[float]50" IsHitTestVisible="[bool]False" Left="[float]0" TemplateName="[string][Comp]otslm.gcomp" Top="[float]0" Width="[float]40" />
 						</IconPanel>
 					</Icon>
 				</MergeItem>
@@ -423,6 +418,7 @@
 									<FontSetting FontFamily="Verdana" FontSize="6" />
 								</FileNameText>
 							</IconTemplate>
+							<Image BaseName="[string]Image" Height="[float]29" Left="[float]5" MinHeight="[float]13" MinWidth="[float]13" Source="[SMEmbeddedImageSource]iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAA0ISURBVGhDpZtLjx3FFcfrds/TxjyyZc9HQMy9HtsEIzAP4xAc4uCFedlYCL5AshgpUjZZZZVF8HiII6QIZQVbpBjJhg+QbRDPhLeNPbbH43nk/Kr63326bvfM2Gnp1+dUVXdV/ftUV/W9t+8ghH9thvCfkPiv8XXFcrhw4f3w7bchfPNNiPa77xq+/z6E69dD+OGHEH78ccOO/9GwRLRwqWLFuOz4KVy8+H5YsewrVxI3b4Zw9Wqb5eWGa9dCWF1NljZlV1Zo94bjlkF7+FiruLaJIoRJczwTNYWVTpgLk1Yk31OWwY6zA4M57tw2lKm8bNXr6xE+z9vcb9oVllnb3E/QdJXIhU+GtTUrsaJcLOkc2xvUA95Xusl76KFHW/V14YVthe13QCPcBE+Zow616RIG/Q1bYcT7SouUXl+3vSWF6vW2ry2P7XdAahNMsIYF1vtljARXmpED+H3YvjrP15HT5Os81ettTl8+UGbejrE9EfZwNRrLVZ6yJOiqd2F7h65qTpM/HD4cI8S5ud3Kz/Ow5lWQkO/zGjoEeybjFVQjEt0nPj93nHa+r1tsJdSL9LYsiZ45NVZQ4/MntxM8Fe81H2Fvc3zFllOR+035wBZFnevr9O14uvKE7XeECZ42R1iNtU0+UVBHtsP2W0CD7fTc3COdnRfU6a3PF8qbmLCr54Ql7IAsr5ia4sAu0cmfm3sqTJub4xsVExMMLXNug9Fo2FmXp0+k8pu0RFtmRD42+QX3gd0FFRr3Pl3GpyIi7eE84fPM6yHV1YWv9//F9hkEofELohXCTAUJ8OmZbSPs88yrIAHe72I6bNrDbV7nnZKibE4PxQy66k7mwhOj0WOxQxwrcX2UJZE0Z0ekTgyHj8TO+nq8iL50ni/KGGpzInZQ7VeCp6cJu8R2w3ClAY7PId9j+zvAumN9gry+PE/p/HifPxj4e9kyK4rZ2dTpEMzpECpYQrw4LzgnVY4DTWNbQZRVdx9eXB/+GNtXSLhFGMGQBHeROj4cHopidIEEFefp6WnuI0vExrA7I7+owreTl21HEoqTiLM0pI9a3H85mtIn6lmZJaDL99i+A+4t2XF/bu7herb1dSndVbZVfirj4ptTUezaFQL0R1kRmA0b9nlbkexDI6AouLLm1HCFfTonlXPdVZeiJD/P9+X+mLzcT6S1YLB9BoIbfzQ6VF+cPmhQ1jwDB/CV9n6b4fBgLeB28GLzMpgg3FZ/S/Ak43NMrDqXIMoI2k44FAVX1Zwaa7m2Ii+fqUeS6sk7fydwISYny1Ds3p06L5tE9sM1kdjcdjEuugvrkUuPRo/H+893mLq6/K3yPCqPEfaiEZUg4W1ibu5ILVpQmU/7fLB9hWU6YW2sN7WdsXYORtGqQ53O/a48fJGn7cNDWrsAIVjzKkjIb+BRkGP70AyptO0ruI9AaeV1+5p587plPT5vq+OKu+5KkQX55hk43YxGT9RR1OjYitlZlga71PVIwRc+z5ftsgns0dhpRQ5SfTtDEfZEwULCy9KO7BDadA7RB2qxuWjV4/OKgjrNGcN60RLr83dZO4+MdRp83Xm+L/dl0BLsKQo7uo60t/IhCctRY+DzLaeCRJffxWx8ICHSvl4vQuk8X/jzij17QgBEeh9SZyTQC00Mh0+1BPWhxqan7SaK51qirsf7So+j4e07fztIfC3YC5X4oqAD5kQQnLM7flmvcyTQ+zlFYa22xHnfp315KhuNDtaiqSsXtRPqWVqPYUL5aaYG1lNQOjE//3h9rKBTXb7S5hk4svJ9Oi9P7N27L9bR1Ybyt6K4++4QwEfaY/sKRTVP32VRs72520FUsP2TYo6FpDPf9mYUNflYT1cZH5Gi4Fy4/F27bDGsRYL1uCV8j00qT8crnAv00Ji3ts+wgkif3zA/f8iseZYELygX6S0U+/YdjuLuuWdcuGwSZomW9aQo62KBFwvKk929m7XZnDGsd52+0om9ew/Fz8+qX4K971G+dfOeeKJEexrxdM56uoXo0ejZ+GTkRQt1KmdmhlnbnDtkNHrSbFuQFyh8ngm+14bIkU6hPl2WdkYU2s9o9FQc2l2iu6ADU1NMhOa0LiDpnZCWRr7Q77qlvFD5JpgJZCb+wq4ZWg/aeTrN0n1YiwbPqzSuc3MoE0pPTjKVmDOGHdCZL5ryvXv3x5GqupmR5XtihAFB95oLPto+ykXB1bdER3SVPxw+HYV0RRTSLdJYUZY2o7SiDBaaVsS9P543HD5W39fU6a2oBQ+HL8SJR6I9CJZNwjzjolmbEdQFHZDNaT/o7BRT4fz5+SeiDgJInRJatxHCfXZgYt++I1uKhdlZGxdjooUpqSzfWuRi+6Aj8gcDBJhTgxDvd+FFs0wetvnk0TiEJdRF+Gd2UCP61i3bmwsIlfUUBY1LpGXUfhKLnZ9/Nuzff6C+UF5gHxJeFF6AZTgxTdrb/JjE3NwTNnJ/Hp+hJbwSLO4LBw48X9/PXmwu3PYViPRWfoJIS7QHYX22EW1OL4iSld8Fwh+PSyZziwnmYd4zY9E5WH+6EFwEWShLmwarGb4ffpd6On5Dwjk02GeFzzfvNuBW87btM6HNzx/gG/DfLaQXumxdihbWwokTR+M9wKchwdsAns3NCcu3axYsESyULUxlZCKcPftWeOWVF+KShXjwG/lszLDebm4WdovRadrgAmMpBB55SQvSOkZpD41M4P2hEtyIxZ49+0547bVfxsYlMBfNMLlxYzoO260EY5eW/hJef/14LRYrYV2Che3tGYEocRAZXqQXho9gpT2cm2y5Z8/vF1ZXqcgLhjKcOUNkno8Nd0UYwYi9fp3xlwuVX6mx7ZVXnquGarNRN4KTuGRzWGYGg9L6QLQto1MwKMJJXNsmv7z//oWFK1dm7YpLqERzwFo4efJwvKdysQilo8kfhJUVOuMFCxpM/pkz58LLLx9tiUaQBOcgNIlNT06DAUOckyVW4kQeYdpuUz7wwMICS9G1awybdoSxi4t/DadO/aIWJ7FY8vBhba20oUeDEs3mBadNopkAEcK2nWBIgq1X1q319SlrU+K8aPKSsAR5Pj3R/PJQlgjm8W4cPu9qtubY3MofDLj65lSzfeO3GQ6fMZtmYtUryOvDl4//WLczygcfXFjg/iTKy8tk+ghbGCtOnDgSG1SENaTlAxPRjRvUkYZw2riybE2U2c6cOWuT4rEYOWDLo+rTHOPL0vwxGaOd+gr4tKe0fGyK/uCNNzY3P/00hM8+C+Hzz0O4fPmKFXxhYL80vjLS+9QXL/4tvr/89dcJfL1L7d+nvnSJi/R9Be8u8x613qXWe9Ticjh//p/xnemffkroPWrQ+9N8mvPvUIN/f3pjg/eiuSX9+9NC702vhPLw4XQPa63lXl5bs0sbr0oTYSAqp04drWdnIqx11bOxUdgkxi3CRj1s1Als8hNLS29bvS/UUVRkaUcR5ZmAdA59wKZ2WCJTJBt8ejKUx46lIe25coVPLRyAUFMWSf7i4lvh1Vefj43QQQ1lrLaULi1qiKZBNi9W1pREpqzes+H06d+kz6yVSIkG5SuNUIlVmmNYvtbXZ6wPEooVNkufPJkirBkYwclXpBuxifQQ8eabx1oRZpNlk+iNDX7vtR7VG3Xm0JnCRtBSePHFX8dJsEuw/ByJZ/mUPxjwFMh84gVPpp9a9PEp/zokfezCkQXrjVl+/tAM3wVlTHL45lXngfc9KX///iejUJ2L3Ql+Jvfkv0+Xx48vLFCxhrMizXC9eXPC4Mr4CDeRfumlo9WFaUeZe5ANSz2bm7y+SIM+qsLUxdkVm1hcXLK6j0XBimIeYaIoK4gw7eFj5RcFI403/qZDee7c5wunTz8TT5ZYCea+5Fn51i0rrER6FhfftSF4pIoiwkyCaZAFOprKmMi86EZgLhiWls7ZXPGrWogES1wulv76IS3BnCefl1+t5d9a9z4JH3zwTvxLDksUyxPLA/YLW6G+tNVpddXWm3qJ4u8+YOtF+CZ8+OGS2fG/++ivPljqTn/5QbyWJJYp/trDktH8zSfBsoi9Gv9ORBBYmvxffFiOBO1QfsNWIXys4OVYYYL/bIL/HT766I+xUq3JuWBYX+f/TP4/TtZqtIh+22x7TUYonUGoRCMY1tYQJOFbC07+ahTOqMvXYglm8sVuI/i9KJgonz//pyjaCwYJ/soCvLnpBdMZ/bGrEY1YRPsIe8HYS6ZzZcUKo0jr1ZhgiRZ8Xr9qgflHFK0HEQkGCUakF+0F2w3TfB2yf//xWBlfseg7IA8zeJqxhWW69L59zwXuWyYyP9v3MRhw84MlWquA8sZ9XqrhZ1PuU+aOLpidu/LBuvdJFeEUZRvU4eOP/26PmE2EGdZAhGF5mauvCGMVZQurRfrChXfjFSfSeYQFESba2NVVJkSGdh5hRZl2eDzEArfSskX7vThB+iGN3xVh7M2bIfwP1T+rVaYty4YAAAAASUVORK5CYII=" Stretch="[SMStretch]Uniform" Top="[float]15" Width="[float]29" />
 							<IconTemplate Height="[float]50" IsHitTestVisible="[bool]False" Left="[float]0" TemplateName="[string][Comp]otslm.gcomp" Top="[float]0" Width="[float]40" />
 						</IconPanel>
 					</Icon>
