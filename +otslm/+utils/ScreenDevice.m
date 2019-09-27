@@ -275,8 +275,11 @@ classdef ScreenDevice < otslm.utils.Showable
     function set.size(slm, value)
       % Change the size of the window
       
-      % TODO: Implement this
-      error('Not yet implemented');
+      assert(numel(value) == 2, 'value must be 2 element vector');
+      
+      % TODO: Should this change?
+      
+      slm.size = value;
     end
   end
 end
