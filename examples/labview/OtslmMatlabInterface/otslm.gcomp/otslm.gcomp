@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="7B617089179BA8176AA3E4AEAB1C27CCEA410C70501E5BB8F08BA0B64E07F0A7386165CBAFBA92080876BACD26B3E82623D023672C75A79B105DC86FFB3E805C" Timestamp="1D5744159FD12B6" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="C99BBD71EDA4DD2F13CC7151C9DB358A25AB33274D61E31FCF680BB5348CF5F712B76F69925E4810243C82209DE51BBA818F0D636ED5511EF8147E811E79A6DC" Timestamp="1D574D3F2406759" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="GComponentFeatureSet" Name="http://www.ni.com/GComponent.xsd" OldestCompatibleVersion="6.1.0.1" Version="6.2.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Interface for MATLAB®" Name="http://www.ni.com/Matlab" OldestCompatibleVersion="5.3.1.49152" Version="5.3.1.49152" />
@@ -24,6 +24,11 @@
 			<ComponentItemProperties AssociatedEnvoyId="3b13fd8a45de42409553e4715ab9a6a4" Exported="True" Id="dfc8c9266fd64c5da6769fc70dc71c74" />
 			<ComponentItemProperties AssociatedEnvoyId="8fea2887f45d453c9ad2a162412bb090" Exported="True" Id="b3f062458b454856999233b124412fa2" />
 			<ComponentItemProperties AssociatedEnvoyId="2a3eca4119fc4abbb96de63659fb6f79" Exported="True" Id="731f97b63c804a09a6f49a1d227580cc" />
+			<ComponentItemProperties AssociatedEnvoyId="3e1e6b5ee0d940ee83fdea294f3013aa" Exported="True" Id="adcc1087a6ab43328b58f88dfe7b7598" />
+			<ComponentItemProperties AssociatedEnvoyId="9aff3da953db4dae877d1b9b458004ef" Exported="True" Id="7148c7c2be94e5596962f4f5bc67db5" />
+			<ComponentItemProperties AssociatedEnvoyId="b66da60a87a04a0ab0ddb8b343d8fa53" Exported="True" Id="d50b421ab83d497c9ab12557bdd92c2b" />
+			<ComponentItemProperties AssociatedEnvoyId="5065712207ea4e5c997515880d598360" Exported="True" Id="ea1e6322d6094a92a9b1e3c405e44703" />
+			<ComponentItemProperties AssociatedEnvoyId="be2a59a607a54bdabeb6f3c7a673c3dd" Exported="True" Id="415750c66d34494f85900a7c466f1158" />
 		</ComponentConfiguration>
 	</ComponentDefinition>
 	<EnvoyManagerFile Id="7470c07c65a940cc883b4ca3dc5cbb62" xmlns="http://www.ni.com/PlatformFramework">
@@ -43,7 +48,15 @@
 					<SourceFileReference Bindings="EnvoyManager" Id="8fea2887f45d453c9ad2a162412bb090" ModelDefinitionType="{http://www.ni.com/Matlab}MatlabDefinition" Name="combine.mli" StoragePath="tools\combine.mli" />
 					<SourceFileReference Id="2a3eca4119fc4abbb96de63659fb6f79" ModelDefinitionType="NationalInstruments.LabVIEW.VI.Modeling.VirtualInstrument" Name="combine.gvi" StoragePath="tools\combine.gvi" />
 				</NameScopingEnvoy>
-				<NameScopingEnvoy AutomaticallyResolveUp="True" Id="a443c12683564e9c9acbe6ec88b45124" Name="utils" />
+				<NameScopingEnvoy AutomaticallyResolveUp="True" Id="a443c12683564e9c9acbe6ec88b45124" Name="utils">
+					<NameScopingEnvoy AutomaticallyResolveUp="True" Id="78bebbb0cef24caa82f4084b4f74ae40" Name="ScreenDevice">
+						<SourceFileReference Id="3e1e6b5ee0d940ee83fdea294f3013aa" ModelDefinitionType="NationalInstruments.LabVIEW.VI.Modeling.VirtualInstrument" Name="Close.gvi" StoragePath="utils\ScreenDevice\Close.gvi" />
+						<SourceFileReference Id="9aff3da953db4dae877d1b9b458004ef" ModelDefinitionType="NationalInstruments.LabVIEW.VI.Modeling.VirtualInstrument" Name="Show.gvi" StoragePath="utils\ScreenDevice\Show.gvi" />
+						<SourceFileReference Id="b66da60a87a04a0ab0ddb8b343d8fa53" ModelDefinitionType="NationalInstruments.LabVIEW.VI.Modeling.VirtualInstrument" Name="Delete.gvi" StoragePath="utils\ScreenDevice\Delete.gvi" />
+						<SourceFileReference Id="5065712207ea4e5c997515880d598360" ModelDefinitionType="NationalInstruments.LabVIEW.VI.Modeling.VirtualInstrument" Name="Construct.gvi" StoragePath="utils\ScreenDevice\Construct.gvi" />
+						<SourceFileReference Bindings="EnvoyManager" Id="be2a59a607a54bdabeb6f3c7a673c3dd" ModelDefinitionType="{http://www.ni.com/Matlab}MatlabDefinition" Name="ScreenDevice.mli" StoragePath="utils\ScreenDevice\ScreenDevice.mli" />
+					</NameScopingEnvoy>
+				</NameScopingEnvoy>
 				<NameScopingEnvoy AutomaticallyResolveUp="True" Id="bdac9e6a44254ba2951e16e7e7e85e1d" Name="iter" />
 				<SourceFileReference Bindings="EnvoyManager" Id="e9bafd3520ce454c87196d2d538742e8" ModelDefinitionType="{http://www.ni.com/Matlab}MatlabDefinition" Name="initOtslm.mli" StoragePath="initOtslm.mli" />
 			</NameScopingEnvoy>

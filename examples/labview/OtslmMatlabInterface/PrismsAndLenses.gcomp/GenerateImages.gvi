@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="62CABC48BCC663B845C270601B5221D29857E58E1F0BFD5E6B32DDFA2834B45520CD82FD90E238C4BD3B30966D9A65DC01CF79515B6482057BCC68338C5A3289" Timestamp="1D574C925BEEE33" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="76BF5897037CEB88E1B92E43E5E31F8D94D24F28792ED9212ABFABA5FB6D072E37E2A6A4D75AB9E0B59253FCC6BD805B3B5BD5B6D9C48DDA8E84A07E54495B0A" Timestamp="1D574DD3919ECEA" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="LabVIEW Controls" Name="http://www.ni.com/Controls.LabVIEW.Design" OldestCompatibleVersion="6.2.0.49152" Version="6.2.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="LabVIEW Virtual Instrument" Name="http://www.ni.com/LabVIEW.VI" OldestCompatibleVersion="6.2.0.49152" Version="6.2.0.49152" />
@@ -60,7 +60,7 @@
 					<Terminal DataType="Double[,]" Direction="Output" Hotspot="40 5" Id="R0" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="Error" Direction="Output" Hotspot="40 45" Id="R4" xmlns="http://www.ni.com/PlatformFramework" />
 				</MethodCall>
-				<MethodCall Bounds="390 125 40 50" Id="a3d817df9ecc4a38afb0f599a109b29a" ResolveFailedHint="&quot;C:\\Users\\uqilento\\Documents\\Research2017\\otslm\\examples\\labview\\OtslmMatlabInterface\\otslm.gcomp\\simple\\spherical.gvi&quot;" Signature="@38859de6701f46bfb34b9a52cc5e13e4" Target="otslm::simple::spherical.gvi" xmlns="http://www.ni.com/MocCommon">
+				<MethodCall Bounds="390 125 40 50" Id="a3d817df9ecc4a38afb0f599a109b29a" ResolveFailedHint="&quot;C:\\Users\\uqilento\\Documents\\Research2017\\otslm\\examples\\labview\\OtslmMatlabInterface\\otslm.gcomp\\simple\\spherical.gvi&quot;" Signature="@c891a4d21708484dafff749990647434" Target="otslm::simple::spherical.gvi" xmlns="http://www.ni.com/MocCommon">
 					<p.MethodDeclaration>
 						<MethodDeclaration xmlns="http://www.ni.com/PlatformFramework">
 							<Parameter Id="L0" Desc="sz" />
@@ -75,7 +75,7 @@
 					</p.MethodDeclaration>
 					<Terminal DataType="Double[]" Direction="Input" Id="L0" Usage="Required" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="Double" Direction="Input" Hotspot="0 15" Id="L1" Usage="Required" xmlns="http://www.ni.com/PlatformFramework" />
-					<Terminal DataType="Double[]" Direction="Input" Hotspot="0 25" Id="L2" Usage="Required" xmlns="http://www.ni.com/PlatformFramework" />
+					<Terminal DataType="Double[]" Direction="Input" Hotspot="0 25" Id="L2" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="Double" Direction="Input" Hotspot="0 35" Id="L3" Usage="Required" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="Error" Direction="Input" Hotspot="0 45" Id="L4" xmlns="http://www.ni.com/PlatformFramework" />
 					<Terminal DataType="String" Direction="Input" Hotspot="15 0" Id="T0" Usage="Optional" xmlns="http://www.ni.com/PlatformFramework" />
@@ -122,13 +122,13 @@
 				<ArrayLiteral Bounds="85 45 145 25" DataType="Double[]" Id="688a1c55931c4166ba5ad87aced78fa2" Label="c8534a4edd554f259579278a8afe7b4a" xmlns="http://www.ni.com/MocCommon">
 					<p.Data>
 						<Array Lengths="2" IsBinary="True" Compression="GZip">
-							<BinaryElements>H4sIAAAAAAAEAGNgZGBg+A8EIBoEBEAMJiDmYIMIfLBHsLgBWKxiny8AAAA=</BinaryElements>
+							<BinaryElements>H4sIAAAAAAAEAGNgZGBg+A8EIBoEBEAMJiDmYIMINDggWNwAMMMejy8AAAA=</BinaryElements>
 						</Array>
 					</p.Data>
 					<ArrayBehavior ElementType="Double" IndexEditorWidth="42" Orientation="Horizontal" VisibleColumns="2">
 						<p.DefaultElementValue>0x0</p.DefaultElementValue>
 					</ArrayBehavior>
-					<Literal Bounds="91 20.5 40 15" DataType="Double" Id="53ef2e3c7f1148d5ba1a14471411ee78">
+					<Literal Bounds="91.5 3.5 40 15" DataType="Double" Id="53ef2e3c7f1148d5ba1a14471411ee78">
 						<NumericBehavior Interpretation="Exact" ValueFormatter="LV:G6" />
 					</Literal>
 				</ArrayLiteral>
@@ -335,8 +335,8 @@
 				</AttributeValues>
 			</Attributed>
 		</p.TypeReference>
-		<p.TypeReference TypeId="38859de6701f46bfb34b9a52cc5e13e4">
-			<Attributed AttributedType="@680227d849e7415d806fc7e2a3c193d9">
+		<p.TypeReference TypeId="c891a4d21708484dafff749990647434">
+			<Attributed AttributedType="@8d7655fbd2e946b6a9387f64b63b1a9f">
 				<AttributeValues>
 					<AttributeValue Name="NI.ConnectorPaneHeight" Value="[int]50" />
 					<AttributeValue Name="NI.ConnectorPaneWidth" Value="[int]40" />
@@ -374,7 +374,7 @@
 				</Parameters>
 			</Function>
 		</p.TypeReference>
-		<p.TypeReference TypeId="680227d849e7415d806fc7e2a3c193d9">
+		<p.TypeReference TypeId="8d7655fbd2e946b6a9387f64b63b1a9f">
 			<Function Id="1" IsStatic="True" IsConstructor="False" Name="spherical.gvi" ReturnType="Void" GenericTypeDefinition="Void">
 				<Parameters>
 					<Attributed AttributedType="@117c6b2e27354d0eb67045f503aa9c6f">
@@ -387,7 +387,7 @@
 							<AttributeValue Name="NI.UserDefinedName" Value="[string]radius" />
 						</AttributeValues>
 					</Attributed>
-					<Attributed AttributedType="@cb5e556f7eca448ba5b6c7b00b04d4f6">
+					<Attributed AttributedType="@904ccf4315134b83add52425b1947a83">
 						<AttributeValues>
 							<AttributeValue Name="NI.UserDefinedName" Value="[string]centre" />
 						</AttributeValues>
@@ -441,8 +441,8 @@
 		<p.TypeReference TypeId="45cc3aeda75c4894a8ef65721e3a9932">
 			<Parameter InputParameterPassingRule="Required" OutputParameterPassingRule="NotAllowed" Name="L1" DataType="Double" />
 		</p.TypeReference>
-		<p.TypeReference TypeId="cb5e556f7eca448ba5b6c7b00b04d4f6">
-			<Parameter InputParameterPassingRule="Required" OutputParameterPassingRule="NotAllowed" Name="L2" DataType="Double[]" />
+		<p.TypeReference TypeId="904ccf4315134b83add52425b1947a83">
+			<Parameter InputParameterPassingRule="Recommended" OutputParameterPassingRule="NotAllowed" Name="L2" DataType="Double[]" />
 		</p.TypeReference>
 		<p.TypeReference TypeId="d66cbb5fc6ff4a1a883dff0ce37689b6">
 			<Parameter InputParameterPassingRule="Required" OutputParameterPassingRule="NotAllowed" Name="L3" DataType="Double" />

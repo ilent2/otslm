@@ -1,5 +1,9 @@
 function initOtslm()
 % Initialize function for labview (adds toolbox path)
+%
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
   fname = mfilename('fullpath');
   [fpath, ~, ~] = fileparts(fname);
