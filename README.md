@@ -107,7 +107,7 @@ Contact us
 ----------
 
 The best person to contact for inquiries about the toolbox or licensing
-is [Timo Nieminen](mailto:timo@physics.uq.edu.au)
+is [Isaac Lenton](mailto:uqilento@uq.edu.au)
 
 File listing
 ------------
