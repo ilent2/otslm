@@ -50,15 +50,26 @@ file in `+otslm/+ui` or run the Launcher from the Matlab command line:
 Dependencies
 ------------
 
+The toolbox runs on recent versions of Matlab.  We have tested the
+toolbox and UI on Matlab 2018a.
+
 Some functionality requires the following dependencies:
 
-* Matlab (2018a or newer)
 * [Optical Tweezers Toolbox](https://github.com/ilent2/ott) (1.5.1 or newer)
 * Python (2.7 or newer)
     * numpy (tested on 1.13.3)
     * theano (tested on 0.9)
     * scipy (tested on 1.0)
     * pyfftw (optional, for fourier transform)
+* [Red Tweezers](https://doi.org/10.1016/j.cpc.2013.08.008)
+* Specific Matlab toolboxes:
+    * Optimization Toolbox
+    * Signal Processing Toolbox
+    * Neural Network Toolbox
+    * Symbolic Math Toolbox
+    * Image Processing Toolbox
+    * Instrument Control Toolbox
+    * Parallel Computing Toolbox
 
 License
 -------
