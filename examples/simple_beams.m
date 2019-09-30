@@ -8,14 +8,14 @@
 addpath('../');
 
 sz = [512, 512];      % Size of pattern
-o = 50;              % Region of interest size in output
-padding = 500;        % Padding for FFT
 
 % incident = [];        % Incident beam (use default in visualize)
 incident = otslm.simple.gaussian(sz, 150);  % Incident beam (gaussian)
 % incident = ones(sz);  % Incident beam (use uniform illumination)
 
 % Functions used for generating figures
+o = 50;              % Region of interest size in output
+padding = 500;        % Padding for FFT
 zoom = @(im) im(round(size(im, 1)/2)+(-o:o), round(size(im, 2)/2)+(-o:o));
 visualize = @(pattern) zoom(abs(otslm.tools.visualise(pattern, ...
     'method', 'fft', 'padding', padding, 'incident', incident)).^2);
@@ -123,7 +123,7 @@ imagesc(visualize(pattern));
 %% Axicon lens (non-diffracting ring-beam)
 % Applies a cone shaped phase pattern to generate a Bessel-like beam.
 
-radius = 200;
+radius = 50;
 
 pattern = otslm.simple.axicon(sz, -1/radius);
 
@@ -140,6 +140,15 @@ imagesc(pattern);
 
 subplot(4, 4, 12);
 imagesc(visualize(pattern));
+
+% We could also look at the near-field of the pattern
+% im1 = otslm.tools.visualise(pattern, 'method', 'fft', 'trim_padding', true, 'z', 50000);
+% im2 = otslm.tools.visualise(pattern, 'method', 'fft', 'trim_padding', true, 'z', 70000);
+% im3 = otslm.tools.visualise(pattern, 'method', 'fft', 'trim_padding', true, 'z', 90000);
+% figure();
+% subplot(1, 3, 1), imagesc(zoom(abs(im1).^2)), axis image;
+% subplot(1, 3, 2), imagesc(zoom(abs(im2).^2)), axis image;
+% subplot(1, 3, 3), imagesc(zoom(abs(im3).^2)), axis image;
 
 %% Cubic lens (airy beam)
 % Applies a cubic lens function to the beam
