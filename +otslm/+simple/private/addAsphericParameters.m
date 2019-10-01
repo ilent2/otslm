@@ -26,7 +26,7 @@ function p = addAsphericParameters(p, sz, varargin)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
 %   'gpuArray'    bool        If the result should be a gpuArray
 %
-% Copyright 2018 Isaac Lenton
+% Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 

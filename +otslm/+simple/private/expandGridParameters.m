@@ -1,5 +1,9 @@
 function params = expandGridParameters(p)
 % Expand input parser for grid parameters
+%
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
 parameters = {'centre', 'offset', 'type', 'aspect', 'angle', ...
   'angle_deg', 'gpuArray'};

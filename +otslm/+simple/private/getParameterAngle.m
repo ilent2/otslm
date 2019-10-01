@@ -5,7 +5,7 @@ function [rad, deg] = getParameterAngle(p, default)
 % from inputParser p or default angle if unspecified.
 % The default angle is specified in degrees.
 %
-% Copyright 2018 Isaac Lenton
+% Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
