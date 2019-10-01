@@ -24,6 +24,9 @@ classdef TestDmd < otslm.utils.TestShowable
     valueRange = {0:1};
     lookupTable
     patternType = 'amplitude';
+  end
+  
+  properties (Dependent)
     size            % Size before rotation packing
   end
 
@@ -47,11 +50,11 @@ classdef TestDmd < otslm.utils.TestShowable
       slm = slm@otslm.utils.TestShowable();
       
       % Store value range and size
-      slm.size = p.Results.size;
+      our_size = p.Results.size;
       
       % Default argument for incident
       if isempty(p.Results.incident)
-        slm.incident = ones(slm.size);
+        slm.incident = ones(our_size);
       else
         slm.incident = p.Results.incident;
       end
@@ -84,9 +87,13 @@ classdef TestDmd < otslm.utils.TestShowable
     
     function set.incident(slm, newincident)
       % Check the new incident pattern
-      assert(all(size(newincident) == slm.size), ...
-        'Incident pattern size must match SLM size');
+      assert(ismatrix(newincident), 'Incident pattern must be matrix');
       slm.incident = newincident;
+    end
+    
+    function sz = get.size(slm)
+      % Get the size of the device (i.e. the incident image)
+      sz = size(slm.incident);
     end
   end
 

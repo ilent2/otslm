@@ -4,6 +4,14 @@ import matlab.unittest.TestSuite
 import matlab.unittest.TestRunner
 import matlab.unittest.plugins.CodeCoveragePlugin
 
+%% Run everything
+
+suite = TestSuite.fromFolder('tests', 'IncludingSubfolders', true);
+runner = TestRunner.withTextOutput;
+runner.addPlugin(CodeCoveragePlugin.forPackage(...
+  {'otslm.simple', 'otslm.iter', 'otslm.utils', 'otslm.tools'}, 'IncludingSubpackages', true))
+result = runner.run(suite);
+
 %% otslm.simple
 
 suite = TestSuite.fromFile('tests\testsimple.m');

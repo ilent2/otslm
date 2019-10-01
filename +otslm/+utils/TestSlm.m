@@ -26,6 +26,9 @@ classdef TestSlm < otslm.utils.TestShowable
     valueRange              % Range of values for raw pattern
     lookupTable             % Lookup table for raw values
     patternType = 'phase';  % Type of pattern show() expects
+  end
+  
+  properties (Dependent)
     size                    % Size of the device
   end
 
@@ -58,11 +61,11 @@ classdef TestSlm < otslm.utils.TestShowable
       
       % Store value range and size
       slm.valueRange = p.Results.value_range;
-      slm.size = p.Results.size;
+      our_size = p.Results.size;
       
       % Default argument for incident
       if isempty(p.Results.incident)
-        slm.incident = ones(slm.size);
+        slm.incident = ones(our_size);
       else
         slm.incident = p.Results.incident;
       end
@@ -99,9 +102,13 @@ classdef TestSlm < otslm.utils.TestShowable
     
     function set.incident(slm, newincident)
       % Check the new incident pattern
-      assert(all(size(newincident) == slm.size), ...
-        'Incident pattern size must match SLM size');
+      assert(ismatrix(newincident), 'Incident pattern must be matrix');
       slm.incident = newincident;
+    end
+    
+    function sz = get.size(slm)
+      % Get the size of the device (i.e. the incident image)
+      sz = size(slm.incident);
     end
   end
 

@@ -13,7 +13,7 @@ function testSimple(tests)
   sz = [60, 30, 30];
   dimensions = [5, 20, 5];
   target = otslm.simple.aperture3d(sz, dimensions, ...
-      'type', 'rect', 'value', [0,1]);
+      'shape', 'rect', 'value', [0,1]);
 
   % Objective function for optimisation
   objective = @(t, a) otslm.iter.objectives.bowman2017cost(t, a, ...
