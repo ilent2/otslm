@@ -135,12 +135,15 @@ function output = fft_method(U, p)
 
   if strcmpi(p.Results.type, 'farfield')
 
-    lens = otslm.simple.spherical(size(U), ...
-        rscale*sqrt(sum((size(U)/2).^2)), ...
-        'background', 'checkerboard');
-    
-    % Apply z-shift using a lens in the far-field
-    U = U .* exp(-1i*z*lens);
+    % This is expensive, only do it if we have to
+    if z ~= 0
+      lens = otslm.simple.spherical(size(U), ...
+          rscale*sqrt(sum((size(U)/2).^2)), ...
+          'background', 'checkerboard');
+
+      % Apply z-shift using a lens in the far-field
+      U = U .* exp(-1i*z*lens);
+    end
 
     % Transform to the focal plane (missing scaling factor)
     output = fftshift(fft2(U))./numel(U);
