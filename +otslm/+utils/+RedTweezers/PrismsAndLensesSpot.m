@@ -33,7 +33,7 @@ classdef PrismsAndLensesSpot
       ip.addParameter('oam', 0);
       ip.addParameter('phase', 0);
       ip.addParameter('intensity', 1);
-      ip.addParameter('aperture', [0, 0, Inf]);
+      ip.addParameter('aperture', [0, 0, 1]);
       ip.addParameter('line', [0, 0, 0, 0]);
       ip.parse(varargin{:});
       

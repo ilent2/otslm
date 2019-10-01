@@ -55,8 +55,8 @@ classdef Showable < otslm.utils.RedTweezers.RedTweezers & otslm.utils.Showable
       
       % Parse inputs
       ip = inputParser;
-      ip.addOptional('address', '127.0.0.1');
-      ip.addOptional('port', 61557);
+      ip.addParameter('address', '127.0.0.1');
+      ip.addParameter('port', 61557);
       ip.addParameter('prescaledPatterns', false);
       ip.addParameter('preferred_size', []);
       ip.addParameter('lookup_table', []);

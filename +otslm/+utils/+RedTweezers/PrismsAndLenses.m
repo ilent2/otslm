@@ -46,7 +46,6 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       ip = inputParser();
       ip.addOptional('address', '127.0.0.1');
       ip.addOptional('port', 61557);
-      ip.addParameter('nspots', 2);
       ip.parse(varargin{:});
       
       % Call base class constructor
@@ -76,6 +75,70 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       rt.sendShader();
     end
     
+    function varargout = updateAll(rt, send)
+      % Resends all information to RedTweezers
+      %
+      % Only sends set options (leaves others at RedTweezers defaults)
+      % Does not send the shader.
+      %
+      % If send is false, the command isn't sent.  Default value for
+      % send is nargout == 0
+      
+      % Handle default send argument
+      if nargin < 2
+        send = nargout == 0;
+      end
+      
+      % Get base commands
+      cmds = updateAll@otslm.utils.RedTweezers.RedTweezers(rt, false);
+      
+      % This seems to break things
+      %cmds = [cmds, rt.sendShader(false)];
+      
+      if ~isempty(rt.spots)
+        cmds = [cmds, rt.sendUniform(0, numel(rt.spots), false)];
+        cmds = [cmds, rt.sendSpots(false)];  % 2
+      end
+      
+      if ~isempty(rt.total_intensity)
+        cmds = [cmds, rt.sendUniform(1, rt.total_intensity, false)];
+      end
+      
+      if ~isempty(rt.centre)
+        cmds = [cmds, rt.sendUniform(3, rt.centre, false)];
+      end
+      
+      if ~isempty(rt.size)
+        cmds = [cmds, rt.sendUniform(4, rt.size, false)];
+      end
+      
+      if ~isempty(rt.focal_length)
+        cmds = [cmds, rt.sendUniform(5, rt.focal_length, false)];
+      end
+      
+      if ~isempty(rt.wavenumber)
+        cmds = [cmds, rt.sendUniform(6, rt.wavenumber, false)];
+      end
+      
+      if ~isempty(rt.blazing)
+        cmds = [cmds, rt.sendUniform(7, rt.blazing, false)];
+      end
+      
+      if ~isempty(rt.zernike)
+        cmds = [cmds, rt.sendUniform(8, rt.zernike, false)];
+      end
+      
+      % Send commands
+      if send
+        rt.sendCommand(cmds);
+      end
+      
+      % Write outputs
+      if nargout
+        varargout{1} = cmds;
+      end
+    end
+    
     function addSpot(rt, varargin)
       % Add a spot to the pattern
       %
@@ -94,7 +157,7 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       spot = otslm.utils.RedTweezers.PrismsAndLensesSpot(varargin{:});
       
       % Add it to the array
-      rt.spots = [rt.spots, spot];
+      rt.spots = [rt.spots; spot];
     end
     
     function removeSpot(rt, index)
@@ -152,7 +215,7 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       
       assert(numel(value) == 2, 'value must be 2 element vector');
       assert(isnumeric(value), 'value must be a pair of numbers');
-      assert(all(value <= 1 && value >= 0), 'value must be between 0 and 1');
+      assert(all(value <= 1 & value >= 0), 'value must be between 0 and 1');
       
       rt.centre = value;
     end
@@ -187,7 +250,7 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       
       assert(numel(value) == 32, 'value must be a 32 element vector');
       assert(isnumeric(value), 'value must be numeric');
-      assert(all(value <= 1 && value >= 0), 'values must be between 0 and 1');
+      assert(all(value <= 1 & value >= 0), 'values must be between 0 and 1');
       
       rt.blazing = value;
     end
@@ -238,11 +301,12 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
   
   methods (Hidden)
     
-    function sendSpots(rt)
-      % Send the spots array and shader to the device
+    function varargout = sendSpots(rt, send)
+      % Send the spots array
       
-      % First send the shader
-      rt.sendShader();
+      if nargin < 2
+        send = nargout == 0;
+      end
       
       % Then send the data, from the GLSL source code:
       % spot parameters- each spot corresponds to 4 vec4, first one is x,y,z,l, second one is amplitude, -,-,-
@@ -254,6 +318,9 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       
       % Check there is work to do
       if numel(rt.spots) == 0
+        if nargout > 0
+          varargout{1} = '';
+        end
         return;
       end
       
@@ -267,10 +334,11 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       
       % Send the data (could be large so send it separately)
       if numel(rt.spots) > 50 || (~isempty(rt.use_texture) && rt.use_texture)
-        data = permute(data, [3, 2, 1]);
-        rt.sendTexture(id, data);
+        data = permute(data, [2, 3, 1]);
+        [varargout{1:nargout}] = rt.sendTexture(id, data./500.0 + 0.5, send);
       else
-        rt.sendUniform(id, data(:));
+        data = permute(data, [1, 3, 2]);
+        [varargout{1:nargout}] = rt.sendUniform(id, double(data(:)), send);
       end
       
     end
@@ -285,11 +353,20 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       switch src.Name
         case 'spots'
           
-          % Send number of spots
-          rt.sendUniform(0, numel(rt.spots));
-          
-          % Send the spots (also sends the shader)
-          rt.sendSpots();
+          if ~isempty(rt.use_texture) && (rt.use_texture || numel(rt.spots) <= 50)
+            
+            % Send number of spots
+            rt.sendUniform(0, numel(rt.spots));
+            
+            % Send spots
+            rt.sendSpots();
+            
+          else
+            
+            % Send shader and spots
+            rt.updateAll();
+            
+          end
           
         case 'total_intensity'
           rt.sendUniform(1, rt.total_intensity);
@@ -309,11 +386,11 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
         case 'use_texture'
           
           % Send shader and spots
-          rt.sendSpots();
+          rt.updateAll();
           
         otherwise
           % Let the base class do everything else
-          handleSetEvents@ott.utils.RedTweezers.RedTweezers(rt, src, ev);
+          handleSetEvents@otslm.utils.RedTweezers.RedTweezers(rt, src, ev);
       end
     end
   end
