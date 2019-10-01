@@ -11,11 +11,7 @@ function setupOnce(testCase)
   addpath('../');
 
   % Check if there is a GPU (sometimes fails if run more than once???)
-  try
-    b = parallel.gpu.GPUDevice.isAvailable;
-  catch ME
-    b = false;
-  end
+  b = parallel.gpu.GPUDevice.isAvailable;
 
 end
 
