@@ -70,6 +70,7 @@ Some functionality requires the following dependencies:
     * Image Processing Toolbox
     * Instrument Control Toolbox
     * Parallel Computing Toolbox
+    * Image Acquisition Toolbox
 
 License
 -------
