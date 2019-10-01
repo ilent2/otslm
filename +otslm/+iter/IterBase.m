@@ -100,6 +100,7 @@ classdef IterBase < handle
       p.addParameter('invdata', {});
       p.addParameter('objective', @otslm.iter.objectives.flatintensity);
       p.addParameter('objective_type', 'min');
+      p.addParameter('gpuArray', []);
       p.parse(varargin{:});
 
       % Store inputs
@@ -111,6 +112,12 @@ classdef IterBase < handle
       mtd.invdata = p.Results.invdata;
       mtd.objective = p.Results.objective;
       mtd.objective_type = p.Results.objective_type;
+      
+      % Ensure guess and target are gpuArrays
+      if ~isempty(p.Results.gpuArray) && p.Results.gpuArray
+        mtd.target = gpuArray(mtd.target);
+        mtd.guess = gpuArray(mtd.guess);
+      end
 
       % Handle default argument for guess
       if isempty(mtd.guess)
@@ -250,10 +257,22 @@ classdef IterBase < handle
       if size(mtd.target, 3) ~= size(trial, 3)
         score = zeros(1, size(mtd.target, 3));
         for ii = 1:length(score)
-          score(ii) = mtd.objective(mtd.target, trial(:, :, ii));
+          our_score = mtd.objective(mtd.target, trial(:, :, ii));
+        
+          % Collect result from gpu
+          if isa(our_score, 'gpuArray')
+            our_score = gather(our_score);
+          end
+          
+          score(ii) = our_score;
         end
       else
         score = mtd.objective(mtd.target, trial);
+        
+        % Collect result from gpu
+        if isa(score, 'gpuArray')
+          score = gather(score);
+        end
       end
     end
 

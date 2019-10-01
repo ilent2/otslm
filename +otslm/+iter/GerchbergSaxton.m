@@ -57,6 +57,7 @@ classdef GerchbergSaxton < otslm.iter.IterBase
       p.addParameter('invdata', {});
       p.addParameter('objective', @otslm.iter.objectives.flatintensity);
       p.addParameter('objective_type', 'min');
+      p.addParameter('gpuArray', []);
       p.parse(varargin{:});
 
       % Call base class for most handling
@@ -67,7 +68,8 @@ classdef GerchbergSaxton < otslm.iter.IterBase
           'visdata', p.Results.visdata, ...
           'invdata', p.Results.invdata, ...
           'objective', p.Results.objective, ...
-          'objective_type', p.Results.objective_type);
+          'objective_type', p.Results.objective_type, ...
+          'gpuArray', p.Results.gpuArray);
 
       % Store adaptive-adaptive factor
       mtd.adaptive = p.Results.adaptive;
@@ -92,8 +94,10 @@ classdef GerchbergSaxton < otslm.iter.IterBase
       % Return the latest guess
       result = mtd.guess;
 
-      % Evaluate the fitness
-      mtd.fitness(end+1) = mtd.evaluateFitness();
+      % Evaluate the fitness (optional for GS)
+      if ~isempty(mtd.objective)
+        mtd.fitness(end+1) = mtd.evaluateFitness();
+      end
 
     end
   end
