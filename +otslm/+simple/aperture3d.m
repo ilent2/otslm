@@ -10,6 +10,7 @@ function pattern = aperture3d(sz, dimension, varargin)
 %           'shell'     [r1, r2]    Ring specified by inner and outer radius
 %   'centre'      [x, y, z]   centre location for pattern
 %   'value'       [l, h]      values for off and on regions (default: [])
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -24,10 +25,17 @@ p = inputParser;
 p.addParameter('shape', 'sphere');
 p.addParameter('centre', [sz(2), sz(1), sz(3)]/2.0);
 p.addParameter('value', []);
+p.addParameter('gpuArray', false);
 p.parse(varargin{:});
 
+% Generate grid
+if p.Results.gpuArray
+  [xx, yy, zz] = meshgrid(gpuArray(1:sz(2)), gpuArray(1:sz(1)), gpuArray(1:sz(3)));
+else
+  [xx, yy, zz] = meshgrid(1:sz(2), 1:sz(1), 1:sz(3));
+end
+
 % Calculate grid
-[xx, yy, zz] = meshgrid(1:sz(2), 1:sz(1), 1:sz(3));
 xx = xx - 0.5 - p.Results.centre(1);
 yy = yy - 0.5 - p.Results.centre(2);
 zz = zz - 0.5 - p.Results.centre(3);

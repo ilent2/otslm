@@ -13,11 +13,13 @@ function [pattern, amplitude] = igmode(sz, even, modep, modem, elipticity, varar
 %
 % Optional named parameters:
 %
-%   'centre'    [ x, y ]    centre location (default: pattern centre)
-%   'scale'     scale       scaling factor for pattern
-%   'aspect'    aspect      aspect ratio for pattern
-%   'angle'     angle       rotation angle of pattern (radians)
-%   'angle_deg' angle       rotation angle of pattern (degrees)
+%   'scale'       scale       scaling factor for pattern
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % This function uses code from Miguel Bandres, see source code
 % for information about copyright/license/distribution.
@@ -26,7 +28,8 @@ function [pattern, amplitude] = igmode(sz, even, modep, modem, elipticity, varar
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
-warning('igmode may not produce clean output/needs work');
+warning('otslm:simple:igmode:work-in-progress', ...
+    'igmode may not produce clean output/needs work');
 
 % Check inputs
 assert(even == true || even == false, 'e (even) must be true or false');
@@ -35,17 +38,13 @@ assert(modem <= modep && modem >= 0 && ...
 assert(modep >= 0 && floor(modep) == modep, 'p must be positive integer');
 
 p = inputParser;
-p.addParameter('centre', [sz(2)/2, sz(1)/2]);
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
+p = addGridParameters(p, sz, 'skip', 'type');
 p.addParameter('scale', sqrt(sz(1)^2 +sz(2)^2)/2);
 p.parse(varargin{:});
 
 % Generate coordinates
-[xx, yy] = otslm.simple.grid(sz, ...
-    'centre', p.Results.centre, 'aspect', p.Results.aspect, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[xx, yy] = otslm.simple.grid(sz, gridParameters{:});
 
 % Apply scaling to the coordinates
 xx = xx ./ p.Results.scale;
@@ -83,7 +82,10 @@ amplitudeE = amplitudeE .* exp(-(xE.^2 + yE.^2));
 S = warning('off', 'MATLAB:scatteredInterpolant:DupPtsAvValuesWarnId');
 F = scatteredInterpolant(xE(:), yE(:), amplitudeE(:));
 warning(S);
-amplitude = F(xx, yy);
+amplitude = F(cast(xx, 'like', 1), cast(yy, 'like', 1));
+
+% TODO: This does pretty much everything on the CPU...
+amplitude = cast(amplitude, 'like', xx);
 
 % Normalize amplitude maximum value
 amplitude = amplitude ./ max(abs(amplitude(:)));

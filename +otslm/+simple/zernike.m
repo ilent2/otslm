@@ -6,25 +6,24 @@ function pattern = zernike(sz, m, n, varargin)
 %
 % Optional named parameters:
 %
-%   'centre'      [x, y]      centre location for lens
 %   'scale'       scale       scaling value for the final pattern
 %   'rscale'      rscale      radius scaling factor (default: min(sz)/2)
+%   'outside'     val         Value to use for outside points (default: 0)
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'outside'     val         Value to use for outside points (default: 0)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 p = inputParser;
-p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
+p = addGridParameters(p, sz, 'skip', 'type');
 p.addParameter('scale', 1.0);
 p.addParameter('rscale', min(sz(1), sz(2)/2));
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
 p.addParameter('outside', 0.0);
 p.parse(varargin{:});
 
@@ -33,16 +32,15 @@ assert(floor(n) == n, 'n must be an integer');
 assert(floor(m) == m, 'm must be an integer');
 
 % Calculate radial coordinates
-[~, ~, rho, phi] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
-    'type', '2d', 'aspect', p.Results.aspect, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[~, ~, rho, phi] = otslm.simple.grid(sz, gridParameters{:}, 'type', '2d');
 
 % Scale rho and selection region of interest
 rho = rho ./ p.Results.rscale;
 roi = rho <= 1.0;
 
 % Generate pattern
-pattern = zeros(sz);
+pattern = zeros(sz, 'like', rho);
 
 % Calculate pattern
 

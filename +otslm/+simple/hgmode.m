@@ -9,11 +9,13 @@ function [pattern, amplitude] = hgmode(sz, xmode, ymode, varargin)
 %
 % Optional named parameters:
 %
-%   'centre'    [ x, y ]    centre location (default: pattern centre)
-%   'scale'     scale       scaling factor for pattern
-%   'aspect'    aspect      aspect ratio for pattern
-%   'angle'     angle       rotation angle of pattern (radians)
-%   'angle_deg' angle       rotation angle of pattern (degrees)
+%   'scale'       scale       scaling factor for pattern
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -25,17 +27,13 @@ assert(floor(xmode) == xmode, 'xmode must be integer');
 assert(floor(ymode) == ymode, 'ymode must be integer');
 
 p = inputParser;
-p.addParameter('centre', [sz(2)/2, sz(1)/2]);
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
+p = addGridParameters(p, sz, 'skip', 'type');
 p.addParameter('scale', sqrt(sz(1)^2 +sz(2)^2)/(2*max(xmode, ymode)));
 p.parse(varargin{:});
 
 % Generate coordinates
-[xx, yy] = otslm.simple.grid(sz, ...
-    'centre', p.Results.centre, 'aspect', p.Results.aspect, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[xx, yy] = otslm.simple.grid(sz, gridParameters{:});
 
 % Apply scaling to the coordinates
 xx = xx ./ p.Results.scale;
@@ -46,10 +44,10 @@ yy = yy ./ p.Results.scale;
 xr = linspace(min(xx(:)), max(xx(:)), ceil(sqrt(sz(2)^2 + sz(1)^2)));
 yr = linspace(min(yy(:)), max(yy(:)), ceil(sqrt(sz(2)^2 + sz(1)^2)));
 
-hx = hermiteH(xmode, xr);
-hy = hermiteH(ymode, yr);
+hx = hermiteH(xmode, cast(xr, 'like', 1));
+hy = hermiteH(ymode, cast(yr, 'like', 1));
 
-pattern = ones(sz);
+pattern = ones(sz, 'like', xx);
 
 for ii = 2:length(xr)
   idx = xx >= xr(ii-1) & xx < xr(ii);

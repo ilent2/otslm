@@ -7,30 +7,27 @@ function [pattern] = cubic(sz, varargin)
 %
 % Optional named parameters:
 %
+%   'scale'       scale       Scaling factor for pattern.
 %   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
 %   'type'        type        is the lens cylindrical or spherical (1d or 2d)
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'scale'       scale       Scaling factor for pattern.
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 p = inputParser;
-p.addParameter('type', '2d');
+p = addGridParameters(p, sz);
 p.addParameter('scale', 3.0/min(sz));
-p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
 p.parse(varargin{:});
 
 % Calculate coordinates
-[xx, yy] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
-    'aspect', p.Results.aspect, 'angle', p.Results.angle, ...
-    'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[xx, yy] = otslm.simple.grid(sz, gridParameters{:});
 
 % Generate pattern
 if strcmpi(p.Results.type, '1d')

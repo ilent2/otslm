@@ -9,11 +9,14 @@ function [pattern, amplitude] = bessel(sz, mode, varargin)
 %
 % Optional named parameters:
 %
-%   'centre'    [ x, y ]    centre location (default: pattern centre)
 %   'scale'     scale       scaling factor for pattern
-%   'aspect'    aspect      aspect ratio for pattern
-%   'angle'     angle       rotation angle of pattern (radians)
-%   'angle_deg' angle       rotation angle of pattern (degrees)
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
+%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
+%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
+%   'angle'       angle       Rotation angle about axis (radians)
+%   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -22,17 +25,13 @@ function [pattern, amplitude] = bessel(sz, mode, varargin)
 assert(floor(mode) == mode, 'mode must be integer');
 
 p = inputParser;
-p.addParameter('centre', [sz(2)/2, sz(1)/2]);
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
+p = addGridParameters(p, sz);
 p.addParameter('scale', sqrt(sz(1)^2 + sz(2)^2)/100);
 p.parse(varargin{:});
 
 % Generate coordinates
-[~, ~, rr, phi] = otslm.simple.grid(sz, ...
-    'centre', p.Results.centre, 'aspect', p.Results.aspect, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[~, ~, rr, phi] = otslm.simple.grid(sz, gridParameters{:});
 
 % Apply scaling to the coordinates
 rr = rr ./ p.Results.scale;

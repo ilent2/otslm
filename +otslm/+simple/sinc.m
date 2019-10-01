@@ -6,32 +6,29 @@ function pattern = sinc(sz, radius, varargin)
 %
 % Optional named parameters:
 %
-%   'centre'      [x, y]      centre location for lens
 %   'type'        type        the type of sinc pattern to generate
 %       '1d'      one dimensional
 %       '2d'      circular coordinates
 %       '2dcart'  multiple of two sinc functions at 90 degree angle
 %           supports two radius values: radius = [ Rx, Ry ].
+%   'centre'      [x, y]      centre location for lens
+%   'offset'      [x, y]      offset after applying transformations
 %   'aspect'      aspect      aspect ratio of lens (default: 1.0)
 %   'angle'       angle       Rotation angle about axis (radians)
 %   'angle_deg'   angle       Rotation angle about axis (degrees)
+%   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 p = inputParser;
-p.addParameter('centre', [ sz(2)/2, sz(1)/2 ]);
-p.addParameter('type', '2d');
-p.addParameter('aspect', 1.0);
-p.addParameter('angle', []);
-p.addParameter('angle_deg', []);
+p = addGridParameters(p, sz);
 p.parse(varargin{:});
 
 % Calculate radial coordinates
-[xx, yy, rr] = otslm.simple.grid(sz, 'centre', p.Results.centre, ...
-    'type', p.Results.type(1:2), 'aspect', p.Results.aspect, ...
-    'angle', p.Results.angle, 'angle_deg', p.Results.angle_deg);
+gridParameters = expandGridParameters(p);
+[xx, yy, rr] = otslm.simple.grid(sz, gridParameters{:});
 
 % Generate pattern
 if strcmpi(p.Results.type, '1d')

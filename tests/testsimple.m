@@ -143,6 +143,12 @@ function testSinusoid(testCase)
   pattern = otslm.simple.sinusoid(sz, 100, 'type', '1d');
   pattern = otslm.simple.sinusoid(sz, 100, 'type', '2dcart');
   pattern = otslm.simple.sinusoid(sz, [100, 50], 'type', '2dcart');
+  
+  % Make sure the values are what the comments say they are
+  pattern = otslm.simple.sinusoid([1, 10], 100, 'type', '1d');
+  x = (1:10) - 10/2;
+  exactValue = 0.5 * sin(2*pi/100.*x) + 0.5;
+  testCase.verifyEqual(pattern, exactValue);
 end
 
 function testSinc(testCase)
@@ -196,6 +202,21 @@ function testAperture3d(testCase)
   pattern = otslm.simple.aperture3d(sz, radius, ...
     'shape', 'sphere', 'value', [0, 10]);
   testCase.verifyClass(pattern, 'double', 'wrong type (double)');
+  
+  % Cube
+  pattern = otslm.simple.aperture3d(sz, radius, ...
+    'shape', 'cube', 'value', []);
+  testCase.verifyClass(pattern, 'logical', 'wrong type (logical)');
+  
+  % Rect
+  pattern = otslm.simple.aperture3d(sz, [50, 40, 30], ...
+    'shape', 'rect', 'value', []);
+  testCase.verifyClass(pattern, 'logical', 'wrong type (logical)');
+  
+  % Shell
+  pattern = otslm.simple.aperture3d(sz, [40, 50], ...
+    'shape', 'shell', 'value', []);
+  testCase.verifyClass(pattern, 'logical', 'wrong type (logical)');
   
 end
 

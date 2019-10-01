@@ -52,7 +52,9 @@ rr2 = rr.^2;
 
 % Calculate pattern
 
-pattern = rr2 ./ ( radius .* ( 1 + sqrt(1 - (1 + kappa) .* rr2./radius^2)));
+% TODO: using sqrt(complex(...)) is more memory intensive than we need
+% it may cause problems on some GPUs, should we re-write it?
+pattern = rr2 ./ ( radius .* ( 1 + sqrt(complex(1 - (1 + kappa) .* rr2./radius^2))));
 
 for ii = 1:length(p.Results.alpha)
   pattern = pattern + p.Results.alpha(ii)*rr2^(ii+1);
@@ -68,9 +70,9 @@ imag_parts = imag(pattern) ~= 0;
 if isa(p.Results.background, 'char')
   switch p.Results.background
     case 'random'
-      background = otslm.simple.random(sz);
+      background = otslm.simple.random(sz, 'gpuArray', p.Results.gpuArray);
     case 'checkerboard'
-      background = otslm.simple.checkerboard(sz);
+      background = otslm.simple.checkerboard(sz, 'gpuArray', p.Results.gpuArray);
     otherwise
       error('Unknown background string');
   end
