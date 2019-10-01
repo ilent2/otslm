@@ -1,6 +1,4 @@
-% Example of more advanced beams (using iterative methods, 
-%
-% (figure 3 in otslm paper)
+% Example of more advanced beams
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -128,6 +126,8 @@ subplot(4, 4, 8);
 imagesc(visualize(pattern, 100));
 
 %% Binary amplitude LG beam
+% This is similar to Lerner et al., Opt. Lett.37 (23) 4826-4828 (2012) 
+% https://doi.org/10.1364/OL.37.004826
 
 dmdsz = [512, 1024];
 aspect = 2;
