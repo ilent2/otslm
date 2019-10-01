@@ -16,7 +16,7 @@ aspect = 2;
 
 % Generate the pattern
 pattern = otslm.simple.aperture(dmdsz, 200, ...
-    'aspect', aspect, 'type', 'circle');
+    'aspect', aspect, 'shape', 'circle');
 
 % Transform the pattern to dmd coordinates
 pattern = otslm.tools.finalize(pattern, 'device', 'dmd');

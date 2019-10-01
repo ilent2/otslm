@@ -157,7 +157,7 @@ for ii = 1:length(locations)
 
       % Mask the grating and place it in the pattern
       mask = otslm.simple.aperture(sz, radius, ...
-          'type', 'circle', 'centre', loc);
+          'shape', 'circle', 'centre', loc);
       pattern(mask) = linear(mask);
 
     case 'gaussian_dither'
@@ -200,7 +200,7 @@ for ii = 1:length(locations)
       
       % Use the masking method to add the region
       mask = otslm.simple.aperture(sz, 1.5*radius, ...
-          'type', 'circle', 'centre', loc);
+          'shape', 'circle', 'centre', loc);
       pattern(mask) = layer(mask);
       
     case 'gaussian_scale'
@@ -227,7 +227,7 @@ for ii = 1:length(locations)
           
         case 'step'
           mask = otslm.simple.aperture(sz, pa.Results.mixargs, ...
-              'type', 'circle', 'centre', loc);
+              'shape', 'circle', 'centre', loc);
           pattern(mask) = layer(mask);
         otherwise
           error('Unknown mix method for amplitude');

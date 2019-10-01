@@ -28,7 +28,7 @@ switch target_name
   case 'line'
     dimensions = [3, 10, 3]*0.5;
     target = otslm.simple.aperture3d(sz, dimensions, ...
-        'type', 'rect', 'value', [0,1]);
+        'shape', 'rect', 'value', [0,1]);
       
   case 'twobeams'
     % Generate a 2-D hologram with two spots

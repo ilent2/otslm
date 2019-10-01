@@ -95,7 +95,7 @@ imagesc(visualize(pattern, 20));
 
 %% Bessel beam
 
-pattern = otslm.simple.aperture(sz, [ 100, 110 ], 'type', 'ring');
+pattern = otslm.simple.aperture(sz, [ 100, 110 ], 'shape', 'ring');
 
 % Coorect for amplitude of beam
 pattern = pattern .* beamCorrection;
@@ -187,7 +187,7 @@ background = otslm.simple.checkerboard(sz);
 
 pattern = otslm.tools.mask_regions(background, ...
     {pattern1, pattern2, pattern3}, {loc1, loc2, loc3}, ...
-    {radius1, radius2, radius3}, 'type', 'circle');
+    {radius1, radius2, radius3}, 'shape', 'circle');
   
 pattern = otslm.tools.finalize(pattern);
 

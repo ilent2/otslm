@@ -18,7 +18,7 @@ function [target, trial] = roiAperture(target, trial, varargin)
 p = inputParser;
 p.addParameter('fftshift', false);
 p.addParameter('dimensions', min(size(target))/4);
-p.addParameter('type', 'circle');
+p.addParameter('shape', 'circle');
 p.addParameter('centre', size(target)/2.0);
 p.addParameter('offset', zeros(size(target)));
 p.addParameter('aspect', ones(1, numel(size(target))-1));
@@ -30,7 +30,7 @@ assert(all(size(target) == size(trial)), 'Trial and target must be same size');
 
 % Generate the ROI mask
 roi = otslm.simple.aperture(size(target), p.Results.dimensions, ...
-    'type', p.Results.type, 'centre', p.Results.centre, ...
+    'shape', p.Results.shape, 'centre', p.Results.centre, ...
     'offset', p.Results.offset, 'value', [false, true], ...
     'aspect', p.Results.aspect, 'angle_deg', p.Results.angle_deg, ...
     'angle', p.Results.angle);

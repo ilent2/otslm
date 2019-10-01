@@ -3,7 +3,7 @@ function pattern = aperture3d(sz, dimension, varargin)
 %
 %   pattern = aperture3d(sz, dimension, ...)
 %
-%   'type'    type      Type of aperture to generate. Supported types:
+%   'shape'    shape      Shape of aperture to generate. Supported types:
 %           'sphere'    [radius]    Pinhole/circular aperture
 %           'cube'      [width]     Square with equal sides
 %           'rect'      [w, h, d]   Rectangle with width and height
@@ -21,7 +21,7 @@ assert(isnumeric(sz) && numel(sz) == 3, ...
   'sz must be numeric with have 3 elements');
 
 p = inputParser;
-p.addParameter('type', 'sphere');
+p.addParameter('shape', 'sphere');
 p.addParameter('centre', [sz(2), sz(1), sz(3)]/2.0);
 p.addParameter('value', []);
 p.parse(varargin{:});
@@ -34,7 +34,7 @@ zz = zz - 0.5 - p.Results.centre(3);
 rr = sqrt(xx.^2 + yy.^2 + zz.^2);
 
 % Generate pattern
-switch p.Results.type
+switch p.Results.shape
   case 'sphere'
     assert(length(dimension) == 1, 'Sphere must have only one parameter');
     pattern = rr < dimension;
@@ -52,19 +52,9 @@ switch p.Results.type
     assert(length(dimension) == 2, 'Shell must have two parameters');
     pattern = rr > dimension(1) & rr < dimension(2);
   otherwise
-    error('Unknown shape type argument');
+    error('Unknown shape argument');
 end
 
 % Scale the pattern (convert from logical to double)
-if ~isempty(p.Results.value)
-  
-  assert(numel(p.Results.value) == 2, 'Length of value must be 2');
-  
-  high = p.Results.value(2);
-  low = p.Results.value(1);
-  pattern = pattern .* (high - low) + low;
-
-  % Ensure type of output matches low/high
-  pattern = cast(pattern, 'like', p.Results.value);
-end
+pattern = castValue(pattern, p.Results.value);
 

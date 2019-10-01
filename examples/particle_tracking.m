@@ -40,7 +40,7 @@ switch particle_type
 
     % Add a absorbing particle
     particle = otslm.simple.aperture(sz, r_particle, ...
-        'type', 'circle', 'centre', particle_centre);
+        'shape', 'circle', 'centre', particle_centre);
     image_fp = incident;
     image_fp(particle) = 0.0;
     
@@ -60,7 +60,7 @@ end
 
 %% Simulate spatial resolution loss of imaging system
 
-pinhole = otslm.simple.aperture(sz, r_pinhole, 'type', 'circle');
+pinhole = otslm.simple.aperture(sz, r_pinhole, 'shape', 'circle');
 image_slm = otslm.tools.spatial_filter(image_fp, pinhole, ...
     'padding', padding);
 
@@ -84,7 +84,7 @@ axis image;
 
 % Apply an angle to avoid numerical noise from fft
 grating = otslm.simple.linear(sz, 10, 'angle_deg', 45);
-slm_roi = otslm.simple.aperture(sz, r_slm, 'type', 'circle');
+slm_roi = otslm.simple.aperture(sz, r_slm, 'shape', 'circle');
 
 % TODO: try different ROI mask techniques (test sample_region.m)
 

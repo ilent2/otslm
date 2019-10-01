@@ -5,7 +5,7 @@ function pattern = mask_regions(base, patterns, locations, sizes, varargin)
 %
 % Optional named parameters:
 %
-%   'type'    type      Types of shapes to use for masking.
+%   'shape'    shape      Shape to use for masking.
 %       'circle'    [radius]    Use a circular aperture.
 %       'square'    [width]     Square with equal sides
 %       'rect'      [w, h]      Rectangle with width and height
@@ -15,27 +15,27 @@ function pattern = mask_regions(base, patterns, locations, sizes, varargin)
 % using/distributing this file.
 
 p = inputParser;
-p.addParameter('type', 'circle');
+p.addParameter('shape', 'circle');
 p.parse(varargin{:});
 
 assert(numel(patterns) == numel(locations), 'Not enough locations');
 assert(numel(patterns) == numel(sizes), 'Not enough sizes');
-assert(ischar(p.Results.type) || numel(p.Results.type) == numel(sizes), ...
-    'Type must be either single type or cell array of types for each size');
+assert(ischar(p.Results.shape) || numel(p.Results.shape) == numel(sizes), ...
+    'shape must be either single shape or cell array of shapes for each size');
 
 for ii = 1:length(patterns)
 
   pattern = patterns{ii};
   loc = locations{ii};
-  atype = p.Results.type;
+  atype = p.Results.shape;
   if iscell(atype)
-    atype = p.Results.type{ii};
+    atype = p.Results.shape{ii};
   end
   asize = sizes{ii};
 
   % Generate mask
   roi = otslm.simple.aperture(size(base), asize, ...
-      'type', atype, 'centre', loc);
+      'shape', atype, 'centre', loc);
 
   % Add pattern to base
   base(roi) = pattern(roi);
