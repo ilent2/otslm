@@ -18,6 +18,11 @@ function im = scan2d(slm, cam, varargin)
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+assert(isa(slm, 'otslm.utils.Showable') && isvalid(slm), ...
+  'slm must be a valid otslm.utils.Showable');
+assert(isa(cam, 'otslm.utils.Viewable') && isvalid(cam), ...
+  'cam must be a valid otslm.utils.Viewable');
+
 p = inputParser;
 p.addParameter('width', [10, 10]);
 p.addParameter('stride', [1, 1]);
