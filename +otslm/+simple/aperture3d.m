@@ -64,5 +64,5 @@ switch p.Results.shape
 end
 
 % Scale the pattern (convert from logical to double)
-pattern = castValue(pattern, p.Results.value);
+pattern = otslm.tools.castValue(pattern, p.Results.value);
 

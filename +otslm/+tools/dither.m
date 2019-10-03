@@ -13,6 +13,8 @@ function pattern = dither(pattern, level, varargin)
 %             'mdither'       Use matlab dither function
 %             'floyd'         Floyd-Steinberg algorithm
 %             'random'        Does random dithering
+%     'value'    [min, max]   Value range for output image
+%         (default: [] for logical images)
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -20,6 +22,7 @@ function pattern = dither(pattern, level, varargin)
 
 p = inputParser;
 p.addParameter('method', 'threshold');
+p.addParameter('value', []);
 p.parse(varargin{:});
 
 switch p.Results.method
@@ -84,3 +87,5 @@ switch p.Results.method
 
 end
 
+% Scale the pattern (convert from logical to double if required)
+pattern = otslm.tools.castValue(pattern, p.Results.value);
