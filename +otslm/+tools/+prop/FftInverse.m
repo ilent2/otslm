@@ -1,4 +1,4 @@
-classdef FftInverse < otslm.tools.prop.Propagator
+classdef FftInverse < otslm.tools.prop.FftBase
 %FFTINVERSE Propogate using inverse 2-D fast fourier transform
 %
 % Methods:
@@ -21,25 +21,6 @@ classdef FftInverse < otslm.tools.prop.Propagator
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-
-% TODO: Create FftBase class
-
-  properties (SetAccess=protected)
-    data         % Memory allocated for the transform
-    lens         % Lens function to add after transformation
-    padding      % Padding around image
-    size         % Size of images we can transform
-  end
-  
-  properties
-    % Region of interest in output image [XMIN YMIN WIDTH HEIGHT]
-    % This is applied at the end of the propogate method.  Default: [].
-    roi_output
-  end
-  
-  properties (Dependent)
-    roi          % Region of interest in data
-  end
   
   methods (Static)
     function [output, prop] = simple(pattern, varargin)
@@ -69,8 +50,8 @@ classdef FftInverse < otslm.tools.prop.Propagator
       p.addParameter('gpuArray', isa(pattern, 'gpuArray'));
       p.parse(varargin{:});
       
-      % Calculate lens (use FftForward lens so we are consistent)
-      lens = otslm.tools.prop.FftForward.calculateLens(...
+      % Calculate lens
+      lens = otslm.tools.prop.FftBase.calculateLens(...
         size(pattern)+2*p.Results.padding, ...
         p.Results.NA, p.Results.axial_offset);
       
@@ -78,7 +59,7 @@ classdef FftInverse < otslm.tools.prop.Propagator
       prop = otslm.tools.prop.FftInverse(size(pattern), ...
         'padding', p.Results.padding, ...
         'trim_padding', p.Results.trim_padding, ...
-        'lens', lens, ...
+        'lens', conj(lens), ...
         'gpuArray', p.Results.gpuArray);
       
       % Apply propagator
@@ -114,88 +95,21 @@ classdef FftInverse < otslm.tools.prop.Propagator
       %       and does the transform with the GPU instead of the CPU.
       %       Default: false.
       
-      p = inputParser;
-      p.addParameter('padding', ceil(sz/2));
-      p.addParameter('lens', []);
-      p.addParameter('trim_padding', false);
-      p.addParameter('gpuArray', false);
-      p.parse(varargin{:});
-      
-      assert(numel(sz) == 2, 'size must be a 2 element vector');
-      obj.size = sz;
-      
-      % Ensure padding has correct shape
-      obj.padding = p.Results.padding;
-      if numel(obj.padding) == 1
-        obj.padding = [obj.padding, obj.padding];
-      end
-      
-      % Calculat total image size
-      total_sz = obj.size + 2*obj.padding;
-      
-      % Check size of lens
-      assert(isempty(p.Results.lens) || all(total_sz == size(p.Results.lens)), ...
-        'Lens must have same size as sz + padding');
-      
-      % Allocate memory for transform and lens
-      if p.Results.gpuArray
-        obj.data = gpuArray.zeros(total_sz);
-        if ~isempty(p.Results.lens)
-          obj.lens = gpuArray(p.Results.lens);
-        else
-          obj.lens = [];
-        end
-      else
-        obj.data = zeros(total_sz);
-        obj.lens = p.Results.lens;
-      end
-      
-      % Set the output roi
-      if p.Results.trim_padding
-        obj.roi_output = obj.roi;
-      else
-        obj.roi_output = [];
-      end
+      obj = obj@otslm.tools.prop.FftBase(sz, varargin{:});
     end
-    
-    function output = propagate(obj, input, varargin)
-      % Propogate the input image
-      %
-      % output = propagate(input, ...) propogates the complex input
-      % image using the 2-D inverse FFT method.
-      
-      assert(all(size(input) == obj.size), ...
-        'input must match Propagator.size');
-      
-      % Copy input into padded array
-      obj.data(obj.roi(2)-1 + (1:obj.roi(4)), ...
-        obj.roi(1)-1 + (1:obj.roi(3))) = input;
+  end
+  
+  methods (Access=protected)
+    function output = propagate_internal(obj)
+      % Apply the inverse propagation method
       
       % Apply inverse fourier transform
       output = ifft2(fftshift(obj.data)).*numel(obj.data);
       
       % Apply lens
       if ~isempty(obj.lens)
-        output = output .* conj(obj.lens);
+        output = output .* obj.lens;
       end
-
-      % Remove padding if requested
-      if ~isempty(obj.roi_output)
-        output = output(obj.roi_output(2)-1 + (1:obj.roi_output(4)), ...
-            obj.roi_output(1)-1 + (1:obj.roi_output(3)));
-      end
-    end
-  
-    function roi = get.roi(obj)
-      % Return a rect for the ROI [XMIN YMIN WIDTH HEIGHT]
-      roi = [obj.padding+1, obj.size];
-    end
-    
-    function obj = set.roi_output(obj, val)
-      % Check size of output region of interest
-      assert(numel(val) == 4 || numel(val) == 0, ...
-        'output roi must be empty or have 4 values');
-      obj.roi_output = val;
     end
   end
 end
