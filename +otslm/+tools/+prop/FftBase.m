@@ -59,7 +59,7 @@ classdef (Abstract) FftBase < otslm.tools.prop.Propagator
   
   methods
     function obj = FftBase(sz, varargin)
-      %FFTFORWARD Construct a FFT propagator instance
+      %FFTBASE Construct a FFT 2-D propagator instance
       %
       % For description of arguments, see FftForward or FftInverse.
       
@@ -73,10 +73,16 @@ classdef (Abstract) FftBase < otslm.tools.prop.Propagator
       assert(numel(sz) == 2, 'size must be a 2 element vector');
       obj.size = sz;
       
-      % Ensure padding has correct shape
-      obj.padding = p.Results.padding;
-      if numel(obj.padding) == 1
-        obj.padding = [obj.padding, obj.padding];
+      % Parse padding argument
+      switch numel(p.Results.padding)
+        case 0
+          obj.padding = [0, 0];
+        case 1
+          obj.padding = [1, 1].*p.Results.padding;
+        case 2
+          obj.padding = p.Results.padding;
+        otherwise
+          error('Padding must be 0, 1 or 2 element vector');
       end
       
       % Calculat total image size
