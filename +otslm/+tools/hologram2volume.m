@@ -49,6 +49,9 @@ end
 
 % Calculate padding due to zsize
 zoffset = max((zsize - zsize_min)/2, 0);
+if ~isreal(zoffset)
+  zoffset = 0;
+end
 
 % Allocate memory for the volume
 volume = zeros([size(hologram), round(zsize)]);
@@ -92,7 +95,7 @@ for ii = 1:size(hologram, 2)
         zidx = round(zidx + 1);
 
         % If point within volume, assign it
-        if zidx <= size(volume, 3)
+        if zidx >= 1 && zidx <= size(volume, 3)
           volume(jj, ii, zidx) = real(value);
           volumeI(jj, ii, zidx) = imag(value);
         end
