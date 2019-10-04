@@ -63,6 +63,12 @@ function testGaussian(testCase)
   testCase.verifyClass(pattern, 'double', 'wrong type (double)');
 end
 
+function testGaussian3d(testCase)
+  sz = [128, 128, 128];
+  pattern = otslm.simple.gaussian3d(sz, 100);
+  testCase.verifyClass(pattern, 'double', 'wrong type (double)');
+end
+
 function testHgmode(testCase)
   sz = [512, 512];
   pattern = otslm.simple.hgmode(sz, 3, 2);
@@ -106,6 +112,12 @@ function testLinear(testCase)
   
 end
 
+function testLinear3d(testCase)
+  % Test single spacing
+  pattern = otslm.simple.linear3d([128, 128, 128], 10);
+  testCase.verifyClass(pattern, 'double', 'wrong type (double)');
+end
+
 function testGrid(testCase)
   sz = [20, 20];
   [xx, yy, rr, phi] = otslm.simple.grid(sz, 'angle', 0.1);
@@ -115,6 +127,17 @@ function testGrid(testCase)
   testCase.verifyClass(phi, 'double', 'phi invalid');
   
   
+end
+
+function testGrid3d(testCase)
+  sz = [20, 20, 20];
+  [xx, yy, zz, rr, theta, phi] = otslm.simple.grid3d(sz);
+  testCase.verifyClass(xx, 'double', 'xx invalid');
+  testCase.verifyClass(yy, 'double', 'yy invalid');
+  testCase.verifyClass(zz, 'double', 'zz invalid');
+  testCase.verifyClass(rr, 'double', 'rr invalid');
+  testCase.verifyClass(theta, 'double', 'theta invalid');
+  testCase.verifyClass(phi, 'double', 'phi invalid');
 end
 
 function testCubic(testCase)

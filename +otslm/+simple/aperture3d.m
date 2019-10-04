@@ -8,8 +8,8 @@ function pattern = aperture3d(sz, dimension, varargin)
 %           'cube'      [width]     Square with equal sides
 %           'rect'      [w, h, d]   Rectangle with width and height
 %           'shell'     [r1, r2]    Ring specified by inner and outer radius
-%   'centre'      [x, y, z]   centre location for pattern
 %   'value'       [l, h]      values for off and on regions (default: [])
+%   'centre'      [x, y, z]   centre location for pattern
 %   'gpuArray'    bool        If the result should be a gpuArray
 %
 % Copyright 2018 Isaac Lenton
@@ -23,23 +23,14 @@ assert(isnumeric(sz) && numel(sz) == 3, ...
 
 p = inputParser;
 p.addParameter('shape', 'sphere');
-p.addParameter('centre', [sz(2), sz(1), sz(3)]/2.0);
 p.addParameter('value', []);
+p.addParameter('centre', [sz(2), sz(1), sz(3)]/2.0);
 p.addParameter('gpuArray', false);
 p.parse(varargin{:});
 
-% Generate grid
-if p.Results.gpuArray
-  [xx, yy, zz] = meshgrid(gpuArray(1:sz(2)), gpuArray(1:sz(1)), gpuArray(1:sz(3)));
-else
-  [xx, yy, zz] = meshgrid(1:sz(2), 1:sz(1), 1:sz(3));
-end
-
-% Calculate grid
-xx = xx - 0.5 - p.Results.centre(1);
-yy = yy - 0.5 - p.Results.centre(2);
-zz = zz - 0.5 - p.Results.centre(3);
-rr = sqrt(xx.^2 + yy.^2 + zz.^2);
+% Calculate coordinates
+gridParameters = expandGrid3dParameters(p);
+[xx, yy, zz, rr] = otslm.simple.grid3d(sz, gridParameters{:});
 
 % Generate pattern
 switch p.Results.shape
