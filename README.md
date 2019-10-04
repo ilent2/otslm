@@ -71,6 +71,7 @@ Some functionality requires the following dependencies:
     * Instrument Control Toolbox
     * Parallel Computing Toolbox
     * Image Acquisition Toolbox
+* Matlab MEX compatible C++ compiler
 
 License
 -------
