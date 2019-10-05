@@ -64,28 +64,32 @@ for ii = 1:size(hologram, 2)
       if p.Results.interpolate
 
         % Interpolate between neighbouring pixels
-        zidx_low = floor(zidx + 1) + p.Results.padding;
-        zidx_high = ceil(zidx + 1) + p.Results.padding;
+        zidx_low = floor(zidx + 0.5) + p.Results.padding;
+        zidx_high = ceil(zidx + 0.5) + p.Results.padding;
         
         if p.Results.use_weight
           weight = mod(zidx, 1);
 
-          if zidx_high <= size(volume, 3)
+          if zidx_low >= 1 && zidx_high <= size(volume, 3)
             value = weight*volume(jj, ii, zidx_low);
             value = value + (1.0-weight)*volume(jj, ii, zidx_high);
-          elseif zidx_low <= size(volume, 3)
+          elseif zidx_low >= 1 && zidx_low <= size(volume, 3)
             value = volume(jj, ii, zidx_low);
+          elseif zidx_high >= 1 && zidx_high <= size(volume, 3)
+            value = volume(jj, ii, zidx_high);
           end
         else
-          if zidx_high <= size(volume, 3)
+          if zidx_low >= 1 && zidx_high <= size(volume, 3)
             value = volume(jj, ii, zidx_low);
             value = value + volume(jj, ii, zidx_high);
-          elseif zidx_low <= size(volume, 3)
+          elseif zidx_low >= 1 && zidx_low <= size(volume, 3)
             value = volume(jj, ii, zidx_low);
+          elseif zidx_high >= 1 && zidx_high <= size(volume, 3)
+            value = volume(jj, ii, zidx_high);
           end
         end
       else
-        zidx = round(zidx + 1) + p.Results.padding;
+        zidx = round(zidx + 0.5) + p.Results.padding;
 
         % If point within volume, assign it
         if zidx >= 1 && zidx <= size(volume, 3)

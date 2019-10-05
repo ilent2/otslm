@@ -64,16 +64,17 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
         focal_length = diameter./tan(asin(p.Results.NA)).*2;
       elseif isempty(focal_length)
         zsize = size(pattern, 3);
+        
+        % This method seems to work better if we add a extra padding layer
+        zsize = zsize - 2;
+      
         focal_length = ((diameter/2).^2 + zsize.^2)/(2*zsize);
       end
-      
-      % This method seems to work better if we add a extra padding layer
-      buffer = 2;
       
       % Construct propagator
       prop = otslm.tools.prop.FftEwaldInverse(size(pattern), ...
         'interpolate', p.Results.interpolate, ...
-        'focal_length', focal_length+buffer, ...
+        'focal_length', focal_length, ...
         'padding', p.Results.padding, ...
         'trim_padding', p.Results.trim_padding, ...
         'gpuArray', p.Results.gpuArray);
@@ -139,8 +140,8 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
         'input must match Propagator.size');
       
       % Apply inverse fft with base
-      output = propagate@otslm.tools.prop.Fft3Inverse(...
-          obj, input, varargin{:});
+%       output = propagate@otslm.tools.prop.Fft3Inverse(...
+%           obj, input, varargin{:});
       
       % Inverse map volume Ewald sphere to image
       % TODO: We could do this more efficiently by calculating
@@ -148,11 +149,30 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
 %       output = otslm.tools.volume2hologram(output, ...
 %         'focal_length', obj.focal_length, ...
 %         'padding', 0, 'interpolate', obj.interpolate);
+        
+
+      % The above didn't seem to work very well, the following
+      % works well for simple tests but is is probably fragile
+      % and may not give the correct results in some cases.
+      
+      % Copy input into padded array
+      obj.data(obj.roi(2)-1 + (1:obj.roi(5)), ...
+        obj.roi(1)-1 + (1:obj.roi(4)), ...
+        obj.roi(3)-1 + (1:obj.roi(6))) = input;
+      
+      output = obj.propagate_internal();
 
       % Seems there can be a lot of bluring, this seems to work
       % better at least on the forward-inverse test
       % TODO: What is the best choice?
-      output = sum(output(:, :, 1:end/2), 3);
+%       output = sum(output(:, :, 1:end/2), 3);
+      output = sum(output, 3);
+      
+      % Remove padding if requested
+      if ~isempty(obj.roi_output)
+        output = output(obj.roi_output(2)-1 + (1:obj.roi_output(5)), ...
+            obj.roi_output(1)-1 + (1:obj.roi_output(4)));
+      end
 
     end
   end

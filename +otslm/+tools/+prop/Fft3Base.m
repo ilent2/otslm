@@ -43,6 +43,8 @@ classdef (Abstract) Fft3Base < otslm.tools.prop.Propagator
       p.parse(varargin{:});
       
       assert(numel(sz) == 3, 'size must be a 3 element vector');
+      assert(all(round(sz) == sz), 'size must be integers');
+      assert(all(sz >= 1), 'size must be positive numbers');
       obj.size = sz;
       
       % Parse padding argument

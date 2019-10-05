@@ -59,6 +59,7 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
       %       Default: isa(pattern, 'gpuArray')
       
       p = inputParser;
+      p.KeepUnmatched = true;
       p.addParameter('diameter', min(size(pattern)));
       p.addParameter('zsize', []);
       p.addParameter('focal_length', []);
@@ -68,6 +69,8 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
       p.addParameter('trim_padding', true);
       p.addParameter('gpuArray', isa(pattern, 'gpuArray'));
       p.parse(varargin{:});
+      
+      assert(ismatrix(pattern), 'Pattern must be 2-D matrix');
       
       % Get the default diameter of the lens
       diameter = p.Results.diameter;
@@ -86,11 +89,14 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
       zsize_min = focal_length - sqrt(focal_length.^2 - (diameter/2).^2);
       zsize = p.Results.zsize;
       if isempty(zsize)
-        zsize = zsize_min;
+        zsize = ceil(zsize_min);
       end
       
       % Assemble volume size
       sz = [size(pattern), zsize];
+      
+      % This method seems to work better if we add a extra padding layer
+      sz(3) = sz(3) + 2;
       
       % Handle default padding valid
       padding = p.Results.padding;
@@ -98,12 +104,12 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
         padding = ceil(sz/2);
       end
       
-      % This method seems to work better if we add a extra padding layer
-      buffer = 2;
+      % Pass through unmatched parameters
+      unmatched = [fieldnames(p.Unmatched).'; struct2cell(p.Unmatched).'];
       
       % Construct propagator
-      prop = otslm.tools.prop.FftEwaldForward(sz, ...
-        'focal_length', focal_length+buffer, ...
+      prop = otslm.tools.prop.FftEwaldForward(sz, unmatched{:}, ...
+        'focal_length', focal_length, ...
         'interpolate', p.Results.interpolate, ...
         'padding', padding, ...
         'trim_padding', p.Results.trim_padding, ...

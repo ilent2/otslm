@@ -20,6 +20,10 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
+
+  properties
+    convfilt      % If ~isempty, specifies a convolutional filter matrix
+  end
   
   methods (Static)
     
@@ -78,7 +82,17 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
       %       and does the transform with the GPU instead of the CPU.
       %       Default: false.
       
-      obj = obj@otslm.tools.prop.Fft3Base(sz, varargin{:});
+      p = inputParser;
+      p.KeepUnmatched = true;
+      p.addParameter('convfilt', []);
+      p.parse(varargin{:});
+      
+      % Construct base
+      unmatched = [fieldnames(p.Unmatched).'; struct2cell(p.Unmatched).'];
+      obj = obj@otslm.tools.prop.Fft3Base(sz, unmatched{:});
+      
+      % Store our parameters
+      obj.convfilt = p.Results.convfilt;
     end
   end
   
@@ -86,8 +100,15 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
     function output = propagate_internal(obj)
       % Apply the forward propagation method
       
+      % Apply Gaussian filter to remove high frequency noise
+      if ~isempty(obj.convfilt)
+        output = convn(obj.data, obj.convfilt, 'same');
+      else
+        output = obj.data;
+      end
+      
       % Transform to the focal plane (missing scaling factor)
-      output = fftshift(fftn(obj.data))./numel(obj.data);
+      output = fftshift(fftn(output))./numel(output);
     end
   end
 end
