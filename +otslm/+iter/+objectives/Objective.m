@@ -18,6 +18,7 @@ classdef (Abstract) Objective
   properties
     target        % Target pattern to compare with (or [] for no default)
     roi           % Region of interest to apply to target and trial
+    type          % Type of optimisation function ('min' or 'max')
   end
 
   methods
@@ -44,6 +45,7 @@ classdef (Abstract) Objective
       
       obj.roi = p.Results.roi;
       obj.target = p.Results.target;
+      obj.type = 'min';
     end
     
     function fitness = evaluate(obj, trial, target)

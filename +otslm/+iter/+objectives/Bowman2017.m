@@ -7,7 +7,7 @@ classdef Bowman2017 < otslm.iter.objectives.Objective
 %
 % Properties:
 %    scale      `d` scaling factor in cost function
-%    type       'both', 'phase', or 'amplitude' for optimisation type
+%    field      'complex', 'phase', or 'amplitude' for optimisation type
 %    normalize  Normalize target/trial every evaluation
 %
 % Copyright 2019 Isaac Lenton
@@ -16,7 +16,7 @@ classdef Bowman2017 < otslm.iter.objectives.Objective
 
   properties
   	scale      % `d` scaling factor in cost function
-    type       % 'both', 'phase', or 'amplitude' for optimisation type
+    field      % 'complex', 'phase', or 'amplitude' for optimisation type
     normalize  % Normalize target/trial every evaluation
   end
 
@@ -30,8 +30,8 @@ classdef Bowman2017 < otslm.iter.objectives.Objective
       %   scale   num   `d` scaling factor in cost function.
       %       Default: 0.5
       %
-      %   type    [char]   One of 'both', 'phase', or 'amplitude'
-      %       for optimisation type.  Default: 'both'.
+      %   field    [char]   One of 'complex', 'phase', or 'amplitude'
+      %       for optimisation type.  Default: 'complex'.
       %
       %   normalize   bool    Normalize target/trial every
       %       evaluation.  Default: true.
@@ -48,7 +48,7 @@ classdef Bowman2017 < otslm.iter.objectives.Objective
       
       p = inputParser;
       p.KeepUnmatched = true;
-      p.addParameter('type', 'both');
+      p.addParameter('field', 'complex');
       p.addParameter('normalize', true);
       p.addParameter('scale', 0.5);
       p.parse(varargin{:});
@@ -58,14 +58,14 @@ classdef Bowman2017 < otslm.iter.objectives.Objective
       
       obj.scale = p.Results.scale;
       obj.normalize = p.Results.normalize;
-      obj.type = p.Results.type;
+      obj.field = p.Results.field;
     end
     
-    function obj = set.type(obj, value)
+    function obj = set.field(obj, value)
       % Check for valid type
-      assert(any(strcmpi(value, {'both', 'phase', 'amplitude'})), ...
-        'type must be one of ''both'', ''phase'' or ''amplitude''');
-      obj.type = value;
+      assert(any(strcmpi(value, {'complex', 'phase', 'amplitude'})), ...
+        'field must be one of ''both'', ''phase'' or ''amplitude''');
+      obj.field = value;
     end
   end
   
@@ -84,7 +84,7 @@ classdef Bowman2017 < otslm.iter.objectives.Objective
       I = abs(trial).^2;
 
       % Switch between the different types
-      switch obj.type
+      switch obj.field
         case 'amplitude'
           % Throw away phase information
           phi = zeros(size(phi));
