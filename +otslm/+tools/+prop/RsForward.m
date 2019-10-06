@@ -31,7 +31,7 @@ classdef RsForward < otslm.tools.prop.Propagator
   
   methods (Static)
     
-    function prop = simpleProp(pattern, varargin)
+    function prop = simpleProp(pattern, distance, varargin)
       % Generate the propagator for the specified pattern.
       %
       % prop = simpleProp(pattern, ...) construct a new propagator.

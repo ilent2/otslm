@@ -89,13 +89,13 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
       zsize = p.Results.zsize;
       if isempty(zsize)
         zsize = ceil(zsize_min);
+      
+        % This method seems to work better if we add a extra padding layer
+        zsize = zsize + 2;
       end
       
       % Assemble volume size
       sz = [size(pattern), zsize];
-      
-      % This method seems to work better if we add a extra padding layer
-      sz(3) = sz(3) + 2;
       
       % Handle default padding valid
       padding = p.Results.padding;
