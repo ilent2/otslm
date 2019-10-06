@@ -41,7 +41,7 @@ focallength = p.Results.focal_length;
 zsize_min = focallength - sqrt(focallength.^2 - (xsize/2).^2);
 zsize = p.Results.zsize;
 if isempty(zsize)
-  zsize = zsize_min;
+  zsize = ceil(zsize_min);
 elseif zsize < zsize_min
   warning('otslm:tools:hologram2volume:zsize_small', ...
     'Part of lens is not captured by volume size');
@@ -49,9 +49,12 @@ end
 
 % Calculate padding due to zsize
 zoffset = max((zsize - zsize_min)/2, 0);
+if ~isreal(zoffset)
+  zoffset = 0;
+end
 
 % Allocate memory for the volume
-volume = zeros([size(hologram), round(zsize)]);
+volume = zeros([size(hologram), zsize]);
 
 % Compute the real an imaginary parts separately (optimisation, R2018a)
 volumeI = volume;
@@ -75,24 +78,27 @@ for ii = 1:size(hologram, 2)
       if p.Results.interpolate
 
         % Interpolate between neighbouring pixels
-        zidx_low = floor(zidx + 1);
-        zidx_high = ceil(zidx + 1);
+        zidx_low = floor(zidx + 0.5);
+        zidx_high = ceil(zidx + 0.5);
         weight = mod(zidx, 1);
 
-        if zidx_high <= size(volume, 3)
+        if zidx_low >= 1 && zidx_high <= size(volume, 3)
           volume(jj, ii, zidx_low) = weight*real(value);
           volume(jj, ii, zidx_high) = (1.0-weight)*real(value);
           volumeI(jj, ii, zidx_low) = weight*imag(value);
           volumeI(jj, ii, zidx_high) = (1.0-weight)*imag(value);
-        elseif zidx_low <= size(volume, 3)
+        elseif zidx_low >= 1 && zidx_low <= size(volume, 3)
           volume(jj, ii, zidx_low) = real(value);
           volumeI(jj, ii, zidx_low) = imag(value);
+        elseif zidx_high >= 1 && zidx_high <= size(volume, 3)
+          volume(jj, ii, zidx_high) = real(value);
+          volumeI(jj, ii, zidx_high) = imag(value);
         end
       else
-        zidx = round(zidx + 1);
+        zidx = round(zidx + 0.5);
 
         % If point within volume, assign it
-        if zidx <= size(volume, 3)
+        if zidx >= 1 && zidx <= size(volume, 3)
           volume(jj, ii, zidx) = real(value);
           volumeI(jj, ii, zidx) = imag(value);
         end

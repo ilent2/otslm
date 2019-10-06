@@ -37,6 +37,8 @@ function varargout = visualise(phase, varargin)
 %       is an offset from the focal plane.  For rs/rslens, this is the
 %       distance along the beam axis.
 %   'padding'   p         Add padding to the outside of the image.
+%       Default: ceil(size(phase)/2)
+%
 %   'trim_padding', bool  Trim padding before returning result (default: 0)
 %   NA          num       Numerical aparture of the lens (default: 0.1)
 %   resample    num       Number of samples per each pixel
@@ -51,7 +53,7 @@ p.addParameter('type', 'farfield');
 p.addParameter('amplitude', []);
 p.addParameter('incident', []);
 p.addParameter('z', 0.0);
-p.addParameter('padding', 100);
+p.addParameter('padding', ceil(size(phase)/2));
 p.addParameter('trim_padding', false);
 p.addParameter('methoddata', []);
 p.addParameter('NA', 0.1);
@@ -91,13 +93,55 @@ end
 
 switch p.Results.method
   case 'fft'
-    varargout{1} = fft_method(U, p);
+    if strcmpi(p.Results.type, 'farfield')
+      [varargout{1:nargout}] = otslm.tools.prop.FftForward.simple(U, ...
+        'trim_padding', p.Results.trim_padding, 'padding', p.Results.padding, ...
+        'NA', p.Results.NA, 'axial_offset', p.Results.z);
+    elseif strcmpi(p.Results.type, 'nearfield')
+      [varargout{1:nargout}] = otslm.tools.prop.FftInverse.simple(U, ...
+        'trim_padding', p.Results.trim_padding, 'padding', p.Results.padding, ...
+        'NA', p.Results.NA, 'axial_offset', p.Results.z);
+    else
+      error(['Invalid visualisation type: ', p.Results.type]);
+    end
+    
   case 'fft3'
-    varargout{1} = fft3_method(U, p);
+    if strcmpi(p.Results.type, 'farfield')
+      if ismatrix(U)
+        [varargout{1:nargout}] = otslm.tools.prop.FftEwaldForward.simple(U, ...
+          'trim_padding', p.Results.trim_padding, 'padding', p.Results.padding, ...
+          'NA', p.Results.NA);
+      else
+        [varargout{1:nargout}] = otslm.tools.prop.Fft3Forward.simple(U, ...
+          'trim_padding', p.Results.trim_padding, 'padding', p.Results.padding);
+      end
+    elseif strcmpi(p.Results.type, 'nearfield-surface')
+      [varargout{1:nargout}] = otslm.tools.prop.FftEwaldInverse.simple(U, ...
+        'trim_padding', p.Results.trim_padding, 'padding', p.Results.padding, ...
+        'NA', p.Results.NA);
+    elseif strcmpi(p.Results.type, 'nearfield-volume')
+      [varargout{1:nargout}] = otslm.tools.prop.Fft3Inverse.simple(U, ...
+        'trim_padding', p.Results.trim_padding, 'padding', p.Results.padding);
+    else
+      error(['Invalid visualisation type: ', p.Results.type]);
+    end
+    
   case 'ott'
-    [varargout{1:nargout}] = ott_method(U, p);
+    if strcmpi(p.Results.type, 'farfield')
+      [varargout{1:nargout}] = otslm.tools.prop.Ott2Forward.simple(U, ...
+        'beam_data', p.Results.methoddata, 'NA', p.Results.NA, 'index_medium', 1.0, ...
+        'offset', p.Results.z, 'axis', p.Results.axis, 'field', 'irradiance');
+    else
+      error(['Invalid visualisation type: ', p.Results.type]);
+    end
+    
   case 'rs'
-    [varargout{1:nargout}] = rs_method(U, p);
+    if strcmpi(p.Results.type, 'farfield')
+      [varargout{1:nargout}] = otslm.tools.prop.RsForward.simple(U, p.Results.z);
+    else
+      error(['Invalid visualisation type: ', p.Results.type]);
+    end
+    
   case 'rslens'
     wavelength_per_pixel = 20;
     Uatlens = otslm.tools.visualise(U, ...
@@ -106,73 +150,11 @@ switch p.Results.method
     Uafterlens = Uatlens .* exp(1i*2*pi*lensphase);
     varargout{1} = otslm.tools.visualise(Uafterlens, ...
         'z', p.Results.z, 'method', 'rs');
+      
   otherwise
     error('Unknown method');
 end
 
-end
-
-function output = fft_method(U, p)
-% z should be dimensionless, multiplied by a factor of 2pi/lambda
-
-  axis = p.Results.axis;
-  if ~strcmpi(axis, 'z')
-    error('Only z-axis supported for now with fft');
-  end
-
-  z = p.Results.z;
-  padding = p.Results.padding;
-  if numel(padding) == 1
-    padding = [padding, padding];
-  end
-
-  % Apply padding to the image
-  U = padarray(U, padding, 0);
-  
-  % Set rscale from inputs, this is determined by the
-  % focal length/numerical aparture of the lens (for z-shift)
-  rscale = 1.0./p.Results.NA;
-
-  if strcmpi(p.Results.type, 'farfield')
-
-    % This is expensive, only do it if we have to
-    if z ~= 0
-      lens = otslm.simple.spherical(size(U), ...
-          rscale*sqrt(sum((size(U)/2).^2)), ...
-          'background', 'checkerboard');
-
-      % Apply z-shift using a lens in the far-field
-      U = U .* exp(-1i*z*lens);
-    end
-
-    % Transform to the focal plane (missing scaling factor)
-    output = fftshift(fft2(U))./numel(U);
-
-  elseif strcmpi(p.Results.type, 'nearfield')
-
-    % Calculate pattern at DOE
-    output = ifft2(fftshift(U));
-    
-    lens = otslm.simple.spherical(size(output), ...
-        rscale*sqrt(sum((size(output)/2).^2)), ...
-        'background', 'checkerboard');
-    
-    % Remove the z-shift using a negative lens in far-field
-    output = output .* exp(1i*z*lens);
-
-  end
-
-  % Remove padding if requested
-  if p.Results.trim_padding
-
-    % Hmm, we could also resample at the original resolution
-
-    szOutput = size(output);
-    opadding = floor(szOutput/4);
-
-    output = output(opadding(1)+1:end-opadding(1), ...
-        opadding(2)+1:end-opadding(2));
-  end
 end
 
 function output = fft3_method(U, p)
@@ -228,44 +210,5 @@ function output = fft3_method(U, p)
 
 end
 
-function [output, beam] = ott_method(U, p)
-% Calculate the irradiance, does not calculate phase
 
-  % Generate the beam if not supplied
-  beam = p.Results.methoddata;
-  if isempty(beam)
-    beam = otslm.tools.hologram2bsc(U, ...
-        'NA', p.Results.NA, 'index_medium', 1.0);
-  end
-
-  % Calculate the irradiance
-  output = beam.visualise('offset', p.Results.z, ...
-      'axis', p.Results.axis, 'field', 'irradiance', ...
-      'size', round(size(U)/5));
-end
-
-function [output] = rs_method(U, p)
-
-  scale = 1;                % Number of pixels in output
-  uscale = 1;               % Upscaling of input input image
-  pixelsize = [20, 20];     % Pixel size in units of wavelength
-
-  % Repeat elements for multi-sampling
-  U = repelem(U, uscale, uscale);
-  
-  % Check for a compiler
-  ccs = mex.getCompilerConfigurations('C++');
-  assert(~isempty(ccs), 'No C++ compilers installed');
-  
-  % Check for a compiled mex file
-  % This feels like a little bit of kludge (wasn't there a better way?)
-  if exist('+otslm\+tools\vis_rsmethod.mexw64') == 0
-    warning('No mex file found, compiling mex file');
-    [toolpath, ~, ~] = fileparts(mfilename('fullpath'));
-    mex('-R2018a', [toolpath, '\vis_rsmethod.cpp'], '-outdir', toolpath);
-  end
-
-  output = otslm.tools.vis_rsmethod(U, pixelsize, p.Results.z, scale*uscale);
-
-end
 

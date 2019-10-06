@@ -16,8 +16,8 @@ incident = ones(512, 512);
 NA = 0.8;
 
 % Objective function for optimisation
-objective = @(t, a) otslm.iter.objectives.bowman2017cost(t, a, ...
-    'roi', @otslm.iter.objectives.roiAll, 'd', 9, 'type', 'amplitude');
+objective = otslm.iter.objectives.Bowman2017('scale', 9, ...
+  'field', 'amplitude');
 
 %% Generate the target pattern
 
@@ -75,9 +75,11 @@ ylabel('y');
 axis image;
 
 %% Attempt to generate an optimised beam with BSC method
+% This can take a while
 
 % Calculate size of pixels [m]
-pixel_size = 3.0e-6/dimensions(2);
+% pixel_size = 3.0e-6/dimensions(2);
+pixel_size = 3.0e-6/5;
 
 [pattern, beam, coeffs] = otslm.iter.bsc(size(incident), target, ...
     'incident', incident, 'objective', objective, ...
@@ -99,12 +101,22 @@ axis image;
 
 incident = ones(sz(1:2));
 
-method = otslm.iter.GerchbergSaxton3d(target, ...
-  'visdata', {'incident', incident, 'NA', NA, 'zsize', size(target, 3)}, ...
-  'invdata', {'NA', NA}, 'objective', objective, 'objective_type', 'min');
-pattern = method.run(20, 'show_progress', true);
+% Setup propagators
+prop = otslm.tools.prop.FftEwaldForward.simpleProp(target(:, :, 1), ...
+    'gpuArray', isa(target, 'gpuArray'), ...
+    'NA', NA, 'zsize', size(target, 3));
+vismethod = @(U) prop.propagate(U .* incident);
+prop = otslm.tools.prop.FftEwaldInverse.simpleProp(target, ...
+    'gpuArray', isa(target, 'gpuArray'), 'NA', NA);
+invmethod = @prop.propagate;
 
-beam = otslm.tools.hologram2bsc(pattern, ...
+method = otslm.iter.GerchbergSaxton3d(target, ...
+  'vismethod', vismethod, ...
+  'invmethod', invmethod, ...
+  'objective', objective);
+method.run(100, 'show_progress', true);
+
+beam = otslm.tools.hologram2bsc(method.guess, ...
   'incident', incident, 'Nmax', 30, 'NA', NA);
 
 figure();

@@ -22,9 +22,11 @@ function [pattern, beam, coeffs] = bsc(sz, target, varargin)
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+warning('Method may be unstable and may change in future releases');
+
 p = inputParser;
 p.addParameter('incident', ones(size(sz)));
-p.addParameter('objective', @otslm.iter.objectives.bowman2017cost);
+p.addParameter('objective', otslm.iter.objectives.Bowman2017());
 p.addParameter('basis', 'vswf_lg');     % Not used yet
 p.addParameter('basis_size', 40);
 p.addParameter('polarisation', [1 1i]);
@@ -40,6 +42,9 @@ p.addParameter('pixel_size', 2.0e-6/sqrt(sum((size(target)/2).^2)));
 p.addParameter('method', 'cgs');
 p.addParameter('verbose', false);
 p.parse(varargin{:});
+
+assert(isa(p.Results.objective, 'otslm.iter.objectives.Objective'), ...
+  'objective must be a otslm.iter.objectives.Objective');
 
 % Calculate Nmax for basis functions
 rtarget = sqrt(sum((size(target)/2).^2)) * p.Results.pixel_size;
@@ -170,7 +175,7 @@ else
 end
 
 % Generate the optimisation function
-optfun = @(x) p.Results.objective(target, ...
+optfun = @(x) p.Results.objective.evaluate(target, ...
   reshape(sqrt(sum(abs(reshape(modes * x, [3, size(modes, 1)/3])).^2, 1)), size(target)));
 
 % Attempt to optimise using fminsearch

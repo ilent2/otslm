@@ -92,14 +92,19 @@ switch p.Results.method
       target = target + nweights(ii).*abs(vis).^2;
     end
     target = target ./ length(inputs);
+    
+    % Setup visualisation function
+    prop = otslm.tools.prop.FftForward.simpleProp(target, ...
+        'gpuArray', isa(target, 'gpuArray'));
+    vismethod = @(U) prop.propagate(U .* incident);
 
     % Calculate the pattern with GS algorithm
     gs = otslm.iter.GerchbergSaxton(target, 'guess', 2*pi*guess, ...
-        'visdata', {'incident', incident});
-    pattern = gs.run(20, 'show_progress', false);
+        'vismethod', vismethod);
+    gs.run(100, 'show_progress', false);
 
     % Convert pattern to 0-1 range
-    pattern = (pattern/pi+1)/2;
+    pattern = (gs.phase/pi+1)/2;
 
   case 'add'
 

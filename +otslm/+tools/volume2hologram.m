@@ -5,13 +5,14 @@ function hologram = volume2hologram(volume, varargin)
 % of the Ewald sphere with the volume and projects it to a 2-D hologram.
 %
 % This function is only the inverse of hologram2volume when interpolation
-% is disabled for both.
+% use_weight is disabled and there is no bluring 
 %
 % Optional named arguments:
 %   'interpolate'   value   Interpolate between the nearest two
 %       pixels in the z-direction.  Default: true.
 %   'padding'       value   Padding in the axial direction (default 0).
 %   'focal_length'  value   focal length in pixels (default: estimated from z)
+%   'use_weight'    bool    use weights when sampling interpolated pixels
 %
 % See also: otslm.tools.hologram2volume, otslm.iter.gs3d
 %
@@ -23,6 +24,7 @@ p = inputParser;
 p.addParameter('interpolate', true);
 p.addParameter('focal_length', []);
 p.addParameter('padding', 0);
+p.addParameter('use_weight', false);
 p.parse(varargin{:});
 
 % Calculate the focal length of the lens (assuming no padding)
@@ -57,25 +59,40 @@ for ii = 1:size(hologram, 2)
     if isreal(zloc)
 
       zidx = focallength - zloc + zoffset;
+      value = 0.0;
 
       if p.Results.interpolate
 
         % Interpolate between neighbouring pixels
-        zidx_low = floor(zidx + 1) + p.Results.padding;
-        zidx_high = ceil(zidx + 1) + p.Results.padding;
-        weight = mod(zidx, 1);
+        zidx_low = floor(zidx + 0.5) + p.Results.padding;
+        zidx_high = ceil(zidx + 0.5) + p.Results.padding;
+        
+        if p.Results.use_weight
+          weight = mod(zidx, 1);
 
-        if zidx_high <= size(volume, 3)
-          value = weight*volume(jj, ii, zidx_low);
-          value = value + (1.0-weight)*volume(jj, ii, zidx_high);
-        elseif zidx_low <= size(volume, 3)
-          value = volume(jj, ii, zidx_low);
+          if zidx_low >= 1 && zidx_high <= size(volume, 3)
+            value = weight*volume(jj, ii, zidx_low);
+            value = value + (1.0-weight)*volume(jj, ii, zidx_high);
+          elseif zidx_low >= 1 && zidx_low <= size(volume, 3)
+            value = volume(jj, ii, zidx_low);
+          elseif zidx_high >= 1 && zidx_high <= size(volume, 3)
+            value = volume(jj, ii, zidx_high);
+          end
+        else
+          if zidx_low >= 1 && zidx_high <= size(volume, 3)
+            value = volume(jj, ii, zidx_low);
+            value = value + volume(jj, ii, zidx_high);
+          elseif zidx_low >= 1 && zidx_low <= size(volume, 3)
+            value = volume(jj, ii, zidx_low);
+          elseif zidx_high >= 1 && zidx_high <= size(volume, 3)
+            value = volume(jj, ii, zidx_high);
+          end
         end
       else
-        zidx = round(zidx + 1) + p.Results.padding;
+        zidx = round(zidx + 0.5) + p.Results.padding;
 
         % If point within volume, assign it
-        if zidx <= size(volume, 3)
+        if zidx >= 1 && zidx <= size(volume, 3)
           value = volume(jj, ii, zidx);
         end
       end

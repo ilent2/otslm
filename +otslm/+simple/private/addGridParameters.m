@@ -17,6 +17,8 @@ function p = addGridParameters(p, sz, varargin)
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+assert(numel(sz) == 2, 'sz must be 2 element vector');
+
 parameters = {'centre', 'offset', 'type', 'aspect', 'angle', ...
   'angle_deg', 'gpuArray'};
 

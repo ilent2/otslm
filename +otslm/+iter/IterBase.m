@@ -5,14 +5,16 @@ classdef IterBase < handle
 %   run()         Run the iterative method
 %
 % Properties
-%   guess         Best guess at hologram pattern
-%   target        Target pattern the method tries to approximate
+%   guess         Best guess at hologram pattern (complex)
+%   target        Target pattern the method tries to approximate (complex)
 %   vismethod     Method used to do the visualisation
 %   invmethod     Method used to calculate initial guess/inverse-visualisation
-%   visdata       Additional arguments to pass to vismethod
-%   invdata       Additional arguments to pass to invmethod
-%   objective     Objective function used to evaluate fitness
-%   fitness       Fitness evaluated after every iteration
+%
+%   phase         Phase of the best guess (real: 0, 2*pi)
+%   amplitude     Amplitude of the best guess (real)
+%
+%   objective     Objective function used to evaluate fitness or []
+%   fitness       Fitness evaluated after every iteration or []
 %
 % Abstract methods:
 %   iteration()       run a single iteration of the method
@@ -26,11 +28,20 @@ classdef IterBase < handle
     target      % Target pattern the method tries to approximate
     vismethod   % Method used to do the visualisation
     invmethod   % Method used to calculate initial guess/inverse-visualisation
-    visdata     % Additional arguments to pass to vismethod
-    invdata     % Additional arguments to pass to invmethod
-    objective   % Objective function used to evaluate fitness
-    objective_type  % Type of objective function (min or max)
-    fitness     % Fitness evaluated after every iteration
+    
+    % Objective function used to evaluate fitness
+    % This may not be required by all methods but can still be
+    % provided for diagnostics.
+    objective
+    
+    % Fitness evaluated after every iteration
+    % Empty if objective function is not provided.
+    fitness     
+  end
+  
+  properties (Dependent)
+    phase         % Phase of the best guess (real: 0, 2*pi)
+    amplitude     % Amplitude of the best guess (real)
   end
 
   properties (Hidden)
@@ -42,36 +53,6 @@ classdef IterBase < handle
     result = iteration(mtd)    % Run a single iteration of the method
   end
 
-  methods (Static)
-    function output = defaultVisMethod(input, varargin)
-      % Calculate the far-field of the device from the near-field
-
-      p = inputParser;
-      p.addParameter('incident', []);
-      p.parse(varargin{:});
-
-      if isreal(input)
-        error('input must be complex');
-      end
-
-      output = otslm.tools.visualise(input, ...
-          'incident', p.Results.incident, ...
-          'padding', size(input)/2, 'trim_padding', true, ...
-          'method', 'fft');
-    end
-
-    function output = defaultInvMethod(input, varargin)
-      % Calculate the near-field of the device from the far-field
-
-      pad = size(input)/2;
-
-      input = padarray(input, pad);
-      input = fftshift(input);
-      output = ifft2(input);
-      output = output(pad(1):end-pad(1)-1, pad(2):end-pad(2)-1);
-    end
-  end
-
   methods
     function mtd = IterBase(varargin)
       % Abstract constructor for iterative algorithm base class
@@ -79,27 +60,27 @@ classdef IterBase < handle
       % mtd = IterBase(target, ...)
       %
       % Optional named arguments:
-      %   guess     im     Initial guess at phase pattern.
-      %     Image must be complex amplitude or real phase in range 0 to 2*pi.
+      %   guess     im     Initial guess at complex amplitude pattern.
       %     If not image is supplied, a guess is created using invmethod.
+      %
       %   vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
+      %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
+      %
       %   invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
-      %   visdata   {}     Cell array of data to pass to vis function
-      %   invdata   {}     Cell array of data to pass to inv function
+      %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
+      %
       %   objective fcn    Objective function to measure fitness.
+      %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs
       p = inputParser;
       p.addRequired('target');
       p.addParameter('guess', []);
-      p.addParameter('vismethod', @otslm.iter.IterBase.defaultVisMethod);
-      p.addParameter('invmethod', @otslm.iter.IterBase.defaultInvMethod);
-      p.addParameter('visdata', {});
-      p.addParameter('invdata', {});
-      p.addParameter('objective', @otslm.iter.objectives.flatintensity);
-      p.addParameter('objective_type', 'min');
+      p.addParameter('vismethod', []);
+      p.addParameter('invmethod', []);
+      p.addParameter('objective', otslm.iter.objectives.FlatIntensity());
       p.addParameter('gpuArray', []);
       p.parse(varargin{:});
 
@@ -108,13 +89,28 @@ classdef IterBase < handle
       mtd.guess = p.Results.guess;
       mtd.vismethod = p.Results.vismethod;
       mtd.invmethod = p.Results.invmethod;
-      mtd.visdata = p.Results.visdata;
-      mtd.invdata = p.Results.invdata;
       mtd.objective = p.Results.objective;
-      mtd.objective_type = p.Results.objective_type;
+      
+      % Handle default gpuArray argument
+      useGpuArray = p.Results.gpuArray;
+      if isempty(useGpuArray)
+        useGpuArray = isa(mtd.target, 'gpuArray') || isa(mtd.guess, 'gpuArray');
+      end
+      
+      % Handle default visualisation and inverse methods
+      if isempty(mtd.vismethod)
+        prop = otslm.tools.prop.FftForward.simpleProp(mtd.target, ...
+            'gpuArray', useGpuArray);
+        mtd.vismethod = @prop.propagate;
+      end
+      if isempty(mtd.invmethod)
+        prop = otslm.tools.prop.FftInverse.simpleProp(mtd.target, ...
+            'gpuArray', useGpuArray);
+        mtd.invmethod = @prop.propagate;
+      end
       
       % Ensure guess and target are gpuArrays
-      if ~isempty(p.Results.gpuArray) && p.Results.gpuArray
+      if useGpuArray
         mtd.target = gpuArray(mtd.target);
         mtd.guess = gpuArray(mtd.guess);
       end
@@ -122,11 +118,6 @@ classdef IterBase < handle
       % Handle default argument for guess
       if isempty(mtd.guess)
         mtd.guess = mtd.invmethod(mtd.target);
-      end
-
-      % If the guess is not real, convert from complex amplitude to phase
-      if ~isreal(mtd.guess)
-        mtd.guess = angle(mtd.guess);
       end
     end
 
@@ -172,7 +163,9 @@ classdef IterBase < handle
       mtd.running = false;
 
       % Return the latest guess
-      result = mtd.guess;
+      if nargout > 0
+        result = mtd.guess;
+      end
     end
 
     function showFitness(mtd, varargin)
@@ -245,19 +238,25 @@ classdef IterBase < handle
       % score = mtd.evaluateFitness(guess) evaluate the fitness of the
       % given guess.  If guess is a stack of matrices, the returned
       % score is a vector with size(trial, 3) elements.
+      % Guess should be a complex amplitude.
+      
+      % Check we have an objective
+      if isempty(mtd.objective)
+        error('Can not evaluate fitness without objective function');
+      end
 
       p = inputParser;
       p.addOptional('guess', mtd.guess);
       p.parse(varargin{:});
 
       % Evaluate guess
-      trial = mtd.vismethod(exp(1i*p.Results.guess), mtd.visdata{:});
+      trial = mtd.vismethod(p.Results.guess);
 
       % Evaluate the score or multiple scores
       if size(mtd.target, 3) ~= size(trial, 3)
         score = zeros(1, size(mtd.target, 3));
         for ii = 1:length(score)
-          our_score = mtd.objective(mtd.target, trial(:, :, ii));
+          our_score = mtd.objective.evaluate(trial(:, :, ii), mtd.target);
         
           % Collect result from gpu
           if isa(our_score, 'gpuArray')
@@ -267,7 +266,7 @@ classdef IterBase < handle
           score(ii) = our_score;
         end
       else
-        score = mtd.objective(mtd.target, trial);
+        score = mtd.objective.evaluate(trial, mtd.target);
         
         % Collect result from gpu
         if isa(score, 'gpuArray')
@@ -275,12 +274,22 @@ classdef IterBase < handle
         end
       end
     end
-
-    function set.objective_type(mtd, val)
-      % Check and set objective_type value
-      assert(any(strcmpi(val, {'min', 'max'})), ...
-        'Objective type must be ''min'' or ''max''');
-      mtd.objective_type = val;
+    
+    function set.objective(obj, val)
+      % Check objective type
+      assert(isempty(val) || isa(val, 'otslm.iter.objectives.Objective'), ...
+        'Objective must be [] or an otslm.iter.objectives.Objective');
+      obj.objective = val;
+    end
+    
+    function val = get.phase(obj)
+      % Get the guess phase
+      val = angle(obj.guess);
+    end
+    
+    function val = get.amplitude(obj)
+      % Get the guess amplitude
+      val = abs(obj.guess);
     end
   end
 end
