@@ -22,7 +22,7 @@ pattern = otslm.simple.aperture(dmdsz, 200, ...
 pattern = otslm.tools.finalize(pattern, 'device', 'dmd');
 
 % Calculate the output for the simulated pattern
-output = otslm.tools.visualise([], 'amplitude', pattern);
+output = otslm.tools.visualise([], 'amplitude', pattern, 'padding', 100);
 
 % Zoom to region of interest
 pad = 550;
