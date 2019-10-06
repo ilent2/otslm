@@ -59,7 +59,7 @@ imagesc(visualize(pattern, 100));
 
 % Generate the target image
 im = zeros(sz);
-if exist('insertText')
+if exist('insertText', 'var')
   im = insertText(im,[7 0; 0 25] + [ 230, 225 ], {'UQ', 'OMG'}, ...
       'FontSize', 18, 'BoxColor', 'black', 'TextColor', 'white', 'BoxOpacity', 0);
   im = im(:, :, 1);
@@ -67,17 +67,22 @@ else
   im = otslm.simple.aperture(sz, sz(1)/20);
 end
 
+% Setup the propagator methods for GS with the incident beam
+prop = otslm.tools.prop.FftForward.simpleProp(im, ...
+    'gpuArray', isa(im, 'gpuArray'));
+vismethod = @(U) prop.propagate(U .* incident);
+
 % Setup the GS object and then run for 20 iterations
 gs = otslm.iter.GerchbergSaxton(im, 'adaptive', 1.0, ...
-    'visdata', {'incident', incident});
-pattern = gs.run(20);
+    'vismethod', vismethod);
+gs.run(20);
 
 figure(hf);
 subplot(4, 4, 9);
-imagesc(pattern);
+imagesc(gs.phase);
 
 subplot(4, 4, 10);
-imagesc(visualize(pattern, 100));
+imagesc(visualize(gs.phase, 100));
 
 %% HG beam with amplitude correction for Gaussian illumination
 

@@ -95,9 +95,9 @@ title('Dither');
 
 function im = vismethod(pattern)
   im = otslm.tools.visualise(pattern, 'method', 'fft', ...
-    'trim_padding', true, 'padding', size(pattern));
+    'trim_padding', true, 'padding', ceil(size(pattern)/2));
   im = abs(im).^2;
-  o = 60;
+  o = 30;
   im = im(end/2-o:end/2+o, end/2-o:end/2+o);
 end
   

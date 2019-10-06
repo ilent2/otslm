@@ -63,7 +63,7 @@ pattern = otslm.tools.finalize(pattern, ...
     'colormap', 'gray', 'rpack', '45deg', 'modulo', 'none');
 
 % Calculate the output for the simulated pattern
-output = otslm.tools.visualise([], 'amplitude', pattern);
+output = otslm.tools.visualise([], 'amplitude', pattern, 'padding', 100);
 
 % Zoom to a single diffracted region
 output = output(655+(-20:20), 626+(-20:20));

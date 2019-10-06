@@ -43,6 +43,9 @@ p.addParameter('method', 'cgs');
 p.addParameter('verbose', false);
 p.parse(varargin{:});
 
+assert(isa(p.Results.objective, 'otslm.iter.objectives.Objective'), ...
+  'objective must be a otslm.iter.objectives.Objective');
+
 % Calculate Nmax for basis functions
 rtarget = sqrt(sum((size(target)/2).^2)) * p.Results.pixel_size;
 Nmax = ott.utils.ka2nmax(p.Results.index_medium*(2*pi)*rtarget ...

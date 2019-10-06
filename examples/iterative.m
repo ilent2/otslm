@@ -13,12 +13,17 @@ zm = 50;
 
 incident = otslm.simple.gaussian(sz, 0.5*sz(1));
 
+% Setup propagators (use for figure generation and in iterative methods)
+prop = otslm.tools.prop.FftForward.simpleProp(incident, ...
+    'gpuArray', isa(incident, 'gpuArray'));
+vismethod = @(U) prop.propagate(U .* incident);
+prop = otslm.tools.prop.FftInverse.simpleProp(incident, ...
+    'gpuArray', isa(incident, 'gpuArray'));
+invmethod = @prop.propagate;
+
 % Functions used for generating figures
 zoom = @(im, o) im(round(size(im, 1)/2)+(-o+1:o), round(size(im, 2)/2)+(-o+1:o));
 % zoom = @(im, o) im(1+padding:end-padding, 1+padding:end-padding);
-visualize = @(pattern) otslm.tools.visualise(pattern, ...
-  'method', 'fft', 'padding', size(pattern)./2, 'trim_padding', true, ...
-  'incident', incident);
 
 im = zeros(sz);
 if exist('insertText', 'file')
@@ -36,11 +41,8 @@ Nf = 6;
 subplot(Nf, 2, 2);
 imagesc(zoom(im, zm));
 
-roi = @(t, a) otslm.iter.objectives.roiAperture(t, a, ...
-  'dimensions', 50);
-objective = @(t, a) otslm.iter.objectives.bowman2017cost(t, a, ...
-    'roi', roi, 'd', 9, 'type', 'amplitude');
-objtype = 'min';
+objective = otslm.iter.objectives.Bowman2017('scale', 9, ...
+  'field', 'amplitude', 'roi', otslm.simple.aperture(sz, 50));
 
 % Guess from Gerchberg-Saxton method (computed in 2-D GS)
 gsguess = [];
@@ -48,8 +50,9 @@ gsguess = [];
 %% 2-D GS algorithm
 
 mtd = otslm.iter.GerchbergSaxton(im, 'adaptive', 1.0, ...
-    'visdata', {'incident', incident}, ...
-    'objective', objective, 'objective_type', objtype);
+    'vismethod', vismethod, ...
+    'invmethod', invmethod, ...
+    'objective', objective);
 pattern = mtd.run(500);
 
 % Store gsguess for later
@@ -58,51 +61,51 @@ gsguess = pattern;
 figure(hp);
 
 subplot(Nf, 2, 3);
-imagesc(pattern);
+imagesc(mtd.phase);
 
 subplot(Nf, 2, 4);
-output = visualize(pattern);
+output = vismethod(pattern);
 imagesc(zoom(abs(output).^2, zm));
 
-disp(['GS score: ', num2str(objective(im, output))]);
+disp(['GS score: ', num2str(objective.evaluate(im, output))]);
 
 %% Direct search
 
 mtd = otslm.iter.DirectSearch(im, 'levels', 8, ...
-    'visdata', {'incident', incident}, 'guess', gsguess, ...
-    'objective', objective, 'objective_type', objtype);
+    'vismethod', vismethod, 'guess', gsguess, ...
+    'objective', objective, 'invmethod', invmethod);
 pattern = mtd.run(prod(sz));
 
 figure(hp);
 
 subplot(Nf, 2, 5);
-imagesc(pattern);
+imagesc(mtd.phase);
 
 subplot(Nf, 2, 6);
-output = visualize(pattern);
+output = vismethod(pattern);
 imagesc(zoom(abs(output).^2, zm));
 
-disp(['DS score: ', num2str(objective(im, output))]);
+disp(['DS score: ', num2str(objective.evaluate(im, output))]);
 
 %% Simulated annealing
 
 mtd = otslm.iter.SimulatedAnnealing(im, ...
     'temperature', 1000, 'maxTemperature', 10000, ...
-    'visdata', {'incident', incident}, 'guess', gsguess, ...
-    'objective', objective, 'objective_type', objtype, ...
+    'vismethod', vismethod, 'guess', gsguess, ...
+    'objective', objective, 'invmethod', invmethod, ...
     'temperatureFcn', otslm.iter.SimulatedAnnealing.simpleTemperatureFcn(1000, 1000));
 pattern = mtd.run(1000);
 
 if ishandle(hp), figure(hp), else, figure(), end
 
 subplot(Nf, 2, 7);
-imagesc(mod(pattern+pi, 2*pi)-pi);
+imagesc(mod(mtd.phase+pi, 2*pi)-pi);
 
 subplot(Nf, 2, 8);
-output = visualize(pattern);
+output = vismethod(pattern);
 imagesc(zoom(abs(output).^2, zm));
 
-disp(['SA score: ', num2str(objective(im, output))]);
+disp(['SA score: ', num2str(objective.evaluate(im, output))]);
 
 %% Bowman 2017 conjugate gradient method
 
@@ -114,11 +117,11 @@ subplot(Nf, 2, 9);
 imagesc(pattern);
 
 subplot(Nf, 2, 10);
-output = visualize(pattern);
+output = vismethod(pattern);
 imagesc(zoom(abs(output).^2, zm));
 caxis([1e-9, 0.5e-5]);
 
-disp(['Bowman 2017 score: ', num2str(objective(im, output))]);
+disp(['Bowman 2017 score: ', num2str(objective.evaluate(im, output))]);
 
 %% BSC optimisation
 % Attempt to optimise beam shape coefficients for tightly focussed fields
@@ -138,10 +141,10 @@ subplot(Nf, 2, 11);
 imagesc(pattern);
 
 subplot(Nf, 2, 12);
-output = visualize(pattern);
+output = vismethod(pattern);
 imagesc(zoom(abs(output).^2, zm));
 
-disp(['BSC1 score: ', num2str(objective(im, output))]);
+disp(['BSC1 score: ', num2str(objective.evaluate(im, output))]);
 
 %% Change properties of all figures
 
