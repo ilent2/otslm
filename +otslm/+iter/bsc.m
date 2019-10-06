@@ -22,6 +22,8 @@ function [pattern, beam, coeffs] = bsc(sz, target, varargin)
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+warning('Method may be unstable and may change in future releases');
+
 p = inputParser;
 p.addParameter('incident', ones(size(sz)));
 p.addParameter('objective', otslm.iter.objectives.Bowman2017());
