@@ -37,6 +37,8 @@ function varargout = visualise(phase, varargin)
 %       is an offset from the focal plane.  For rs/rslens, this is the
 %       distance along the beam axis.
 %   'padding'   p         Add padding to the outside of the image.
+%       Default: ceil(size(phase)/2)
+%
 %   'trim_padding', bool  Trim padding before returning result (default: 0)
 %   NA          num       Numerical aparture of the lens (default: 0.1)
 %   resample    num       Number of samples per each pixel
@@ -51,7 +53,7 @@ p.addParameter('type', 'farfield');
 p.addParameter('amplitude', []);
 p.addParameter('incident', []);
 p.addParameter('z', 0.0);
-p.addParameter('padding', 100);
+p.addParameter('padding', ceil(size(phase)/2));
 p.addParameter('trim_padding', false);
 p.addParameter('methoddata', []);
 p.addParameter('NA', 0.1);
