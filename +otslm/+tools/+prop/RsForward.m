@@ -5,6 +5,10 @@ classdef RsForward < otslm.tools.prop.Propagator
 %    size      Size of the pattern
 %    distance  Distance to propagate pattern
 %
+% Static methods:
+%    simple()        propagate the field with a simple interface
+%    simpleProp()    construct the propogator for input pattern
+%
 % See also FftForward, OttForward and otslm.tools.visualise.
 %
 % Copyright 2019 Isaac Lenton
@@ -26,17 +30,28 @@ classdef RsForward < otslm.tools.prop.Propagator
   end
   
   methods (Static)
+    
+    function prop = simpleProp(pattern, varargin)
+      % Generate the propagator for the specified pattern.
+      %
+      % prop = simpleProp(pattern, ...) construct a new propagator.
+      %
+      % See also simple and RsForward.
+      
+      prop = otslm.tools.prop.RsForward(size(pattern), distance, varargin{:});
+    end
+    
     function [output, prop] = simple(pattern, distance, varargin)
       %SIMPLE propagate the field with a simple interface
       %
       % output = simple(pattern, distance, ...) propagates the 2-D
       % complex field amplitude `pattern` using the Rayleigh-Sommerfeld
       % integral by the specified distance.
+      %
+      % See also simple and RsForward.
       
-      p = inputParser;
-      p.parse(varargin{:});
-      
-      prop = otslm.tools.prop.RsForward(size(pattern), distance);
+      prop = otslm.tools.prop.RsForward.simpleProp(...
+        pattern, distance, varargin{:});
       
       output = prop.propagate(pattern);
     end

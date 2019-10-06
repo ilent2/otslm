@@ -16,6 +16,7 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
 %
 % Static methods:
 %    simple()        propagate the field with a simple interface
+%    simpleProp()    construct the propogator for input pattern
 %
 % See also FftEwaldForward, FftInverse and otslm.tools.visualise.
 %
@@ -25,12 +26,10 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
   
   methods (Static)
     
-    function [output, prop] = simple(pattern, varargin)
-      % propagate the field with a simple interface
+    function prop = simpleProp(pattern, varargin)
+      % Generate the propagator for the specified pattern.
       %
-      % [output, prop] = simple(pattern, ...) construct a new Ewald FFT
-      % propogator and apply it to the pattern.  Returns the
-      % propagated pattern and the propagator.
+      % prop = simpleProp(pattern, ...) construct a new propagator.
       %
       % Optional named arguemnts:
       %    padding   num | [xy, z] | [x, y, z]  Padding for transform.
@@ -78,6 +77,18 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
         'padding', p.Results.padding, ...
         'trim_padding', p.Results.trim_padding, ...
         'gpuArray', p.Results.gpuArray);
+    end
+    
+    function [output, prop] = simple(pattern, varargin)
+      % propagate the field with a simple interface
+      %
+      % [output, prop] = simple(pattern, ...) construct a new Ewald FFT
+      % propogator and apply it to the pattern.  Returns the
+      % propagated pattern and the propagator.
+      %
+      % See also simpleProp for named arguments.
+      
+      prop = otslm.tools.prop.FftEwaldInverse.simpleProp(pattern, varargin{:});
       
       % Apply propagator
       output = prop.propagate(pattern);

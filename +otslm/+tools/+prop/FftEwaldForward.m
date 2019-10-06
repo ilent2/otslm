@@ -16,6 +16,7 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
 %
 % Static methods:
 %    simple()        propagate the field with a simple interface
+%    simpleProp()    construct the propogator for input pattern
 %
 % See also FftEwaldInverse, FftForward and otslm.tools.visualise.
 %
@@ -25,12 +26,10 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
 
   methods (Static)
     
-    function [output, prop] = simple(pattern, varargin)
-      % propagate the field with a simple interface
+    function prop = simpleProp(pattern, varargin)
+      % Generate the propagator for the specified pattern.
       %
-      % [output, prop] = simple(pattern, ...) construct a new
-      % propogator and apply it to the pattern.  Returns the
-      % propagated pattern and the propagator.
+      % prop = simpleProp(pattern, ...) construct a new propagator.
       %
       % Optional named arguemnts:
       %    diameter    num     Diameter of the lens.
@@ -114,6 +113,18 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
         'padding', padding, ...
         'trim_padding', p.Results.trim_padding, ...
         'gpuArray', p.Results.gpuArray);
+    end
+    
+    function [output, prop] = simple(pattern, varargin)
+      % propagate the field with a simple interface
+      %
+      % [output, prop] = simple(pattern, ...) construct a new
+      % propogator and apply it to the pattern.  Returns the
+      % propagated pattern and the propagator.
+      %
+      % See also simpleProp for named arguments.
+      
+      prop = otslm.tools.prop.FftEwaldForward.simpleProp(pattern, varargin{:});
       
       % Apply propagator
       output = prop.propagate(pattern);

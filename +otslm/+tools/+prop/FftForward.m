@@ -15,6 +15,7 @@ classdef FftForward < otslm.tools.prop.FftBase
 %
 % Static methods:
 %    simple()        propagate the field with a simple interface
+%    simpleProp()    construct the propogator for input pattern
 %    calculateLens() lens function used by simple and FftInverse.simple.
 %
 % See also FftInverse, Fft3Forward and otslm.tools.visualise.
@@ -25,12 +26,10 @@ classdef FftForward < otslm.tools.prop.FftBase
   
   methods (Static)
     
-    function [output, prop] = simple(pattern, varargin)
-      % propagate the field with a simple interface
+    function prop = simpleProp(pattern, varargin)
+      % Generate the propagator for the specified pattern.
       %
-      % [output, prop] = simple(pattern, ...) construct a new FFT
-      % propogator and apply it to the pattern.  Returns the
-      % propagated pattern and the propagator.
+      % prop = simpleProp(pattern, ...) construct a new propagator.
       %
       % Optional named arguemnts:
       %    axial_offset    num   Offset along the propagation axis
@@ -63,10 +62,22 @@ classdef FftForward < otslm.tools.prop.FftBase
         'trim_padding', p.Results.trim_padding, ...
         'lens', lens, ...
         'gpuArray', p.Results.gpuArray);
+    end
+    
+    function [output, prop] = simple(pattern, varargin)
+      % propagate the field with a simple interface
+      %
+      % [output, prop] = simple(pattern, ...) construct a new FFT
+      % propogator and apply it to the pattern.  Returns the
+      % propagated pattern and the propagator.
+      %
+      % See also simpleProp for input arguments.
+      
+      % Construct the propagator
+      prop = otslm.tools.prop.FftForward.simpleProp(pattern, varargin{:});
       
       % Apply propagator
       output = prop.propagate(pattern);
-      
     end
   end
   

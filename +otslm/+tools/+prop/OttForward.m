@@ -11,6 +11,10 @@ classdef OttForward < otslm.tools.prop.Propagator
 %    wavelength0    Wavelength in vacuum
 %    omega          Angular frequency of light
 %
+% Static methods:
+%    simple()        propagate the field with a simple interface
+%    simpleProp()    construct the propogator for input pattern
+%
 % See also Ott2Forward, Ott3Forward and otslm.tools.visualise.
 %
 % Copyright 2019 Isaac Lenton
@@ -30,6 +34,18 @@ classdef OttForward < otslm.tools.prop.Propagator
   end
   
   methods (Static)
+    
+    function prop = simpleProp(pattern, varargin)
+      % Generate the propagator for the specified pattern.
+      %
+      % prop = simpleProp(pattern, ...) construct a new propagator.
+      %
+      % Additional named arguments are passed to Ott2Forward.
+      
+      prop = otslm.tools.prop.OttForward(size(pattern), varargin{:});
+      
+    end
+    
     function [beam, prop] = simple(pattern, varargin)
       %SIMPLE propagate the field with a simple interface
       %
@@ -39,8 +55,9 @@ classdef OttForward < otslm.tools.prop.Propagator
       %
       % Additional named arguments are passed to Ott2Forward.
       
-      prop = otslm.tools.prop.OttForward(size(pattern), ...
+      prop = otslm.tools.prop.OttForward.simpleProp(pattern, ...
         varargin{:}, 'pre_calculate', false);
+      
       beam = prop.propagate(pattern);
     end
   end
