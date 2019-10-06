@@ -10,9 +10,7 @@ function testSimple(tests)
   incident = ones(sz);
   target = otslm.simple.aperture(sz, sz(1)/2);
 
-  method = otslm.iter.DirectSearch(target, ...
-    'levels', 2, ...
-    'visdata', {'incident', incident});
+  method = otslm.iter.DirectSearch(target, 'levels', 2);
   pattern = method.run(2, 'show_progress', false);
 
 end

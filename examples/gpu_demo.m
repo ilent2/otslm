@@ -198,16 +198,16 @@ title('Dedicated gratings and lenses');
 
 % Generate the target image
 sz = [512, 512];
-im = otslm.simple.aperture(sz, sz(1)/20, 'value', [0, 1], 'gpuArray', true);
+target = otslm.simple.aperture(sz, sz(1)/20, 'value', [0, 1], 'gpuArray', true);
 
 % Setup the GS object and then run
-gs = otslm.iter.GerchbergSaxton(im, 'adaptive', 1.0, 'objective', []);
+gs = otslm.iter.GerchbergSaxton(target, 'adaptive', 1.0, 'objective', []);
 tic
-pattern = gs.run(600, 'show_progress', false);
+gs.run(600, 'show_progress', false);
 toc
 
 figure();
-im = abs(otslm.tools.visualise(pattern, 'trim_padding', true).^2);
+im = abs(gs.vismethod(gs.guess).^2);
 imagesc(im);
 
 %% Running Prisms and Lenses with RedTweezers

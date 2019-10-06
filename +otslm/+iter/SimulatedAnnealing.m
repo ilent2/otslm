@@ -9,14 +9,14 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
 %   temperature    Current temperature of the system
 %   maxTemperature Scaling factor for new pattern guesses
 %   temperatureFcn Function used to calculate temperature in iteration
-%   guess          Best guess at hologram pattern
-%   target         Target pattern the method tries to approximate
-%   vismethod      Method used to do the visualisation
-%   invmethod      Method used to calculate initial guess/inverse-visualisation
-%   visdata        Additional arguments to pass to vismethod
-%   invdata        Additional arguments to pass to invmethod
-%   objective      Objective function used to evaluate fitness
-%   fitness        Fitness evaluated after every iteration
+%   lastFitness    The fitness associated with the current guess
+%
+%   guess         Best guess at hologram pattern
+%   target        Target pattern the method tries to approximate
+%   vismethod     Method used to do the visualisation
+%   invmethod     Method used to calculate initial guess/inverse-visualisation
+%   objective     Objective function used to evaluate fitness
+%   fitness       Fitness evaluated after every iteration
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -45,50 +45,43 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
   end
 
   methods
-    function mtd = SimulatedAnnealing(varargin)
+    function mtd = SimulatedAnnealing(target, varargin)
       % Construct a new instance of the SimulatedAnnealing iterative method
       %
       % mtd = SimulatedAnnealing(target, ...) attempts to produce the
       % target using the Simulated Annealing algorithm.
       %
       % Optional named arguments:
-      %   guess     im     Initial guess at phase pattern.
-      %     Image must be complex amplitude or real phase in range 0 to 2*pi.
-      %     If not image is supplied, a guess is created using invmethod.
       %   levels    num    Number of discrete levels or array of
       %     levels between -pi and pi.  Default: 256.
       %   temperature num  Initial temperature of the solver.
-      %   objective fcn    Objective function to measure fitness.
+      %
+      %   guess     im     Initial guess at complex amplitude pattern.
+      %     If not image is supplied, a guess is created using invmethod.
+      %
       %   vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
+      %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
+      %
       %   invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
+      %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
+      %
+      %   objective fcn    Objective function to measure fitness.
+      %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs
       p = inputParser;
-      p.addRequired('target');
-      p.addParameter('guess', []);
+      p.KeepUnmatched = true;
       p.addParameter('levels', 256);
       p.addParameter('temperature', 1e3);
       p.addParameter('maxTemperature', 1e4);
       p.addParameter('temperatureFcn', []);
-      p.addParameter('vismethod', @otslm.iter.IterBase.defaultVisMethod);
-      p.addParameter('invmethod', @otslm.iter.IterBase.defaultInvMethod);
-      p.addParameter('visdata', {});
-      p.addParameter('invdata', {});
-      p.addParameter('objective', @otslm.iter.objectives.flatintensity);
-      p.addParameter('objective_type', 'min');
       p.parse(varargin{:});
 
       % Call base class for most handling
-      mtd = mtd@otslm.iter.IterBase(p.Results.target, ...
-          'guess', p.Results.guess, ...
-          'vismethod', p.Results.vismethod, ...
-          'invmethod', p.Results.invmethod, ...
-          'visdata', p.Results.visdata, ...
-          'invdata', p.Results.invdata, ...
-          'objective', p.Results.objective, ...
-          'objective_type', p.Results.objective_type);
+      unmatched = [fieldnames(p.Unmatched).'; struct2cell(p.Unmatched).'];
+      mtd = mtd@otslm.iter.IterBase(target, unmatched{:});
 
       % Store parameters
       mtd.temperature = p.Results.temperature;
@@ -108,7 +101,7 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
       end
 
       % Convert the guess to the discrete levels
-      mtd.guess = mtd.makeDiscrete(mtd.guess);
+      mtd.guess = exp(1i*mtd.makeDiscrete(mtd.phase));
 
       % Calculate original fitness
       mtd.fitness(1) = mtd.evaluateFitness();
@@ -134,31 +127,34 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
       scale = mtd.temperature./mtd.maxTemperature;
 
       % Generate new guess
-      newGuess = mtd.guess + randn(size(mtd.guess))*scale;
+      newGuess = mtd.phase + randn(size(mtd.guess))*scale;
 
       % Convert new Guess to discrete levels
       newGuess = mtd.makeDiscrete(newGuess);
 
       % Evaluate the fitness of the new guess
-      mtd.fitness(end+1) = mtd.evaluateFitness(newGuess);
+      U_newGuess = exp(1i*newGuess);
+      mtd.fitness(end+1) = mtd.evaluateFitness(U_newGuess);
 
       % Determine if this trial is satisfactory to keep
-      if strcmpi(mtd.objective_type, 'min')
+      if strcmpi(mtd.objective.type, 'min')
         if mtd.fitness(end) <= mtd.lastFitness ...
             || exp(-(mtd.fitness(end)-mtd.lastFitness)/mtd.temperature) > rand()
-          mtd.guess = newGuess;
+          mtd.guess = U_newGuess;
           mtd.lastFitness = mtd.fitness(end);
         end
-      elseif strcmpi(mtd.objective_type, 'max')
+      elseif strcmpi(mtd.objective.type, 'max')
         if mtd.fitness(end) >= mtd.lastFitness ...
             || exp((mtd.fitness(end)-mtd.lastFitness)/mtd.temperature) > rand()
-          mtd.guess = newGuess;
+          mtd.guess = U_newGuess;
           mtd.lastFitness = mtd.fitness(end);
         end
+      else
+        error('Unknown objective type');
       end
       
       % Provide the result if requested
-      if nargout ~= 0
+      if nargout > 0
         result = mtd.guess;
       end
     end

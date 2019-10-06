@@ -10,8 +10,7 @@ function testSimple(tests)
   incident = ones(sz);
   target = otslm.simple.aperture(sz, sz(1)/2);
 
-  method = otslm.iter.GerchbergSaxton(target, ...
-    'visdata', {'incident', incident});
+  method = otslm.iter.GerchbergSaxton(target);
   pattern = method.run(2, 'show_progress', false);
 
 end

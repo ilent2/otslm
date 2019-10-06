@@ -9,12 +9,11 @@ classdef DirectSearch < otslm.iter.IterBase
 %
 % Properties
 %   levels        Discrete levels that will be search in optimisation
+%
 %   guess         Best guess at hologram pattern
 %   target        Target pattern the method tries to approximate
 %   vismethod     Method used to do the visualisation
 %   invmethod     Method used to calculate initial guess/inverse-visualisation
-%   visdata       Additional arguments to pass to vismethod
-%   invdata       Additional arguments to pass to invmethod
 %   objective     Objective function used to evaluate fitness
 %   fitness       Fitness evaluated after every iteration
 %
@@ -22,52 +21,46 @@ classdef DirectSearch < otslm.iter.IterBase
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+  % TODO: Adapt implementation for amplitude patterns
+
   properties
     levels      % Discrete levels that will be search in optimisation
   end
 
   methods
-    function mtd = DirectSearch(varargin)
+    function mtd = DirectSearch(target, varargin)
       % Construct a new instance of the DirectSearch iterative method
       %
       % mtd = DirectSearch(target, ...) attempts to produce the target
       % using the Direct Search algorithm.
       %
       % Optional named arguments:
-      %   guess     im     Initial guess at phase pattern.
-      %     Image must be complex amplitude or real phase in range 0 to 2*pi.
-      %     If not image is supplied, a guess is created using invmethod.
-      %   levels    num    Number of discrete levels or array of
+      %   levels    num    Number of discrete phase levels or array of
       %     levels between -pi and pi.  Default: 256.
-      %   objective fcn    Objective function to measure fitness.
-      %   objective_type str Objective type (min or max).
+      %
+      %   guess     im     Initial guess at complex amplitude pattern.
+      %     If not image is supplied, a guess is created using invmethod.
+      %
       %   vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
+      %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
+      %
       %   invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
+      %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
+      %
+      %   objective fcn    Objective function to measure fitness.
+      %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs
       p = inputParser;
-      p.addRequired('target');
-      p.addParameter('guess', []);
+      p.KeepUnmatched = true;
       p.addParameter('levels', 256);
-      p.addParameter('vismethod', @otslm.iter.IterBase.defaultVisMethod);
-      p.addParameter('invmethod', @otslm.iter.IterBase.defaultInvMethod);
-      p.addParameter('visdata', {});
-      p.addParameter('invdata', {});
-      p.addParameter('objective', @otslm.iter.objectives.flatintensity);
-      p.addParameter('objective_type', 'min');
       p.parse(varargin{:});
 
       % Call base class for most handling
-      mtd = mtd@otslm.iter.IterBase(p.Results.target, ...
-          'guess', p.Results.guess, ...
-          'vismethod', p.Results.vismethod, ...
-          'invmethod', p.Results.invmethod, ...
-          'visdata', p.Results.visdata, ...
-          'invdata', p.Results.invdata, ...
-          'objective', p.Results.objective, ...
-          'objective_type', p.Results.objective_type);
+      unmatched = [fieldnames(p.Unmatched).'; struct2cell(p.Unmatched).'];
+      mtd = mtd@otslm.iter.IterBase(target, unmatched{:});
 
       % Store levels and create array if needed
       mtd.levels = p.Results.levels;
@@ -77,9 +70,9 @@ classdef DirectSearch < otslm.iter.IterBase
       end
 
       % Convert the guess to the discrete levels
-      mtd.guess = angle(exp(1i*mtd.guess));
-      mtd.guess = interp1([mtd.levels, pi], [mtd.levels, mtd.levels(1)], ...
-          mtd.guess, 'nearest');
+      new_phase = interp1([mtd.levels, pi], [mtd.levels, mtd.levels(1)], ...
+          mtd.phase, 'nearest');
+      mtd.guess = exp(1i*new_phase);
     end
 
     function result = iteration(mtd)
@@ -90,28 +83,32 @@ classdef DirectSearch < otslm.iter.IterBase
 
       % Try all values for this pixel
       pixelFitness = zeros(numel(mtd.levels), 1);
-      pixelGuess = mtd.guess;
+      pixelGuess = mtd.phase;
       for jj = 1:length(pixelFitness)
 
         % Change the pixel value
         pixelGuess(loc) = mtd.levels(jj);
 
         % Evaluate the fitness of this guess
-        pixelFitness(jj) = mtd.evaluateFitness(pixelGuess);
+        pixelFitness(jj) = mtd.evaluateFitness(exp(1i*pixelGuess));
 
       end
 
       % Update the guess
-      if strcmpi(mtd.objective_type, 'min')
+      if strcmpi(mtd.objective.type, 'min')
         [bestFittness, idx] = min(pixelFitness);
-      elseif strcmpi(mtd.objective_type, 'max')
+      elseif strcmpi(mtd.objective.type, 'max')
         [bestFittness, idx] = max(pixelFitness);
+      else
+        error('Unknown objective type');
       end
-      mtd.guess(loc) = mtd.levels(idx);
+      mtd.guess(loc) = exp(1i*mtd.levels(idx));
       mtd.fitness(end+1) = bestFittness;
 
       % Return the latest guess
-      result = mtd.guess;
+      if nargout > 0
+        result = mtd.guess;
+      end
     end
   end
 end

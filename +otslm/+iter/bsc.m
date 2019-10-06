@@ -24,7 +24,7 @@ function [pattern, beam, coeffs] = bsc(sz, target, varargin)
 
 p = inputParser;
 p.addParameter('incident', ones(size(sz)));
-p.addParameter('objective', @otslm.iter.objectives.bowman2017cost);
+p.addParameter('objective', otslm.iter.objectives.Bowman2017());
 p.addParameter('basis', 'vswf_lg');     % Not used yet
 p.addParameter('basis_size', 40);
 p.addParameter('polarisation', [1 1i]);
@@ -170,7 +170,7 @@ else
 end
 
 % Generate the optimisation function
-optfun = @(x) p.Results.objective(target, ...
+optfun = @(x) p.Results.objective.evaluate(target, ...
   reshape(sqrt(sum(abs(reshape(modes * x, [3, size(modes, 1)/3])).^2, 1)), size(target)));
 
 % Attempt to optimise using fminsearch
