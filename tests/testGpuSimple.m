@@ -1,5 +1,5 @@
 function tests = testGpuSimple
-  % SIMPLE tests for otslm.simple.*
+  % tests for otslm.simple.* with GPU
   %
   % These tests are primarily to test everything runs, we should
   % write better tests in future.
@@ -170,5 +170,3 @@ function testAperture3d(testCase)
   testCase.verifyClass(pattern, 'gpuArray', 'wrong type (gpu)');
 
 end
-
-

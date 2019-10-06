@@ -4,11 +4,14 @@
 % runs.
 %
 % Files
-%   testsimple  - tests for otslm.simple.*
-%   coverage    - helper for running coverage reports
-%   utils/*     - tests for otslm.utils.*
-%   iter/*      - tests for otslm.iter.*
-%   tools/*     - tests for otslm.tools.*
+%   testsimple    - tests for otslm.simple.*
+%   testGpuSimple - tests for otslm.simple.* with GPU
+%   coverage      - Run a test with the coverage report
+%
+% Sub-folders
+%   utils       - tests for otslm.utils.*
+%   iter        - tests for otslm.iter.*
+%   tools       - tests for otslm.tools.*
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

@@ -1,4 +1,4 @@
-% hologram2bsc_multibeam Fast generation of multiple BSC beams
+%HOLOGRAM2BSC_MULTIBEAM Fast generation of multiple BSC beams
 %
 % Demonstrate new features added to hologram2bsc to improve performance
 %
@@ -46,4 +46,5 @@ figure(), beam3.visualise();
 
 % Both of these should be much faster than the original
 % But you need to make sure you have the same Nmax, NA and refractive index
+
 

@@ -1,5 +1,5 @@
 function tests = testsimple
-  % SIMPLE tests for otslm.simple.*
+  % tests for otslm.simple.*
   %
   % These tests are primarily to test everything runs, we should
   % write better tests in future.
@@ -242,6 +242,7 @@ function testAperture3d(testCase)
   testCase.verifyClass(pattern, 'logical', 'wrong type (logical)');
   
 end
+
 
 
 

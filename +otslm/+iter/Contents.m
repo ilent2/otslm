@@ -14,12 +14,15 @@
 %   IterBase           - base class for iterative algorithm classes
 %   SimulatedAnnealing - Optimise the pattern using simulated annealing
 %   GerchbergSaxton3d  - Implementation of 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
-%   IterBase3d         - base class for 3-D iterative algorithm classes
+%   IterBaseEwald      - base class for 3-D Ewald iterative algorithm classes
 %   bsc                - optimisation in vector spherical wave function basis
-%   bowman2017         - wrapper for Bowman 2017 conjugate gradient implementation (see also bowman2017/README.md)
+%   bowman2017         - wrapper for Bowman 2017 conjugate gradient implementation
 %
 % Sub-packages
 %   +objectives        - objective functions for use with optimisation algorithms
+%
+% Private sub-folders
+%   bowman2017         - Files used by Bowman2017
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

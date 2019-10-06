@@ -15,6 +15,9 @@
 %   hologram2bsc    - convert pattern to beam shape coefficients
 %   phaseblur       - simulate pixel phase blurring
 %   volume2hologram - generate hologram from 3-D volume
+%   castValue       - castValue convert from logical pattern to specified value range
+%   lensesAndPrisms - Generates a hologram using the Lenses and Prisms algorithm
+%   make_beam       - combine the phase, amplitude and incident patterns
 %
 % Subpackages
 %   +prop           - propogation methods (used by visualise and iter)

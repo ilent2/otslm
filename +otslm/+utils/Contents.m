@@ -16,6 +16,7 @@
 %   ScreenDevice  - represents a device controlled by full screen window
 %   GigeCamera    - connect to a gige camera connected to the computer
 %   WebcamCamera  - connect to a webcam camera connected to the computer
+%   ImaqCamera    - connect to a image acquisition toolbox camera
 %
 % Non-physical devices used for testing
 %   TestDmd       - non-physical dmd-like device for testing code
@@ -23,4 +24,7 @@
 %   TestFarfield  - non-physical camera for viewing Test* Showable objects
 %   TestMichelson - non-physical representation of Michelson interferometer
 %   TestShowable  - non-physical showable device for testing implementation
-
+%
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
