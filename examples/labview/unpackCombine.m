@@ -10,8 +10,6 @@ function varargout = unpackCombine(input3, varargin)
   
   input = squeeze(input);
   
-  assignin('base', 'test', input);
-  
   [varargout{1:nargout}] = otslm.tools.combine(input, varargin{:});
   
 end
