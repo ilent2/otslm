@@ -1,15 +1,6 @@
-
 ############
 Introduction
 ############
-
-.. contents::
-   :depth: 3
-..
-
-
-Overview
-========
 
 OTSLM is a set of Matlab functions and graphical user interface for
 generating patterns for phase and amplitude spatial light modulators
@@ -31,6 +22,11 @@ Comments and suggestions welcome.
 
 To get started using the toolbox, checkout the `Getting
 Started <Getting-Started>`__ page.
+
+.. contents::
+   :depth: 3
+   :local:
+..
 
 License
 =======

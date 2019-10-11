@@ -2,7 +2,9 @@
 
 .. toctree::
    :maxdepth: 2
+   :includehidden:
 
+   forward.rst
    Introduction.rst
    Getting-Started.rst
    Examples.rst
