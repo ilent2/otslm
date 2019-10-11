@@ -13,10 +13,11 @@ project Wiki or in the doc directory of the main repository (for offline
 viewing).
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
+   :includehidden:
    :caption: Documentation Contents:
 
-   Introduction
+   Introduction.rst
    Getting-Started.rst
    Examples.rst
    Packages.rst

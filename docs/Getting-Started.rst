@@ -9,6 +9,7 @@ functions with the toolbox <#using-the-toolbox-functions>`__.
 
 .. contents::
    :depth: 3
+   :local:
 ..
 
 Installation
