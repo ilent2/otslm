@@ -7,11 +7,6 @@ is split into three sections: `installation <#installation>`__, `using
 the GUIs <#exploring-the-toolbox-with-the-gui>`__, and `writing
 functions with the toolbox <#using-the-toolbox-functions>`__.
 
-.. contents::
-   :depth: 3
-   :local:
-..
-
 Installation
 ============
 

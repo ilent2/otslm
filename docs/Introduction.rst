@@ -23,11 +23,6 @@ Comments and suggestions welcome.
 To get started using the toolbox, checkout the `Getting
 Started <Getting-Started>`__ page.
 
-.. contents::
-   :depth: 3
-   :local:
-..
-
 License
 =======
 
