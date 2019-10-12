@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="E8105C1B6DF85297D238C65779313E06B56CA8EFC72DDCC8E860B4968FA4221BF6378CCA542D6A989E69794465B973913EA97D9277962180EF55FF9E1412D517" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="E039D6DAED9E73A475AD41EDDBFD90FEBE61DF2535B6C5D9E1786759B7E1E6E221468AE4ECB50172D2BEDCB33F28ADBD2F4C25238212CC29C7659A0A0CBDBAE8" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="GComponentFeatureSet" Name="http://www.ni.com/GComponent.xsd" OldestCompatibleVersion="6.1.0.1" Version="6.2.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="6.4.0.49504" FeatureSetName="Common language components" Name="http://www.ni.com/MocCommon" OldestCompatibleVersion="6.2.0.49153" Version="6.2.0.49153" />
@@ -407,7 +407,7 @@
 				<SourceFileReference Bindings="EnvoyManager" Id="6a2935e224d8410eb643ae65438c731d" ModelDefinitionType="PackageInterfaceDefinition" Name="ni-visa-base-src-18.5.0.niaddon" StoragePath="ref://NI/VISA/Base-src/18.5.0" />
 			</EmbeddedDefinitionReference>
 		</NameScopingEnvoy>
-		<SourceFileReference Id="cbcf522eb6344212bc146c544d7572bc" ModelDefinitionType="SystemManagementDefinition" Name="SystemDesigner" StoragePath="SystemDesigner" />
+		<SourceFileReference Id="cbcf522eb6344212bc146c544d7572bc" ModelDefinitionType="SystemManagementDefinition" Name="SystemDesigner_2" StoragePath="SystemDesigner" />
 	</Project>
 	<ProjectInformation ProjectIconFilename="Blank Project.png" xmlns="http://www.ni.com/PlatformFramework" />
 </SourceFile>
