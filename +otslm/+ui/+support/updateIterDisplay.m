@@ -1,6 +1,6 @@
 function updateIterDisplay(pattern, slm, display_type, ax, ...
     output_name, fitness_method)
-% updateSimpleDisplay helper for updating the display on simple uis
+% updateSimpleDisplay helper for updating the display on iterative uis
 %
 % updateSimpleDisplay(pattern, slm, display_type, ax, output_name)
 % Generates the display pattern, updates the axis and outputs to base.

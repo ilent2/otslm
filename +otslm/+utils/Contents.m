@@ -7,6 +7,7 @@
 % Sub-packages
 %   imaging       - functions for imaging the device surface
 %   calibration   - functions for calibrating a device
+%   RedTweezers   - interface for RedTweezers
 %
 % Base classes of showable and viewable objects
 %   Showable      - represents devices that can display a pattern

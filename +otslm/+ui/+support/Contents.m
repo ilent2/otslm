@@ -18,7 +18,7 @@
 %   saveVariableToBase         - saves the variables to the base workspace
 %   simplePatternValueChanged  - simplePatternValueChanged common code for simple update uis
 %   updateComplexDisplay       - updateComplexDisplay helper for the display on simple uis with ptype
-%   updateIterDisplay          - updateSimpleDisplay helper for updating the display on simple uis
+%   updateIterDisplay          - updateSimpleDisplay helper for updating the display on iterative uis
 %   updateSimpleDisplay        - updateSimpleDisplay helper for updating the display on simple uis
 %
 % Copyright 2019 Isaac Lenton
