@@ -12,8 +12,8 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
+import os
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
 
@@ -41,9 +41,15 @@ release = u''
 extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
+    'sphinx.ext.autodoc',
+    'sphinxcontrib.matlab',
     'sphinx_matlabdoc_builder',
 ]
 #    'recommonmark',
+
+# Add things for matlabdomain
+matlab_src_dir = os.path.abspath(os.path.join('..', '..'))
+primary_domain = 'mat'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

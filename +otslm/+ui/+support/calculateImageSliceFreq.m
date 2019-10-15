@@ -1,16 +1,32 @@
 function [fvals, freqs] = calculateImageSliceFreq(img, theta, offset, swidth)
 % Calculate the frequency spectrum of an image slice
 %
-% [fvals, freqs] = calculateImageSliceFreq(img, theta, offset, swidth)
-% calculates the frequency spectrium of the image slice specified by angle
-% theta (radians), offset (pixels) and slice width `swidth` (pixels).
+% Usage
+%   [fvals, freqs] = calculateImageSliceFreq(img, theta, offset, swidth)
+%   calculates the frequency spectrum of a slice through an image.
 %
+% Parameters
+%   - img     -- Real valued image to calculate spectrum from
+%   - theta   -- Angle of slice (radians)
+%   - offset  -- Offset of slice (pixels)
+%   - swidth  -- width of slice (pixels) to average over
+%
+% Returns
+%   - fvals   -- Calculated amplitudes
+%   - freqs   -- Corresponding frequencies
+%
+% This function is used for the power spectrum plots in the calibration
+% functions. The function samples a slice of pixels from an image.
+% Arguments control the slice position, width and angle. The function
+% returns the spatial frequencies and complex amplitudes. For example
+% usage, see :class:`ui.utils.CalibrationStepFarfield`.
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
 % TODO: Should this function move elsewhere?
-            
+
 imwidth = size(img, 2);
 imheight = size(img, 1);
 len = sqrt(imwidth.^2 + imheight.^2);

@@ -10,7 +10,7 @@ components and a brief description of their function. The rest of the
 sub-package is split between ``simple``, ``utils``, ``tools``, ``iter``,
 and ``examples`` sub-packages providing interfaces to the OTSLM core
 packages and examples of how the UI can be combined. The UI sub-package
-also contains a ```support`` <#support-sub-package>`__ sub-package with
+also contains a :mod:`otslm.ui.support` sub-package with
 common code used by the GUIs.
 
 This page describes the Launcher, the support package and provides a
@@ -131,263 +131,83 @@ changed.
 Support sub-package
 ===================
 
+.. automodule:: +otslm.+ui.+support
+
 The support sub-package contains common code and functions used by the
 GUI components. These support functions can be used to design additional
 user interfaces using the toolbox. This section briefly describes these
 functions and how they are used by the existing GUI components.
 
-Some of these functions should really be part of a custom GUI component
-layout class. To the best of our knowledge, this is currently not
-supported for Matlab Apps in R2018a. If this changes in a future Matlab
-release, much of this code will likely move/change.
+.. warning::
+   Some of these functions should really be part of a custom GUI component
+   layout class. To the best of our knowledge, this is currently not
+   supported for Matlab Apps in R2018a. If this changes in a future Matlab
+   release, much of this code will likely move/change.
 
-calculateImageSliceFreq
------------------------
-
-Calculate the frequency spectrum of an image slice.
-
-.. code:: matlab
-
-    [fvals, freqs] = calculateImageSliceFreq(img, theta, offset, swidth)
-    % calculates the frequency spectrum of the image slice specified by angle
-    % theta (radians), offset (pixels) and slice width `swidth` (pixels).
-
-This function is used for the power spectrum plots in the calibration
-functions. The function samples a slice of pixels from an image.
-Arguments control the slice position, width and angle. The function
-returns the spatial frequencies and complex amplitudes. For example
-usage, see ``ui.utils.CalibrationStepFarfield.mlapp``.
+.. autofunction:: calculateImageSliceFreq
 
 checkImagesChanged
 ------------------
 
-Compare two cell arrays of images for changes.
-
-.. code:: matlab
-
-    changed = checkImagesChanged(oldImage, newImages)
-    % compares each image in the two cell arrays for differences.
-    % If the cell arrays are different, returns true.
-
-This function is used by most methods which have an input image,
-including ``tools.Visualise.mlapp``, ``tools.finalize.mlapp`` and
-``tools.dither.mlapp``. The two inputs contain cell arrays of matrices
-to be compared. If either the length of the cell arrays, size or type of
-the images, or the image data are different, the function returns true.
-This can be a expensive comparison. We look for changes between the old
-and new images rather than watching for a change event on variables,
-this is to allow the user to enter constants or procedural functions
-into the GUI inputs.
+.. autofunction:: checkImagesChanged
 
 cleanTimer
 ----------
 
-Cleans up the timer when the app is about to finish.
-
-.. code:: matlab
-
-    cleanTimer(tmr)
-
-Function attempts to stop and delete the given timer. The function
-avoids raising errors, making it safe to use in a GUI clean-up method.
-Timers are mainly used to watch for changes to input variables, such as
-image inputs to ``tools.Visualise.mlapp``, ``tools.finalize.mlapp`` and
-``tools.dither.mlapp``.
+.. autofunction:: cleanTimer
 
 complexPatternValueChanged
 --------------------------
 
-common code for simple update uis with ptype.
-
-.. code:: matlab
-
-    complexPatternValueChanged(name, phase, amplitude, ptype, ...
-      device_name, enable_update, enable_display, ...
-      display_ax, display_type, display_name)
-
-As per ```simplePatternValueChanged`` <#simplePatternValueChanged>`__
-but with complex patterns and an additional ``ptype`` argument.
-
-See also ```iterPatternValueChanged`` <#iterPatternValueChanged>`__ and
-```updateComplexDisplay`` <#updateComplexDisplay>`__.
+.. autofunction:: complexPatternValueChanged
 
 findTabUserdata
 ---------------
 
-Find entries with the specific user-data tag and returns a struct
-
-.. code:: matlab
-
-    findTabUserdata(tab, tag_strings)
-
-This function uses ``findall`` to search the given ``Tab`` for entries
-whose ``UserData`` attribute is set to one of the specified strings.
-``tag_strings`` should be a cell array of character vectors for the tags
-to search for. Example usage (based on ``ui.tools.SampleRegion``):
-
-.. code:: matlab
-
-    entry = otslm.ui.support.findTabUserdata(tab, ...
-        {'location', 'target', 'radius'});
-                
-    entry.location.ValueChangedFcn = createCallbackFcn(app, @patternValueChanged, true);
-    entry.target.Value= 'test';
+.. autofunction:: findTabUserdata
 
 getDeviceFromBase
 -----------------
 
-get an showable object from the base workspace.
-
-.. code:: matlab
-
-    dev = getDeviceFromBase(sname)
-
-This function attempts to get the variable specified by ``sname`` from
-the base workspace. If ``sname`` is empty, the funtion returns an empty
-matrix. If ``sname`` is not a variable name, the function raises a
-warning. Otherwise, the function gets the variable and checks to see if
-it is valid using ``isvalid``. For example usage see
-```simplePatternValueChanged`` <#simplePatternValueChanged>`__.
+.. autofunction:: getDeviceFromBase
 
 getImageOrNone
 --------------
 
-Get the image from the base workspace or an empty array.
-
-.. code:: matlab
-
-    im = getImageOrNone(name, silent=false)
-
-Attempts to evaluate the given string in the base workspace. The string
-can either be a variable name or valid matlab code which can be
-evaluated in the users base workspace. If an error occurs, the function
-prints the error to the console and returns a empty matrix. If the
-silent argument is set to true, the function does not print to the
-console (useful for methods which frequently check for the existance of
-a variable, such as `checkImagesChanged <#checkImagesChanged>`__. For
-example usage, see ``tools.Visualise.mlapp``, ``tools.finalize.mlapp``
-or ``tools.dither.mlapp``.
+.. autofunction:: getImageOrNone
 
 iterPatternValueChanged
 -----------------------
 
-common code for iter update uis
-
-.. code:: matlab
-
-    iterPatternValueChanged(name, pattern, ...
-      device_name, enable_update, enable_display, ...
-      display_ax, display_type, display_name, fitness_method)
-
-As per ```simplePatternValueChanged`` <#simplePatternValueChanged>`__
-but with complex patterns and an additional ``ptype`` argument.
-
-See also
-```complexPatternValueChanged`` <#complexPatternValueChanged>`__ and
-```updateIterDisplay`` <#updateIterDisplay>`__.
+.. autofunction:: iterPatternValueChanged
 
 populateDeviceList
 ------------------
 
-Populates the device list with devices of the specific type.
-
-.. code:: matlab
-
-    populateDeviceList(list, type_name='otslm.utils.Showable')
-
-This function is used to populate the contents of a ``uidropdown``
-widget. The function takes a handle to the ``uidropdown`` widget, an
-optional Matlab class name and searches the base workspace for variables
-with the specified type. If no class name is specified, the method
-populates the list with ``Showable`` object names. For example usage,
-see ``ui.simple.linear.mlapp``.
+.. autofunction:: populateDeviceList
 
 saveVariableToBase
 ------------------
 
-saves the variables to the base workspace
-
-.. code:: matlab
-
-    saveVariableToBase(name, data, warn_prefix)
-
-This function is called to save patterns into the base workspace. The
-function is called with the variable name, the data to be saved and an
-optional prefix to pre-pend to any warnings the function raises. The
-function checks that name is a valid variable name and then attempts to
-assign data in the base workspace with the given variable name. This
-function is used by most GUIs for saving computed patterns into the base
-workspace, for example usage see
-```simplePatternValueChanged`` <#simplePatternValueChanged>`__.
+.. autofunction:: saveVariableToBase
 
 simplePatternValueChanged
 -------------------------
 
-Common code for simple update GUIs.
-
-.. code:: matlab
-
-    simplePatternValueChanged(name, pattern, ...
-        device_name, enable_update, enable_display, ...
-        display_ax, display_type, display_name)
-
-This function is used by most of the simple GUIs including
-``ui.simple.linear``, ``ui.simple.random``, and ``ui.tools.combine``.
-The function takes as input values from the various GUI components as
-well as the generated pattern. The function saves the pattern to the
-workspace, displays the pattern on the device, and updates the pattern
-preview (if the appropriate values are set).
-
-See also ```iterPatternValueChanged`` <#iterPatternValueChanged>`__ and
-```complexPatternValueChanged`` <#complexPatternValueChanged>`__.
+.. autofunction:: simplePatternValueChanged
 
 updateComplexDisplay
 --------------------
 
-helper for the display on simple uis with ptype
-
-.. code:: matlab
-
-    updateComplexDisplay(pattern, slm, ptype, display_type, ax, output_name)
-
-As per ```updateSimpleDisplay`` <#updateSimpleDisplay>`__ but with
-complex patterns and an additional ``ptype`` argument.
-
-See also ```updateIterDisplay`` <#updateIterDisplay>`__ and
-```complexPatternValueChanged`` <#complexPatternValueChanged>`__.
+.. autofunction:: updateComplexDisplay
 
 updateIterDisplay
 -----------------
 
-helper for updating the display on iterative GUIs
-
-.. code:: matlab
-
-    updateIterDisplay(pattern, slm, display_type, ax, ...
-        output_name, fitness_method)
-
-Similar to ```updateSimpleDisplay`` <#updateSimpleDisplay>`__ but
-displays either the phase pattern, error function, simulated far-field
-or device pattern in the preview window.
-
-See also ```updateComplexDisplay`` <#updateComplexDisplay>`__ and
-```iterPatternValueChanged`` <#iterPatternValueChanged>`__.
+.. autofunction:: updateIterDisplay
 
 updateSimpleDisplay
 -------------------
 
-helper for updating the display on simple uis
+.. autofunction:: updateSimpleDisplay
 
-.. code:: matlab
-
-    updateSimpleDisplay(pattern, slm, display_type, ax, output_name)
-
-This function generates the pattern to display in the preview axis. If
-output\_name is not empty, the function also writes the pattern to the
-specified variable name. This function is used by most of the simple
-GUIs including ``ui.simple.linear``, ``ui.simple.random``, and
-``ui.tools.combine``. For example usage, see
-```simplePatternValueChanged`` <#simplePatternValueChanged>`__.
-
-See also ```updateComplexDisplay`` <#updateComplexDisplay>`__ and
-```updateIterDisplay`` <#updateIterDisplay>`__.

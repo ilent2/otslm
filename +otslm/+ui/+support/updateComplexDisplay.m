@@ -1,9 +1,25 @@
 function updateComplexDisplay(pattern, slm, ptype, display_type, ax, output_name)
-% updateComplexDisplay helper for the display on simple uis with ptype
+% Helper for the display on simple uis with ptype
 %
-% updateComplexDisplay(pattern, slm, ptype, display_type, ax, output_name)
-% Generates the display pattern, updates the axis and outputs to base.
+% Usage
+%   updateComplexDisplay(pattern, slm, ptype, display_type, ax, output_name)
+%   Generates the display pattern, updates the axis and outputs to base.
 %
+% Parameters
+%   - pattern -- pattern to be displayed
+%   - slm -- showable device displaying pattern (or ``[]``)
+%   - ptype -- type of pattern.  Must be 'phase', 'amplitude' or 'complex'.
+%   - display_type -- mode for the preview window.
+%     can be 'phase', 'raw', 'device', or 'farfield'.
+%   - ax -- axis to place the preview in
+%   - output_name -- output variable name in base workspace (or ``[]``)
+%
+% As per :func:`updateSimpleDisplay` but with complex patterns and
+% an additional ``ptype`` argument.
+%
+% See also :func:`updateIterDisplay` and
+% :func:`complexPatternValueChanged`
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

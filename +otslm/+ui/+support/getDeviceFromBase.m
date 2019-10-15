@@ -1,9 +1,22 @@
 function slm = getDeviceFromBase(sname)
-% getDeviceFromBase get an showable object from the base workspace
+% Get an showable object from the base workspace
 %
-% If the device is invalid or deleted, displays a warning and
-% returns an empty list.
+% Usage
+%  slm = getDeviceFromBase(sname)
 %
+% Parameters
+%  - sname -- string for device variable name in base workspace
+%
+% Returns
+%  Returns the Showable device or an empty list.
+%
+% This function attempts to get the variable specified by ``sname`` from
+% the base workspace. If ``sname`` is empty, the function returns an empty
+% matrix. If ``sname`` is not a variable name, the function raises a
+% warning. Otherwise, the function gets the variable and checks to see if
+% it is valid using ``isvalid``. For example usage see
+% :func:`simplePatternValueChanged`.
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

@@ -1,10 +1,31 @@
 function updateIterDisplay(pattern, slm, display_type, ax, ...
     output_name, fitness_method)
-% updateSimpleDisplay helper for updating the display on iterative uis
+% Helper for updating the display on iterative uis.
 %
-% updateSimpleDisplay(pattern, slm, display_type, ax, output_name)
-% Generates the display pattern, updates the axis and outputs to base.
+% Usage
+%   updateIterDisplay(pattern, slm, display_type, ax, output_name,
+%   fitness_method) generates the display pattern, updates the
+%   axis and outputs to base.
 %
+% Parameters
+%   - pattern -- pattern to be displayed
+%   - slm -- showable device displaying pattern (or ``[]``)
+%   - display_type -- mode for the preview window.
+%     can be 'phase', 'error', 'device', or 'farfield'
+%   - ax -- axis to place the preview in
+%   - output_name -- output variable name in base workspace (or ``[]``)
+%   - fitness_method -- function to plot fitness
+%
+% Similar to :func:`updateSimpleDisplay` but displays either the
+% phase pattern, error function, simulated far-field or device
+% pattern in the preview window.
+%
+% This function generates the pattern to display in the preview axis.
+% If ``output_name`` is not empty, the function also writes the
+% pattern to the specified variable name.
+%
+% See also :func:`updateComplexDisplay` and :func:`iterPatternValueChanged`.
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

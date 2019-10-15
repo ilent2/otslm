@@ -1,9 +1,25 @@
 function populateDeviceList(list, type_name)
-% POPULATEDEVICELIST Populates the device list with Showable devices
+% Populates the device list with Showable devices
 %
-% populateDeviceList(list) populates the device drop down list
-% with the otslm.utils.Showable devices in the base workspace.
+% Usage
+%   populateDeviceList(list) populates the device drop down list
+%   with the ``otslm.utils.Showable`` devices in the base workspace.
 %
+%   populateDeviceList(list, type_name) specify types of devices
+%   to populate list with.
+%
+% Parameters
+%   - list (uidropdown) -- List handle to add items to
+%   - type_name -- Name of type to filter variables
+%     by (optional, default: ``otslm.utils.Showable``)
+%
+% This function is used to populate the contents of a ``uidropdown``
+% widget. The function takes a handle to the ``uidropdown`` widget, an
+% optional Matlab class name and searches the base workspace for variables
+% with the specified type. If no class name is specified, the method
+% populates the list with ``Showable`` object names. For example usage,
+% see :class:`ui.simple.linear`.
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
