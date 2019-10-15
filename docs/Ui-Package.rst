@@ -144,6 +144,9 @@ functions and how they are used by the existing GUI components.
    supported for Matlab Apps in R2018a. If this changes in a future Matlab
    release, much of this code will likely move/change.
 
+calculateImageSliceFreq
+-----------------------
+
 .. autofunction:: calculateImageSliceFreq
 
 checkImagesChanged
