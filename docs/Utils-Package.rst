@@ -83,11 +83,10 @@ camera are positioned in one of the following configurations
 .. figure:: images/utilsPackage/expSetup.png
    :alt: slm configurations
 
-   slm configurations
-
-(a) shows a Michelson interferometer setup. The SLM and reference mirror
-    will typically be tilted slightly relative to each other.
-(b) shows a camera imaging the far-field of the device.
+   Two different SLM configurations.
+   (a) shows a Michelson interferometer setup. The SLM and reference mirror
+   will typically be tilted slightly relative to each other.
+   (b) shows a camera imaging the far-field of the device.
 
 The sub-package contains several methods using these configurations.
 Some of the methods can be fairly unstable. The most robust methods,
