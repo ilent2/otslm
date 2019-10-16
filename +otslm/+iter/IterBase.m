@@ -1,24 +1,25 @@
 classdef IterBase < handle
-% ITERBASE base class for iterative algorithm classes
+% Base class for iterative algorithm classes
+% Inherits from :class:`handle`.
 %
 % Methods
-%   run()         Run the iterative method
+%   - run()      -- Run the iterative method
 %
 % Properties
-%   guess         Best guess at hologram pattern (complex)
-%   target        Target pattern the method tries to approximate (complex)
-%   vismethod     Method used to do the visualisation
-%   invmethod     Method used to calculate initial guess/inverse-visualisation
+%   - guess      -- Best guess at hologram pattern (complex)
+%   - target     -- Target pattern the method tries to approximate (complex)
+%   - vismethod  -- Method used to do the visualisation
+%   - invmethod  -- Method used to calculate initial guess/inverse-visualisation
 %
-%   phase         Phase of the best guess (real: 0, 2*pi)
-%   amplitude     Amplitude of the best guess (real)
+%   - phase      -- Phase of the best guess (real: 0, 2*pi)
+%   - amplitude  -- Amplitude of the best guess (real)
 %
-%   objective     Objective function used to evaluate fitness or []
-%   fitness       Fitness evaluated after every iteration or []
+%   - objective  -- Objective function used to evaluate fitness or []
+%   - fitness    -- Fitness evaluated after every iteration or []
 %
 % Abstract methods:
-%   iteration()       run a single iteration of the method
-%
+%   - iteration()  --   run a single iteration of the method
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

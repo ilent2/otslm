@@ -1,6 +1,7 @@
 classdef GerchbergSaxton3d < otslm.iter.IterBaseEwald ...
     & otslm.iter.GerchbergSaxton
 % Implementation of 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
+% Inherits from :class:`GerchbergSaxton` and :class:`IterBaseEwald`.
 %
 % This algorithm attempts to recreate the target volume using
 % the 3-D analog of the Gerchberg-Saxton algorithm.
@@ -9,18 +10,21 @@ classdef GerchbergSaxton3d < otslm.iter.IterBaseEwald ...
 % and Graeme Whyte and Johannes Courtial 2005 New J. Phys. 7 117
 %
 % Methods
-%   run()         Run the iterative method
+%   - run()     --  Run the iterative method
 %
 % Properties
-%   adaptive      Adaptive-adaptive factor (1 for Gerchberg-Saxton)
+%   - adaptive  --  Adaptive-adaptive factor (1 for Gerchberg-Saxton)
 %
-%   guess         Best guess at hologram pattern
-%   target        Target pattern the method tries to approximate
-%   vismethod     Method used to do the visualisation
-%   invmethod     Method used to calculate initial guess/inverse-visualisation
-%   objective     Objective function used to evaluate fitness
-%   fitness       Fitness evaluated after every iteration
+% Inherited properties
+%   - guess     --  Best guess at hologram pattern
+%   - target    --  Target pattern the method tries to approximate
+%   - vismethod --  Method used to do the visualisation
+%   - invmethod --  Method used to calculate initial guess/inverse-visualisation
+%   - objective --  Objective function used to evaluate fitness
+%   - fitness   --  Fitness evaluated after every iteration
 %
+% See also GerchbergSaxton3d
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

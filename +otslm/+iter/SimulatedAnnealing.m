@@ -1,23 +1,26 @@
 classdef SimulatedAnnealing < otslm.iter.IterBase
 % Optimise the pattern using simulated annealing
+% Inherits from :class:`IterBase`.
 %
 % Methods
-%   run()         Run the iterative method
+%   - run()     --  Run the iterative method
 %
 % Properties
-%   levels         Discrete levels that will be search in optimisation
-%   temperature    Current temperature of the system
-%   maxTemperature Scaling factor for new pattern guesses
-%   temperatureFcn Function used to calculate temperature in iteration
-%   lastFitness    The fitness associated with the current guess
+%   - levels         -- Discrete levels that will be search in optimisation
+%   - temperature    -- Current temperature of the system
+%   - maxTemperature -- Scaling factor for new pattern guesses
+%   - temperatureFcn -- Function used to calculate temperature in iteration
+%   - lastFitness    -- The fitness associated with the current guess
 %
-%   guess         Best guess at hologram pattern
-%   target        Target pattern the method tries to approximate
-%   vismethod     Method used to do the visualisation
-%   invmethod     Method used to calculate initial guess/inverse-visualisation
-%   objective     Objective function used to evaluate fitness
-%   fitness       Fitness evaluated after every iteration
+%   - guess     --  Best guess at hologram pattern
+%   - target    --  Target pattern the method tries to approximate
+%   - vismethod --  Method used to do the visualisation
+%   - invmethod --  Method used to calculate initial guess/inverse-visualisation
+%   - objective --  Objective function used to evaluate fitness
+%   - fitness   --  Fitness evaluated after every iteration
 %
+% See also SimulatedAnnealing
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

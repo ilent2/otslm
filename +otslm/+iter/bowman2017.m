@@ -1,19 +1,23 @@
 function pattern = bowman2017(target, varargin)
-% BOWMAN2017 wrapper for Bowman 2017 conjugate gradient implementation
-%
-% pattern = bowman2017(target, ...) attempt to generate the target
-% using a phase pattern optimised using conjugate gradient method.
+% Wrapper for Bowman 2017 conjugate gradient implementation
 %
 % See Bowman, et al. Optics Express 25, 11692 (2017)
 % If you use this method, please consider citing Bowman 2017.
 %
-% Optional named parameters:
-%   'guess'   pattern   Initial guess at the phase
-%   'iterations' num    Number of iterations (default: 200)
-%   'steepness'  num    Steepness for Bowman cost function (default: 9.0)
-%   'incident'  pattern Incident illumination (default: ones)
-%   'roisize'    num    Optimisation region size (default: min(size)/2)
+% Usage
+%   pattern = bowman2017(target, ...) attempt to generate the target
+%   using a phase pattern optimised using conjugate gradient method.
 %
+% Parameters
+%   - target -- target pattern to generate
+%
+% Optional named parameters
+%   - 'guess'       -- Initial guess at the phase
+%   - 'iterations'  -- Number of iterations (default: 200)
+%   - 'steepness'   -- Steepness for Bowman cost function (default: 9.0)
+%   - 'incident'    -- Incident illumination (default: ones)
+%   - 'roisize'     -- Optimisation region size (default: min(size)/2)
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

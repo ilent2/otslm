@@ -1,23 +1,27 @@
 function [pattern, beam, coeffs] = bsc(sz, target, varargin)
 % BSC optimisation in vector spherical wave function basis
 %
-% [pattern, beam, coeffs] = bsc(target, ...) attempt to produce
-% target using a phase pattern.  Returns the phase pattern matched
-% to the beam (bsc) and optimised basis weighting coefficients.
+% Usage
+%   [pattern, beam, coeffs] = bsc(target, ...) attempt to produce
+%   target using a phase pattern.  Returns the phase pattern matched
+%   to the beam (bsc) and optimised basis weighting coefficients.
 %
-% Optional named parameters:
-%   'incident'  pattern  Incident illumination on SLM
-%   'roi'       func     Region to optimise (default: roiAll)
-%   'basis'     str      BSC basis to optimise in (default: vswf_lg)
-%   'basis_size' num     Number of basis functions to use
-%   'polarisation' [x y] Polarisation of the basis functions
-%   'wavelength' num     Wavelength in medium [m]
-%   'speed'     num      Speed in medium [m/s]
-%   'NA'        num      Numberical aperture of objective
-%   'pixel_size' num     Size of pixels in target [m]
-%   'method'    str      Optimisation method to use
-%   'radius'    num      Radius for hologram unwrapping (default: 1.0)
+% Parameters
+%   - target -- target pattern
 %
+% Optional named parameters
+%   - 'incident'  pattern -- Incident illumination on SLM
+%   - 'roi'       func    -- Region to optimise (default: roiAll)
+%   - 'basis'     str     -- BSC basis to optimise in (default: vswf_lg)
+%   - 'basis_size' num    -- Number of basis functions to use
+%   - 'polarisation' [x y] -- Polarisation of the basis functions
+%   - 'wavelength' num    -- Wavelength in medium [m]
+%   - 'speed'     num     -- Speed in medium [m/s]
+%   - 'NA'        num     -- Numberical aperture of objective
+%   - 'pixel_size' num    -- Size of pixels in target [m]
+%   - 'method'    str     -- Optimisation method to use
+%   - 'radius'    num     -- Radius for hologram unwrapping (default: 1.0)
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

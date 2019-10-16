@@ -1,4 +1,7 @@
 
+.. todo:: Each iterative method should have a short example
+.. todo:: Re-do objective functions and mask functions sections
+
 ##############
 `iter` Package
 ##############
@@ -13,18 +16,53 @@ optimisation.
 Iterative optimisation methods
 ==============================
 
+.. automodule:: +otslm.+iter
+
 GerchbergSaxton
 ---------------
 
-| Implementation of Gerchberg-Saxton and Adaptive-Adaptive algorithms ##
-  DirectSearch search through each pixel value to optimise hologram ##
-  IterBase base class for iterative algorithm classes ##
-  SimulatedAnnealing Optimise the pattern using simulated annealing ##
-  GerchbergSaxton3d Implementation of 3-D Gerchberg-Saxton and
-  Adaptive-Adaptive algorithms ## IterBase3d
-| base class for 3-D iterative algorithm classes ## bsc optimisation in
-  vector spherical wave function basis ## bowman2017 wrapper for Bowman
-  2017 conjugate gradient implementation (see also bowman2017/README.md)
+.. autoclass:: GerchbergSaxton
+   :members:
+
+DirectSearch
+------------
+
+.. autoclass:: DirectSearch
+   :members:
+
+IterBase
+--------
+
+.. autoclass:: IterBase
+   :members:
+
+SimulatedAnnealing
+------------------
+
+.. autoclass:: SimulatedAnnealing
+   :members:
+
+GerchbergSaxton3d
+-----------------
+
+.. autoclass:: GerchbergSaxton3d
+   :members:
+
+IterBaseEwald
+-------------
+
+.. autoclass:: IterBaseEwald
+   :members:
+
+bsc
+---
+
+.. autofunction:: bsc
+
+bowman2017
+----------
+
+.. autofunction:: bowman2017
 
 Objective functions
 ===================

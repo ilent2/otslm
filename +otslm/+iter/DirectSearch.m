@@ -1,22 +1,26 @@
 classdef DirectSearch < otslm.iter.IterBase
-% search through each pixel value to optimise hologram
+% Optimiser to search through each pixel value to optimise hologram
+% Inherits from :class:`IterBase`.
 %
 % The algorithm is described in
 % Di Leonardo, et al., Opt. Express 15, 1913-1922 (2007)
 %
 % Methods
-%   run()         Run the iterative method
+%   - run()     --  Run the iterative method
 %
 % Properties
-%   levels        Discrete levels that will be search in optimisation
+%   - levels    --  Discrete levels that will be search in optimisation
 %
-%   guess         Best guess at hologram pattern
-%   target        Target pattern the method tries to approximate
-%   vismethod     Method used to do the visualisation
-%   invmethod     Method used to calculate initial guess/inverse-visualisation
-%   objective     Objective function used to evaluate fitness
-%   fitness       Fitness evaluated after every iteration
+% Inherited properties
+%   - guess     --  Best guess at hologram pattern
+%   - target    --  Target pattern the method tries to approximate
+%   - vismethod --  Method used to do the visualisation
+%   - invmethod --  Method used to calculate initial guess/inverse-visualisation
+%   - objective --  Objective function used to evaluate fitness
+%   - fitness   --  Fitness evaluated after every iteration
 %
+% See also DirectSearch
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
