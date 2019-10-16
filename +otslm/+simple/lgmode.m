@@ -1,24 +1,36 @@
 function [phase, amplitude] = lgmode(sz, amode, rmode, varargin)
-% LGMODE generates the phase pattern for a LG beam
+% Generates the phase pattern for a LG beam
 %
-% pattern = lgmode(sz, amode, rmode, ...) generates the phase
-% pattern with azimuthal order amode, radial order rmode.
+% Usage
+%   pattern = lgmode(sz, amode, rmode, ...) generates phase pattern.
 %
-% [phase, amplitude] = lgmode(...) also generates the amplitude pattern.
+%   [phase, amplitude] = lgmode(...) also generates the amplitude pattern.
 %
-% Optional named parameters:
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
-%   'radius'    radius      scaling factor for radial mode rings
-%   'p0'        p0          incident amplitude correction factor
-%       Should be 1.0 (default) for plane wave illumination (w_i = Inf),
-%       for Gaussian beams should be p0 = 1 - radius^2/w_i^2.
-%       See Lerner et al. (2012) for details.
+% Parameters
+%   - sz -- size of the pattern
+%   - amode -- azimuthal order
+%   - rmode -- radial order
 %
+% Optional named parameters
+%   - 'radius'    radius   -- scaling factor for radial mode rings
+%   - 'p0'        p0       -- incident amplitude correction factor
+%     Should be 1.0 (default) for plane wave illumination (w_i = Inf),
+%     for Gaussian beams should be p0 = 1 - radius^2/w_i^2.
+%     See `Lerner et al. (2012) <https://doi.org/10.1364/OL.37.004826>`__
+%     for details.
+%
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+%
+% In order to generate pure LG beams it is necessary to control both the
+% beam amplitude and phase. However, if the purity of the beam is not
+% important then the phase pattern is often sufficient to generate the
+% desired beam shape.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

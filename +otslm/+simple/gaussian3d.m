@@ -1,20 +1,28 @@
 function pattern = gaussian3d(sz, sigma, varargin)
-% GAUSSIAN generates a gaussian lens similar to otslm.simple.gaussian
-%
-% pattern = gaussian3d(sz, sigma, ...)
-% Calculates a Gaussian pattern scaled by sigma.  Sigma can be a
-% 1 or 3 element vector for the radial or [x, y, z] scaling.
+% Generates a gaussian volume similar to :func:`gaussian`.
 %
 % The equation describing the lens is
 %
-%    z(r) = scale*exp(-r^2/(2*sigma^2))
+% .. math::
 %
-% Optional named parameters:
+%    z(r) = s \exp{-r^2/(2\sigma^2)}
 %
+% where :math:`s` is a scaling factor and :math:`\sigma` describes
+% the radius of the Gaussian distribution.
+%
+% Usage
+%   pattern = gaussian3d(sz, sigma, ...)
+%
+% Parameters
+%   - sz -- size of the pattern ``[rows, cols, depth]``
+%   - sigma -- radius of the distribution :math:`\sigma`.  Can be
+%     a 1 or 3 element vector for the radial or ``[x, y, z]`` scaling.
+%
+% Optional named parameters
 %   'scale'       scale       scaling value for the final pattern
 %   'centre'      [x, y]      centre location for lens
 %   'gpuArray'    bool        If the result should be a gpuArray
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

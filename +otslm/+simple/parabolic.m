@@ -1,16 +1,25 @@
 function pattern = parabolic(sz, alphas, varargin)
-% PARABOLIC generates a parabolic lens pattern
+% Generates a parabolic lens pattern.
+% The equation describing this lens is
 %
-% pattern = parabolic(sz, alphas, ...) generates a parabolic lens, the
-% equation describing this lens is
+% .. math::
 %
-%   z(r) = alpha_1*r^2 + alpha_2*r^4 + alpha_3*r^6 + ...
+%   z(r) = \alpha_1*r^2 + \alpha_2*r^4 + \alpha_3*r^6 + ...
+%
+% where :math:`alpha_n` are the polynomial coefficients.
+%
+% Usage
+%   pattern = parabolic(sz, alphas, ...) generates a parabolic lens.
+%
+% Parameters
+%   - sz -- size of pattern
+%   - alphas -- array of polynomial coefficients :math:`\alpha_n`
 %
 % The default centre for the lens is the centre of the pattern,
 % this can be modified with named parameters.
 %
-% See simple.aspheric for more information and named parameters.
-%
+% See also :func:`aspheric` for more information and named parameters.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

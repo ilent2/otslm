@@ -1,21 +1,32 @@
 function pattern = checkerboard(sz, varargin)
-% CHECKERBOARD generates a checkerboard pattern
+% Generates a checkerboard pattern.
+% A checkerboard pattern with equal sized squares can be written
+% mathematically as
 %
-% pattern = checkerboard(sz, ...) creates a checkerboard with spacing
-% of 1 pixel and values of 0 and 0.5.
+% .. math::
 %
-% Optional named parameters:
+%   f(x, y) = \mod(x + y, 2)
 %
-%   'spacing'   spacing     Width of checks (default 1 pixel)
-%   'value'     [l,h]       Lower and upper values of checks (default: 0, 0.5)
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Usage
+%   pattern = checkerboard(sz, ...) creates a checkerboard with spacing
+%   of 1 pixel and values of 0 and 0.5.
 %
+% Parameters
+%   - sz -- size of the pattern ``[rows, cols]``
+%
+% Optional named parameters
+%   - 'spacing'   spacing  --   Width of checks (default 1 pixel)
+%   - 'value'     [l,h]    --   Lower and upper values of
+%     checks (default: ``[0, 0.5]``)
+%
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'type'        type   --   is the lens cylindrical or spherical (1d or 2d)
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

@@ -1,16 +1,22 @@
 function pattern = random(sz, varargin)
-% RANDOM generates a random pattern
+% Generates a image filled with random noise.
+% The function supports three types of noise: uniform, normally
+% distributed, and binary.
 %
-% pattern = random(sz, ...) creates a pattern with uniform random
-% noise values between 0 and 1.
+% Usage
+%   pattern = random(sz, ...) creates a pattern with uniform random
+%   noise values between 0 and 1.  See the 'type' argument for other
+%   noise types.
 %
-% Optional named parameters:
+% Parameters
+%   - sz -- size of the pattern
 %
-%   'range'   [low, high]  Range of values (default: [0, 1)).
-%   'type'    type         Type of noise.  Can be 'uniform',
-%       'gaussian', or 'binary'.  (default: 'uniform')
-%   'gpuArray'    bool        If the result should be a gpuArray
-%
+% Optional named parameters
+%   - 'range' (numeric)     -- Range of values (default: [0, 1]).
+%   - 'type' (enum)         -- Type of noise.  Can be 'uniform',
+%     'gaussian', or 'binary'.  (default: 'uniform')
+%   - 'gpuArray' (logical)  -- If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

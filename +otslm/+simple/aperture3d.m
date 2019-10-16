@@ -1,17 +1,26 @@
 function pattern = aperture3d(sz, dimension, varargin)
-% APERTURE3D generate a 3-D volume similar to otslm.simple.aperture
+% Generate a 3-D volume similar to :func:`aperture`.
+% Can be used to create a target 3-D volume for beam shape optimisation.
 %
+% Usage
 %   pattern = aperture3d(sz, dimension, ...)
 %
-%   'shape'    shape      Shape of aperture to generate. Supported types:
-%           'sphere'    [radius]    Pinhole/circular aperture
-%           'cube'      [width]     Square with equal sides
-%           'rect'      [w, h, d]   Rectangle with width and height
-%           'shell'     [r1, r2]    Ring specified by inner and outer radius
-%   'value'       [l, h]      values for off and on regions (default: [])
-%   'centre'      [x, y, z]   centre location for pattern
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Properties
+%   - sz -- Size of the pattern ``[rows, cols, depth]``
+%   - dimensions -- aperture dimensions (depends on aperture shape)
 %
+% Optional named parameters
+%   - 'shape' -- Shape of aperture to generate. See supported shapes.
+%   - 'value'       [l, h]    -- values for off and on regions (default: [])
+%   - 'centre'      [x, y, z] -- centre location for pattern
+%   - 'gpuArray'   (logical)  -- If the result should be a gpuArray
+%
+% Supported shapes [dimensions]
+%    - 'sphere'  [radius]  -- Pinhole/circular aperture
+%    - 'cube'    [width]   -- Square with equal sides
+%    - 'rect'    [w, h, d] -- Rectangle with width and height
+%    - 'shell'   [r1, r2]  -- Ring specified by inner and outer radius
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

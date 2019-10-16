@@ -1,22 +1,28 @@
 function [pattern, amplitude] = hgmode(sz, xmode, ymode, varargin)
-% HGMODE generates the phase pattern for a HG beam
+% Generates the phase pattern for a HG beam
 %
-% pattern = hgmode(sz, xmode, ymode, ...) generates the phase
-% pattern with x and y mode numbers.
+% Usage
+%   pattern = hgmode(sz, xmode, ymode, ...) generates the phase
+%   pattern with x and y mode numbers.
 %
-% [phase, amplitude] = hgmode(...) also calculates the signed
-% amplitude of the pattern in addition to the phase.
+%   [phase, amplitude] = hgmode(...) also calculates the signed
+%   amplitude of the pattern in addition to the phase.
 %
-% Optional named parameters:
+% Parameters
+%   - sz -- size of the pattern
+%   - xmode -- HG mode order in the x-direction
+%   - ymode -- HG mode order in the y-direction
 %
-%   'scale'       scale       scaling factor for pattern
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Optional named parameters
+%   - 'scale'       scale  --   scaling factor for pattern
 %
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

@@ -1,21 +1,30 @@
 function pattern = zernike(sz, m, n, varargin)
-% ZERNIKE generates a pattern based on the zernike polynomials
+% Generates a pattern based on the zernike polynomials.
 %
-% pattern = zernike(sz, m, n, ...) evaluates the zernike polynomial
-% with integer index m, n (n >= |m|).
+% The polynomials are parameterised by two integers, :math:`m`
+% and :math:`n`. :math:`n` is a positive integer, and
+% :math:`|m| \leq n`.
 %
-% Optional named parameters:
+% Usage
+%   pattern = zernike(sz, m, n, ...)
 %
-%   'scale'       scale       scaling value for the final pattern
-%   'rscale'      rscale      radius scaling factor (default: min(sz)/2)
-%   'outside'     val         Value to use for outside points (default: 0)
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Parameters
+%   - sz (numeric) -- size of the pattern ``[rows, cols]``
+%   - m (numeric) -- polynomial order parameter (integer)
+%   - n (numeric) -- polynomial order parameter (integer)
 %
+% Optional named parameters
+%   - 'scale'       scale  --   scaling value for the final pattern
+%   - 'rscale'      rscale --   radius scaling factor (default: min(sz)/2)
+%   - 'outside'     val    --   Value to use for outside points (default: 0)
+%
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

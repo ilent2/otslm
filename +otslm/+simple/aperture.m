@@ -1,24 +1,32 @@
 function pattern = aperture(sz, dimension, varargin)
-% APERTURE generates an aperture mask
+% Generates different shaped aperture patterns/masks
 %
-% pattern = aperture(sz, dimension, ...) creates a circular aperture with
-% radius given by parameter dimension.  Array is logical array.
+% Usage
+%   pattern = aperture(sz, dimension, ...) creates a circular aperture with
+%   radius given by parameter dimension.  Array is logical array.
 %
-% Optional named parameters:
+% Parameters
+%   - sz -- size of the pattern ``[rows, cols]``
+%   - dimension -- List of numbers describing the aperture size.
+%     Lens of the list depends on the aperture shape.  For a circle
+%     dimensions is one element, the radius of the circle.
 %
-%   'shape'    shape      Shape of aperture to generate. Supported types:
-%           'circle'    [radius]    Pinhole/circular aperture
-%           'square'    [width]     Square with equal sides
-%           'rect'      [w, h]      Rectangle with width and height
-%           'ring'      [r1, r2]    Ring specified by inner and outer radius
-%   'value'       [l, h]      values for off and on regions (default: [])
-%   'centre'      [x, y]      centre location for pattern
-%   'offset'      [x, y]      offset in rotated coordinate system
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Optional named parameters
+%   - 'shape' -- Shape of aperture to generate. See supported shapes bellow.
+%   - 'value'       [l, h]  --  values for off and on regions (default: [])
+%   - 'centre'      [x, y]  --  centre location for pattern
+%   - 'offset'      [x, y]  --  offset in rotated coordinate system
+%   - 'aspect'    (num)     --  aspect ratio of lens (default: 1.0)
+%   - 'angle'     (num)     --  Rotation angle about axis (radians)
+%   - 'angle_deg' (num)     --  Rotation angle about axis (degrees)
+%   - 'gpuArray' (logical)  --  If the result should be a gpuArray
 %
+% Supported shapes [dimensions]
+%   - 'circle'    [radius] -- Pinhole/circular aperture
+%   - 'square'    [width]  -- Square with equal sides
+%   - 'rect'      [w, h]   -- Rectangle with width and height
+%   - 'ring'      [r1, r2] -- Ring specified by inner and outer radius
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

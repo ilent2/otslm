@@ -1,42 +1,48 @@
 function pattern = aspheric(sz, radius, kappa, varargin)
-% ASPHERIC generates a aspherical lens 
-%
-% pattern = aspheric(sz, radius, kappa, ...) generates a aspheric lens
-% described by radius and conic constant (kappa) centred in the image.
-%
+% Generates a aspherical lens.
 % The equation describing the lens is
 %
-%    z(r) = r^2 / ( R ( 1 + sqrt(1 - (1 + kappa) r^2/R^2)))
-%               + \sum_{i=2}^N  alpha_i * r^(2*i) + delta
+% .. math::
 %
-% Where kappa is
-%   < -1	    hyperbola
-%   -1	      parabola
-%   (-1, 0)   ellipse (surface is a prolate spheroid)
-%   0	        sphere
-%   > 0	      ellipse (surface is an oblate spheroid)
+%    z(r) = \frac{r^2}{ R ( 1 + \sqrt{1 - (1 + \kappa) r^2/R^2})}
+%               + \sum_{i=2}^N  \alpha_i  r^{2i} + \delta
 %
-% The alpha terms provide higher order parabolic corrections and
-% delta is a phase offset term.
+% where :math:`R` is the radius of the lens, :math:`\kappa` determines
+% if the lens shape:
+%  - ``<-1``      -- hyperbola
+%  - ``-1``       -- parabola
+%  - ``(-1, 0)``  -- ellipse (surface is a prolate spheroid)
+%  - ``0``        -- sphere
+%  - ``> 0``      -- ellipse (surface is an oblate spheroid)
+% and the :math:`\alpha`'s corresponds to higher order corrections
+% and :math:`\delta` is a constant offset.
 %
-% Optional named parameters:
+% Usage
+%   pattern = aspheric(sz, radius, kappa, ...) generates a aspheric lens
+%   described by radius and conic constant centred in the image.
 %
-%   'alpha'       [a1, ...]   additional parabolic correction terms
-%   'delta'       offset      offset for the final pattern (default: 0.0)
-%   'scale'       scale       scaling value for the final pattern
-%   'background'  img         Specifies a background pattern to use for
-%       values outside the lens.  Can also be a scalar, in which case
-%       all values are replaced by this value; or a string with
-%       'random' or 'checkerboard' for these patterns.
+% Parameters
+%   - sz -- size of the pattern ``[rows, cols]``
+%   - radius -- Radius of the lens :math:`R`
+%   - kappa -- conic constant :math:`\kappa`
 %
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Optional named parameters
+%   - 'alpha'    [a1, ...] --   additional parabolic correction terms
+%   - 'delta'       offset --   offset for the final pattern (default: 0.0)
+%   - 'scale'       scale  --   scaling value for the final pattern
+%   - 'background'  img    --   Specifies a background pattern to use for
+%     values outside the lens.  Can be a matrix; a scalar, in which case
+%     all values are replaced by this value; or a string with
+%     'random' or 'checkerboard' for these patterns.
 %
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'type'        type   --   is the lens cylindrical or spherical (1d or 2d)
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

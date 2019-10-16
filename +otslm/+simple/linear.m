@@ -1,18 +1,37 @@
 function pattern = linear(sz, spacing, varargin)
-% LINEAR generates a linear gradient
+% Generates a linear gradient.
+% The pattern is described by
 %
-% pattern = linear(sz, spacing, varargin) generates a linear gradient
-% with slope 1/spacing.
+% .. math::
 %
-% Optional named parameters:
+%   f(x) = \frac{1}{D} x
 %
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% where the gradient is :math:`1/D`. For a periodic grating with
+% maximum height of 1, :math:`D` corresponds to the grating spacing.
 %
+% Usage
+%   pattern = linear(sz, spacing, ...)
+%
+% Parameters
+%   - sz (numeric) -- size of pattern ``[rows, cols]``
+%   - spacing -- inverse gradient :math:`D`
+%
+% Optional named parameters
+%   - 'centre'      [x, y] --   centre location for lens (default: ``[1, 1]``)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+%
+% To generate a linear grating (a saw-tooth grating) you need to take
+% the modulo of this pattern.  This is done by :func:`otslm.tools.finalize`
+% but can also be done explicitly with::
+%
+%   sz = [40, 40];
+%   spacing = 10;
+%   im = mod(otslm.simple.linear(sz, spacing, 'angle_deg', 45), 1);
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

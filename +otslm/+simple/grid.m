@@ -1,20 +1,28 @@
 function [xx, yy, rr, phi] = grid(sz, varargin)
-% GRID generates a grid of points for other functions
+% Generates a grid of points similar to meshgrid.
 %
-% xx, yy = grid(sz, ...) equivilant to mesh grid.
+% This function is used by most other otslm.simple functions to create
+% grids of Cartesian or polar coordinates.  Without any optional
+% parameters, this function produces a similar result to the Matlab
+% :func:`meshgrid` function.
 %
-% xx, yy, rr, phi = grid(sz, ...) calculates polar coordinates.
+% Usage
+%   xx, yy = grid(sz, ...) equivilant to mesh grid.
 %
-% Optional named parameters:
+%   xx, yy, rr, phi = grid(sz, ...) calculates polar coordinates.
 %
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Parameters
+%   - sz -- size of the pattern ``[rows, cols]``
 %
+% Optional named parameters
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'type'        type   --   is the lens cylindrical or spherical (1d or 2d)
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

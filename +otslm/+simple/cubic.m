@@ -1,21 +1,30 @@
 function [pattern] = cubic(sz, varargin)
-% CUBIC generates cubic phase pattern for Airy beams
+% Generates cubic phase pattern for Airy beams.
+% The phase pattern is given by
 %
-% pattern = cubic(sz, ...) generates a cubic pattern according to
+% .. math::
 %
-%    pattern = (x^3 + y^3)*scale^3
+%    f(x, y) = (x^3 + y^3)s^3
 %
-% Optional named parameters:
+% where :math:`s` is a scaling factor.
 %
+% Usage
+%   pattern = cubic(sz, ...) generates a cubic pattern according to
+%
+% Parameters
+%   - sz -- size of the pattern ``[rows, cols]``
+%
+% Optional named parameters
 %   'scale'       scale       Scaling factor for pattern.
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'type'        type        is the lens cylindrical or spherical (1d or 2d)
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
 %
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'type'        type   --   is the lens cylindrical or spherical (1d or 2d)
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

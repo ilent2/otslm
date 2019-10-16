@@ -1,14 +1,18 @@
 function pattern = linear3d(sz, spacing, varargin)
-% LINEAR3D generates a linear gradient similar to otslm.simple.linear
+% Generates a linear gradient similar to :func:`linear`
 %
-% pattern = linear3d(sz, spacing, varargin) generates a linear gradient
-% with slope 1/spacing.  Spacing can be a scalar or a 3 element vector.
+% Usage
+%   pattern = linear3d(sz, spacing, ...)
 %
-% Optional named parameters:
+% Parameters
+%   - sz -- size of pattern to generate
+%   - spacing -- Inverse slope (1/spacing).  Can be a scalar or a
+%     3 element vector.
 %
-%   'centre'      [x, y, z]   centre location for pattern
-%   'gpuArray'    bool        If the result should be a gpuArray
-%
+% Optional named parameters
+%   - 'centre'      [x, y, z] --  centre location for pattern
+%   - 'gpuArray'    bool      --  If the result should be a gpuArray
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

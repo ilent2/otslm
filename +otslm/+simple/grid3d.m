@@ -1,19 +1,22 @@
 function [xx, yy, zz, rr, theta, phi] = grid3d(sz, varargin)
-% GRID3D generates a 3-D grid similar to otslm.simple.grid
+% Generates a 3-D grid similar to :func:`grid`
 %
-% [xx, yy, zz] = grid3d(sz, ...) equivilant to mesh grid.
+% Usage
+%   [xx, yy, zz] = grid3d(sz, ...) Equivalent to mesh grid.
 %
-% [xx, yy, zz, rr, theta, phi] = grid3d(sz, ...
-% calculates spherical coordinates:
-%     rr       Distance from centre of pattern
-%     theta    polar angle, measured from +z axis [0, pi]
-%     phi      azimuthal angle, measured from +x towards +y axes [0, 2*pi)
+%   [xx, yy, zz, rr, theta, phi] = grid3d(sz, ...)
+%   Additionally, calculates spherical coordinates:
+%     - rr      -- Distance from centre of pattern
+%     - theta   -- polar angle, measured from +z axis [0, pi]
+%     - phi     -- azimuthal angle, measured from +x towards +y axes [0, 2*pi)
 %
-% Optional named parameters:
+% Parameters
+%   - sz -- size of the pattern ``[rows, cols]``
 %
-%   'centre'      [x, y, z]   centre location for lens
-%   'gpuArray'    bool        If the result should be a gpuArray
-%
+% Optional named parameters
+%   - 'centre'      [x, y, z] --  centre location for lens
+%   - 'gpuArray'    bool      --  If the result should be a gpuArray
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

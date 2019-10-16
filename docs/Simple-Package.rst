@@ -3,6 +3,8 @@
 `simple` Package
 ################
 
+.. automodule:: +otslm.+simple
+
 This page contains a description of the functions contained in the
 ``otslm.simple`` package. These functions typically have analytic
 expressions and the functionality can be implemented in just a few lines
@@ -49,53 +51,12 @@ function can be used to create a cylindrical or spherical lens.
 aspheric
 --------
 
-Generates a aspheric lens described by the function
-
-.. raw:: html
-
-   <!--
-   z(r) = \frac{r^2}{ R \left( 1 + \sqrt{1 - (1 + \kappa) \frac{r^2}{R^2}}\right)}
-                   + \sum_{m=2}^N  \alpha_i * r^{2m}
-   -->
-
-[[images/simplePackage/aspheric\_equation.png]]
-
-where R is the radius of the lens, κ determines if the lens is \*
-``< -1`` hyperbola \* ``-1`` parabola \* ``(-1, 0)`` ellipse (surface is
-a prolate spheroid) \* ``0`` sphere \* ``> 0`` ellipse (surface is an
-oblate spheroid) and the :math:`\alpha`'s corresponds to higher order corrections.
-
-Usage:
-
-.. code:: matlab
-
-    im = otslm.simple.aspheric(sz, radius, kappa, ...);
-
-Optional parameters: \* ``'centre', [x, y]`` (double) centre location
-for lens (default: image centre) \* ``'alpha', [a1, ...]`` (double)
-additional parabolic correction terms \* ``'scale'`` (double) scaling
-value for the final pattern \* ``'offset'`` (double) offset for the
-final pattern (default: 0.0) \* ``'type'`` (string) is the lens
-cylindrical or spherical (1d or 2d) \* ``'aspect'`` (double) aspect
-ratio of lens (default: 1.0) \* ``'angle'`` (double) Rotation angle
-about axis (radians) \* ``'angle_deg'`` (double) Rotation angle about
-axis (degrees) \* ``'background'`` (matrix\|scalar) Specifies a
-background pattern to use for values outside the lens. Can also be a
-scalar, in which case all values are replaced by this value; or a string
-with 'random' or 'checkerboard' for these patterns.
+.. autofunction:: aspheric
 
 axicon
 ------
 
-Generates a axicon lens described by the function
-
-.. raw:: html
-
-   <!-- z(r) = -G|r| -->
-
-[[images/simplePackage/axicon\_equation.png]]
-
-where G is the gradient of the lens.
+.. autofunction:: axicon
 
 Example:
 
@@ -105,27 +66,13 @@ Example:
     gradient = 0.1;
     im = otslm.simple.axicon(sz, gradient);
 
-[[images/simplePackage/axicon\_default.png]]
-
-Optional parameters: \* ``'centre', [x, y]`` (double) centre location
-for lens \* ``'type'`` (string) is the lens cylindrical or spherical (1d
-or 2d) \* ``'aspect'`` (double) aspect ratio of lens (default: 1.0) \*
-``'angle'`` (double) Rotation angle about axis (radians) \*
-``'angle_deg'`` (double) Rotation angle about axis (degrees)
+.. figure:: images/simplePackage/axicon_default.png
+   :alt: Example of an axicon lens
 
 cubic
 -----
 
-Generates cubic phase pattern which can be used for generating airy
-beams according to the equation
-
-.. raw:: html
-
-   <!-- z(x, y)= a^3(x^3 + y^3) -->
-
-[[images/simplePackage/cubic\_equation.png]]
-
-where a is a scaling factor.
+.. autofunction:: cubic
 
 Example:
 
@@ -134,32 +81,17 @@ Example:
     sz = [128, 128];
     im = otslm.simple.cubic(sz);
 
-[[images/simplePackage/cubic\_default.png]]
-
-Optional parameters \* ``'centre', [x, y]`` (double) centre location for
-lens \* ``'type'`` (string) is the lens cylindrical or spherical (1d or
-2d) \* ``'aspect'`` (double) aspect ratio of lens (default: 1.0) \*
-``'angle'`` (double) Rotation angle about axis (radians) \*
-``'angle_deg'`` (double) Rotation angle about axis (degrees) \*
-``'scale'`` (double) Scaling factor for pattern.
+.. figure:: images/simplePackage/cubic_default.png
+   :alt: example cubic function output
 
 spherical
 ---------
 
-Generates a spherical lens pattern with values from 0 (at the edge) to
-1\*sign(radius) (at the centre). The lens equation is
+.. autofunction:: spherical
 
-.. raw:: html
-
-   <!--
-   z(r) = \frac{A}{r}\sqrt{R^2 - r^2}
-   -->
-
-[[images/simplePackage/spherical\_equation.png]]
-
-where A is a scaling factor and R is the radius of the lens.
-
-Example:
+The following example creates a spherical lens with radius 128 pixels.
+The lens is centred in the pattern and a checkerboard pattern is
+used for values outside the lens.
 
 .. code:: matlab
 
@@ -168,43 +100,18 @@ Example:
     background = otslm.simple.checkerboard(sz);
     im = otslm.simple.spherical(sz, radius, 'background', background);
 
-[[images/simplePackage/spherical\_default.png]]
-
-For a list of optional parameters see `aspheric <#aspheric>`__.
+.. figure:: images/simplePackage/spherical_default.png
+   :alt: example spherical lens output
 
 parabolic
 ---------
 
-Generates a parabolic lens pattern described by the equation
-
-.. raw:: html
-
-   <!-- z(r) = \alpha_1 r^2 + \alpha_2 r^4 + \alpha_3 r^6 + \dots -->
-
-[[images/simplePackage/parabolic\_equation.png]]
-
-where α is a parameter describing the shape of the lens.
-
-Usage:
-
-.. code:: matlab
-
-    im = otslm.simple.parabolic(sz, alphas);
-
-For additional information and named parameters, see
-`aspheric <#aspheric>`__.
+.. autofunction:: parabolic
 
 gaussian
 --------
 
-Generates a Gaussian profile. This can be used as a lens or as the
-intensity profile of the incident illumination. The function generates a
-Gaussian shape
-
-[[images/simplePackage/gaussian\_equation.png]]
-
-with width, σ, positioned in the centre of the image. The default
-height, A, is 1.
+.. autofunction:: gaussian
 
 Example usage:
 
@@ -215,14 +122,7 @@ Example usage:
     im = otslm.simple.gaussian(sz, sigma, 'scale', 2.0);
     imagesc(im);
 
-[[images/simplePackage/gaussian\_sc2.png]]
-
-Optional parameters: \* ``'centre', [x, y]`` (double) centre location
-for lens \* ``'scale'`` (double) scaling value for the final pattern \*
-``'type'`` (string) is the lens cylindrical or spherical (``'1d'`` or
-``'2d'``) \* ``'aspect'`` (double) aspect ratio of lens (default: 1.0)
-\* ``'angle'`` (double) Rotation angle about axis (radians) \*
-``'angle_deg'`` (double) Rotation angle about axis (degrees)
+.. figure:: images/simplePackage/gaussian_sc2.png
 
 Beams
 =====
@@ -238,68 +138,39 @@ produced by these functions, for details see
 bessel
 ------
 
-Generates the phase and amplitude patterns for Bessel beams.
-
-Optional parameters: \* ``'centre', [ x, y ]`` (double) centre location
-(default: pattern centre) \* ``'scale'`` (double) scaling factor for
-pattern \* ``'aspect'`` (double) aspect ratio for pattern \* ``'angle'``
-(double) rotation angle of pattern (radians) \* ``'angle_deg'`` (double)
-rotation angle of pattern (degrees)
+.. autofunction:: bessel
 
 hgmode
 ------
 
-Generates the phase pattern for a
 `Hermite-Gaussian <https://en.wikipedia.org/wiki/Gaussian_beam#Hermite-Gaussian_modes>`__
-(HG) beam. The HG modes for a complete basis in Cartesian coordinates.
+(HG) beams are solutions to the paraxial wave equation in
+Cartesian coordinates.
+Beams are described by two mode indices.
 
-Optional parameters: \* ``'centre', [ x, y ]`` (double) centre location
-(default: pattern centre) \* ``'scale'`` (double) scaling factor for
-pattern \* ``'aspect'`` (double) aspect ratio for pattern \* ``'angle'``
-(double) rotation angle of pattern (radians) \* ``'angle_deg'`` (double)
-rotation angle of pattern (degrees)
+.. autofunction:: hgmode
 
 lgmode
 ------
 
-Generates the phase pattern for a
 `Laguerre-Gaussian <https://en.wikipedia.org/wiki/Gaussian_beam#Laguerre-Gaussian_modes>`__
-(LG) beam. The LG modes for a complete basis in polar coordinates.
+(LG) beams are solutions to the paraxial wave equation in
+cylindrical coordinates.
 
-In order to generate pure LG beams it is necesary to control both the
-beam amplitude and phase. However, if the purity of the beam is not
-important then the phase pattern is often sufficient to generate the
-desired beam shape.
-
-Optional parameters: \* ``'centre', [ x, y ]`` (double) centre location
-(default: pattern centre) \* ``'aspect'`` (double) aspect ratio for
-pattern \* ``'angle'`` (double) rotation angle of pattern (radians) \*
-``'angle_deg'`` (double) rotation angle of pattern (degrees) \*
-``'radius'`` (double) scaling factor for radial mode rings \* ``'p0'``
-(double) incident amplitude correction factor Should be 1.0 (default)
-for plane wave illumination (w\_i = Inf), for Gaussian beams should be
-p0 = 1 - radius\ :sup:`2/w\_i`\ 2. See `Lerner et al.
-(2012) <https://doi.org/10.1364/OL.37.004826>`__ for details.
+.. autofunction:: lgmode
 
 igmode
 ------
 
-Generates phase and amplitude patterns for
 `Ince-Gaussian <https://en.wikipedia.org/wiki/Gaussian_beam#Ince-Gaussian_modes>`__
-(IG) beams The IG modes for a complete basis in elliptic coordinates.
-When the elipticity parameter is infinite, IG beams are equivalent to HG
-beams, and when the elipticity approaches 0, IG beams are equivalent to
+(IG) beams are solutions to the paraxial wave equation in
+elliptical coordinates.
+The IG modes for a complete basis in elliptic coordinates.
+When the ellipticity parameter is infinite, IG beams are equivalent to HG
+beams, and when the ellipticity approaches 0, IG beams are equivalent to
 LG beams.
 
-This implementation uses code by Miguel Bandres. More information can be
-found in `Bandres and Gutiérrez-Vega
-(2004) <https://doi.org/10.1364/ol.29.000144>`__.
-
-Optional parameters: \* ``'centre', [ x, y ]`` (double) centre location
-(default: pattern centre) \* ``'scale'`` (double) scaling factor for
-pattern \* ``'aspect'`` (double) aspect ratio for pattern \* ``'angle'``
-(double) rotation angle of pattern (radians) \* ``'angle_deg'`` (double)
-rotation angle of pattern (degrees)
+.. autofunction:: igmode
 
 Gratings
 ========
@@ -310,56 +181,24 @@ used to create diffraction gratings.
 linear
 ------
 
-This function generates a linear gradient according to
+.. autofunction:: linear
 
-.. raw:: html
-
-   <!-- f(x) = \frac{1}{D} x -->
-
-[[images/simplePackage/linear\_equation.png]]
-
-where the gradient is 1/D. For a periodic grating with maximum height of
-1, D corresponds to the grating spacing.
-
-To generate a linear grating (a saw-tooth grating) you would need to
-take the modulo of this pattern. This is done by
-``otslm.tools.finalize`` but we can also do it explicitly, for example:
-
-.. code:: matlab
-
-    sz = [40, 40];
-    spacing = 10;
-    im = mod(otslm.simple.linear(sz, spacing, 'angle_deg', 45), 1);
-
-[[images/simplePackage/linear\_mod.png]]
+.. figure:: images/simplePackage/linear_mod.png
+   :alt: example output from linear function
 
 Spacing can be a single number or two numbers for the spacing in the x
-and y directions. For an example of how ``otslm.simple.linear`` can be
+and y directions. For an example of how :func:`linear` can be
 used to shift the beam focus, see the `grating and lens
 example <Lens-Grating>`__.
-
-Optional arguments: \* ``'centre', [ x, y ]`` (double) centre location
-for zero value \* ``'aspect'`` (double) aspect ratio for coordinates \*
-``'angle'`` (double) angle in radians for gradient (from +x to +y) \*
-``'angle_deg'`` (double) angle in degrees for gradient
 
 sinusoid
 --------
 
-Generates a sinusoidal grating described by
+.. autofunction:: sinusoid
 
-.. raw:: html
+Type of sinusoidal gratings:
 
-   <!-- f(x) = \sin(2\pi x/P) -->
-
-[[images/simplePackage/sinusoid\_equation.png]]
-
-where D is the grating period. This function can create a one
-dimensional grating in polar (circular) coordinates, in linear
-coordinates, or a mixture of two orthogonal gratings, see the types
-parameters for information.
-
-[[images/simplePackage/sinusoid\_types.png]]
+.. figure:: images/simplePackage/sinusoid_types.png
 
 Example usage:
 
@@ -369,18 +208,7 @@ Example usage:
     period = 10;
     im = sinusoid(sz, period);
 
-[[images/simplePackage/sinusoid\_default.png]]
-
-Optional parameters: \* ``'centre', [x, y]`` (double) centre location
-for lens \* ``'type'`` (string) the type of sinusoid pattern to
-generate, can be one of: \* ``'1d'`` one dimensional (default) \*
-``'2d'`` circular coordinates \* ``'2dcart'`` multiple of two sinusoid
-functions at 90 degree angle supports two period values ``[ Px, Py ]``.
-\* ``'aspect'`` (double) aspect ratio of lens (default: 1.0) \*
-``'angle'`` (double) Rotation angle about axis (radians) \*
-``'angle_deg'`` (double) Rotation angle about axis (degrees) \*
-``'scale'`` (double) Scale for the final result (default: 1) \*
-``'offset'`` (double) Offset for pattern (default: 0.5)
+.. figure:: images/simplePackage/sinusoid_default.png
 
 Miscellaneous
 =============
@@ -388,22 +216,12 @@ Miscellaneous
 aperture
 --------
 
-Can be used to generate different shaped apertures: square, circle,
-rectangle and annular (ring). The default aperture shape is a circle
-with logical true values in the centre and false outside.
+.. autofunction:: aperture
 
-[[images/simplePackage/aperture\_types.png]]
+The following image shows examples of different apertures.
 
-Usage:
-
-.. code:: matlab
-
-    im = otslm.simple.aperture(sz, dimension);
-
-The ``dimension`` parameter is a list of numbers describing the
-aperture. The required length of ``dimension`` depends on the chosen
-aperture. For a circular aperture, the dimension is the radius of the
-circle. For other shapes, see details bellow.
+.. figure:: images/simplePackage/aperture_types.png
+   :alt: Example of different aperture types
 
 Logical arrays can be used to mask parts of other arrays. This can be
 useful for creating composite images, for example:
@@ -416,34 +234,22 @@ useful for creating composite images, for example:
     app = otslm.simple.aperture(sz, 80);
     im(app) = chk(app);
 
-[[images/simplePackage/aperture\_logicals.png]]
-
-Optional parameters: \* ``'shape'`` (string) Shape of aperture to
-generate. Supported shapes: \* ``'circle'`` (dimension: radius)
-Pinhole/circular aperture \* ``'square'`` (dimension: width) Square with
-equal sides \* ``'rect'`` (dimension: width, height) Rectangle with
-width and height \* ``'ring'`` (dimension: inner radius, outer radius)
-Ring specified by inner and outer radius \* ``'centre', [x, y]``
-(double) centre location for pattern \* ``'offset', [x, y]`` (double)
-offset in rotated coordinate system \* ``'value', [l, h]``
-(double\|logical) values for off and on regions (default: [false, true])
-\* ``'aspect'`` (double) aspect ratio of lens (default: 1.0) \*
-``'angle'`` (double) Rotation angle about axis (radians) \*
-``'angle_deg'`` (double) Rotation angle about axis (degrees)
+.. figure:: images/simplePackage/aperture_logicals.png
+   :alt: Aperture used for logical array indexing
 
 zernike
 -------
 
-Generates a pattern based on the `Zernike
+:func:`zernike` generates a pattern based on the `Zernike
 polynomials <https://en.wikipedia.org/wiki/Zernike_polynomials>`__. The
 Zernike polynomials are a complete basis of orthogonal functions across
 a circular aperture. This makes them useful for describing beams or
 phase corrections to beams at the back-aperture of a microscope
 objective.
 
-The polynomials are parameterised by two integers, m and n. n is a
-positive integer, and :math:`|m| \leq n`. The function takes as input a pattern
-size and the two integers:
+.. autofunction:: zernike
+
+Example usage:
 
 .. code:: matlab
 
@@ -452,33 +258,14 @@ size and the two integers:
     sz = [512, 512];
     im = otslm.simple.zernike(sz, m, n);
 
-[[images/simplePackage/zernike\_default.png]]
-
-Optional parameters: \* ``'centre', [x, y]`` (double) centre location
-for lens \* ``'scale'`` (double) scaling value for the final pattern \*
-``'rscale'`` (double) radius scaling factor (default: ``min(sz)/2``) \*
-``'aspect'`` (double) aspect ratio of lens (default: 1.0) \* ``'angle'``
-(double) Rotation angle about axis (radians) \* ``'angle_deg'`` (double)
-Rotation angle about axis (degrees) \* ``'outside'`` (double) Value to
-use for outside points (default: 0)
+.. figure:: images/simplePackage/zernike_default.png
 
 sinc
 ----
 
-Generates a sinc pattern. This can be used to create a line shaped trap
-or as a model for the diffraction pattern from a aperture. The pattern
-is described mathematically by
+.. autofunction:: sinc
 
-.. raw:: html
-
-   <!-- f(x) = \sin(\pi x/R)/(\pi x/R) -->
-
-[[images/simplePackage/sinc\_equation.png]]
-
-and as 1 when x is zero; where R is a scaling parameter for the pattern
-radius.
-
-Usage:
+Example usage:
 
 .. code:: matlab
 
@@ -486,27 +273,14 @@ Usage:
     sz = [100, 100];
     im = otslm.simple.sinc(sz, radius);
 
-[[images/simplePackage/sinc\_default.png]]
-
-Optional parameters: \* ``'centre', [x, y]`` (double) centre location
-for lens \* ``'type'`` (string) the type of sinc pattern to generate.
-Must be one of: \* ``'1d'`` one dimensional \* ``'2d'`` circular
-coordinates \* ``'2dcart'`` multiple of two sinc functions at 90 degree
-angle supports two radius values: radius = [ Rx, Ry ]. \* ``'aspect'``
-(double) aspect ratio (default: 1.0) \* ``'angle'`` (double) Rotation
-angle about axis (radians) \* ``'angle_deg'`` (double) Rotation angle
-about axis (degrees)
+.. figure:: images/simplePackage/sinc_default.png
 
 checkerboard
 ------------
 
-Creates a checkerboard pattern. A checkerboard with equal sized squares
-can be written mathematically as:
+.. autofunction:: checkerboard
 
-[[images/simplePackage/checkerboard\_equation.png]]
-
-With the default parameters, the checkerboard function creates a image
-with values between 0 and 0.5 and squares with width 1.
+Example usage:
 
 .. code:: matlab
 
@@ -514,46 +288,27 @@ with values between 0 and 0.5 and squares with width 1.
     im = otslm.simple.checkerboard(sz);
     imagesc(im);
 
-[[images/simplePackage/checkerboard\_default.png]]
-
-Optional parameters: \* ``'spacing'`` (double) Width of checks (default
-1 pixel) \* ``'angle'`` (double) Rotation of pattern (radians) \*
-``'angle_deg'`` (double) Rotation of pattern (degrees) \*
-``'centre', [x,y]`` (double) Centre location for rotation (default:
-centre of image) \* ``'value', [l,h]`` (double\|logical) Lower and upper
-values of checks (default: 0, 0.5) \* ``'aspect'`` (double) Aspect ratio
-of pattern (default: 1.0)
+.. figure:: images/simplePackage/checkerboard_default.png
+   :alt: example of a checkerboard pattern
 
 grid
 ----
 
-Generates a grid of points for other functions. This function is used by
-most other functions to create grids of cartesian or polar coordinates.
-Without any optional parameters, this function produces a similar result
-to the Matlab ``meshgrid`` function.
+.. autofunction:: grid
 
-Usage:
+Example usage:
 
 .. code:: matlab
 
     sz = [10, 10];
     [xx, yy, rr, phi] = otslm.simple.grid(sz);
 
-[[images/simplePackage/grid\_default.png]]
-
-Optional parameters: \* ``'centre', [x, y]`` (double) centre location
-for lens \* ``'offset', [x, y]`` (double) offset after applying
-transformations \* ``'type'`` (string) is the lens cylindrical or
-spherical (``'1d'`` or ``'2d'``) \* ``'aspect'`` (double) aspect ratio
-of lens (default: 1.0) \* ``'angle'`` (double) Rotation angle about axis
-(radians) \* ``'angle_deg'`` (double) Rotation angle about axis
-(degrees)
+.. figure:: images/simplePackage/grid_default.png
 
 random
 ------
 
-Generates a image filled with random noise. The function supports three
-types of noise: uniform, normally distributed and binary.
+.. autofunction:: random
 
 Example:
 
@@ -562,18 +317,12 @@ Example:
     sz = [20, 20];
     im = otslm.simple.random(sz, 'type', 'binary');
 
-[[images/simplePackage/random\_output.png]]
-
-Optional parameters: \* ``'range', [low, high]`` (double) Range of
-values (default: [0, 1)). \* ``'type'`` (string) Type of noise. Can be
-``'uniform'``, ``'gaussian'``, or ``'binary'``. (default: ``'uniform'``)
+.. figure:: images/simplePackage/random_output.png
 
 step
 ----
 
-Creates a step function, defined by
-
-[[images/simplePackage/step\_equation.png]]
+.. autofunction:: step
 
 Example usage:
 
@@ -582,13 +331,7 @@ Example usage:
     sz = [5, 5];
     im = otslm.simple.step(sz);
 
-[[images/simplePackage/step\_default.png]]
-
-Optional parameters: \* ``'centre', [ x, y ]`` (double) centre location
-for rotation (default: centre) \* ``'angle'`` (double) angle in radians
-for gradient (from +x to +y) \* ``'angle_deg'`` (double) angle in
-degrees for gradient \* ``'value', [ l, h ]`` (double\|logical) low and
-high values of step (default: [0, 0.5])
+.. figure:: images/simplePackage/step_default.png
 
 3-D functions
 =============
@@ -599,36 +342,20 @@ parameter is a 3 element vector for the ``x, y, z`` dimension sizes.
 aperture3d
 ----------
 
-Generate a 3-D volume similar to `aperture <#aperture>`__. This function
-can be used for creating a target 3-D volume for beam shape
-optimisation.
-
-Usage:
-
-.. code:: matlab
-
-    im = otslm.simple.aperture3d(sz, dimension, ...);
-
-Optional parameters: \* ``'shape'`` (string) Shape of aperture to
-generate. Supported shapes: \* ``'sphere'`` (dimension: ``[radius]``)
-Pinhole/circular aperture \* ``'cube'`` (dimension: ``[width]``) Square
-with equal sides \* ``'rect'`` (dimension: ``[w, h, d]``) Rectangle with
-width and height \* ``'shell'`` (dimension: ``[r1, r2]``) Ring specified
-by inner and outer radius \* ``'centre', [x, y, z]`` centre location for
-pattern \* ``'value', [l, h]`` values for off and on regions (default:
-[])
+.. autofunction:: aperture3d
 
 grid3d
 ------
 
-Generate 3-D matrices with coordinates similar to `grid <#grid>`__.
+.. autofunction:: grid3d
 
 gaussian3d
 ----------
 
-Generate a 3-D volume similar to `gaussian <#gaussian>`__.
+.. autofunction:: gaussian3d
 
 linear3d
 --------
 
-Generate a 3-D volume similar to `linear <#linear>`__.
+.. autofunction:: linear3d
+

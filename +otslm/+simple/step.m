@@ -1,18 +1,28 @@
 function pattern = step(sz, varargin)
-% STEP generates a step
+% Generates a step.
+% The function is described by
 %
-% pattern = step(sz, ...) generates a step at the centre of the image.
+% .. math::
 %
-% Optional named parameters:
+%   f(x) = 0    \qquad   x < 0
 %
-%   'value'     [ l, h ]    low and high values of step (default: [0, 0.5])
-%   'centre'      [x, y]      centre location for pattern
-%   'offset'      [x, y]      offset in rotated coordinate system
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+%   f(x) = 1    \qquad   x \geq 0
 %
+% Usage
+%   pattern = step(sz, ...) generates a step at the centre of the image.
+%
+% Parameters
+%   sz -- size of the pattern
+%
+% Optional named parameters
+%   - 'value'     [ l, h ]   -- low and high values of step (default: [0, 0.5])
+%   - 'centre'      [x, y]   -- centre location for pattern
+%   - 'offset'      [x, y]   -- offset in rotated coordinate system
+%   - 'aspect'      aspect   -- aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle    -- Rotation angle about axis (radians)
+%   - 'angle_deg'   angle    -- Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool     -- If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

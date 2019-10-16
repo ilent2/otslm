@@ -1,28 +1,42 @@
 function pattern = sinusoid(sz, period, varargin)
-% SINUSOID generates a sinusoidal grating
+% Generates a sinusoidal grating.
+% The function for the pattern is
 %
-% pattern = sinusoid(sz, period, ...) generates a sinusoidal grating:
+% .. math::
 %
-%    pattern = scale * sin(2*pi*x/period) + mean
+%    f(x) = A\sin(2\pi x/P) + \delta
 %
-% The default scale is 0.5 and default mean is 0.5.
+% Where :math:`A` is the scale, :math:`\delta` is the mean,
+% and :math:`P` is the period.
 %
-% Optional named parameters:
+% This function can create a one dimensional grating in polar
+% (circular) coordinates, in linear coordinates, or a mixture
+% of two orthogonal gratings, see the types parameters for information.
 %
-%   'scale'       scale       Scale for the final result (default: 1)
-%   'mean'        num         Offset for pattern (default: 0.5)
-%   'type'        type        the type of sinusoid pattern to generate
-%       '1d'      one dimensional (default)
-%       '2d'      circular coordinates
-%       '2dcart'  multiple of two sinusoid functions at 90 degree angle
-%           supports two period values [ Px, Py ].
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Usage
+%   pattern = sinusoid(sz, period, ...) generates a sinusoidal grating
+%   with the default scale of 0.5 and default mean of 0.5.
 %
+% Parameters
+%   - sz (numeric) -- size of pattern ``[rows, cols]``
+%   - period (numeric) -- period :math:`P`
+%
+% Optional named parameters
+%   - 'scale' (numeric) -- pattern scale :math:`A` (default: 1)
+%   - 'mean' (numeric)  -- offset for pattern :math:`\delta` (default: 0.5)
+%   - 'type' (enum)     -- the type of sinusoid pattern to generate
+%    - '1d'     -- one dimensional (default)
+%    - '2d'     -- circular coordinates
+%    - '2dcart' -- multiple of two sinusoid functions at 90 degree angle
+%      supports two period values [ Px, Py ].
+%
+%   - 'centre'      [x, y]  --  centre location for lens
+%   - 'offset'      [x, y]  --  offset after applying transformations
+%   - 'aspect'      aspect  --  aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle   --  Rotation angle about axis (radians)
+%   - 'angle_deg'   angle   --  Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool    --  If the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

@@ -1,29 +1,38 @@
-function [pattern, amplitude] = igmode(sz, even, modep, modem, elipticity, varargin)
-% IGMODE generates phase and amplitude patterns for Ince-Gaussian beams
+function [pattern, amplitude] = igmode(sz, even, modep, modem, ...
+    elipticity, varargin)
+% Generates phase and amplitude patterns for Ince-Gaussian beams
 %
-% pattern = igmode(sz, e, p, m, elipticity, ...) generates the phase
-% pattern with parity even and polynomial order modep and degree modem.
-% p = 0,1,2,3... and 0 <= m <= p.
-% elipticity is the elipticity of the coordinates.
+% Ince-Gaussian beams are described in `Bandres and Gutirrez-Vega (2004)
+% <https://doi.org/10.1364/ol.29.000144>`__.
 %
-% [phase, amplitude] = igmode(...) also calculates the signed
-% amplitude of the pattern in addition to the phase.
+% .. warning:: This function is a work-in-progress and may not
+%     produce clean output.
 %
-% Ince-Gaussian beams are described in Bandres and Gutirrez-Vega (2004).
+% Usage
+%   pattern = igmode(sz, even, modep, modem, elipticity, ...)
 %
-% Optional named parameters:
+%   [phase, amplitude] = igmode(...) also calculates the signed
+%   amplitude of the pattern in addition to the phase.
 %
-%   'scale'       scale       scaling factor for pattern
-%   'centre'      [x, y]      centre location for lens
-%   'offset'      [x, y]      offset after applying transformations
-%   'aspect'      aspect      aspect ratio of lens (default: 1.0)
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Parameters
+%   - even -- True for even parity
+%   - modep -- polynomial order p (integer: 0, 1, 2, ...)
+%   - modem -- polynomial degree m (:math:`0 \leq m \leq p`)
+%   - elipticity -- elipticity of the coordinates.
+%
+% Optional named parameters
+%   - 'scale'       scale  --   scaling factor for pattern
+%
+%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
+%   - 'offset'      [x, y] --   offset after applying transformations
+%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
+%   - 'angle'       angle  --   Rotation angle about axis (radians)
+%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
+%   - 'gpuArray'    bool   --   If the result should be a gpuArray
 %
 % This function uses code from Miguel Bandres, see source code
 % for information about copyright/license/distribution.
-%
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
