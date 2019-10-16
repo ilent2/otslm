@@ -39,12 +39,16 @@ release = u''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
     'sphinxcontrib.matlab',
 ]
 #    'recommonmark',
+
+# Things for todo extension
+todo_include_todos = True
 
 # Add things for matlabdomain
 matlab_src_dir = os.path.abspath('..')
