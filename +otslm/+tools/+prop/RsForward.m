@@ -1,16 +1,16 @@
 classdef RsForward < otslm.tools.prop.Propagator
-%RSFORWARD Propagate the field forward using Rayleight-Sommerfeld integral
+% Propagate the field forward using Rayleight-Sommerfeld integral
 %
 % Properties
-%    size      Size of the pattern
-%    distance  Distance to propagate pattern
+%  - size     -- Size of the pattern
+%  - distance -- Distance to propagate pattern
 %
-% Static methods:
-%    simple()        propagate the field with a simple interface
-%    simpleProp()    construct the propogator for input pattern
+% Static methods
+%  - simple()      --  propagate the field with a simple interface
+%  - simpleProp()  --  construct the propogator for input pattern
 %
 % See also FftForward, OttForward and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

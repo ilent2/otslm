@@ -1,26 +1,26 @@
 classdef OttForward < otslm.tools.prop.Propagator
-%OTTFORWARD Propagate the field using the optical tweezers toolbox
+% Propagate the field using the optical tweezers toolbox
 %
-% Properties:
-%    size           Size of input beam image
-%    beam_data      Beam with saved data for repeated computations
-%    Nmax           Nmax for VSWF
-%    polarisation   Polarisation of beam (jones vector)
-%    index_medium   Refractive index in medium
-%    NA             Numerical aperture
-%    wavelength0    Wavelength in vacuum
-%    omega          Angular frequency of light
+% Properties
+%  - size          -- Size of input beam image
+%  - beam_data     -- Beam with saved data for repeated computations
+%  - Nmax          -- Nmax for VSWF
+%  - polarisation  -- Polarisation of beam (jones vector)
+%  - index_medium  -- Refractive index in medium
+%  - NA            -- Numerical aperture
+%  - wavelength0   -- Wavelength in vacuum
+%  - omega         -- Angular frequency of light
 %
-% Static methods:
-%    simple()        propagate the field with a simple interface
-%    simpleProp()    construct the propogator for input pattern
+% Static methods
+%  - simple()      --  propagate the field with a simple interface
+%  - simpleProp()  --  construct the propogator for input pattern
 %
 % See also Ott2Forward, Ott3Forward and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-  
+
   properties (SetAccess=protected)
     size          % Size of input beam image
     beam_data     % Beam with saved data for faster future computations

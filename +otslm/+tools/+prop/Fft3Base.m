@@ -1,21 +1,27 @@
 classdef (Abstract) Fft3Base < otslm.tools.prop.Propagator
-%FFTBASE Abstract base class for Fft3* propagator methods
+% Abstract base class for Fft3* propagator methods
+% Inherits from :class:`Propagator`
+%
+% Properties
+%   - data    -- Memory allocated for the transform
+%   - padding -- Padding around image
+%   - size    -- size of images we can transform
 %
 % Abstract methods:
-%   propagate_internal(obj)    method called by propogate().
+%   - propagate_internal(obj)  -- method called by propogate().
 %
 % See also Fft3Forward, Fft3Inverse and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-  
+
   properties (SetAccess=protected)
     data         % Memory allocated for the transform
     padding      % Padding around image
     size         % Size of images we can transform
   end
-  
+
   properties
     % Region of interest in output image [XMIN YMIN ZMIN WIDTH HEIGHT DEPTH]
     % This is applied at the end of the propogate method.  Default: [].

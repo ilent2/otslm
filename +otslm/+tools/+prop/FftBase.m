@@ -1,15 +1,15 @@
 classdef (Abstract) FftBase < otslm.tools.prop.Propagator
-%FFTBASE Abstract base class for Fft* propagator methods
+% Abstract base class for Fft* propagator methods
 %
 % Abstract methods:
 %   propagate_internal(obj)    method called by propogate().
 %
 % See also FftForward, FftInverse and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-  
+
   properties (SetAccess=protected)
     data         % Memory allocated for the transform
     lens         % Lens function to add before transformation

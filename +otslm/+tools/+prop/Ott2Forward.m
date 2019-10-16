@@ -1,29 +1,30 @@
 classdef Ott2Forward < otslm.tools.prop.OttForward
-%OTTFORWARD Propagate the field using the optical tweezers toolbox
-%  Provides awrapper to calculate the 2-D field after beam calculation
+% Propagate the field using the optical tweezers toolbox.
+% Provides a wrapper to calculate the 2-D field after beam calculation.
 %
-% Properties:
-%    axis          Axis perpendicular to output image plane
-%    offset        Offset along axial direction
-%    field         Type of field to calculate
-%    output_size   Size of the output image
-%    range         Range of values to calculate field over
+% Properties
+%  - axis         -- Axis perpendicular to output image plane
+%  - offset       -- Offset along axial direction
+%  - field        --  Type of field to calculate
+%  - output_size  -- Size of the output image
+%  - range        -- Range of values to calculate field over
 %
-%    size          (Base) Size of input beam image
-%    beam_data     (Base) Beam with saved data for repeated computations
-%    Nmax          (Base) Nmax for VSWF
-%    polarisation  (Base) Polarisation of beam (jones vector)
-%    index_medium  (Base) Refractive index in medium
-%    NA            (Base) Numerical aperture
-%    wavelength0   (Base) Wavelength in vacuum
-%    omega         (Base) Angular frequency of light
+% Inherited properties
+%  - size         -- Size of input beam image
+%  - beam_data    -- Beam with saved data for repeated computations
+%  - Nmax         -- Nmax for VSWF
+%  - polarisation -- Polarisation of beam (jones vector)
+%  - index_medium -- Refractive index in medium
+%  - NA           -- Numerical aperture
+%  - wavelength0  -- Wavelength in vacuum
+%  - omega        -- Angular frequency of light
 %
-% Static methods:
-%    simple()        propagate the field with a simple interface
-%    simpleProp()    construct the propogator for input pattern
+% Static methods
+%  - simple()      --  propagate the field with a simple interface
+%  - simpleProp()  --  construct the propogator for input pattern
 %
 % See also Ott3Forward, FftForward and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

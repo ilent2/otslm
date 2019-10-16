@@ -1,25 +1,25 @@
 classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
     & otslm.tools.prop.EwaldBase
-%FFTEWALDINVERSE Propogate using inverse Ewald sphere and 3-D FFT
+% Propagate using inverse Ewald sphere and 3-D FFT
 %
-% Methods:
-%    FftEwaldInverse()  construct a new propagator instance
-%    propagate()        propagate the field
+% Methods
+%  - FftEwaldInverse() -- construct a new propagator instance
+%  - propagate()       -- propagate the field
 %
-% Properties:
-%    data         Memory allocated for transform input (3-D)
-%    padding      Padding around image [x, y, z]
-%    size         Size of image [x, y, z]
-%    roi          Region of interest within data for image
-%    roi_output   Region to crop output image after transformation
-%    focal_length Focal length of the lens
+% Properties
+%  - data        -- Memory allocated for transform input (3-D)
+%  - padding     -- Padding around image [x, y, z]
+%  - size        -- Size of image [x, y, z]
+%  - roi         -- Region of interest within data for image
+%  - roi_output  -- Region to crop output image after transformation
+%  - focal_length -- Focal length of the lens
 %
-% Static methods:
-%    simple()        propagate the field with a simple interface
-%    simpleProp()    construct the propogator for input pattern
+% Static methods
+%  - simple()       -- propagate the field with a simple interface
+%  - simpleProp()   -- construct the propagator for input pattern
 %
 % See also FftEwaldForward, FftInverse and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

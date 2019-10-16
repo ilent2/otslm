@@ -1,29 +1,29 @@
 classdef FftForward < otslm.tools.prop.FftBase
-%FFTFORWARD Propogate using forward 2-D fast fourier transform
+% Propagate using forward 2-D fast Fourier transform
 %
-% Methods:
-%    FftForward()    construct a new propagator instance
-%    propagate()     propagate the field forward using 2-D FFT
+% Methods
+%  - FftForward()  --  construct a new propagator instance
+%  - propagate()   --  propagate the field forward using 2-D FFT
 %
-% Properties:
-%    data        Memory allocated for transform input
-%    lens        Lens to be applied before transformation
-%    padding     Padding around image
-%    size        Size of image
-%    roi         Region of interest within data for image
-%    roi_output  Region to crop output image after transformation
+% Properties
+%  - data       -- Memory allocated for transform input
+%  - lens       -- Lens to be applied before transformation
+%  - padding    -- Padding around image
+%  - size       -- Size of image
+%  - roi        -- Region of interest within data for image
+%  - roi_output -- Region to crop output image after transformation
 %
-% Static methods:
-%    simple()        propagate the field with a simple interface
-%    simpleProp()    construct the propogator for input pattern
-%    calculateLens() lens function used by simple and FftInverse.simple.
+% Static methods
+%  - simple()      --  propagate the field with a simple interface
+%  - simpleProp()  --  construct the propogator for input pattern
+%  - calculateLens() -- lens function used by simple and FftInverse.simple.
 %
 % See also FftInverse, Fft3Forward and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-  
+
   methods (Static)
     
     function prop = simpleProp(pattern, varargin)

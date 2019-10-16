@@ -18,27 +18,109 @@ toolbox <https://github.com/ilent2/ott>`__. Functions requiring the
 toolbox have a note in their documentation (in the Matlab help and this
 documentation).
 
-.. contents::
-   :depth: 3
-..
+This package also contains the prop sub-package.
+This package contains classes for propagating the fields.
+For simple beam propagation, see :func:`+tools.visualise`.
+This documentation contains information on the Propagator base class
+and the propagator sub-classes.
+The package contains additional base classes for the common code
+shared between the forward and inverse methods.
+
+
+.. toctree::
+   :hidden:
+
+   Prop-Package
+
+
+Functions
+=========
+
+.. automodule:: +otslm.+tools
 
 combine
-=======
+-------
 
-Combines multiple patterns # dither Creates a binary patter from gray
-pattern # encode1d Encode the target pattern amplitude into the phase
-pattern size # finalize finalize a pattern, applying a color map and
-taking the modulo. # mask\_regions adds patterns to base using masking #
-sample\_region generates a pattern for sampling regions on SLM. #
-spatial\_filter applies a spatial filter to the image spectrum #
-visualise generates far-field plane images of the phase pattern #
-colormap applies a colormap to a pattern # phaseblur simulate pixel
-phase blurring
+.. autofunction:: combine
+
+dither
+------
+
+.. autofunction:: dither
+
+encode1d
+--------
+
+.. autofunction:: encode1d
+
+finalize
+--------
+
+.. autofunction:: finalize
+
+hologram2volume
+---------------
+
+.. autofunction:: hologram2volume
+
+mask\_regions
+-------------
+
+.. autofunction:: mask_regions
+
+sample\_region
+--------------
+
+.. autofunction:: sample_region
+
+spatial\_filter
+---------------
+
+.. autofunction:: spatial_filter
+
+visualise
+---------
+
+.. autofunction:: visualise
 
 bsc2hologram
-============
+------------
 
-calculates the far-field hologram for a BSC beam # hologram2bsc convert
-pattern to beam shape coefficients # hologram2volume generate 3-D volume
-representation from hologram # volume2hologram generate hologram from
-3-D volume
+.. autofunction:: bsc2hologram
+
+colormap
+--------
+
+.. autofunction:: colormap
+
+hologram2bsc
+------------
+
+.. autofunction:: hologram2bsc
+
+phaseblur
+---------
+
+.. autofunction:: phaseblur
+
+volume2hologram
+---------------
+
+.. autofunction:: volume2hologram
+
+castValue
+---------
+
+.. autofunction:: castValue
+
+lensesAndPrisms
+---------------
+
+.. autofunction:: lensesAndPrisms
+
+make\_beam
+----------
+
+.. autofunction:: make_beam
+
+

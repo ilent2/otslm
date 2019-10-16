@@ -1,27 +1,27 @@
 classdef Fft3Inverse < otslm.tools.prop.Fft3Base
-%FFT3INVERSE Propogate using inverse 3-D fast fourier transform
+% Propagate using inverse 3-D fast Fourier transform
 %
-% Methods:
-%    Fft3Inverse()   construct a new propagator instance
-%    propagate()     propagate the field forward using 3-D FFT
+% Methods
+%  - Fft3Inverse() --  construct a new propagator instance
+%  - propagate()   --  propagate the field forward using 3-D FFT
 %
-% Properties:
-%    data        Memory allocated for transform input
-%    padding     Padding around image
-%    size        Size of image
-%    roi         Region of interest within data for image
-%    roi_output  Region to crop output image after transformation
+% Properties
+%  - data       -- Memory allocated for transform input
+%  - padding    -- Padding around image
+%  - size       -- Size of image
+%  - roi        -- Region of interest within data for image
+%  - roi_output -- Region to crop output image after transformation
 %
-% Static methods:
-%    simple()        propagate the field with a simple interface
-%    simpleProp()    construct the propogator for input pattern
+% Static methods
+%  - simple()     -- propagate the field with a simple interface
+%  - simpleProp() -- construct the propagator for input pattern
 %
 % See also Fft3Forward, FftInverse and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-  
+
   methods (Static)
     
     function prop = simpleProp(pattern, varargin)

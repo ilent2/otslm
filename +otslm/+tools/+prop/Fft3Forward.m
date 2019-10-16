@@ -1,23 +1,23 @@
 classdef Fft3Forward < otslm.tools.prop.Fft3Base
-%FFT3FORWARD Propogate using forward 3-D fast fourier transform
+% Propagate using forward 3-D fast Fourier transform
 %
-% Methods:
-%    Fft3Forward()   construct a new propagator instance
-%    propagate()     propagate the field forward using 3-D FFT
+% Methods
+%  - Fft3Forward() -- construct a new propagator instance
+%  - propagate()   -- propagate the field forward using 3-D FFT
 %
-% Properties:
-%    data        Memory allocated for transform input
-%    padding     Padding around image
-%    size        Size of image
-%    roi         Region of interest within data for image
-%    roi_output  Region to crop output image after transformation
+% Properties
+%  - data       -- Memory allocated for transform input
+%  - padding    -- Padding around image
+%  - size       -- Size of image
+%  - roi        -- Region of interest within data for image
+%  - roi_output -- Region to crop output image after transformation
 %
-% Static methods:
-%    simple()        propagate the field with a simple interface
-%    simpleProp()    construct the propogator for input pattern
+% Static methods
+%  - simple()     -- propagate the field with a simple interface
+%  - simpleProp() -- construct the propogator for input pattern
 %
 % See also Fft3Inverse, FftForward and otslm.tools.visualise.
-%
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
