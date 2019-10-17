@@ -9,5 +9,4 @@
    Getting-Started.rst
    Examples.rst
    Packages.rst
-   Documentation-terms-of-use.rst
 
