@@ -101,7 +101,7 @@ means that methods like ``otslm.tools.combine`` become memory limited
 sooner. In order to work around this, it is sometimes possible to
 implement a version which calculates each pattern, adds it to the total
 array and re-uses the same memory to calculate the next pattern. The
-``otslm.tools.prismsAndLenses`` function implements the Prisms and
+``otslm.tools.lensesAndPrisms`` function implements the Prisms and
 Lenses algorithm without needing to generate all the patterns before
 combining.
 

@@ -1,10 +1,16 @@
 function pattern = sample_region(sz, locations, detectors, varargin)
-% SAMPLE_REGION generates a pattern for sampling regions on SLM.
+% Generates a pattern for sampling regions on SLM.
 %
-% pattern = sample_region(sz, locations, detectors, ...) generates
-% the patterns for sampling regions at different SLM locations
-% onto detectors located at detector locations.  The range for the pattern
-% is 0 to 1, so the output should be passed to otslm.tools.finalize.
+% Usage
+%   pattern = sample_region(sz, locations, detectors, ...) generates
+%   the patterns for sampling regions at different SLM locations
+%   onto detectors located at detector locations.  The range for the pattern
+%   is 0 to 1, so the output should be passed to otslm.tools.finalize.
+%
+% Parameters
+%   - sz (size) -- size of the generated pattern
+%   - locations (numeric) --
+%   - detectors (numeric) --
 %
 % If detectors is a single location, all the patterns will point to
 % the same detector.
@@ -14,8 +20,7 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 % Most optional named parameters can also be cell arrays (or cell arrays of
 % cell arrays) for different options for each location.
 %
-% Optional named parameters:
-%
+% Optional named parameters
 %   'radii'       [r, ...]      Radius of each SLM region
 %   'amplitude'   method        Specifies a method for amplitude modulation.
 %   'ampliutdeargs', args       Amplitude method arguments.
@@ -55,7 +60,7 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 %       'scale'
 %
 % TODO: Documentation in this function
-%
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

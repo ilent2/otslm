@@ -1,48 +1,53 @@
 function varargout = visualise(phase, varargin)
-% VISUALISE generates far-field plane images of the phase pattern
+% Generates far-field plane images of the phase pattern
 %
-% [output, ...] = visualise(phase, ...) visualise the phase plane.
-% Some methods output additional parameters, such as the ott-toolbox beam.
+% Usage
+%   [output, ...] = visualise(phase, ...) visualise the phase plane.
+%   Some methods output additional parameters, such as the ott-toolbox beam.
 %
-% [output, ...] = visualise(complex_amplitude, ...) visualise the
-% field with complex amplitude.
+%   If phase is an empty array and one of the other images is supplied,
+%   the phase is assumed to be an array of zeros the same size as one of
+%   the other images.
 %
-% If phase is an empty array and one of the other images is supplied,
-% the phase is assumed to be an array of zeros the same size as one of
-% the other images.
+%   [output, ...] = visualise(complex_amplitude, ...) visualise the
+%   field with complex amplitude.
 %
-% The phase image should be in a range from 0 to 2*pi.  If the range is
-% approximately 1 a warning is issued.
+% Parameters
+%   - phase (real) -- The phase image should be in a range from 0 to 2*pi.
+%     If the range is approximately 1 a warning is issued.
+%   - complex_amplitude (complex) -- a complex amplitude pattern to
+%     visualise.
 %
-% Optional named parameters:
-%
-%   'method'    method      Method to use when calculating visualisation.
+% Optional named parameters
+%   - 'method' (enum) -- Method to use when calculating visualisation.
 %     Current supported methods:
-%         'fft'         Use fourier transform approach described in
-%                       https://doi.org/10.1364/JOSAA.15.000857
-%         'fft3'        Use 3-D Fourier transform, if original image
-%             is 2-D, converts to volume and takes Fourier transform.
-%             If input is 3-D, directly applies 3-D Fourier transform.
-%         'ott'         Use optical tweezers toolbox
-%         'rs'          Rayleigh-Sommerfeld diffraction formula
-%         'rslens'      Use rs to propagate to a lens, apply the lens
-%             phase pattern and propagate some distance from the lens.
+%    - 'fft'         Use fourier transform approach described in
+%      https://doi.org/10.1364/JOSAA.15.000857
+%    - 'fft3'        Use 3-D Fourier transform, if original image
+%      is 2-D, converts to volume and takes Fourier transform.
+%      If input is 3-D, directly applies 3-D Fourier transform.
+%    - 'ott'         Use optical tweezers toolbox
+%    - 'rs'          Rayleigh-Sommerfeld diffraction formula
+%    - 'rslens'      Use rs to propagate to a lens, apply the lens
+%      phase pattern and propagate some distance from the lens.
 %
-%   'type'      type      Type of transformation: 'nearfield' or 'farfield'
+%   - 'type'      type      Type of transformation: 'nearfield' or 'farfield'
 %
-%   'amplitude' image     Specifies the amplitude pattern
-%   'incident'  image     Specifies the incident illumination
-%       Default illumination is uniform intensity and phase.
-%   'z'         z         z-position of output plane.  For fft/ott this
-%       is an offset from the focal plane.  For rs/rslens, this is the
-%       distance along the beam axis.
-%   'padding'   p         Add padding to the outside of the image.
-%       Default: ceil(size(phase)/2)
+%   - 'amplitude' image     Specifies the amplitude pattern
+%   - 'incident'  image     Specifies the incident illumination
+%     Default illumination is uniform intensity and phase.
+%   - 'z'         z         z-position of output plane.  For fft/ott this
+%     is an offset from the focal plane.  For rs/rslens, this is the
+%     distance along the beam axis.
+%   - 'padding'   p         Add padding to the outside of the image.
+%     Default: ceil(size(phase)/2)
 %
-%   'trim_padding', bool  Trim padding before returning result (default: 0)
-%   NA          num       Numerical aparture of the lens (default: 0.1)
-%   resample    num       Number of samples per each pixel
-%
+%   - trim_padding (logical) -- Trim padding before returning result
+%     (default: false).
+%   - NA (numeric)       -- Numerical aparture of the lens (default: 0.1)
+%   - resample (numeric) -- Number of samples per each pixel
+%     (default: []).
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

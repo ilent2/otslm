@@ -1,15 +1,37 @@
 function pattern = colormap(pattern, cmap, varargin)
-% COLORMAP applies a colormap to a pattern
+% Applies a colormap to a pattern.
 %
-% pattern = colormap(pattern, colormap, ...) applies the colormap to
-% the pattern.  The input pattern should have a typical range from 0 to 1.
-% If the colormap is a LookupTable, the input pattern is scaled by the
-% lookup table range.
+% This method either applies nearest value interpolation or uses a
+% predefined lookup table.
 %
-% Optional named parameters:
-%   'inverse'   bool    Apply inverse colormap.  The output will have
-%       a typical range from 0 to 1.
+% If a discrete colormap is provided, only values present in the
+% colormap are used for the output pattern, allowing the colormap to
+% contain discrete device specific values.
 %
+% Usage
+%   pattern = colormap(pattern, colormap, ...) applies the colormap to
+%   the pattern.  The input pattern should have a typical range from 0 to 1.
+%   If the colormap is a LookupTable, the input pattern is scaled by the
+%   lookup table range.
+%
+% Parameters
+%   - pattern (numeric) -- the pattern to be converted
+%   - colormap (LookupTable|numeric|cell|enum) -- colormap to apply.
+%     The way colormaps are applied depends on the colormap type:
+%     - LookupTable -- Uses phase, value and range properties of
+%       the :class:`utils.LookupTable` object.
+%     - numeric -- assumes colormap is a vector of equally spaced values
+%       for the phase corresponding to pattern values between 0 and 1.
+%     - cell -- assumes colormap is a 2 element cell array.  The first
+%       element is a vector with pattern values (range 0 to 1) and the
+%       second column is the corresponding output values.
+%     - enum -- 'pmpi', '2pi', 'bin' or 'gray' for output range between
+%       plus/minus pi, 0 to 2pi, binary, or grayscale (unchanged).
+%
+% Optional named parameters
+%   - 'inverse' (logical) -- Apply inverse colormap.  The output will have
+%       a typical range from 0 to 1.  Not implemented for all colormap types.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

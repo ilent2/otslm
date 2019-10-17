@@ -1,15 +1,21 @@
 function [pattern, assigned] = encode1d(target, varargin)
 % Encode the target pattern amplitude into the phase pattern size
 %
-% [pattern, assigned] = encode1d(target, ...) encodes the complex
-% target pattern into a 1-D phase mask.
+% Usage
+%   [pattern, assigned] = encode1d(target, ...) encodes the complex
+%   target pattern into a 1-D phase mask.
+%   Returns the encoded pattern and a logical matrix of the same size
+%   that specifies if pixels were used to encode the pattern.
 %
-% Optional named arguments:
+% Parameters
+%   - target (numeric) -- vector containing values of 1-D amplitude function
+%     to be encoded.
 %
-%   'scale'       scale       Scale for the height of the pattern
-%   'angle'       angle       Rotation angle about axis (radians)
-%   'angle_deg'   angle       Rotation angle about axis (degrees)
-%
+% Optional named arguments
+%  - 'scale' (numeric)     -- Scale for the height of the pattern
+%  - 'angle' (numeric)     -- Rotation angle about axis (radians)
+%  - 'angle_deg' (numeric) --  Rotation angle about axis (degrees)
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

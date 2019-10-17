@@ -1,15 +1,27 @@
 function pattern = mask_regions(base, patterns, locations, sizes, varargin)
-% MASK_REGIONS adds patterns to base using masking
+% Adds patterns to base using masking
 %
-% pattern = mask_region(bas, patterns, locations, sizes, ...)
+% Usage
+%   pattern = mask_region(base, patterns, locations, sizes, ...)
 %
-% Optional named parameters:
+% Parameters
+%   - base (numeric) -- base pattern to mask and add regions to
+%   - patterns (cell) -- cell array of patterns to be added.  Each pattern
+%     must be the same size as base.  Patterns should be numeric.
+%   - locations (cell) -- cell array containing vectors for the centre
+%     of each mask region.  Must be the same length as patterns.
+%   - sizes -- size parameters for each shape (see options bellow).
+%     Number of sizes must be 1 (for a single shape) or match the
+%     length of patterns.
 %
-%   'shape'    shape      Shape to use for masking.
-%       'circle'    [radius]    Use a circular aperture.
-%       'square'    [width]     Square with equal sides
-%       'rect'      [w, h]      Rectangle with width and height
-%
+% Optional named parameters
+%   - 'shape' (cell|enum) -- shape to use for masking.  Must either be
+%     a single shape or a cell array of shapes with the same number of
+%     elements as patterns.  Supported shapes and [sizes] include:
+%    - 'circle'    [radius]    Use a circular aperture.
+%    - 'square'    [width]     Square with equal sides.
+%    - 'rect'      [w, h]      Rectangle with width and height.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

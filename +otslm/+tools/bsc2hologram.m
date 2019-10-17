@@ -1,17 +1,25 @@
 function [pattern, cpattern] = bsc2hologram(sz, beam, varargin)
-% BSC2HOLOGRAM calculates the far-field hologram for a BSC beam
+% Calculates the far-field hologram for a BSC beam
 %
-% [phase, cpattern] = bsc2hologram(sz, beam, ...) calculates the phase
-% pattern that transforms the incident beam to the BSC beam.
-% Additionally, outputs the complex x and y polarisation complex
-% amplitudes of the BSC beam in the far-field (szx2 matrix).
+% .. warning:: The current version of the optical tweezers toolbox
+%    may introduce additional phase artifacts in the far-field.
 %
-% Optional named parameters:
-%   'incident'      im      Incident beam complex amplitude (default: ones)
-%   'polarisation'  [x y]   Polarisation of incident beam (default: [1 1i])
-%   'encodemethod'  str     Amplitude encode method (see tools.finalize)
-%   'radius'        r       Radius of the hologram pattern (default: 1.0)
+% Usage
+%   [phase, cpattern] = bsc2hologram(sz, beam, ...) calculates the phase
+%   pattern that transforms the incident beam to the BSC beam.
+%   Additionally, outputs the complex x and y polarisation complex
+%   amplitudes of the BSC beam in the far-field (szx2 matrix).
 %
+% Parameters
+%   - sz -- size of pattern
+%   - beam -- Optical tweezers toolbox Bsc beam object
+%
+% Optional named parameters
+%   - 'incident'      im    -- Incident beam complex amplitude (default: ones)
+%   - 'polarisation'  [x y] -- Polarisation of incident beam (default: [1 1i])
+%   - 'encodemethod'  str   -- Amplitude encode method (see tools.finalize)
+%   - 'radius'        r     -- Radius of the hologram pattern (default: 1.0)
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

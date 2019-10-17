@@ -1,24 +1,32 @@
 function beam = hologram2bsc(pattern, varargin)
-% HOLOGRAM2BSC convert pattern to beam shape coefficients
+% Convert 2-D paraxial pattern to beam shape coefficients
 %
-% beam = hologram2bsc(pattern, ...) converts the pattern to a BSC beam.
-% If pattern is real, assumes a phase pattern, else assumes complex amplitude.
+% This function uses the Optical Tweezers Toolbox BscPmParaxial class
+% to calculate the beam shape coefficients using point matching.
 %
-% Optional named parameters:
-%   incident   pattern    Uses the incident illumination
-%   amplitude  amplitude  Specifies the amplitude of the pattern
-%   Nmax       num        The VSWF truncation number
-%   polarisation [x,y]    Polarisation of the VSWF beam
-%   index_medium num      Refractive index of medium
-%   NA           num      Numerical aperture of objective
-%   wavelength0  num      Wavelength of light in vacuum (default: 1)
-%   omega        num      Angular frequency of light (default: 2*pi)
-%   beamData     beam     Pass an existing Paraxial beam to reuse
-%     the pre-computed special functions.
-%   keep_coefficient_matrix  bool  Calculate the inverse coefficient
+% Usage
+%   beam = hologram2bsc(pattern, ...) converts the pattern to a BSC beam.
+%   If pattern is real, assumes a phase pattern, else assumes complex amplitude.
+%
+% Parameters
+%   pattern (numeric) -- the pattern to convert
+%
+% Optional named parameters
+%   - incident (numeric)  -- Uses the incident illumination
+%   - amplitude (numeric) -- Specifies the amplitude of the pattern
+%   - Nmax       num      -- The VSWF truncation number
+%   - polarisation [x,y]  -- Polarisation of the VSWF beam
+%   - index_medium num    -- Refractive index of medium
+%   - NA           num    -- Numerical aperture of objective
+%   - wavelength0  num    -- Wavelength of light in vacuum (default: 1)
+%   - omega        num    -- Angular frequency of light (default: 2*pi)
+%   - beamData     beam   -- Pass an existing Paraxial beam to reuse
+%     the pre-computed special functions.  This requires the previous
+%     beam to have been generated with the keep_coefficient_matrix option.
+%   - keep_coefficient_matrix (logical) -- Calculate the inverse coefficient
 %     matrix and store it with the beam.  This is slower for a single
 %     calculation but can be faster for repeated calculation. Default: false.
-%
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

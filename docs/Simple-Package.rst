@@ -1,4 +1,6 @@
 
+.. _simple-package:
+
 ################
 `simple` Package
 ################

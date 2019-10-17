@@ -1,16 +1,19 @@
 function U = make_beam(phase, varargin)
-% MAKE_BEAM combine the phase, amplitude and incident patterns
+% Combine the phase, amplitude and incident patterns.
 %
-% U = make_beam(phase, ...) converts the phase pattern with a 2*pi
-% range into a complex field amplitude.  If phase is already complex
-% U is just phase.
+% Usage
+%   U = make_beam(phase, ...) converts the phase pattern with a 2*pi
+%   range into a complex field amplitude.  If phase is already complex
+%   the result is U = phase.
 %
-% U = make_beam(..., 'incident', incident) specifies the incident
-% field that the phase is modulating.
+% Parameters
+%   - phase (numeric) -- pattern to convert
 %
-% U = make_beam(..., 'amplitude', amplitude) specifies the amplitude
-% of the field.  Only used when phase is a real matrix.
-%
+% Named parameters
+%   - incident (numeric) -- incident illumination.
+%   - amplitude (numeric) -- specify amplitude of the field.  Only
+%     used when phase is a real matrix.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -65,7 +68,8 @@ assert(all(size(amplitude) == size(phase)), ...
 if isreal(phase)
 
   % Check phase range
-  if abs(1 - max(phase(:)) - min(phase(:))) < eps(1)
+  if max(phase(:)) - min(phase(:)) <= 1 && ...
+      abs(1 - max(phase(:)) - min(phase(:))) <= 0.1
     warning('otslm:tools:make_beam:range', 'Phase range should be 2*pi');
   end
 

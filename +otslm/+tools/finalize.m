@@ -1,6 +1,7 @@
 function pattern = finalize(pattern, varargin)
-% FINALIZE finalize a pattern, applying a color map and taking the modulo.
+% Finalize a pattern, applying a color map and taking the modulo.
 %
+% Usage
 %   pattern = finalize(input, ...) finalizes the pattern.
 %   For dmd type devices, the input is assumed to be the amplitude.
 %   For slm type devices, the input is assumed to be the phase.
@@ -8,35 +9,36 @@ function pattern = finalize(pattern, varargin)
 %   pattern = finalize(phase, 'amplitude', amplitude', ...) attempts
 %   to generate a pattern encoding both the phase and amplitude.
 %
-% Optional named parameters:
+% Parameters
+%   - pattern (numeric) -- phase pattern to be finalized
 %
-%   'modulo'    mod     Applies modulo to the pattern, default 1.0 for slm.
-%       Use 'none' for no modulo (default dmd).
+% Optional named parameters
+%   - 'modulo' (numeric|enum) -- Applies modulo to the pattern.
+%     Modulo should either be a scalar or 'none' for no modulo.
+%     (default: 1.0 for slm type devices and 'none' for dmd type devices).
 %
-%   'colormap'  lookup  Applies the nearest value colour map lookup.
-%       May also be:
-%         'pmpi'  for -pi to pi range (default for slm)
-%         '2pi'   for 0 to 2*pi range
-%         'bin'   for binary amplitude
-%         'gray'  for 0 to 1 range (default for dmd)
+%   - 'colormap' -- Colormap to apply to pattern.  For a list of
+%     valid values, see :func:`colormap`.
+%     (default: 'pmpi' for slm and 'gray' for dmd type devices).
 %
-%   'rpack'     type    Rotation packing of the pixels
-%       Supported types:
-%         'none'  No additional steps required (default slm)
-%         '45deg' Device is rotated 45 degrees (aspect 1:2, default dmd)
+%   - 'rpack' (enum) -- rotation packing of the pixels.
+%    - 'none'  -- No additional steps required (default slm)
+%    - '45deg' -- Device is rotated 45 degrees (aspect 1:2, default dmd)
 %
-%   'device'    type    Specifies the type of device.
-%       Supported devices:
-%         'dmd'   Digital micro mirror (amplitude) device
-%         'slm'   Spatial light modulator (phase) device
+%   - 'device' (enum) -- Specifies the type of device, changes the
+%     default value for most arguments.  If all arguments are provided,
+%     this argument has no impact.
+%    - 'dmd' -- Digital micro mirror (amplitude) device
+%    - 'slm' -- Spatial light modulator (phase) device
 %
-%   'encodemethod' method Method to use when encoding phase/amplitude
-%       'checker'   Use checkerboard pattern and acos correction (phase)
-%       'grating'   Use linear grating and sinc correction (phase)
-%       'magnitude' Use grating magnitude modulation (phase)
+%   - 'encodemethod' method Method to use when encoding phase/amplitude
+%    - 'checker'   -- (default) use checkerboard pattern and acos
+%      correction (phase)
+%    - 'grating'   -- Use linear grating and sinc correction (phase)
+%    - 'magnitude' -- Use grating magnitude modulation (phase)
 %
-%   'amplitude' pattern Amplitude pattern to generate output for
-%
+%   - 'amplitude' pattern Amplitude pattern to generate output for
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

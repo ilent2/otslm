@@ -1,36 +1,41 @@
 function pattern = combine(inputs, varargin)
-% COMBINE combines multiple patterns
-%
-% pattern = combine(inputs, ...) combines the cell array of patterns.
+% Combines multiple patterns
 %
 % Typical input should be a pattern between 0 and 1.
 % Most methods output range is between 0 and 1.
 %
-% See also Di Leonardo, Ianni and Ruocco (2007).
+% Usage
+%   pattern = combine(inputs, ...) combines the cell array of patterns.
 %
-% Optional named parameters:
+% Parameters
+%   - inputs (cell) -- cell array of input images to combine.
+%     These images should all be the same size.
 %
-%   'method'    method    Method to use when combinging patterns.
+% Optional named parameters
+%   - 'method' (enum) -- Method to use when combining patterns.
 %
-%       Methods to create multiple beams:
-%         dither        Randomly chooses values from different patterns
-%         super         Uses phi = angle(\sum_ii exp(1i*2*pi*inputs(ii)))
-%         rsuper        Superposition with random offset for each layer
-%         gs            Applies GS algorithm to try and generate the
-%             pattern that would be created by the sum of the individual
-%             beams.  Starts with an initial guess using rsuper.
+%       Methods to create multiple beams
+%         - dither   --   Randomly chooses values from different patterns
+%         - super    --   Uses phi = angle(\sum_ii exp(1i*2*pi*inputs(ii)))
+%         - rsuper   --   Superposition with random offset for each layer
+%         - gs       --   Applies GS algorithm to try and generate the
+%           pattern that would be created by the sum of the individual
+%           beams.  Starts with an initial guess using rsuper.
 %
-%       Methods to modulate a beam pattern:
-%         add           Adds the patterns: \sum_ii inputs(ii)
-%         multiply      Multiplies the patterns: \prod_ii inputs(ii)
-%         addangle      Uses phi = angle(\prod_ii exp(1i*2*pi*inputs(ii)))
-%         average       Weighted average of inputs.  (default weights: ones)
-%                           \sum_ii w_ii*inputs(ii) / \sum_ii w_ii
+%       Methods to modulate a beam pattern
+%         - add      --   Adds the patterns: \sum_ii inputs(ii)
+%         - multiply --   Multiplies the patterns: \prod_ii inputs(ii)
+%         - addangle --   Uses phi = angle(\prod_ii exp(1i*2*pi*inputs(ii)))
+%         - average  --   Weighted average of inputs.  (default weights: ones)
+%           :math:`\sum_i w_i I_i / \sum_i w_i`
 %
 %       Default method: super.
 %
-%   'weights'   [weights] Array of weights for each pattern.
+%   - 'weights' (numeric) -- Array of weights, one for each pattern.
+%     (default: [], uses equal weights for each pattern)
 %
+% See also Di Leonardo, Ianni and Ruocco (2007).
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -48,7 +53,7 @@ weights = p.Results.weights;
 if isempty(weights)
   weights = ones(length(inputs), 1);
 end
-nweights = weights ./ sum(weights);
+nweights = ones(size(weights)); %weights ./ sum(weights);
 
 
 switch p.Results.method

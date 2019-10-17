@@ -1,27 +1,32 @@
 function pattern = lensesAndPrisms(sz, xyz, varargin)
 % Generates a hologram using the Lenses and Prisms algorithm
 %
-% pattern = lensesAndPrisms(sz, xyz, ...) uses the prisms and lenses
-% algorithm to attempt to place beams at the locations specified by xyz.
-% xyz should be a 3xN matrix, with each column describing the location
-% of the target beam.  The first two rows describe the linear gradient,
-% thefinal row describes the lens magnitude.
-%
-% The output pattern is in the range [0, 1).  If supplied, the lens,
-% xgrad and ygrad functions should have range [0, 1).
-%
 % This function has the same affect as using multiple linear
 % gratings and spherical lenses combined using otslm.tools.combine.
 % The advantage of this function is a smaller memory footprint.
 %
-% Optional parameters:
+% Usage
+%   pattern = lensesAndPrisms(sz, xyz, ...)
+%   The output pattern is in the range [0, 1).  If supplied, the lens,
+%   xgrad and ygrad functions should have range [0, 1).
 %
-%   'lens'  mat   pattern to use for lens.  (default: xx^2 + yy^2)
-%   'xgrad' mat   function to use for x gradient.  (default: xx)
-%   'ygrad' mat   function to use for x gradient.  (default: yy)
-%   'amplitude'  mat  vector of amplitudes for each location
-%   'gpuArray'    bool        If the result should be a gpuArray
+% Parameters
+%   - sz (size) -- size of the pattern ``[rows, cols]``
+%   - xyz (numeric) -- 3xN matrix for target spot locations.
+%     Each column describes a different target, the first two rows
+%     describe the linear gradient and the final row describes the lens
+%     magnitude.
 %
+% Optional named parameters
+%  - 'lens'       -- pattern to use for lens.
+%    (default: xx^2 + yy^2 where xx and yy are from otslm.simple.grid)
+%  - 'xgrad'      -- pattern to use for x gradient.
+%    (default: xx from otslm.simple.grid)
+%  - 'ygrad'      -- pattern to use for y gradient.
+%    (default: yy from otslm.simple.grid)
+%  - 'amplitude'  -- vector of amplitudes for each location
+%  - 'gpuArray' (logical) -- True if the result should be a gpuArray
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

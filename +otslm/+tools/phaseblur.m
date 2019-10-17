@@ -1,13 +1,18 @@
 function pattern = phaseblur(pattern, varargin)
-% PHASEBLUR simulate pixel phase blurring
+% Simulate pixel phase blurring
 %
-% pattern = phaseblur(pattern, ...) applies Gaussian blur to the pattern.
+% Usage
+%   pattern = phaseblur(pattern, ...) applies Gaussian blur to the pattern.
 %
-% Optional named arguments:
-%   colormap   map    colormap to apply before/after blurring (default: [])
-%   invmap     bool   apply inverse colormap at end (default: true)
-%   sigma      num    size of the Gaussian kernel
+% Parameters
+%   - pattern (numeric) -- pattern to blur
 %
+% Optional named arguments
+%   - colormap          -- colormap to apply before/after blurring.
+%     For a list of valid values, see :func:`colormap`. (default: [])
+%   - invmap (logical)  -- apply inverse colormap at end (default: true)
+%   - sigma (numeric)   -- size of the Gaussian kernel
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

@@ -2,6 +2,8 @@
 .. todo:: Each iterative method should have a short example
 .. todo:: Re-do objective functions and mask functions sections
 
+.. _iter-package:
+
 ##############
 `iter` Package
 ##############

@@ -1,14 +1,22 @@
 function [output, filtered] = spatial_filter(input, filter, varargin)
-% SPATIAL_FILTER applies a spatial filter to the image spectrum
+% Applies a spatial filter to the image spectrum
 %
-% output, filtered = spatial_filter(input, filter, ...) applies filter to the
-% fourier transform of input and calculates the inverse fourier
-% transform to give output.  Optional output filtered is the filtered
-% pattern.
+% Usage
+%   [output, filtered] = spatial_filter(input, filter, ...)
+%   applies filter to the
+%   Fourier transform of input and calculates the inverse Fourier
+%   transform to give output.  Optional output filtered is the filtered
+%   pattern.
 %
-% Optional named parameters:
-%     'padding'       padding     Add padding to the outside of the image.
-%     'keep_padding'  keep        Keep or discard padding after filter
+% Parameters
+%   - input (numeric) -- image to apply filter to
+%   - filter -- a mask pattern to apply to the far-field of the input.
+%
+% Optional named parameters
+%   - 'padding' (numeric)      -- Add padding to the outside of the image
+%     (default: 100).
+%   - 'keep_padding' (logical) -- Keep or discard padding after filter
+%     (default: false).
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

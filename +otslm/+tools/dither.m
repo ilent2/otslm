@@ -1,21 +1,25 @@
 function pattern = dither(pattern, level, varargin)
-% DITHER creates a binary patter from gray pattern
+% Creates a binary pattern from gray-scale image.
+% Supports several different dithering methods.
 %
-% pattern = dither(pattern, level, ...) applies the default dithering,
-% binary threshold, to the pattern.
+% Usage
+%   pattern = dither(pattern, level, ...) applies the default dithering,
+%   binary threshold, to the pattern.
 %
-% Most methods assume the pattern is in the range 0 to 1.
+% Parameters
+%   - pattern (numeric) -- the gray-scale pattern.  Most methods
+%     assume the pattern has values in the range 0 to 1.
+%   - level (numeric) -- threshold level
 %
-% Optional named parameters:
-%     'method'    method      Method to use for dithering
-%         Supported methods:
-%             'threshold'     Apply threshold filter to image (default)
-%             'mdither'       Use matlab dither function
-%             'floyd'         Floyd-Steinberg algorithm
-%             'random'        Does random dithering
-%     'value'    [min, max]   Value range for output image
-%         (default: [] for logical images)
-%
+% Optional named parameters
+%   - 'method' (enum) -- Method to use for dithering. Supported methods:
+%    - 'threshold' --  Apply threshold filter to image (default)
+%    - 'mdither'   --  Use matlab dither function
+%    - 'floyd'     --  Floyd-Steinberg algorithm
+%    - 'random'    --  Does random dithering
+%   - 'value'    [min, max]   Value range for output image
+%     (default: [] for logical images).  See :func:`castValue`.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

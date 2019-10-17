@@ -1,22 +1,26 @@
 function volume = hologram2volume(hologram, varargin)
-% HOLOGRAM2VOLUME generate 3-D volume representation from hologram
-%
-% volume = hologram2volume(hologram, ...) generates a 3-D volume for
-% 2-D complex amplitude hologram.  Unwraps hologram onto Ewald sphere.
+% Generate 3-D volume representation from hologram.
 %
 % This function is only the inverse of volume2hologram when interpolation
 % is disabled for both.
 %
-% Optional named arguments:
-%   'interpolate'   value   Interpolate between the nearest two
-%       pixels in the z-direction.  Default: true.
-%   'padding'       value   Padding in the axial direction (default 0).
-%   'focal_length'  value   focal length in pixels (default: min(size)/2).
-%   'zsize'         value   size for z depth (default: [])
-%       The total z size is zsize + 2*padding.
+% Usage
+%   volume = hologram2volume(hologram, ...) generates a 3-D volume for
+%   2-D complex amplitude hologram.  Unwraps hologram onto Ewald sphere.
 %
-% See also: otslm.tools.volume2hologram, otslm.iter.gs3d
+% Parameters
+%   hologram (numeric) -- 2-D hologram to map to Ewald sphere.
 %
+% Optional named arguments
+%  - 'interpolate' (logical) -- Interpolate between the nearest two
+%    pixels in the z-direction.  (default: True)
+%  - 'padding' (numeric) -- Padding in the axial direction (default 0).
+%  - 'focal_length' (numeric) -- focal length in pixels (default: min(size)/2).
+%  - 'zsize' (size) -- size for z depth (default: [])
+%    The total z size is zsize + 2*padding.
+%
+% See also :func:`volume2hologram` and :class:`prop.FftEwaldForward`
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
