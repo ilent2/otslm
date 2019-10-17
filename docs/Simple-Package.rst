@@ -35,11 +35,12 @@ functions <#lens-functions>`__, `beams <#beams>`__,
 non-unique grouping. The output of many of these functions can be placed
 directly on a spatial light modulator as a phase or amplitude masks, or
 output of multiple functions can be combined using functions in the
-tools package [[tools\|tools-package]] or matlab operations on arrays
+tools package :ref:`tools-package` or matlab operations on arrays
 (e.g., array addition or logical indexing).
 
-.. contents::
-   :depth: 3
+.. contents:: Contents
+   :depth: 1
+   :local:
 ..
 
 Lens functions
@@ -49,6 +50,11 @@ These functions produce a single array. These arrays can be used to
 describe the phase functions of different lenses. Most of these
 functions support 1-D or 2-D variants, for instance, the spherical
 function can be used to create a cylindrical or spherical lens.
+
+.. contents:: Functions
+   :depth: 1
+   :local:
+..
 
 aspheric
 --------
@@ -137,6 +143,11 @@ amplitude pattern which combines the phase and amplitude patterns
 produced by these functions, for details see
 `otslm.tools.finalize <Tools-Package#finalize>`__.
 
+.. contents:: Functions
+   :depth: 1
+   :local:
+..
+
 bessel
 ------
 
@@ -180,6 +191,11 @@ Gratings
 These functions can be used to create periodic patterns which can be
 used to create diffraction gratings.
 
+.. contents:: Functions
+   :depth: 1
+   :local:
+..
+
 linear
 ------
 
@@ -214,6 +230,16 @@ Example usage:
 
 Miscellaneous
 =============
+
+Various functions for generating patterns not described in other
+sections.
+This includes the :func:`grid` and :func:`aperture` functions which
+are used to create the grids and masks used by other toolbox functions.
+
+.. contents:: Functions
+   :depth: 1
+   :local:
+..
 
 aperture
 --------
@@ -340,6 +366,11 @@ Example usage:
 
 These functions generate a 3-D volume instead of a 2-D image. The size
 parameter is a 3 element vector for the ``x, y, z`` dimension sizes.
+
+.. contents:: Functions
+   :depth: 1
+   :local:
+..
 
 aperture3d
 ----------

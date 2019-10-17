@@ -11,14 +11,20 @@
 Package containing algorithms and cost functions for iterative
 optimisation.
 
-.. contents::
-   :depth: 3
+.. contents:: Contents
+   :depth: 1
+   :local:
 ..
 
 Iterative optimisation methods
 ==============================
 
 .. automodule:: +otslm.+iter
+
+.. contents:: Methods
+   :depth: 1
+   :local:
+..
 
 GerchbergSaxton
 ---------------
@@ -73,6 +79,11 @@ Objective functions are contained in the ``otslm.iter.objectives``
 sub-package. These functions are used with the above optimisation
 methods to measure the quality of the pattern.
 
+.. contents:: Objectives
+   :depth: 1
+   :local:
+..
+
 bowman2017cost
 --------------
 
@@ -83,8 +94,13 @@ calculated from fidelity function ## intensity objective function to
 optimise for intensity ## rmsintensity objective function to optimise
 for intensity
 
+
+
 Mask functions
-==============
+--------------
+
+.. todo:: Probably remove this section, add a section
+   describing how to use masks on objective objects
 
 TODO: Comment on what these are Maybe these should become a parameter of
 the obejctive functions, something that is handled by the objective

@@ -1,5 +1,5 @@
 function [output, filtered] = spatial_filter(input, filter, varargin)
-% Applies a spatial filter to the image spectrum
+% Applies a spatial filter to the image spectrum.
 %
 % Usage
 %   [output, filtered] = spatial_filter(input, filter, ...)
@@ -17,7 +17,7 @@ function [output, filtered] = spatial_filter(input, filter, varargin)
 %     (default: 100).
 %   - 'keep_padding' (logical) -- Keep or discard padding after filter
 %     (default: false).
-%
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

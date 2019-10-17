@@ -17,8 +17,9 @@ in the documentation appear to have a courser checkerboard pattern as a
 result of a Moiré/aliasing effect. To use these patterns, we recommend
 generating higher resolution versions using the toolbox.
 
-.. contents::
+.. contents:: Contents
    :depth: 3
+   :local:
 ..
 
 Initial setup

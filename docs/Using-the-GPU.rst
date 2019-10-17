@@ -44,8 +44,9 @@ following sections. Although it may be possible to achieve
 interoperability between CUDA/OpenCL and OpenGL, these features are not
 currently implemented.
 
-.. contents::
+.. contents:: Contents
    :depth: 3
+   :local:
 ..
 
 

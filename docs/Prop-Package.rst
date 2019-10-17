@@ -1,4 +1,6 @@
 
+.. _prop-package:
+
 `prop` sub-package
 ==================
 
@@ -12,7 +14,7 @@ The package contains additional base classes for the common code
 shared between the forward and inverse methods.
 
 .. contents::
-   :depth: 3
+   :local:
 ..
 
 

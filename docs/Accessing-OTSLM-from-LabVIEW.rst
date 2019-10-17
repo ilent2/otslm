@@ -21,8 +21,9 @@ provides the features needed for the PrismsAndLenese example. We welcome
 contributions from LabVIEW users to improve this package to provide
 better coverage of the OTSLM functionality.
 
-.. contents::
+.. contents:: Contents
    :depth: 3
+   :local:
 ..
 
 Creating an ``otslm.simple`` function interface

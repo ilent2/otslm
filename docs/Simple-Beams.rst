@@ -7,8 +7,9 @@ This page describes the ``simple_beams.m`` example. This example
 demonstrates some of the simpler hologram generation functions in the
 toolbox.
 
-.. contents::
+.. contents:: Contents
    :depth: 3
+   :local:
 ..
 
 Initial setup

@@ -1,7 +1,11 @@
 
+.. _utils-package:
+
 ###############
 `utils` Package
 ###############
+
+.. automodule:: +otslm.+utils
 
 The ``otslm.utils`` package contains functions for controlling,
 interacting with and simulating hardware.
@@ -10,14 +14,15 @@ Hardware (and simulated hardware) is represented by classes inheriting
 from the ``Showable`` and ``Viewable`` base classes. ``Test*`` devices
 are used for simulating non-physical devices, these are used mainly for
 testing algorithms. For converting from a ``[0, 2*pi)`` phase range to a
-device specific lookup table, the ```LookupTable`` <#lookuptable>`__
+device specific lookup table, the :class:`LookupTable`
 class can be used. This package contains three sub-packages containing
 `imaging algorithms <#imaging>`__, `calibration
 methods <#calibration>`__ and an `interface for
 RedTweezers <#RedTweezers>`__.
 
 .. contents::
-   :depth: 3
+   :depth: 1
+   :local:
 ..
 
 LookupTable
@@ -25,12 +30,19 @@ LookupTable
 
 represents the phase and pixel values of a lookup table
 
+.. autoclass:: LookupTable
+
 imaging
 =======
 
 This sub-package contains functions for generating an image of the
 intensity at the surface of a phase-only SLM in the far-field of the
 SLM.
+
+.. contents::
+   :depth: 1
+   :local:
+..
 
 scan1d
 ------
@@ -93,6 +105,11 @@ Some of the methods can be fairly unstable. The most robust methods,
 from our experience, are ``smichelson`` and ``step``, both are described
 bellow. For information on the other methods, see the file comments and
 ``examples/calibration.m``.
+
+.. contents::
+   :depth: 1
+   :local:
+..
 
 smichelson
 ----------
@@ -170,6 +187,11 @@ In order to understand these parameters, we recommend using the
 RedTweezers
 ===========
 
+.. contents::
+   :depth: 1
+   :local:
+..
+
 interface for RedTweezers
 
 -  Overview of functions in base class
@@ -182,17 +204,31 @@ example <Using-the-GPU#uploading-a-shader-to-the-gpu>`__.
 Base classes of showable and viewable objects
 =============================================
 
+.. contents::
+   :depth: 1
+   :local:
+..
+
 Showable
 --------
 
-represents devices that can display a pattern ## Viewable represents
-objects that can be viewed (cameras)
+Represents devices that can display a pattern
+
+Viewable
+--------
+
+Represents objects that can be viewed (cameras)
 
 Physical devices
 ================
 
 These classes are used to interact with hardware, for example cameras
 and screens.
+
+.. contents::
+   :depth: 1
+   :local:
+..
 
 ScreenDevice
 ------------
@@ -354,6 +390,11 @@ except they store their output to a ``pattern`` property. The Viewable
 devices require a valid TestShowable instance and implement a view
 function which retrieves the ``pattern`` property from the Showable and
 simulates the expected output.
+
+.. contents::
+   :depth: 1
+   :local:
+..
 
 TestDmd
 -------
