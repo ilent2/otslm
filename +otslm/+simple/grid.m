@@ -4,10 +4,10 @@ function [xx, yy, rr, phi] = grid(sz, varargin)
 % This function is used by most other otslm.simple functions to create
 % grids of Cartesian or polar coordinates.  Without any optional
 % parameters, this function produces a similar result to the Matlab
-% :func:`meshgrid` function.
+% :func:`meshgrid` function but with 0 centred at the centre of the image.
 %
 % Usage
-%   xx, yy = grid(sz, ...) equivilant to mesh grid.
+%   xx, yy = grid(sz, ...)
 %
 %   xx, yy, rr, phi = grid(sz, ...) calculates polar coordinates.
 %
