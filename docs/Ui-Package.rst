@@ -1,4 +1,6 @@
 
+.. _ui-package:
+
 ############
 `ui` Package
 ############
@@ -16,15 +18,14 @@ common code used by the GUIs.
 This page describes the Launcher, the support package and provides a
 brief `overview of the other GUI components <#simple-gui-overview>`__.
 For details on the functions the GUIs represent, see the corresponding
-package documentation: `iter <Iter-Package>`__,
-`tools <Tools-Package>`__, `simple <Simple-Package>`__ or
-`utils <Utils-Package>`__. For details on how to use the GUIs, see the
-`Getting Started
-page <Getting-Started#exploring-the-toolbox-with-the-gui>`__ and the
-`Examples <Examples>`__.
+package documentation: :ref:`iter-package`, :ref:`tools-package`,
+:ref:`simple-package` or :ref:`utils-package`.
+For details on how to use the GUIs, see :ref:`getting-started`
+and :ref:`examples`.
 
-.. contents::
-   :depth: 3
+.. contents:: Contents
+   :depth: 1
+   :local:
 ..
 
 Launcher
@@ -74,12 +75,12 @@ Most GUIs are split into 4 main sections
 .. figure:: images/uiPackage/simpleOverview.png
    :alt: overview of ui.simple.linear
 
-   overview of ui.simple.linear
-
-1. Output variable name
-2. Size of pattern (mostly used on ``ui.simple.*`` GUIs)
-3. Controls for the method
-4. Pattern preview window
+   Overview of `ui.simple.linear` graphical user interface.
+   The layout consists of:
+   (1) Output variable name;
+   (2) Size of pattern (mostly used on ``ui.simple.*`` GUIs);
+   (3) Controls for the method; and
+   (4) Pattern preview window.
 
 When the window launches it will search the base workspace for variables
 names and ``otslm.utils.Showable`` devices which can be used for
@@ -143,6 +144,11 @@ functions and how they are used by the existing GUI components.
    layout class. To the best of our knowledge, this is currently not
    supported for Matlab Apps in R2018a. If this changes in a future Matlab
    release, much of this code will likely move/change.
+
+.. contents:: Contents
+   :depth: 1
+   :local:
+..
 
 calculateImageSliceFreq
 -----------------------
