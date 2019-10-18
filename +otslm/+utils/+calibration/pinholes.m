@@ -1,27 +1,32 @@
 function lt = pinholes(slm, cam, varargin)
-% PINHOLES generates virtual pinholes with different phase
+% Generates virtual pinholes with different phase.
 %
 % Similar to step but looks at interference of two regions on
 % different parts of the device allowing per-pixel or per-region
 % calibration.
 %
-% lt = pinholes(slm, cam, ...) calibrates using the pinholes method.
+% Usage
+%   lt = pinholes(slm, cam, ...) calibrates using the pinholes method.
 %
-% Optional named arguments:
-%     slice_offset    num     slice distance from image centre
-%     slice_width     num     width of the slice to average over
-%     slice_angle     num     angle for the slice (deg)
-%     freq_index      idx     index for frequency sample
-%     delay           num     delay after displaying slm image
-%     stride          num     number of linear indexes to step
-%     basevalue       num     value to use for the first region
-%     radius          num     radius of pinholes (pixels)
+% Parameters
+%   - slm (:class:`Showable`) -- device to generate the lookup table for.
+%   - cam (:class:`Viewable`) -- device imaging the slm in the far-field.
 %
-%     verbose         bool    display progress in console
-%     show_progress   bool    show progress figure
-%     show_camera     bool    show what the camera sees
-%     show_spectrum   bool    show the 1-D Fourier spectrum of the images
+% Optional named arguments
+%   - slice_offset    num  -- slice distance from image centre
+%   - slice_width     num  -- width of the slice to average over
+%   - slice_angle     num  -- angle for the slice (deg)
+%   - freq_index      idx  -- index for frequency sample
+%   - delay           num  -- delay after displaying slm image
+%   - stride          num  -- number of linear indexes to step
+%   - basevalue       num  -- value to use for the first region
+%   - radius          num  -- radius of pinholes (pixels)
 %
+%   - verbose (logical)       -- display progress in console
+%   - show_progress (logical) -- show progress figure
+%   - show_camera (logical)   -- show what the camera sees
+%   - show_spectrum (logical) -- show the 1-D Fourier spectrum of the images
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

@@ -1,5 +1,5 @@
 function lt = michelson(slm, cam, varargin)
-% MICHELSON uses images from a standard Michelson interferometer
+% Uses images from a standard Michelson interferometer
 %
 % Requires the SLM to be configured in Michelson interferometer
 % setup where the screen is perpendicular to the incident beam and
@@ -8,15 +8,22 @@ function lt = michelson(slm, cam, varargin)
 % This method could be extended to allow calibration of individual
 % pixels on the device but requires the uniform illumination.
 %
-% lt = michelson(slm, cam, ...) calibrate the slm using the Michelson
-% interferometer method.
+% Usage
+%   lt = michelson(slm, cam, ...) calibrate the slm using the Michelson
+%   interferometer method.
 %
-% Optional named arguments:
-%     delay           num     delay after displaying slm image
-%     stride          num     number of linear indexes to step
+% Parameters
+%   - slm (:class:`Showable`) -- device to generate the lookup table for.
+%   - cam (:class:`Viewable`) -- device imaging the slm.  The camera
+%     should be viewing the output of a Michelson interferometer, with
+%     the SLM on one arm and a mirror on the other.
 %
-%     verbose         bool    display progress in console
+% Optional named arguments
+%   - delay (numeric)      -- delay after displaying slm image (seconds).
+%   - stride (numeric)     -- number of linear indexes to step
 %
+%   - verbose (logical)    -- display progress in console
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

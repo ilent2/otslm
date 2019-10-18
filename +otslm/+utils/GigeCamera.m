@@ -1,20 +1,28 @@
 classdef GigeCamera < otslm.utils.Viewable
-%GIGECAMERA connect to a gige camera connected to the computer
+% Connect to a gige camera connected to the computer
+% Inherits from :class:`Viewable`.
 %
+% Properties
+%   - device   -- gige camera object
+%   - size     -- size of the camera output image
+%   - Exposure -- camera exposure setting
+%
+% See also GigeCamera
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-  
+
   properties (SetAccess=protected)
     device      % The physical device (gige object)
     size        % Resolution of the device
   end
-  
+
   properties (Dependent=true)
     Exposure     % Camera exposure
     %Gain         % Camera Gain
   end
-  
+
   methods
     function obj = GigeCamera(varargin)
       % Connect to the camera

@@ -1,5 +1,5 @@
 classdef (Abstract) Showable < handle
-% SHOWABLE represents devices that can display a pattern
+% Represents devices that can display a pattern.
 %
 % Methods (abstract):
 %   showRaw(pattern)      Display the pattern on the device.  The pattern
@@ -43,8 +43,8 @@ classdef (Abstract) Showable < handle
 % the abstract methods and properties described above.
 % You can also override the other methods if needed.
 %
-% See also otslm.utils.ScreenDevice.
-%
+% See also Showable and otslm.utils.ScreenDevice.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

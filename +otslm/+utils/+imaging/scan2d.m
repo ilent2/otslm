@@ -1,19 +1,35 @@
 function im = scan2d(slm, cam, varargin)
-% SCAN2D scans a 2-D region region across device
+% Scans a 2-D region region across device.
 %
-% im = scan2d(slm, cam, ...) scans a bar region across the device
-% and returns a matrix representing the intensities at each location.
+% This function is similar to :func:`scan1d` except it scans a rectangular
+% region in a raster pattern across the surface of the SLM to form a 2-D
+% image of the intensity.
 %
-% Optional named arguments:
-%   width     [x,y]     width of the region to scan across the device
-%   stride    [x,y]     number of pixels to step
-%   padding   [x0 x1 y0 y1]     offset for initial window position
-%   delay     num     number of seconds to delay after displaying the
-%       image on the SLM before imaging (default: [], i.e. none)
-%   angle     num     direction to scan in (rad)
-%   angle_deg num     direction to scan in (deg)
-%   verbose   bool    display additional information about run
+% Usage
+%   im = scan2d(slm, cam, ...) scans a bar region across the device
+%   and returns a matrix representing the intensities at each location.
 %
+% Parameters
+%   - slm (:class:`Showable`) -- device to display pattern on.
+%     The slm.showComplex function is used to display the pattern.
+%     The pattern used for pixels outside the main region depends on
+%     the SLM configuration.
+%   - cam (:class:`Viewable`) -- device viewing the display.  This device
+%     could be a single photo-diode or the average intensity from all
+%     pixels on a camera.
+%
+% Optional named arguments
+%   - width [x,y] (numeric)   -- width of the region to scan across the device
+%   - stride [x,y] (numeric)  -- number of pixels to step
+%   - padding [x0 x1 y0 y1] (numeric) -- offset for initial window position
+%   - delay (numeric)     -- number of seconds to delay after displaying the
+%     image on the SLM before imaging (default: [], i.e. none)
+%   - angle (numeric)     -- direction to scan in (rad)
+%   - angle_deg (numeric) -- direction to scan in (deg)
+%   - verbose (logical)   -- display additional information about run
+%
+% See also :func:`image1d`.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

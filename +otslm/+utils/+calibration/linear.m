@@ -1,22 +1,31 @@
 function lt = linear(slm, cam, varargin)
-% LINEAR attempt to optimise diffraction from a linear grating
+% Attempt to optimise diffraction from a linear grating.
 %
 % This method does not produce a good estimate of the lookup table
 % but is useful for generating a lookup table to maximise deflection
 % into a particular direction or region.
 %
-% This method is experimental.
+% .. warning:: This method is experimental.
 %
-% lt = linear(slm, cam, ...)
+% Usage
+%   lt = linear(slm, cam, ...)
 %
-% Optional named arguments:
-%   grating         str   type of grating to display on the device
-%   max_iterations  num   maximum number of iterations to run
-%   show_progrerss  bool  show progress of the method
-%   method          str   method to use for optimisation
-%   dof             num   number of degrees of freedom
-%   spacing         num   diffraction grating spacing
-%   initial_cond    str   initial condition
+% Parameters
+%   - slm (:class:`Showable`) -- device to generate the lookup table for.
+%   - cam (:class:`Viewable`) -- device imaging the slm in the far-field.
+%
+% Optional named arguments
+%   - grating         str  -- type of grating to display on the device
+%   - max_iterations  num  -- maximum number of iterations to run
+%   - show_progrerss  bool -- show progress of the method
+%   - method          str  -- method to use for optimisation
+%   - dof             num  -- number of degrees of freedom
+%   - spacing         num  -- diffraction grating spacing
+%   - initial_cond    str  -- initial condition
+
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
 
   % TODO: Add an option to minimise voltage difference (value distance)
 

@@ -1,9 +1,15 @@
 classdef ImaqCamera < otslm.utils.Viewable
-%IMAQCAMERA connect to a image acquisition toolbox camera
+% Connect to a image acquisition toolbox (imaq) camera
+% Inherits from :class:`Viewable`
 %
 % This call can be used to create a otslm.utils.Viewable instance for
 % a videoinput source.  This requires the Image Acquisition Toolbox.
 %
+% Properties
+%   - device -- imaq object for the camera
+%
+% See also ImaqCamera.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

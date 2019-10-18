@@ -5,8 +5,6 @@
 `utils` Package
 ###############
 
-.. automodule:: +otslm.+utils
-
 The ``otslm.utils`` package contains functions for controlling,
 interacting with and simulating hardware.
 
@@ -17,8 +15,8 @@ testing algorithms. For converting from a ``[0, 2*pi)`` phase range to a
 device specific lookup table, the :class:`LookupTable`
 class can be used. This package contains three sub-packages containing
 `imaging algorithms <#imaging>`__, `calibration
-methods <#calibration>`__ and an `interface for
-RedTweezers <#RedTweezers>`__.
+methods <#calibration>`__ and an
+`interface for RedTweezers <#redtweezers>`__.
 
 .. contents::
    :depth: 1
@@ -28,12 +26,19 @@ RedTweezers <#RedTweezers>`__.
 LookupTable
 ===========
 
+.. automodule:: +otslm.+utils
+
 represents the phase and pixel values of a lookup table
 
 .. autoclass:: LookupTable
+   :members:
+
+.. _utils-imaging:
 
 imaging
 =======
+
+.. automodule:: +otslm.+utils.+imaging
 
 This sub-package contains functions for generating an image of the
 intensity at the surface of a phase-only SLM in the far-field of the
@@ -47,43 +52,16 @@ SLM.
 scan1d
 ------
 
-This function scans a vertical stripe across the surface of the SLM with
-flat phase. Pixels outside this region are assigned a random phase, a
-checkerboard pattern or some other pattern in order to scatter light
-away from the zero order. The camera (or a photo-diode) should be placed
-in the far-field to capture only light from the flat phase region. This
-function generates a 1-D profile of the light on the SLM.
+.. autofunction:: scan1d
 
-.. code:: matlab
-
-    im = scan1d(slm, cam)
-
-Named parameters: \* ``width`` num width of the region to scan across
-the device \* ``stride`` num number of pixels to step \* ``padding`` num
-offset for initial window position \* ``delay`` num number of seconds to
-delay after displaying the image on the SLM before imaging (default: [],
-i.e. none) \* ``angle`` num direction to scan in (rad) \* ``angle_deg``
-num direction to scan in (deg) \* ``verbose`` bool display additional
-information about run
+.. todo:: example usage
 
 scan2d
 ------
 
-This function is similar to ``scan1d`` except it scans a rectangular
-region in a raster pattern across the surface of the SLM to form a 2-D
-image of the intensity.
+.. autofunction:: scan2d
 
-.. code:: matlab
-
-    im = scan2d(slm, cam)
-
-Named parameters: \* width [x,y] width of the region to scan across the
-device \* stride [x,y] number of pixels to step \* padding [x0 x1 y0 y1]
-offset for initial window position \* delay num number of seconds to
-delay after displaying the image on the SLM before imaging (default: [],
-i.e. none) \* angle num direction to scan in (rad) \* angle\_deg num
-direction to scan in (deg) \* verbose bool display additional
-information about run
+.. todo:: example usage
 
 calibration
 ===========
@@ -110,6 +88,8 @@ bellow. For information on the other methods, see the file comments and
    :depth: 1
    :local:
 ..
+
+.. automodule:: +otslm.+utils.+calibration
 
 smichelson
 ----------
@@ -148,6 +128,8 @@ sets the direction of the phase step.
 In order to understand these parameters, we recommend using the
 ``CalibrationSMichelson`` GUI with the ``TestMichelson`` GUI.
 
+.. autofunction:: smichelson
+
 step
 ----
 
@@ -155,8 +137,8 @@ This function requires the camera to be in the far-field of the device.
 The function applies a step function to the device, causing a
 interference line to appear in the far-field. The position of the
 interference line changes depending on the relative phase of the two
-sides of the step function. An extension to this function is the
-``pinholes`` function which uses two pinholes instead of a step
+sides of the step function. An extension to this function is
+:func:`pinholes` which uses two pinholes instead of a step
 function, allowing for more precise calibration.
 
 The easiest way to use this method is via the
@@ -184,25 +166,82 @@ the slice.
 In order to understand these parameters, we recommend using the
 ``CalibrationStepFarfield`` GUI with the ``TestFarfield`` GUI.
 
+.. autofunction:: step
+
+pinholes
+--------
+
+.. autofunction:: pinholes
+
+checker
+-------
+
+.. autofunction:: checker
+
+linear
+------
+
+.. autofunction:: linear
+
+michelson
+---------
+
+.. autofunction:: michelson
+
 RedTweezers
 ===========
+
+.. automodule:: +otslm.+utils.+RedTweezers
+
+The RedTweezers sub-package provides classes for displaying patterns
+using OpenGL using the GPU or OpenGL enabled CPU.
+The main class is :class:`RedTweezers` which provides methods for
+setting up the connection to the RedTweezers UDP server and sending
+OpenGL uniforms, textures and shaders programs to the UDP server.
+For these classes to work, you must have a running RedTweezers
+UDP server setup on your network.
+For example usage, see the :ref:`example-using-the-gpu` example.
 
 .. contents::
    :depth: 1
    :local:
 ..
 
-interface for RedTweezers
+RedTweezers base class
+----------------------
 
--  Overview of functions in base class
--  Information on changing the port
--  Other classes: Showable and PrismsAndLenses
+.. autoclass:: RedTweezers
+   :members:
 
-See also `RedTweezers
-example <Using-the-GPU#uploading-a-shader-to-the-gpu>`__.
+Showable
+--------
+
+.. autoclass:: Showable
+   :members:
+
+PrismsAndLenses
+---------------
+
+.. autoclass:: PrismsAndLenses
+   :members:
+
+PrismsAndLensesSpot
+~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: PrismsAndLensesSpot
+   :members:
 
 Base classes of showable and viewable objects
 =============================================
+
+.. automodule:: +otslm.+utils
+
+These abstract base classes define the interface expected by the
+various imaging, calibration and GUI functions/classes in the toolbox.
+You can not directly create instances of these classes, instead
+you must implement your own subclass or
+use one of the predefined subclasses, see :ref:`utils-physical-devices`
+or :ref:`utils-non-physical-devices`.
 
 .. contents::
    :depth: 1
@@ -214,16 +253,25 @@ Showable
 
 Represents devices that can display a pattern
 
+.. autoclass:: Showable
+   :members:
+
 Viewable
 --------
 
 Represents objects that can be viewed (cameras)
 
+.. autoclass:: Viewable
+   :members:
+
+
+.. _utils-physical-devices:
+
 Physical devices
 ================
 
 These classes are used to interact with hardware, for example cameras
-and screens.
+and screens and photo-diodes.
 
 .. contents::
    :depth: 1
@@ -348,6 +396,9 @@ into the constructor:
         'target_offset', [0, 0], 'lookup_table', lookup_table, ...
         'pattern_type', 'phase', 'fullscreen', true);
 
+.. autoclass:: ScreenDevicce
+   :members:
+
 GigeCamera
 ----------
 
@@ -355,6 +406,9 @@ GigeCamera
 class uses the ``snapshot`` function to get an image from the device.
 The ``gigecam`` device is stored in the ``device`` property of the
 class.
+
+.. autoclass:: GigeCamera
+   :members:
 
 WebcamCamera
 ------------
@@ -368,6 +422,9 @@ class.
 This class currently doesn't inherit from ``ImaqCamera`` but is likely
 to in a future release of OTSLM.
 
+.. autoclass:: WebcamCamera
+   :members:
+
 ImaqCamera
 ----------
 
@@ -376,20 +433,27 @@ ImaqCamera
 the ``getsnapshot`` function to get an image from the device. The
 ``videoinput`` device is stored in the ``device`` property of the class.
 
+.. autoclass:: ImaqCamera
+   :members:
+
+.. _utils-non-physical-devices:
+
 Non-physical devices
 ====================
 
 The ``utils`` package defines several non-physical devices which can be
 used to test calibration or imaging algorithms.
-```TestDmd`` <#testdmd>`__ and ```TestSlm`` <#testslm>`__ classes are
+The :class:`TestDmd` and :class:`TestSlm` classes are
 Showable devices which can be combined with the
-```TestFarfield`` <#TestFarfield>`__ or
-```TestMichelson`` <#TestMichelson>`__ Viewable devices. These Showable
+:class:`TestFarfield` or
+:class:`TestMichelson` Viewable devices. These Showable
 devices implement the same functions as their physical counter-parts,
 except they store their output to a ``pattern`` property. The Viewable
 devices require a valid TestShowable instance and implement a view
 function which retrieves the ``pattern`` property from the Showable and
 simulates the expected output.
+
+For example usage, see the examples in the :ref:`utils-imaging` section.
 
 .. contents::
    :depth: 1
@@ -399,99 +463,30 @@ simulates the expected output.
 TestDmd
 -------
 
-Class describing a non-physical representation of a digital micro-mirror
-device. This class inherits from `TestShowable <#testshowable>`__ and
-`Showable <#showable>`__. The class defines the following properties:
-
--  ``size`` size of the device (in pixels)
--  ``incident`` complex incident illumination. Must be same size as
-   device.
--  ``pattern`` pattern generated by the ``showRaw`` method. This pattern
-   is is the complex amplitude after multiplying by the incident
-   illumination and applying ``rpack``. The ``rpack`` operation means
-   that this pattern is larger than the device, with extra padding added
-   to the corners.
--  ``valueRange`` value range for the device. For DMDs, this is 0 or 1.
--  ``lookupTable`` Lookup table for the device. Default is a simple
-   mapping from a 0 to 1 range to binary 0 or 1.
--  ``patternType`` pattern type for device. For DMDs, this is amplitude
-   only.
-
-When ``showRaw`` is called, the function calculates the pattern by
-applying ``rpack`` using the ```finalize`` <Tools-Package#finalize>`__
-method and sets the ``pattern`` property with the computed pattern. The
-incident illumination is added to the output. To change the incident
-illumination, either set a different pattern on construction or change
-the property value.
+.. autoclass:: TestDmd
+   :members: TestDmd
 
 TestSlm
 -------
 
-Non-physical phase only SLM-like device for testing code. This class
-inherits from `TestShowable <#testshowable>`__ and
-`Showable <#showable>`__. The class defines the following properties:
-
--  ``size`` size of the device (in pixels)
--  ``incident`` complex incident illumination. Must be same size as
-   device.
--  ``pattern`` pattern generated by the ``showRaw`` method. This pattern
-   is is the complex amplitude after multiplying by the incident
-   illumination and is the same size as the device.
--  ``valueRange`` value range for the device. Default is a single colour
-   channel device with 255 discrete levels.
--  ``lookupTable`` Lookup table for the device. Defaults to a linear
-   mapping of 0 to 2\*pi to the discrete colour levels of the device.
--  ``patternType`` pattern type for device. This device is phase-only.
-
-The ``showRaw`` function applies the inverse of the lookup table,
-converts from phase to a complex amplitude and assigns the result to the
-``pattern`` property.
+.. autoclass:: TestSlm
+   :members: TestSlm
 
 TestFarfield
 ------------
 
-Non-physical camera for viewing Test\* Showable objects in the
-far-field. This class inherits from
-```otslm.utils.Viewable`` <#viewable>`__. The class defines the
-following properties:
-
--  ``showable`` the ```TestShowable`` <#TestShowable>`__ instance
-   corresponding to the device in the interferometer.
--  ``size`` size of the output image.
--  ``NA`` numerical aperture to pass to ``otslm.tools.visualise``.
--  ``offset`` offset parameter to pass to ``otslm.tools.visualise``.
-
-The view method calls ``otslm.tools.visualise`` and calculates the
-intensity of the resulting image (``abs(U)^2``).
-
-This class may change in future versions to use a propagator instead of
-``otslm.tools.visualise``.
+.. autoclass:: TestFarfield
+   :members: TestFarfield
 
 TestMichelson
 -------------
 
-Non-physical representation of a `Michelson
-interferometer <https://en.wikipedia.org/wiki/Michelson_interferometer>`__.
-The interferometer consists of two arms, a reference arm with a mirror
-and a device arm with a ``Showable`` device such as a SLM or DMD. This
-class inherits from ```Viewable`` <#viewable>`__. The class defines the
-following properties:
-
--  ``showable`` the ```TestShowable`` <#TestShowable>`__ instance
-   corresponding to the device in the interferometer.
--  ``size`` size of the output image.
--  ``tilt`` tilt angle between the interferometer reference and device
-   arms. Default 0.0.
-
-The ``view`` function gets the current ``pattern`` from the
-``TestShowable`` device, adds the tilt using a linear grating and
-returns the intensity of the interference between the reference and
-device arms (``out = abs(Ref + Dev)^2``).
+.. autoclass:: TestMichelson
+   :members: TestMichelson
 
 TestShowable
 ------------
 
-Non-physical showable device for testing implementation. This is an
-abstract class defining a single abstract property, ``pattern``, the
-pattern currently being displayed on the device. For implementations see
-`TestDmd <#testdmd>`__ and `TestSlm <#testslm>`__.
+.. autoclass:: TestShowable
+   :no-members:
+

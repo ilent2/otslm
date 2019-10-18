@@ -1,20 +1,27 @@
 function lt = checker(slm, cam, varargin)
-% CHECKER generate phase device lookup table using checkerboard pattern
+% Generate phase device lookup table using checkerboard pattern.
 %
 % This method displays a checkerboard pattern on the device and looks
 % at the intensity of the zero-th order.  This may not be very effective
 % if the device is not efficient or the device doesn't cover the full
 % 2*pi phase range.
 %
-% Optional named arguments:
-%   spacing           num     size of checkerboard grid
-%   delay             num     delay after updating slm
-%   stride            num     number of linear indexes to step
+% Usage
+%   lt = checker(slm, cam, ...)
 %
-%   verbose           bool    display progress in console
-%   show_progress     bool    display progress of the method
-%   show_camera       bool    show what the camera sees
+% Parameters
+%   - slm (:class:`Showable`) -- device to generate the lookup table for.
+%   - cam (:class:`Viewable`) -- device imaging the slm in the far-field.
 %
+% Optional named arguments
+%   - spacing (numeric)       -- size of checkerboard grid
+%   - delay (numeric)         -- delay after updating slm
+%   - stride (numeric)        -- number of linear indexes to step
+%
+%   - verbose (logical)       -- display progress in console
+%   - show_progress (logical) -- display progress of the method
+%   - show_camera (logical)   -- show what the camera sees
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

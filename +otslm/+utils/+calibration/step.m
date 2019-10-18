@@ -1,26 +1,31 @@
 function lt = step(slm, cam, varargin)
-% STEP applies a step function and looks at interference
+% Applies a step function and looks at interference.
 %
 % Creates a phase pattern with two regions and looks at the interference
 % of the regions.
 %
-% lt = step(slm, cam, ...) calibrates using the step method.
+% Usage
+%   lt = step(slm, cam, ...) calibrates using the step method.
 %
-% Optional named arguments:
-%     slice_offset    num     slice distance from image centre
-%     slice_width     num     width of the slice to average over
-%     slice_angle     num     angle for the slice (deg)
-%     freq_index      idx     index for frequency sample
-%     step_angle      num     angle for the step function (deg)
-%     delay           num     delay after displaying slm image
-%     stride          num     number of linear indexes to step
-%     basevalue       num     value to use for the first region
+% Parameters
+%   - slm (:class:`Showable`) -- device to generate the lookup table for.
+%   - cam (:class:`Viewable`) -- device imaging the slm in the far-field.
 %
-%     verbose         bool    display progress in console
-%     show_progress   bool    show progress figure
-%     show_camera     bool    show what the camera sees
-%     show_spectrum   bool    show the 1-D Fourier spectrum of the images
+% Optional named arguments
+%   - slice_offset    num  -- slice distance from image centre
+%   - slice_width     num  -- width of the slice to average over
+%   - slice_angle     num  -- angle for the slice (deg)
+%   - freq_index      idx  -- index for frequency sample
+%   - step_angle      num  -- angle for the step function (deg)
+%   - delay           num  -- delay after displaying slm image
+%   - stride          num  -- number of linear indexes to step
+%   - basevalue       num  -- value to use for the first region
 %
+%   - verbose         bool -- display progress in console
+%   - show_progress   bool -- show progress figure
+%   - show_camera     bool -- show what the camera sees
+%   - show_spectrum   bool -- show the 1-D Fourier spectrum of the images
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

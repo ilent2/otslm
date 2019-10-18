@@ -1,23 +1,24 @@
 classdef LookupTable
-% LOOKUPTABLE represents the phase and pixel values of a lookup table
+% Class representing the phase and pixel values of a lookup table.
 %
-% Lookup tables can be used by Showable devices and tools.finalize.
+% Lookup tables can be used by Showable devices, otslm.tools.finalize
+% and otslm.tools.colormap.
 %
-% Methods:
-%   load        load a human readable lookup table from a file
-%   save        save a human readable lookup table to a file
-%   sorted      Returns a new lookup table sorted by phase
-%   resample    Re-sampled lookup table at the specified phases
-%   linearised  New re-sampled lookup with evenly spaced phase values
-%   valueMinimised Arrange lookup table so values are ascending
+% Methods
+%  - load    --  load a human readable lookup table from a file
+%  - save    --  save a human readable lookup table to a file
+%  - sorted  --  Returns a new lookup table sorted by phase
+%  - resample -- Re-sampled lookup table at the specified phases
+%  - linearised -- New re-sampled lookup with evenly spaced phase values
+%  - valueMinimised -- Arrange lookup table so values are ascending
 %
-% Properties:
-%   phase       phase values in lookup table [Nx1 matrix]
-%   value       pixel values in lookup table [NxM matrix]
-%   range       range of the lookup table (for phase based tables)
+% Properties
+%  - phase   --  phase values in lookup table [Nx1 matrix]
+%  - value   --  pixel values in lookup table [NxM matrix]
+%  - range   --  range of the lookup table (for phase based tables)
 %
 % See also LookupTable, otslm.tools.finalize and otslm.utils.Showable
-%
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

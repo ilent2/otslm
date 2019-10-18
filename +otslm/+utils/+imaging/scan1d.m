@@ -1,19 +1,38 @@
 function im = scan1d(slm, cam, varargin)
-% SCAN1D scans a bar region across device
+% Scans a bar region across device.
 %
-% im = scan1d(slm, cam, ...) scans a bar region across the device
-% and returns a array representing the intensities at each location.
+% This function scans a vertical stripe across the surface of the SLM with
+% flat phase. Pixels outside this region are assigned a random phase, a
+% checkerboard pattern or some other pattern in order to scatter light
+% away from the zero order. The camera (or a photo-diode) should be placed
+% in the far-field to capture only light from the flat phase region. This
+% function generates a 1-D profile of the light on the SLM.
 %
-% Optional named arguments:
-%   width     num     width of the region to scan across the device
-%   stride    num     number of pixels to step
-%   padding   num     offset for initial window position
-%   delay     num     number of seconds to delay after displaying the
-%       image on the SLM before imaging (default: [], i.e. none)
-%   angle     num     direction to scan in (rad)
-%   angle_deg num     direction to scan in (deg)
-%   verbose   bool    display additional information about run
+% Usage
+%   im = scan1d(slm, cam, ...) scans a bar region across the device
+%   and returns a array representing the intensities at each location.
 %
+% Parameters
+%   - slm (:class:`Showable`) -- device to display pattern on.
+%     The slm.showComplex function is used to display the pattern.
+%     The pattern used for pixels outside the main region depends on
+%     the SLM configuration.
+%   - cam (:class:`Viewable`) -- device viewing the display.  This device
+%     could be a single photo-diode or the average intensity from all
+%     pixels on a camera.
+%
+% Optional named arguments
+%  - width (numeric)     -- width of the region to scan across the device
+%  - stride (numeric)    -- number of pixels to step
+%  - padding (numeric)   -- offset for initial window position
+%  - delay (numeric)     -- number of seconds to delay after displaying the
+%    image on the SLM before imaging (default: [], i.e. none)
+%  - angle (numeric)     -- direction to scan in (rad)
+%  - angle_deg (numeric) -- direction to scan in (deg)
+%  - verbose (logical)   -- display additional information about run
+%
+% See also :func:`image2d`.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

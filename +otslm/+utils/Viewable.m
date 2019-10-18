@@ -1,23 +1,24 @@
 classdef (Abstract) Viewable < handle
-% VIEWABLE represents objects that can be viewed (cameras)
+% Abstract representation of objects that can be viewed (cameras).
+% Inherits from :class:`handle`.
 %
 % Methods (Abstract)
-%   view()        Show an image from the device.
+%  - view()        Show an image from the device.
 %
 % Methods:
-%   viewTarget()  Show an image of the target region from the device.
-%       The default behaviour is just to call view().
-%   crop(roi)     Create a region of interest that is returned by
-%       viewTarget.  Can have multiple regions.
+%  - viewTarget()  Show an image of the target region from the device.
+%    The default behaviour is just to call view().
+%  - crop(roi)     Create a region of interest that is returned by
+%    viewTarget.  Can have multiple regions.
 %
 % Properties (Abstract)
-%   size          Size of the device [rows, columns]
-%   roisize       Size of the target region [rows, columns]
+%  - size          Size of the device [rows, columns]
+%  - roisize       Size of the target region [rows, columns]
 %
 % This is the interface that utility functions which request an
 % image from the experiment/simulation use.  For declaring a new
 % camera, you should inherit from this class and define the view method.
-%
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

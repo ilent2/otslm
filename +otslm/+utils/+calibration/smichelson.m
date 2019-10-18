@@ -1,5 +1,5 @@
 function lt = smichelson(slm, cam, varargin)
-% SMICHELSON uses images from a sloped Michelson interferometer
+% Uses images from a sloped Michelson interferometer
 %
 % Calculate the SLM lookup table using interference fringes on a
 % sloped Michelson interferometer setup.  Either the SLM or reference
@@ -8,25 +8,33 @@ function lt = smichelson(slm, cam, varargin)
 % device, the fringes can be made to move.  This can be done on
 % half the device allowing the other half to be used as a reference.
 %
-% lt = smichelson(slm, cam, ...) calibrate using the smichelson method.
+% Usage
+%   lt = smichelson(slm, cam, ...) calibrate using the smichelson method.
 %
-% Optional named parameters:
-%     slice1_offset   num     slice 1 distance from image centre
-%     slice1_width    num     width of the slice 1 to average over
-%     slice2_offset   num     slice 2 distance from image centre
-%     slice2_width    num     width of the slice 2 to average over
-%     slice_angle     num     angle for the slice (deg)
-%     freq_index      idx     index for frequency sample
-%     step_angle      num     angle for the step function (deg)
-%     delay           num     delay after displaying slm image
-%     stride          num     number of linear indexes to step
-%     basevalue       num     value to use for the first region
+% Parameters
+%   - slm (:class:`Showable`) -- device to generate the lookup table for.
+%   - cam (:class:`Viewable`) -- device imaging the slm.  The camera
+%     should be viewing the output of a Michelson interferometer, with
+%     the SLM on one arm and a mirror on the other.  The mirror should
+%     be tilted slightly to create interference fringes on the camera.
 %
-%     verbose         bool    display progress in console
-%     show_progress   bool    show progress figure
-%     show_camera     bool    show what the camera sees
-%     show_spectrum   bool    show the 1-D Fourier spectrum of the images
+% Optional named parameters
+%   - slice1_offset   num  -- slice 1 distance from image centre
+%   - slice1_width    num  -- width of the slice 1 to average over
+%   - slice2_offset   num  -- slice 2 distance from image centre
+%   - slice2_width    num  -- width of the slice 2 to average over
+%   - slice_angle     num  -- angle for the slice (deg)
+%   - freq_index      idx  -- index for frequency sample
+%   - step_angle      num  -- angle for the step function (deg)
+%   - delay           num  -- delay after displaying slm image
+%   - stride          num  -- number of linear indexes to step
+%   - basevalue       num  -- value to use for the first region
 %
+%   - verbose         bool -- display progress in console
+%   - show_progress   bool -- show progress figure
+%   - show_camera     bool -- show what the camera sees
+%   - show_spectrum   bool -- show the 1-D Fourier spectrum of the images
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.

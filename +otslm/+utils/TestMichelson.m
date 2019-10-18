@@ -1,16 +1,29 @@
 classdef TestMichelson < otslm.utils.Viewable
-% TESTMICHELSON non-physical representation of Michelson interferometer
+% Non-physical representation of Michelson interferometer.
+% Inherits from :class:`Viewable`.
 %
-% Properties (read-only):
-%   size      Size of the output image (same as Showable)
-%   showable  The TestShowable device to image
+% The interferometer consists of two arms, a reference arm with a mirror
+% and a device arm with a ``Showable`` device such as a SLM or DMD
+% The TestMichelson simulates a :class:`TestShowable` device placed
+% in one arm, and calculates the interference pattern between the
+% reference arm and the test arm.
 %
-% Properties:
-%   tilt      Angle to tilt the showable device with respect to the
-%       reference beam.  Applies a exp(2*pi*i*linear*tilt) grating.
+% The ``view`` function gets the current ``pattern`` from the
+% ``TestShowable`` device and calculates the interference.
+% The device supports adding a tilt between the reference arm and the
+% Showable arm.  This can be useful for
+% testing :func:`calibration.smichelson`.
 %
-% See also otslm.utils.TestShowable and otslm.utils.TestCamera
+% Properties
+%  - tilt     -- Angle to tilt the showable device with respect to the
+%    reference beam.  Applies a exp(2*pi*i*linear*tilt) grating.
 %
+% Properties (read-only)
+%  - size     -- Size of the output image (same as Showable)
+%  - showable -- The TestShowable device
+%
+% See also TestMichelson, :class:`TestShowable` and :class:`TestFarfield`.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -29,12 +42,16 @@ classdef TestMichelson < otslm.utils.Viewable
     function obj = TestMichelson(showable, varargin)
       % Create the new interferometer-like device
       %
-      % obj = TestMichelson(showable, ...) construct a new michelson
-      % interferometer to view the TestShowable device.
+      % Usage
+      %   obj = TestMichelson(showable, ...) construct a new Michelson
+      %   interferometer to view the TestShowable device.
       %
-      % Optional named arguments:
-      %   tilt   num   tilt factor (default: 0.0)
-      
+      % Parameters
+      %   - showable (:class:`TestShowable`) -- the device to link
+      %
+      % Optional named arguments
+      %   - tilt (numeric) -- tilt factor (default: 0.0)
+
       p = inputParser;
       p.addParameter('tilt', 0.0);
       p.parse(varargin{:});

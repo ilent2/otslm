@@ -1,19 +1,26 @@
 classdef WebcamCamera < otslm.utils.Viewable
-%WEBCAMCAMERA connect to a webcam camera connected to the computer
+% Connect to a webcam camera connected to the computer.
+% Inherits from :class:`Viewable`.
+%
+% Properties
+%   - size -- resolution of the device
+%   - device -- videoinput device for the camera
 %
 % This call can be used to create a otslm.utils.Viewable instance for
 % a videoinput source.  This requires the Image Acquisition Toolbox.
 %
+% See also WebcamCamera, :class:`GigeCamera` and :class:`ImaqCamera`.
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
-  
+
   properties (SetAccess=protected)
     size        % Resolution of the device
   end
   
   properties (SetAccess=public)
-    device      % The physical device (gige object)
+    device      % The physical device
   end
   
   properties (Dependent=true)

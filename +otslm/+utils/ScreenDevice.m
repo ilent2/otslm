@@ -1,12 +1,15 @@
 classdef ScreenDevice < otslm.utils.Showable
-% SCREENDEVICE represents a device controlled by full screen window
-% Base class used for SlmScreen and DmdScreen devices.
+% Represents a device controlled by full screen window
+% Inherits from :class:`Showable`.
+%
+% Useful for displaying images on SLMs and DMDs connected as a screen
+% on the computer running Matlab.
 %
 % The actual target device size may be smaller than the size
 % reported by the device.
 %
 % See also ScreenDevice, show, otslm.utils.Showable.
-%
+
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
