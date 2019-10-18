@@ -1,4 +1,6 @@
 
+.. _example-using-the-gpu:
+
 #############
 Using the GPU
 #############

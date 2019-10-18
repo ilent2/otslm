@@ -1,4 +1,6 @@
 
+.. _packages:
+
 ########
 Packages
 ########

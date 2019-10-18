@@ -15,13 +15,29 @@ codes for patterns they use in research publications. If you would like
 to contribute patterns, we would love to hear from you, see the
 Contributing section bellow.
 
-This toolbox is a work in progress. It is likely, at least in the early
+This documentation provides an overview of the toolbox functions and
+classes, including examples, typical output, and function/class
+reference pages which can be used to extend the toolbox for your own needs.
+The documentation is split into three parts: a :ref:`getting-started`
+section, :ref:`examples` and :ref:`packages` reference section.
+The examples section contains additional details about specific tasks
+the toolbox can be used for.
+Additional example code is provided as part of the toolbox in the
+``examples`` directory.
+The packages section contains information about each of the packages.
+This includes function/class reference pages and example output.
+Most toolbox functions/classes are documented in the source code,
+and can be viewed by typing `help <function-name>` at the matlab prompt.
+The documentation includes the rendered function/class help and
+additional content such as examples and typical output.
+
+The toolbox is a work in progress. It is likely, at least in the early
 versions, the functions will move around, change names and behaviour.
 Some functions still lack documentation and might be a bit unstable.
 Comments and suggestions welcome.
 
-To get started using the toolbox, checkout the `Getting
-Started <Getting-Started>`__ page.
+To get started using the toolbox, take a look at the
+:ref:`getting-started` section.
 
 License
 =======
