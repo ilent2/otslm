@@ -6,7 +6,7 @@ classdef LookupTable
 %
 % Methods
 %  - load    --  load a human readable lookup table from a file
-%  - save    --  save a human readable lookup table to a file
+%  - save    --  save a human readable lookup table to a file.
 %  - sorted  --  Returns a new lookup table sorted by phase
 %  - resample -- Re-sampled lookup table at the specified phases
 %  - linearised -- New re-sampled lookup with evenly spaced phase values
@@ -17,7 +17,7 @@ classdef LookupTable
 %  - value   --  pixel values in lookup table [NxM matrix]
 %  - range   --  range of the lookup table (for phase based tables)
 %
-% See also LookupTable, otslm.tools.finalize and otslm.utils.Showable
+% See also LookupTable, :func:`otslm.tools.finalize` and :class:`Showable`
 
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -37,25 +37,29 @@ classdef LookupTable
       % program.  Otherwise, the recommended way to save a lookup
       % table is by using the matlab save function.
       %
-      % lt = LookupTable.load(filename, ...) loads the lookup table.
+      % Usage
+      %   lt = LookupTable.load(filename, ...) loads the lookup table.
       %
-      % Optional named arguments:
-      %     'channels'    channels    Array of columns numbers in input file
-      %       0 correspond to 0 in output.  Negative values correspond to
-      %       columns in reverse order.
+      % Parameters
+      %   filename (char) -- filename for lookup table to load
       %
-      %   'phase'       column      Column of input file taken as phase
-      %       value.  If omitted, i.e. [], assumes 0 to 2*pi linear
-      %       phase range.
+      % Optional named arguments
+      %   - 'channels'    channels    Array of columns numbers in input file
+      %     0 correspond to 0 in output.  Negative values correspond to
+      %     columns in reverse order.
       %
-      %   'oformat'     format      Output format string (default: uint8)
-      %   'format'      format      Input format handle (default @uint8)
-      %   'mask'        mask        Mask for input format (default: none)
-      %   'morder'      order       Array for order of bits in mask
-      %       length should be 8, (0: zero bit, 1:8 mask bit, other: one bit).
-      %       1:8 is normal bit order, 8:-1:1 is reverse order.
-      %   'delim'       delim       Deliminator in input file
-      %   'nheaderlines' num        Number of header lines in file
+      %   - 'phase'       column      Column of input file taken as phase
+      %     value.  If omitted, i.e. [], assumes 0 to 2*pi linear
+      %     phase range.
+      %
+      %   - 'oformat'     format      Output format string (default: uint8)
+      %   - 'format'      format      Input format handle (default @uint8)
+      %   - 'mask'        mask        Mask for input format (default: none)
+      %   - 'morder'      order       Array for order of bits in mask
+      %     length should be 8, (0: zero bit, 1:8 mask bit, other: one bit).
+      %     1:8 is normal bit order, 8:-1:1 is reverse order.
+      %   - 'delim'       delim       Deliminator in input file
+      %   - 'nheaderlines' num        Number of header lines in file
       %
       % The number of channels in the output is determined by the length
       % of the channels array.  Each element in the channels array determines
@@ -67,10 +71,12 @@ classdef LookupTable
       % The output value is then calculated as a uint8 from the bits
       % that were masked using the morder argument.
       %
-      % Examples:
-      %
+      % Example
       %   Load a 16-bit lookup table with values assigned to the first two
       %   channels.  The input file has two columns, we use the second.
+      %
+      %   .. code::
+      %
       %     lookup_table = 'LookupTable.txt';
       %     colormap = otslm.utils.LookupTable.load(lookup_table, ...
       %       'channels', [2, 2, 0], 'phase', [], 'format', @uint16, ...
@@ -181,14 +187,19 @@ classdef LookupTable
     function lt = LookupTable(phase, value, varargin)
       % Construct a new LookupTable instance
       %
-      % lt = LookupTable(phase, value, ...)
+      % Usage
+      %   lt = LookupTable(phase, value, ...)
       %
-      % Optional named arguments:
-      %   range    num    The range of the look up table.  This will
-      %      typically be either 1 or 2*pi depending on if the lookup
-      %      table is normalized or un-normalized.  The actual ranges
-      %      of phase values may be less or greater than this range.
-      
+      % Parameters
+      %   - phase (numeric) -- [Nx1] vector with phase values
+      %   - value (numeric) -- [NxM] values to map phase too
+      %
+      % Optional named arguments
+      %   - range (numeric) -- The range of the look up table.  This will
+      %     typically be either 1 or 2*pi depending on if the lookup
+      %     table is normalized or un-normalized.  The actual ranges
+      %     of phase values may be less or greater than this range.
+
       p = inputParser;
       p.addParameter('range', 2*pi);
       p.parse(varargin{:});
@@ -209,20 +220,25 @@ classdef LookupTable
       % program.  Otherwise, the recommended way to save a lookup
       % table is by using the matlab save function.
       %
-      % lt.save(filename, ...) saves the lookup table to file.
+      % Usage
+      %   lt.save(filename, ...) saves the lookup table to file.
       %
-      % Optional named arguments:
-      %   header    str     header lines describing file contents.
-      %       Default is a message about when the file was generated.
-      %   cols      [cols]  specifies which columns of values will be written
-      %   format    str     type type of lookup table to write.
-      %       All formats write the phase in the first column.
-      %       This argument controls what is placed in additional columns.
-      %       Currently supported types are:
-      %         8bit    write a single column of 8 bit integers
-      %         16bit   write a single column of 16 bit integers
-      %         none    don't write any additional column
-      %         multi   write one column for each value channel
+      % Parameters
+      %   - filename (char) -- filename to save lookup table too.
+      %
+      % Optional named arguments
+      %   - header (char)     -- header lines describing file contents.
+      %     Default is a message about when the file was generated.
+      %   - cols (numeric)    -- specifies which columns of values
+      %     will be written.
+      %   - format (enum)     -- type type of lookup table to write.
+      %     All formats write the phase in the first column.
+      %     This argument controls what is placed in additional columns.
+      %     Currently supported types are:
+      %    - 8bit  -- write a single column of 8 bit integers
+      %    - 16bit -- write a single column of 16 bit integers
+      %    - none  -- don't write any additional column
+      %    - multi -- write one column for each value channel
 
       p = inputParser;
       p.addParameter('header', ['SLM lookup table generated at ' char(datetime())]);
@@ -301,7 +317,8 @@ classdef LookupTable
     function nlt = sorted(lt)
       % Returns a new lookup table sorted by phase
       %
-      % nlt = lt.sorted()
+      % Usage
+      %   nlt = lt.sorted()
 
       [sortedPhase, idx] = sort(lt.phase);
       sortedValue = lt.value(idx, :);
@@ -313,10 +330,16 @@ classdef LookupTable
     function nlt = resample(lt, nphase)
       % Generates a new lookup table re-sampled at the specified phases
       %
-      % nlt = lt.resample(nphase) returns a new lookup table re-sampled
-      % at the specified phases.  Values assigned to new phases correspond
-      % to the nearest values in the old table.
-      
+      % Usage
+      %   nlt = lt.resample(nphase) returns a new lookup table re-sampled
+      %   at the specified phases.  Values assigned to new phases correspond
+      %   to the nearest values in the old table.
+      %
+      % Parameters
+      %   - phase (numeric) -- new phase values
+
+      % TODO: Add other interpolation methods
+
       assert(size(nphase, 1) == numel(nphase), 'nphase must be column vector');
 
       nvalue = interp1(lt.phase, double(lt.value), nphase, 'nearest');
@@ -329,13 +352,18 @@ classdef LookupTable
     function nlt = linearised(lt, numpts, varargin)
       % Generates a new lookup table with evenly spaced values
       %
-      % nlt = lt.linearised(numpts, ...) generates a resampled
-      % lookup table with evenly spaced values.
+      % Usage
+      %   nlt = lt.linearised(numpts, ...) generates a resampled
+      %   lookup table with evenly spaced values.
+      %
+      % Parameters
+      %   - numpts (numeric) -- number of evenly spaced values.
       %
       % Optional named arguments
-      %     range     [min, max]  range to re-sample. Default: minmax(phase).
-      %     periodic  bool        specifies if the range is periodic, if
-      %       so, the end points count as the same point.  Default false.
+      %   - range (numeric)    -- range to re-sample ``[min, max]``.
+      %     (default: ``[min(lt.phase), max(lt.phase)]``).
+      %   - periodic (logical) -- specifies if the range is periodic, if
+      %     so, the end points count as the same point.  Default false.
 
       p = inputParser;
       p.addParameter('range', [min(lt.phase), max(lt.phase)]);
@@ -356,8 +384,11 @@ classdef LookupTable
       % Arranges lookup table so phase values are ascending but
       % attempts to minimise change in linear index between steps.
       %
-      % nlt = lt.valueMinimised(valueRangeSz) requires information
-      % about the size of each valueRange dimension (vector).
+      % Usage
+      %   nlt = lt.valueMinimised(valueRangeSz) requires information
+      %   about the size of each valueRange dimension (vector).
+      %
+      % .. todo:: document parameters
       %
       % See also otslm.utils.Showable.valueRangeSize()
 

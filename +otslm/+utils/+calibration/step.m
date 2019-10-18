@@ -1,8 +1,16 @@
 function lt = step(slm, cam, varargin)
 % Applies a step function and looks at interference.
 %
-% Creates a phase pattern with two regions and looks at the interference
-% of the regions.
+% This function creates a step phase pattern with two regions.
+% The far-field interference pattern of these regions contains a
+% fringe which moves depending on the relative phase between the
+% two regions.
+%
+% The function uses a Fourier transform to determine the position of the
+% interference fringe. The frequency for the Fourier transform is
+% specified by the ``freq_index`` parameter. The width and angle
+% parameters control the number of pixels to average over and the angle of
+% the slice.
 %
 % Usage
 %   lt = step(slm, cam, ...) calibrates using the step method.

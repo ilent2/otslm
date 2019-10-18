@@ -1,5 +1,6 @@
 classdef (Abstract) Showable < handle
 % Represents devices that can display a pattern.
+% Inherits from :class:`handle`.
 %
 % Methods (abstract):
 %   showRaw(pattern)      Display the pattern on the device.  The pattern

@@ -47,6 +47,8 @@ extensions = [
 ]
 #    'recommonmark',
 
+numfig = True;
+
 # Things for todo extension
 todo_include_todos = True
 

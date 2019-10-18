@@ -28,10 +28,9 @@ LookupTable
 
 .. automodule:: +otslm.+utils
 
-represents the phase and pixel values of a lookup table
-
 .. autoclass:: LookupTable
-   :members:
+   :members: LookupTable, load, save, sorted,
+      resample, linearised, valueMinimised
 
 .. _utils-imaging:
 
@@ -44,6 +43,35 @@ This sub-package contains functions for generating an image of the
 intensity at the surface of a phase-only SLM in the far-field of the
 SLM.
 
+To demonstrate how these function work, we can use the
+:class:`TestFarfield` and :class:`TestSlm` classes.
+From ``examples/imaging.m``, the following code demonstrates how
+we can image the incident illumination on the device.
+:numref:`utils-imaging-example` shows the incident illumination
+and output from the two imaging methods.
+
+.. code:: matlab
+
+   % Setup camera and slm objects
+   slm = otslm.utils.TestSlm();
+   slm.incident = otslm.simple.gaussian(slm.size, 100);
+   cam = otslm.utils.TestFarfield(slm);
+
+   % Generate 1-D profile
+   im = otslm.utils.imaging.scan1d(slm, cam, 'stride', 10, 'width', 10);
+
+   % Generate 2-D raster scan
+   im = otslm.utils.imaging.scan2d(slm, cam, ...
+       'stride', [50,50], 'width', [50,50]);
+
+.. _utils-imaging-example:
+.. figure:: images/utilsPackage/imaging.png
+   :alt: example output from imaging functions
+
+   Example output from imaging functions.
+   (left) incident illumination.  (middle) 1-D scan.  (right)
+   2-D raster scan.
+
 .. contents::
    :depth: 1
    :local:
@@ -54,22 +82,20 @@ scan1d
 
 .. autofunction:: scan1d
 
-.. todo:: example usage
-
 scan2d
 ------
 
 .. autofunction:: scan2d
-
-.. todo:: example usage
 
 calibration
 ===========
 
 This sub-package contains functions for calibrating the device and
 generating a lookup-table. Most of these methods assume the SLM and
-camera are positioned in one of the following configurations
+camera are positioned in one of the configurations shown in
+:numref:`utils-calibration-setup`.
 
+.. _utils-calibration-setup:
 .. figure:: images/utilsPackage/expSetup.png
    :alt: slm configurations
 
@@ -102,21 +128,6 @@ change. The unchanged half of the device is used as a reference.
 The easiest way to use this method is via the ``CalibrationSMichelson``
 graphical user interface.
 
-To use the function you must supply a showable and viewable object,
-specify the slice locations, step angle, frequency of the Michelson
-interference fringes.
-
-.. code:: matlab
-
-    lookup_table = otslm.utils.calibration.smichelson(slm, cam, ...
-      'slice1_offset', slice1_offset, ...
-      'slice1_width', slice1_width, ...
-      'slice2_offset', slice2_offset, ...
-      'slice2_width', slice2_width, ...
-      'slice_angle', slice_angle, ...
-      'step_angle', step_angle, ...
-      'freq_index', freq_index);
-
 The method takes two slices through the output image of the Viewable
 obejct. The slices should be perpendicular to the interference fringes
 on the SLM. The step width determines how many pixels to average over.
@@ -125,8 +136,10 @@ the shifted region of the SLM. The slice offset, angle and width
 describe the location of the two slices. The ``step_angle`` parameter
 sets the direction of the phase step.
 
-In order to understand these parameters, we recommend using the
+In order to understand the function parameters, we recommend using the
 ``CalibrationSMichelson`` GUI with the ``TestMichelson`` GUI.
+
+.. todo:: Screen-shot showing GUI configuration and output
 
 .. autofunction:: smichelson
 
@@ -143,28 +156,10 @@ function, allowing for more precise calibration.
 
 The easiest way to use this method is via the
 ``CalibrationStepFarfield`` graphical user interface.
-
-To use the function you must supply a Showable and Viewable object and
-specify a slice through the camera image which passes perpendicular to
-the interference fringe.
-
-.. code:: matlab
-
-    lookup_table = otslm.utils.calibration.step(slm, cam, ...
-      'slice_offset', slice_offset, ...
-      'slice_width', slice_width, ...
-      'slice_angle', slice_angle, ...
-      'step_angle', step_angle, ...
-      'freq_index', freq_index);
-
-The function uses a Fourier transform to determine the position of the
-interference fringe. The frequency for the Fourier transform is
-specified by the ``freq_index`` parameter. The width and angle
-parameters control the number of pixels to average over and the angle of
-the slice.
-
-In order to understand these parameters, we recommend using the
+In order to understand the function parameters, we recommend using the
 ``CalibrationStepFarfield`` GUI with the ``TestFarfield`` GUI.
+
+.. todo:: Screen-shot showing GUI configuration and output
 
 .. autofunction:: step
 
@@ -251,15 +246,11 @@ or :ref:`utils-non-physical-devices`.
 Showable
 --------
 
-Represents devices that can display a pattern
-
 .. autoclass:: Showable
    :members:
 
 Viewable
 --------
-
-Represents objects that can be viewed (cameras)
 
 .. autoclass:: Viewable
    :members:
@@ -270,8 +261,8 @@ Represents objects that can be viewed (cameras)
 Physical devices
 ================
 
-These classes are used to interact with hardware, for example cameras
-and screens and photo-diodes.
+These classes are used to interact with hardware, including cameras,
+screens and photo-diodes.
 
 .. contents::
    :depth: 1
