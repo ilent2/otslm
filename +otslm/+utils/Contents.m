@@ -14,7 +14,7 @@
 %   Viewable      - represents objects that can be viewed (cameras)
 %
 % Physical devices
-%   ScreenDevice  - represents a device controlled by full screen window
+%   ScreenDevice  - represents a device controlled by a window on the screen
 %   GigeCamera    - connect to a gige camera connected to the computer
 %   WebcamCamera  - connect to a webcam camera connected to the computer
 %   ImaqCamera    - connect to a image acquisition toolbox camera

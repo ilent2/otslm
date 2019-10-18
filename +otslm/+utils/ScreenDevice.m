@@ -1,5 +1,5 @@
 classdef ScreenDevice < otslm.utils.Showable
-% Represents a device controlled by full screen window
+% Represents a device controlled by a window on the screen
 % Inherits from :class:`Showable`.
 %
 % Useful for displaying images on SLMs and DMDs connected as a screen

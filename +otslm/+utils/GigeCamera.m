@@ -26,6 +26,10 @@ classdef GigeCamera < otslm.utils.Viewable
   methods
     function obj = GigeCamera(varargin)
       % Connect to the camera
+      %
+      % cam = GigeCamera(device_id)
+      % connects to the specified GIGE camera.
+      % device_id is passed to the gigecam function.
       
       % Parse inputs
       p = inputParser;
