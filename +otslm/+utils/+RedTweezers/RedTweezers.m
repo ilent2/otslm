@@ -1,29 +1,44 @@
 classdef RedTweezers < handle
-  %RedTweezers interface to RedTweezers
-  %
-  % RedTweezers is a software package which calculates the hologram
-  % using OpenGL and directly displays the hologram on the hardware.
-  % This has the advantage over other methods that it does not require
-  % the pattern to be downloaded from the graphics hardware and
-  % re-uploaded for display on the hardware.
-  %
-  % This class connects to RedTweezers via UDP.
-  % The RedTweezers library must be running for this to work.
-  %
-  % For details and download link, see the RedTweezers CPC paper:
-  % https://doi.org/10.1016/j.cpc.2013.08.008
-  %
-  % Methods:
-  %   RedTweezers    Construct an instance of this object
-  %   sendCommand    Send a command (adds data block wrapper)
-  %   updateAll      Resend all commands
-  %
-  % See also otslm.utils.RedTweezers.PrismsAndLenses
-  %
-  % Copyright 2019 Isaac Lenton
-  % This file is part of OTSLM, see LICENSE.md for information about
-  % using/distributing this file.
-  
+% Interface to RedTweezers
+%
+% RedTweezers is a software package which calculates the hologram
+% using OpenGL and directly displays the hologram on the hardware.
+% This has the advantage over other methods that it does not require
+% the pattern to be downloaded from the graphics hardware and
+% re-uploaded for display on the hardware.
+%
+% This class connects to RedTweezers via UDP.
+% The RedTweezers library must be running for this to work.
+%
+% For details and download link, see the RedTweezers CPC paper:
+% https://doi.org/10.1016/j.cpc.2013.08.008
+%
+% Methods
+%   - RedTweezers   -- Construct an instance of this object
+%   - sendCommand   -- Send a command (adds data block wrapper)
+%   - updateAll     -- Resend all commands
+%   - readGlslFile  -- Read a GLSL file into a character array
+%
+% Properties
+%   - udp_port    -- port of RedTweezers server
+%   - live_update -- True if property changes should be sent to
+%     RedTweeezers immediately, otherwise ``updateAll`` can be used
+%     to send properties at a later time.
+%
+% RedTweezers properties
+%   - vsync (logical) -- Synchronise updating with monitor refresh rate
+%   - window (cell|numeric) -- Size of the window [x, y, width, height] or
+%     {'fullscreen', monitor_id} for fullscreen.  Use ``resizeWindow``
+%     to change the window size.
+%   - network_reply (logical) -- If True, requests RedTweezers server
+%     sends a reply.
+%
+% See also RedTweezers, :class:`Showable` and :class:`PrismsAndLenses`.
+
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
+
   properties (SetAccess=protected)
     udp_port      % UDP port to connect to
   end
@@ -31,24 +46,31 @@ classdef RedTweezers < handle
   properties
     live_update   % If changing properties should update the device
   end
-  
+
   properties (SetObservable)
-    
+
     % (bool) Synchronise updating with monitors refresh rate
     vsync
-    
+
     % Size of the window [x, y, width, height] or
     % {'fullscreen', monitor_id} for fullscreen.
     window
-    
+
     % (bool) If a network reply should be requested
     network_reply
   end
-  
+
   methods (Static)
     function contents = readGlslFile(filename)
       % Read a GLSL file into a character array
-      
+      %
+      % Usage
+      %   contents = RedTweezers.readGlslFile(filename)
+      %   Returns a character vector with file contents.
+      %
+      % Parameters
+      %   - filename (char) -- GLSL file to read
+
       % Check file exists
       assert(2 == exist(filename, 'file'), 'Unable to find GLSL file');
       
@@ -66,11 +88,14 @@ classdef RedTweezers < handle
     function rt = RedTweezers(address, port)
       % RedTweezers construct a new RedTweezers interface
       %
-      % rt = RedTweezers() connect to a running instance of RedTweezers.
-      % Default address is 127.0.0.1 port 61556.
+      % Usage
+      %   rt = RedTweezers([address, port]) specifies a custom address/port.
       %
-      % rt = RedTweezers(address, port) specifies a custom address/port.
-      
+      % Parameters
+      %   - address -- IP address, passed to :func:`udp`.
+      %     (default: '127.0.0.1').
+      %   - port    -- UDP port to connect to (default: 61556).
+
       % Handle default arguments
       if nargin < 2
         port = 61557;
@@ -99,9 +124,13 @@ classdef RedTweezers < handle
     function sendCommand(rt, cmd)
       % Send a command string to the device
       %
-      % rt.sendCommand(cmd) sends the comand string to the device and
-      % adds the data block.
-      
+      % Usage
+      %   rt.sendCommand(cmd) sends the command string to the device and
+      %   adds the data block.
+      %
+      % Parameters
+      %   - cmd (char) -- command string to send to device
+
       % Add data block arround cmd
       cmd = ['<data>', cmd, '</data>'];
       
@@ -127,9 +156,16 @@ classdef RedTweezers < handle
       %
       % Only sends set options (leaves others at RedTweezers defaults)
       %
-      % If send is false, the command isn't sent.  Default value for
-      % send is nargout == 0
-      
+      % Usage
+      %   rt.updateAll([send]) send all commands to the device.
+      %
+      %   cmd = rt.updateAll([send]) send all commands to the device and
+      %   return the string that is sent.
+      %
+      % Parameters
+      %   - send (logical) -- If send is False, don't actually send the
+      %     commands to the device.  (default: nargout == 0)
+
       % Handle default send argument
       if nargin < 2
         send = nargout == 0;
@@ -164,17 +200,22 @@ classdef RedTweezers < handle
       end
     end
     
-    function cmd = sendUniform(rt, id, value, send)
-      % Sends an array of numers to the device and renders the pattern
+    function cmd = sendUniform(rt, id, values, send)
+      % Sends an array of namers to the device and renders the pattern
       %
-      % rt.sendUniform(id, [num, ...]) sends an array of numbers.
-      % The array of numbers will be stored in uniform register id.
-      % The first uniform in the program is id=0.
-      % Array length must be less than 200 elements.
+      % Usage
+      %   cmd = rt.sendUniform(id, values, [send]) sends an array of numbers.
+      %   The array of numbers will be stored in uniform register id.
+      %   The first uniform in the program is id=0.
+      %   Array length must be less than 200 elements.
+      %   Returns the string for the command.
       %
-      % If send is false, the command isn't sent.  Default value for
-      % send is nargout == 0
-      
+      % Parameters
+      %   - id (numeric)     -- OpenGL register to store values in
+      %   - values (numeric) -- array of values to send
+      %   - send (logical)   -- If send is false, the command isn't sent.
+      %     (default: nargout == 0)
+
       % Handle default send argument
       if nargin < 4
         send = nargout == 0;
@@ -239,18 +280,20 @@ classdef RedTweezers < handle
     function cmd = sendTexture(rt, id, texture, varargin)
       % Send a texture blob to the device
       %
-      % sendTexture(id, texture, send) sends the texture to the uniform
-      % with the specified id.  The texture should be a 4*w*h in RGBA
-      % order.
+      % Usage
+      %   cmd = sendTexture(id, texture, [send, ...])
       %
-      % If the texture is a 3*w*h uint8 matrix, adds 255 for the A channel.
+      % Paramters
+      %   - id -- OpenGL uniform id to store texture at
+      %   - texture -- The texture.  Should be a 4xWxH in RGBA order.
+      %     If the texture is a 3xWxH uint8 matrix, the function
+      %     adds 255 for the A channel.
+      %   - send (logical)   -- If send is false, the command isn't sent.
+      %     (default: nargout == 0)
       %
-      % If send is false, the command isn't sent.  Default value for
-      % send is nargout == 0
-      %
-      % Optional arguments:
-      %   endian    'L' or 'B'    endian-ness of byte stream (for float)
-      
+      % Optional named arguments
+      %   - endian (enum) -- 'L' or 'B' endian-ness of byte stream (for float)
+
       % Get the default endian-ness (our endianness)
       [~,~,our_endian] = computer();
       
@@ -316,12 +359,14 @@ classdef RedTweezers < handle
     function cmd = sendShader(rt, shader, send)
       % Send a shader to the device
       %
-      % rt.sendShader(shader, send) sends the text string for a custom
-      % shader to the device.
+      % Usage
+      %   cmd = rt.sendShader(shader, [send])
       %
-      % If send is false, the command isn't sent.  Default value for
-      % send is nargout == 0
-      
+      % Parameters
+      %   - shader (char)    -- shader character vector.
+      %   - send (logical)   -- If send is false, the command isn't sent.
+      %     (default: nargout == 0)
+
       % Handle default send argument
       if nargin < 3
         send = nargout == 0;
