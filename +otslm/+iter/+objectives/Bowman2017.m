@@ -1,15 +1,20 @@
 classdef Bowman2017 < otslm.iter.objectives.Objective
-%BOWMAN2017 cost function used in Bowman et al. 2017 paper.
+% Cost function used in Bowman et al. 2017 paper.
+% Inherits from :class:`Objective`.
 %
-%   C = 10^d * (1.0 - \sum_{nm} sqrt(I_nm T_nm) cos(phi_nm - psi_nm)).^2
+% .. math::
+%
+%   C = 10^d * (1.0 - \sum_{nm} \sqrt{I_nm T_nm} \cos(phi_nm - psi_nm))^2
 %
 % target and trial should be the complex field amplitudes.
 %
-% Properties:
-%    scale      `d` scaling factor in cost function
-%    field      'complex', 'phase', or 'amplitude' for optimisation type
-%    normalize  Normalize target/trial every evaluation
+% Properties
+%  - scale     -- ``d`` scaling factor in cost function
+%  - field     -- 'complex', 'phase', or 'amplitude' for optimisation type
+%  - normalize -- Normalize target/trial every evaluation
 %
+% See also Bowman2017 and :class:`Intensity`.
+
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
@@ -22,29 +27,30 @@ classdef Bowman2017 < otslm.iter.objectives.Objective
 
   methods
     function obj = Bowman2017(varargin)
-      %BOWMAN2017 construct a new objective function instance
+      % Construct a new objective function instance
       %
-      % obj = Bowman2017(...) construct a new objective function instance.
+      % Usage
+      %   obj = Bowman2017(...) construct a new objective function instance.
       %
-      % Optional named arguments:
-      %   scale   num   `d` scaling factor in cost function.
-      %       Default: 0.5
+      % Optional named arguments
+      %   - scale   num --  `d` scaling factor in cost function.
+      %     Default: 0.5
       %
-      %   field    [char]   One of 'complex', 'phase', or 'amplitude'
-      %       for optimisation type.  Default: 'complex'.
+      %   - field    [char] --  One of 'complex', 'phase', or 'amplitude'
+      %     for optimisation type.  Default: 'complex'.
       %
-      %   normalize   bool    Normalize target/trial every
-      %       evaluation.  Default: true.
+      %   - normalize   bool --   Normalize target/trial every
+      %     evaluation.  Default: true.
       %
-      %   roi   [] | logical | function_handle     specify the roi
-      %       to use when evaluating the fitness function.
-      %       Can be a logical array or a function handle.
-      %       Default: []
+      %   - roi   [] | logical | function_handle --  specify the roi
+      %     to use when evaluating the fitness function.
+      %     Can be a logical array or a function handle.
+      %     Default: []
       %
-      %   target   [] | matrix    specify the target pattern for this
-      %       objective.  If not supplied, the target must be supplied
-      %       when the evaluate function is called.
-      %       Default: []
+      %   - target   [] | matrix -- specify the target pattern for this
+      %     objective.  If not supplied, the target must be supplied
+      %     when the evaluate function is called.
+      %     Default: []
       
       p = inputParser;
       p.KeepUnmatched = true;
