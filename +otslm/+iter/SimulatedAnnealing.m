@@ -1,5 +1,5 @@
 classdef SimulatedAnnealing < otslm.iter.IterBase
-% Optimise the pattern using simulated annealing
+% Optimise the pattern using simulated annealing.
 % Inherits from :class:`IterBase`.
 %
 % Methods

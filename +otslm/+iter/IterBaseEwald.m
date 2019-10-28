@@ -1,5 +1,5 @@
 classdef IterBaseEwald < otslm.iter.IterBase
-% Base class for 3-D Ewald iterative algorithm classes
+% Abstract base class for 3-D Ewald iterative algorithm classes
 % Inherits from :class:`IterBase`.
 %
 % Methods
@@ -17,7 +17,7 @@ classdef IterBaseEwald < otslm.iter.IterBase
 %   - objective  -- Objective function used to evaluate fitness or []
 %   - fitness    -- Fitness evaluated after every iteration or []
 %
-% Abstract methods:
+% Abstract methods
 %   - iteration()   --  run a single iteration of the method
 
 % Copyright 2018 Isaac Lenton
@@ -28,23 +28,24 @@ classdef IterBaseEwald < otslm.iter.IterBase
     function mtd = IterBaseEwald(target, varargin)
       % Abstract constructor for 3-D iterative algorithm base class
       %
-      % mtd = IterBaseEwald(target, ...) constructs a new instance.
+      % Usage
+      %   mtd = IterBaseEwald(target, ...) constructs a new instance.
       %   target should be a 3-D volume.  Guess, if supplied, should be
       %   a 2-D matrix for the pattern on the SLM.
       %
       % Optional named arguments:
-      %   guess     im     Initial guess at complex amplitude pattern.
+      %   - guess     im     Initial guess at complex amplitude pattern.
       %     If no image is supplied, a guess is created using invmethod.
       %
-      %   vismethod fcn    Function to calculate far-field.  Takes one
+      %   - vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
       %     Default: @otslm.tools.prop.FftEwaldForward.simpleProp.evaluate
       %
-      %   invmethod fcn    Function to calculate near-field.  Takes one
+      %   - invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
       %     Default: @otslm.tools.prop.FftEwaldInverse.simpleProp.evaluate
       %
-      %   objective fcn    Objective function to measure fitness.
+      %   - objective fcn    Objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs

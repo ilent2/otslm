@@ -2,6 +2,10 @@ classdef DirectSearch < otslm.iter.IterBase
 % Optimiser to search through each pixel value to optimise hologram
 % Inherits from :class:`IterBase`.
 %
+% This method randomly selects a pixel in the pattern and then tries
+% every available level.  The pixel value kept is the pixel value whic
+% gives the best fitness.
+%
 % The algorithm is described in
 % Di Leonardo, et al., Opt. Express 15, 1913-1922 (2007)
 %
@@ -19,7 +23,7 @@ classdef DirectSearch < otslm.iter.IterBase
 %   - objective --  Objective function used to evaluate fitness
 %   - fitness   --  Fitness evaluated after every iteration
 %
-% See also DirectSearch
+% See also DirectSearch and :class:`SimulatedAnnealing`.
 
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
@@ -35,25 +39,26 @@ classdef DirectSearch < otslm.iter.IterBase
     function mtd = DirectSearch(target, varargin)
       % Construct a new instance of the DirectSearch iterative method
       %
-      % mtd = DirectSearch(target, ...) attempts to produce the target
-      % using the Direct Search algorithm.
+      % Usage
+      %   mtd = DirectSearch(target, ...) attempts to produce the target
+      %   using the Direct Search algorithm.
       %
       % Optional named arguments:
-      %   levels    num    Number of discrete phase levels or array of
+      %   - levels    num -- Number of discrete phase levels or array of
       %     levels between -pi and pi.  Default: 256.
       %
-      %   guess     im     Initial guess at complex amplitude pattern.
+      %   - guess     im  -- Initial guess at complex amplitude pattern.
       %     If not image is supplied, a guess is created using invmethod.
       %
-      %   vismethod fcn    Function to calculate far-field.  Takes one
+      %   - vismethod fcn -- Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
       %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
       %
-      %   invmethod fcn    Function to calculate near-field.  Takes one
+      %   - invmethod fcn -- Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
       %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
       %
-      %   objective fcn    Objective function to measure fitness.
+      %   - objective fcn -- Objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs

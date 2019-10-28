@@ -1,9 +1,10 @@
 classdef IterBase < handle
-% Base class for iterative algorithm classes
+% Base class for iterative algorithm classes.
 % Inherits from :class:`handle`.
 %
 % Methods
-%   - run()      -- Run the iterative method
+%   - run()         -- Run the iterative method
+%   - showFitness() -- Show the fitness graph
 %
 % Properties
 %   - guess      -- Best guess at hologram pattern (complex)
@@ -17,7 +18,7 @@ classdef IterBase < handle
 %   - objective  -- Objective function used to evaluate fitness or []
 %   - fitness    -- Fitness evaluated after every iteration or []
 %
-% Abstract methods:
+% Abstract methods
 %   - iteration()  --   run a single iteration of the method
 
 % Copyright 2018 Isaac Lenton
@@ -29,15 +30,15 @@ classdef IterBase < handle
     target      % Target pattern the method tries to approximate
     vismethod   % Method used to do the visualisation
     invmethod   % Method used to calculate initial guess/inverse-visualisation
-    
+
     % Objective function used to evaluate fitness
     % This may not be required by all methods but can still be
     % provided for diagnostics.
     objective
-    
+
     % Fitness evaluated after every iteration
     % Empty if objective function is not provided.
-    fitness     
+    fitness
   end
   
   properties (Dependent)
@@ -58,21 +59,25 @@ classdef IterBase < handle
     function mtd = IterBase(varargin)
       % Abstract constructor for iterative algorithm base class
       %
-      % mtd = IterBase(target, ...)
+      % Usage
+      %   mtd = IterBase(target, ...)
       %
-      % Optional named arguments:
-      %   guess     im     Initial guess at complex amplitude pattern.
+      % Parameters
+      %   - target -- target pattern to generate
+      %
+      % Optional named arguments
+      %   - guess     im     Initial guess at complex amplitude pattern.
       %     If not image is supplied, a guess is created using invmethod.
       %
-      %   vismethod fcn    Function to calculate far-field.  Takes one
+      %   - vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
       %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
       %
-      %   invmethod fcn    Function to calculate near-field.  Takes one
+      %   - invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
       %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
       %
-      %   objective fcn    Objective function to measure fitness.
+      %   - objective fcn    Objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs
@@ -125,11 +130,15 @@ classdef IterBase < handle
     function result = run(mtd, num_iterations, varargin)
       % Run the method for a specified number of iterations
       %
-      % result = mtd.run(num_iterations, ...) run for the specified
-      % number of iterations.
+      % Usage
+      %   result = mtd.run(num_iterations, ...) run for the specified
+      %   number of iterations.
       %
-      % Optional named arguments:
-      %   show_progress   bool    display a figure with optimisation progress
+      % Parameters
+      %   - num_iterations (numeric) -- Number of iterations
+      %
+      % Optional named arguments
+      %   - show_progress   bool    display a figure with optimisation progress
 
       % Parse optional inputs
       p = inputParser;
@@ -172,11 +181,12 @@ classdef IterBase < handle
     function showFitness(mtd, varargin)
       % Show a graph displaying the fitness of the hologram
       %
-      % mtd.showFitness() shows the fitness for each iteration.
+      % Usage
+      %   mtd.showFitness() shows the fitness for each iteration.
       %
-      % Optional named arguments:
-      %   axes    ax     The axes object to put the plot in
-      %   show_stop_button bool  If the stop button should be shown
+      % Optional named arguments
+      %   - axes    ax     The axes object to put the plot in
+      %   - show_stop_button bool  If the stop button should be shown
 
       p = inputParser;
       p.addParameter('show_stop_button', false);
@@ -227,19 +237,24 @@ classdef IterBase < handle
 
     function stopIterations(mtd, src, event)
       % Callback for the stop button in showFitness
+      %
+      % Usage
+      %   mtd.stopIterations(...) arguments are ignored.
+
       mtd.running = false;
     end
 
     function score = evaluateFitness(mtd, varargin)
       % Evaluate the fitness of the current guess
       %
-      % score = mtd.evaluateFitness() visualises the current guess and
-      % evaluate the fitness.
+      % Usage
+      %   score = mtd.evaluateFitness() visualises the current guess and
+      %   evaluate the fitness.
       %
-      % score = mtd.evaluateFitness(guess) evaluate the fitness of the
-      % given guess.  If guess is a stack of matrices, the returned
-      % score is a vector with size(trial, 3) elements.
-      % Guess should be a complex amplitude.
+      %   score = mtd.evaluateFitness(guess) evaluate the fitness of the
+      %   given guess.  If guess is a stack of matrices, the returned
+      %   score is a vector with size(trial, 3) elements.
+      %   Guess should be a complex amplitude.
       
       % Check we have an objective
       if isempty(mtd.objective)

@@ -40,37 +40,37 @@ GerchbergSaxton
 ---------------
 
 .. autoclass:: GerchbergSaxton
-   :members:
+   :members: GerchbergSaxton
 
 DirectSearch
 ------------
 
 .. autoclass:: DirectSearch
-   :members:
+   :members: DirectSearch
 
 IterBase
 --------
 
 .. autoclass:: IterBase
-   :members:
+   :members: IterBase, show_fitness, run, stopIterations, evaluateFitness
 
 SimulatedAnnealing
 ------------------
 
 .. autoclass:: SimulatedAnnealing
-   :members:
+   :members: SimulatedAnnealing, simpleTemperatureFcn
 
 GerchbergSaxton3d
 -----------------
 
 .. autoclass:: GerchbergSaxton3d
-   :members:
+   :members: GerchbergSaxton3d
 
 IterBaseEwald
 -------------
 
 .. autoclass:: IterBaseEwald
-   :members:
+   :members: IterBaseEwald
 
 bsc
 ---

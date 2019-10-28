@@ -1,5 +1,5 @@
 function [pattern, beam, coeffs] = bsc(sz, target, varargin)
-% BSC optimisation in vector spherical wave function basis
+% Optimisation in vector spherical wave function basis
 %
 % Usage
 %   [pattern, beam, coeffs] = bsc(target, ...) attempt to produce

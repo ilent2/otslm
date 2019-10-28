@@ -40,25 +40,28 @@ classdef GerchbergSaxton < otslm.iter.IterBase
     function mtd = GerchbergSaxton(target, varargin)
       % Construct a new instance of the GerchbergSaxton iterative method
       %
-      % mtd = GerchbergSaxton(target, ...) attempts to produce target
-      % using the Gerchberg-Saxton algorithm.
+      % Usage
+      %   mtd = GerchbergSaxton(target, ...)
       %
-      % Optional named arguments:
-      %   adaptive  num    Adaptive-Adaptive factor.  Default: 1.0, i.e.
+      % Parameters
+      %   - target -- target pattern
+      %
+      % Optional named arguments
+      %   - adaptive  num    Adaptive-Adaptive factor.  Default: 1.0, i.e.
       %     the method is Gerchberg-Saxton.
       %
-      %   guess     im     Initial guess at complex amplitude pattern.
+      %   - guess     im     Initial guess at complex amplitude pattern.
       %     If not image is supplied, a guess is created using invmethod.
       %
-      %   vismethod fcn    Function to calculate far-field.  Takes one
+      %   - vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
       %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
       %
-      %   invmethod fcn    Function to calculate near-field.  Takes one
+      %   - invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
       %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
       %
-      %   objective fcn    Objective function to measure fitness.
+      %   - objective fcn    Objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs

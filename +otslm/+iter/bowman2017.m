@@ -4,6 +4,9 @@ function pattern = bowman2017(target, varargin)
 % See Bowman, et al. Optics Express 25, 11692 (2017)
 % If you use this method, please consider citing Bowman 2017.
 %
+% .. warning:: This wrapper may be unstable and may change
+%   in future releases.
+%
 % Usage
 %   pattern = bowman2017(target, ...) attempt to generate the target
 %   using a phase pattern optimised using conjugate gradient method.
@@ -34,7 +37,7 @@ p.parse(varargin{:});
 
 % Get the directory for the python library
 [ourPath, ~, ~] = fileparts(mfilename('fullpath'));
-pypath = fullfile(ourPath, 'bowman2017');
+pypath = fullfile(ourPath, 'bowman2017py');
 
 % Get or generate guess phase
 % Use the guess described in the Bowman 2017 without translation
