@@ -36,8 +36,25 @@ section for available objectives.
    :local:
 ..
 
+.. _gerchberg-saxton-class:
+
 GerchbergSaxton
 ---------------
+
+.. todo:: Need to finish tweaking this section (this was from Advance-dBeams)
+
+replacing the amplitude/phase with the desired
+amplitude/phase pattern. The procedure is: 1. Generate initial guess at
+the SLM phase pattern: P 2. Calculate output for phase pattern: Proj(P)
+**->** O 3. Multiply output phase by target amplitude: ``|T| * O / |O|``
+**->** Q 4. Calculate the complex amplitude required to generate Q:
+Inv(Q) **->** I 5. Calculate new guess from the phase ofI: Angle(I)
+**->** P 6. Goto step 2 until converged
+
+:class:`GerchbergSaxton` also implements the adaptive-adaptive
+algorithm, which we can enable by
+setting the ``adaptive`` parameter to a non-unity value.
+
 
 .. autoclass:: GerchbergSaxton
    :members: GerchbergSaxton

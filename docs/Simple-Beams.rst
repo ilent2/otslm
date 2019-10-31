@@ -1,5 +1,5 @@
 
-.. script:: examples.simple_beams
+.. _simple-beams:
 
 ############
 Simple Beams
@@ -189,6 +189,8 @@ The output of :func:`+otslm.+simple.spherical` is non-modulated, similar to
 :func:`+otslm.+tools.finalize`` is applied does the pattern look like a
 Fresnel lens pattern.
 
+.. _simple-beams-lgbeam-example:
+
 LG Beam
 -------
 
@@ -220,6 +222,8 @@ separate devices for the amplitude and phase modulator or by mixing the
 amplitude pattern into the phase, as is described in the
 :ref:`advanced-beams` example.
 
+.. _simple-beams-hgbeam-example:
+
 HG Beam
 -------
 
@@ -248,6 +252,8 @@ more details.
    method and the corresponding simulated far-field (right).
    The simulated far-field doesn't have any amplitude correction,
    leading to a non-pure HG beam output.
+
+.. _simple-beams-sinc-example:
 
 Sinc pattern
 ------------

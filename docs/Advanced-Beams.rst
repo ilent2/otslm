@@ -6,18 +6,19 @@ Advanced Beams
 ##############
 
 
-This page describes the ``advanced_beams.m`` example. This example
+This page describes the :scpt:`examples.advanced_beams` example.
+This example
 demonstrates some of the more complex hologram generation capabilities
 in the toolbox including: combining multiple holograms, shaping the
 amplitude with a phase-only device, iterative algorithms, and binary
 amplitude patterns.
 
-Note: many of the images in this documentation include checkerboard
-patterns. The checkerboard pattern should have a width of 1 pixel to
-scatter light to high angles, however the lower resolution images shown
-in the documentation appear to have a courser checkerboard pattern as a
-result of a Moiré/aliasing effect. To use these patterns, we recommend
-generating higher resolution versions using the toolbox.
+.. note:: Many of the images in this documentation include checkerboard
+   patterns. The checkerboard pattern should have a width of 1 pixel to
+   scatter light to high angles, however the lower resolution images shown
+   in the documentation appear to have a courser checkerboard pattern as a
+   result of a Moiré/aliasing effect. To use these patterns, we recommend
+   generating higher resolution versions using the toolbox.
 
 .. contents:: Contents
    :depth: 3
@@ -28,8 +29,9 @@ Initial setup
 =============
 
 The start of the script defines parameters and functions for visualising
-the far-field of the SLM. This is mostly the same as the `initial setup
-in Simple Beams <Simple-Beams#initial-setup>`__. Some of the advanced
+the far-field of the SLM. This is mostly the same as the initial setup
+in the :ref:`simple-beams` example.
+Some of the advanced
 beams include a beam amplitude correction term to compensate for the
 non-uniform illumination of the pattern from the incident beam. The beam
 correction term is defined as
@@ -42,21 +44,23 @@ correction term is defined as
 Amplitude control with a phase device
 =====================================
 
-In the `LG beam <Simple-Beams#lg-beam>`__ and `HG
-beam <Simple-Beams#hg-beam>`__ examples in `Simple
-Beams <Simple-Beams>`__ we noted how in order to create pure LG or HG
-beams we need to control both the phase and amplitude of the beam. In
-the `sinc pattern <Simple-Beams#sinc-pattern>`__ example we used the
-:func:`+otslm.+tools.encode1d` method to encode a 1-dimensional pattern into a
-2-dimensional phase pattern. For encoding two dimensional phase patterns
+In the :ref:`simple-beams-lgbeam-example` and :ref:`simple-beams-hgbeam`
+examples in :scpt:`examples.simple_beams`
+we noted how in order to create pure LG or HG
+beams we need to control both the phase and amplitude of the beam.
+In the :ref:`simple-beams-sinc-example` example we used the
+:func:`+otslm.+tools.encode1d` method to encode a 1-dimensional
+pattern into a 2-dimensional phase pattern.
+For encoding two dimensional phase patterns
 we need to create a mixture of two patterns: the pattern we want to
 generate and a second pattern which scatters light into another
-direction. Common choices for the second pattern include: - a uniform
-pattern, which would leave light in the centre of the beam - a
-checkerboard pattern, which would scatter light into large angles, which
-can easily be filtered with a iris - a linear grating to deflect light
-to a specific point - another desired part of the far-field intensity
-profile
+direction.
+Common choices for the second pattern include:
+   - a uniform pattern, which would leave light in the centre of the beam
+   - a checkerboard pattern, which would scatter light into large angles,
+     which can easily be filtered with a iris
+   - a linear grating to deflect light to a specific point
+   - another desired part of the far-field intensity profile
 
 Creating a HG beam
 ------------------
@@ -95,13 +99,16 @@ amplitude. Internally, the method implements:
     pattern = pattern + angle(amplitude)/(2*pi)+0.5;
     pattern = pattern + mixratio.*angle(background)/(2*pi)+0.5;
 
-The final result is something that looks a lot more like a HG beam than
-the simple beams example:
+The final result, shown in :numref:`advanced-example-hgbeam`,
+is something that looks a lot more like a HG beam than
+the simple beams example
 
+.. _advanced-example-hgbeam:
 .. figure:: images/examples/advancedBeams/hgbeam.png
    :alt: a better hg beam
 
-   a better hg beam
+   A phase pattern (left) to generate a HG beam in the far-field (right).
+   This pattern accouts for non-uniform incident illumination.
 
 Creating a Bessel beam
 ----------------------
@@ -116,6 +123,7 @@ create a ring with a finite thickness, for this we can use the
 :func:`+otslm.+simple.aperture` function to create a ring. We can replace the
 regions outside the aperture with a checkerboard pattern to scatter the
 light to high angles.
+Example output is shown in :numref:`advanced-example-bessel`.
 
 .. code:: matlab
 
@@ -127,10 +135,13 @@ light to high angles.
     % Finalize pattern
     pattern = otslm.tools.finalize(zeros(sz), 'amplitude', pattern);
 
+.. _advanced-example-bessel:
 .. figure:: images/examples/advancedBeams/bessel.png
    :alt: a better hg beam
 
-   a better hg beam
+   A bessel-like beam generated using a finite thickness ring.
+   A checkerboard pattern is used to scatter unwanted light away from
+   the desired beam.
 
 Combining patterns
 ==================
@@ -148,6 +159,7 @@ is often better to add the phase patterns before calling the finalize
 method, since the finalize method applies the modulo to the patterns
 which may introduce additional artefacts if patterns are added after
 this operation.
+An example is shown in :numref:`advanced-example-adding`.
 
 .. code:: matlab
 
@@ -155,20 +167,27 @@ this operation.
     pattern = pattern + otslm.simple.linear(sz, 30);
     pattern = otslm.tools.finalize(pattern);
 
+.. _advanced-example-adding:
 .. figure:: images/examples/advancedBeams/addingBeams.png
    :alt: shifted lg beam
 
-   shifted lg beam
+   A linear ramp, generated with :func:`+otslm.+simple.linear`, is
+   added to a LG beam phase mask to shift the location of the LG beam
+   in the farfield (right).
 
 Superposition of beams
 ----------------------
 
 To create a superposition of different beams we can combine the complex
 amplitudes of the individual beams. To do this, we can use the
-:func:`+otslm.+tools.combine` function which provides a ``super`` method. The
+:func:`+otslm.+tools.combine` function.
+This function provides a range of methods for combining beams, here
+we will demonstrate the ``super`` method. The
 combine function accepts additional arguments for weighted
-superpositions and also supports adding random phase offsets using the
+super-positions and also supports adding random phase offsets using the
 ``rsuper`` method.
+The following code demonstrates using the ``super`` method, the output
+is shown in :numref:`advanced-example-super`.
 
 .. code:: matlab
 
@@ -180,18 +199,23 @@ superpositions and also supports adding random phase offsets using the
 
     pattern = otslm.tools.finalize(pattern);
 
+.. _advanced-example-super:
 .. figure:: images/examples/advancedBeams/super.png
    :alt: superposition of beams
 
-   superposition of beams
+   Demonstration of :func:`+otslm.+tools.combine` for combining
+   two linear gratings using the super-position method.
 
 Arrays of patterns
 ------------------
 
 By adding a grating, such as a 2-D sinusoidal grating, to the pattern it
 is possible to create arrays of similar spots. This can be a quick
-method for creating an array of optical traps or scanning beams for
+method for creating an array of optical traps for
 interacting with many similar samples.
+The following example shows how a sinusoid grating can be combined
+with a LG-mode pattern to create the output shown in
+:numref:`advanced-example-grating`.
 
 .. code:: matlab
 
@@ -201,10 +225,11 @@ interacting with many similar samples.
     pattern = lgpattern + grating;
     pattern = otslm.tools.finalize(pattern, 'amplitude', beamCorrection);
 
+.. _advanced-example-grating:
 .. figure:: images/examples/advancedBeams/grating.png
    :alt: arrays of beams
 
-   arrays of beams
+   An array of beams generated using a sinusoidal grating.
 
 Selecting regions of interest
 -----------------------------
@@ -219,8 +244,8 @@ device to create three separate beams.
 The first stage is to setup three different spots. We specify the
 location of each spot, the radius and the pattern. We use
 :func:`+otslm.+tool.finalize` to apply amplitude corrections and apply the
-modulo to the patterns but we request the output remain in the range [0,
-1).
+modulo to the patterns but we request the output remain in the range
+``[0, 1)``.
 
 .. code:: matlab
 
@@ -247,11 +272,13 @@ For the background we use a checkerboard pattern.
 
     background = otslm.simple.checkerboard(sz);
 
-To combine the patterns, we call ``mask_region`` with the background
+To combine the patterns, we call :func:`+otslm.+tools.mask_regions`
+with the background
 pattern, the region patterns, their locations, radii and the mask shape
 (in this case a circle). We then call :func:`+otslm.+tools.finalize` to
-rescale the resulting pattern from the [0, 1) range to the [0, 2pi)
+rescale the resulting pattern from the ``[0, 1)`` range to the ``[0, 2pi)``
 range needed for the visualisation.
+The output is shown in :numref:`advanced-example-region-sampling`.
 
 .. code:: matlab
 
@@ -261,53 +288,68 @@ range needed for the visualisation.
 
     pattern = otslm.tools.finalize(pattern);
 
+.. _advanced-example-region-sampling:
 .. figure:: images/examples/advancedBeams/regionSampling.png
    :alt: three regions of interest
 
-   three regions of interest
+   Example output from :func:`+otslm.tools.mask_regions` sampling
+   three regions of interest.
 
 Gerchberg-Saxton
 ================
 
 The toolbox provides a number of `iterative algorithms <Iter>`__ for
 generating patterns. One such algorithm is the Gerchberg-Saxton
-algorithm. This method iteratively moving between the near-field and
-far-field and replacing the amplitude/phase with the desired
-amplitude/phase pattern. The procedure is: 1. Generate initial guess at
-the SLM phase pattern: P 2. Calculate output for phase pattern: Proj(P)
-**->** O 3. Multiply output phase by target amplitude: ``|T| * O / |O|``
-**->** Q 4. Calculate the complex amplitude required to generate Q:
-Inv(Q) **->** I 5. Calculate new guess from the phase ofI: Angle(I)
-**->** P 6. Goto step 2 until converged
+algorithm.
+This method attempts to approximate the desired light field by
+iteratively moving between the near-field and far-field.
+A more detailed overview of the algorithm can be found in the
+:ref:`gerchberg-saxton-class` section later in the documentation.
 
-Iterative algorithms are implemented as Matlab classes in OTSLM. To use
-the GerchbergSaxton class, we need to generate a target image, specify
-the incident illumination and run the method. The GerchbergSaxton class
-also implements the adaptive-adaptive algorithm, which we can enable by
-setting the ``adaptive`` parameter to a non-unity value.
+In OTSLM, most iterative algorithms are implemented as Matlab classes.
+To use the :class:`GerchbergSaxton` class, we need to specify the
+target image.
+Additionally, we can specify the propagation methods to use to go
+between the near-field and far-field and an initial guess.
+In this example, we setup a propagator with the incident illumination
 
 .. code:: matlab
 
-    im = otslm.simple.aperture(sz, sz(1)/20);
-    gs = otslm.iter.GerchbergSaxton(im, 'adaptive', 1.0, ...
-        'visdata', {'incident', incident});
+   prop = otslm.tools.prop.FftForward.simpleProp(zeros(sz));
+   vismethod = @(U) prop.propagate(U .* incident);
+
+and then create aninstance of the iterator class.
+:class:`GerchbergSaxton` also implements the adaptive-adaptive
+algorithm via the ``adaptive`` optional parameter,
+see the documentation for additional details.
+
+.. code:: matlab
+
+    target = otslm.simple.aperture(sz, sz(1)/20);
+    gs = otslm.iter.GerchbergSaxton(target, 'adaptive', 1.0, ...
+        'vismethod', vismethod);
 
 To run the algorithm, we simply need to call run with the number of
-iterations we would like to run for. The result of the run method is the
-pattern. This pattern has a range of 0 to 2pi which does not need to be
-passed to :func:`+otslm.+tools.finalize` before visualisation.
+iterations we would like to run for.
+The run method returns the complex amplitude pattern from the output
+of the last iteration.
+To retrieve the phase pattern, we can simply access the ``phase`` class
+member.
+This phase pattern has a range of 0 to 2pi, therefore it does not
+need to be passed to :func:`+otslm.+tools.finalize` before visualisation.
+:numref:`advanced-example-gs` shows example output from this method.
 
 .. code:: matlab
 
-    pattern = gs.run(20);
+    gs.run(20);
+    pattern = gs.phase;
 
-The last guess is also stored in the ``gs`` object. To get the last
-guess we can also run ``pattern = gs.guess;``.
-
+.. _advanced-example-gs:
 .. figure:: images/examples/advancedBeams/gs.png
    :alt: beam created with Gerchberg-Saxton
 
-   beam created with Gerchberg-Saxton
+   Phase pattern generated using Gerchberg-Saxton (left) and
+   the simulated far-field (right).
 
 Creating patterns for the DMD
 =============================
@@ -366,9 +408,9 @@ we pass ``none`` as the ``rpack`` option.
 
 At this stage, the pattern is for a continuous amplitude device. To
 convert the continuous amplitude to a binary amplitude, we can use
-:func:`+otslm.+tools.dither`. It is possible to do this all in one step using
-one call to ``finalize`` but this allows additional control over the
-dither.
+:func:`+otslm.+tools.dither`. It is possible to do this all in one
+step using one call to :func:`+otslm.+tools.finalize` but this
+allows additional control over the dither.
 
 .. code:: matlab
 
@@ -377,9 +419,10 @@ dither.
 Up until now, our pattern has been in device pixel coordinates. In order
 to visualise what the pattern will look like in the far-field we need to
 re-map the device pixel coordinates to the 1:2 aspect ratio found on a
-physical device. For this we can use ``finalize`` again, this time with
-the ``rpack`` argument set to ``45deg``. We explicityly set no modulo
-and a grayscale colourmap again, however our pattern is already binary
+physical device. For this we can use :func:`+otslm.+tools.finalize`
+again, this time with the ``rpack`` argument set to ``45deg``.
+We explicitly set no modulo
+and a gray-scale colour-map again, however our pattern is already binary
 so the output will still be zeros and ones.
 
 .. code:: matlab
@@ -390,6 +433,7 @@ so the output will still be zeros and ones.
 The final step is to visualise the pattern. For this we create a uniform
 incident illumination and we call the :func:`+otslm.+tools.visualise` method
 with no phase.
+The output is shown in :numref:`advanced-example-dmd`.
 
 .. code:: matlab
 
@@ -402,7 +446,10 @@ with no phase.
     visOutput = visOutput(ceil(size(visOutput, 1)/2)-50+(-40:40), ...
         ceil(size(visOutput, 2)/2 +(-40:40)));
 
+.. _advanced-example-dmd:
 .. figure:: images/examples/advancedBeams/dmd.png
    :alt: dmd pattern
 
-   dmd pattern
+   Binary amplitude DMD pattern (left) generating an LG-beam
+   beam in the far-field (right).
+
