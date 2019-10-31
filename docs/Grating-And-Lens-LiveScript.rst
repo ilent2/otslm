@@ -1,4 +1,5 @@
 
+.. _grating-and-lenses-livescript:
 
 ##############################
 Gratings and Lenses LiveScript

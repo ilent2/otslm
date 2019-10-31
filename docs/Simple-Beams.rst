@@ -1,4 +1,6 @@
 
+.. _simple-beams:
+
 ############
 Simple Beams
 ############
@@ -26,7 +28,7 @@ directory with ``../``
 
 We define a couple of properties for the patterns, starting with the
 size of the patterns ``[512, 512]`` and the incident illumination we
-will use for the simulation:
+will use for the simulation.
 
 .. code:: matlab
 
@@ -35,6 +37,12 @@ will use for the simulation:
     % incident = [];        % Incident beam (use default in visualize)
     incident = otslm.simple.gaussian(sz, 150);  % Incident beam (gaussian)
     % incident = ones(sz);  % Incident beam (use uniform illumination)
+
+We use :func:`+otslm.+simple.gaussian` to create a Gaussian profile
+for the incident illumination.
+Alternatively we could just us the Matlab :func:`ones` function to
+create a uniform incident illumination or load a gray-scale image from
+a file.
 
 The last part of the setup section defines a couple of functions for
 visualising the SLM patterns in the far-field.
@@ -48,15 +56,15 @@ visualising the SLM patterns in the far-field.
         'method', 'fft', 'padding', padding, 'incident', incident)).^2);
 
 This defines a function ``visualize`` which takes a pattern as input,
-uses the ``otslm.tools.visualise`` method to simulate what the far-field
-looks like using the fast fourier transoform method, calculates the
+uses the :func:`+otslm.+tools.visualise` method to simulate what the
+far-field looks like using the fast Fourier transform method, calculates the
 absolute value squared (converts from the complex output of
-``otslm.tools.visualise`` to an intensity which we can plot with
+:func:`+otslm.+tools.visualise` to an intensity which we can plot with
 ``imagesc``) and zooms into a region of interest in the far-field image.
 This piece of code isn't really part of the example, it is only included
 to make the following sections more succinct. You could replace the use
 of the ``visualize`` function in the sections bellow with a single call
-the ``otslm.tools.visualise`` and manually zoom into the resulting
+the :func:`+otslm.+tools.visualise` and manually zoom into the resulting
 image.
 
 Exploring different simple beams

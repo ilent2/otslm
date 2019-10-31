@@ -13,11 +13,49 @@ functions with the toolbox <#using-the-toolbox-functions>`__.
 Installation
 ============
 
+To run OTSLM you need to download the toolbox files and have a
+recent version of Matlab installed (we tested OTSLM with Matlab 2018a).
+There are a couple of ways to get OTSLM.  You can download one of the
+Matlab toolbox files (with the ``.mltbx`` extension), you can download
+a ``.zip`` archive containing the source code,
+or you can clone the GitHub repository.
+The advantage of cloning the GitHub repository is you can easily switch
+between different versions of the toolbox or download the most recent
+changes/improvements to the toolbox.
+There are a range of online tutorials for getting started with
+git and GitHub, for example
+https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners.
+
+Using a ``.mltbx`` file
+-----------------------
+
+You can download the latest stable release of OTSLM from either the
+`GitHub release page <https://github.com/ilent2/otslm/releases>`__
+or the `Mathworks File Exchange <https://au.mathworks.com/matlabcentral/fileexchange?q=otslm>`__ (you can also access the File Exchange from within
+Matlab via the **Home** > **Add-ons** > **Get Add-ons** button).
+Simply download the appropriate ``.mltbx`` file for the relevant version.
+Once downloaded, execute the file and follow the instructions to install
+the toolbox.
+
+To change/remove the toolbox, go to **Home** > **Add-ons**
+> **Manage Add-ons** and select the toolbox you would like to configure.
+
+Using a ``.zip`` or cloning the repository
+------------------------------------------
+
+The latest version of OTSLM can be downloaded from the
+`OTSLM GitHub page <https://github.com/ilent2/otslm>`__.
+Simply click the *Clone or Download* button and select your
+preferred method of download.
+If you are cloning the repository you can checkout different
+tags to select the desired release.
+Alternatively, for a specific version, navigate to the
+`release page <https://github.com/ilent2/otslm/releases>`__
+and select the ``.zip`` file for the desired release.
+
 To install OTSLM, download the latest version of the toolbox to your
-computer, if you downloaded a ZIP'ed version of the toolbox, extract the
-files. The latest version of OTSLM can be found on the `OTSLM GitHub
-page <https://github.com/ilent2/otslm>`__. To run OTSLM, you will need a
-recent version of Matlab (we tested OTSLM with Matlab 2018a).
+computer, if you downloaded a ``.zip`` file, extract the files to
+your computer.
 
 Once downloaded, most of the toolbox functionality is ready to use. To
 start exploring the functionality of the toolbox immediately, you can
@@ -38,6 +76,9 @@ line can be added to the start of each of your files or for a more
 permanent solution you can add it to the `Matlab startup
 script <https://au.mathworks.com/help/matlab/ref/startup.html>`__.
 
+Post installation
+-----------------
+
 To check that ``otslm`` was found, run the following command and verify
 it displays the contents of the ``+otslm/Contents.m`` file
 
@@ -56,7 +97,8 @@ to check
 OTSLM is implemented as a Matlab package, all the core functionality is
 contained within the ``+otslm`` directory and can be accessed by adding
 the folder containing ``+otslm`` to the path and prefixing the contained
-functions with ``otslm.``. For example, to access the linear function in
+functions with ``otslm.``.
+For example, to access the linear function in
 the ``simple`` sub-package, you would use
 
 .. code:: matlab
@@ -73,7 +115,7 @@ install these now or later.
    -  numpy (tested on 1.13.3)
    -  theano (tested on 0.9)
    -  scipy (tested on 1.0)
-   -  pyfftw (optional, for fourier transform)
+   -  pyfftw (optional, for Fourier transform)
 
 -  `Red Tweezers <https://doi.org/10.1016/j.cpc.2013.08.008>`__
 -  Specific Matlab toolboxes:
@@ -99,20 +141,24 @@ Exploring the toolbox with the GUI
 
 The toolbox includes a graphical user interface (GUI) for many of the
 core functions. The user interface allows you to explore the
-functionality of the toolbox without writing a single line of code. To
-launch the provided GUIs, navigate to the ``+otslm/+ui`` directory and
-launch the ``Launcher.mlapp`` program, or alternatively run
+functionality of the toolbox without writing a single line of code.
+The GUIs can be accessed by running the OTSLM Launcher application.
+The launcher can be found in the **Apps** menu (if OTSLM was installed
+using a ``.mltbx`` file), or run from the file explorer by navigating
+to the ``+otslm/+ui`` directory and running ``Launcher.mlapp``,
+or alternatively it can be started by running the following in the
+Matlab command window
 
 .. code:: matlab
 
     otslm.ui.Launcher
 
-from the Matlab command line. The following window will be displayed
+The following window will be displayed
 
 .. figure:: images/gettingStarted/gui_launcher.png
    :alt: Launcher
 
-   Launcher
+   Overview of the Launcher application.
 
 The window is split into 4 sections: a description of the toolbox, a
 list of GUI categories, a list of applications, and a description about
@@ -127,29 +173,29 @@ window by simply specifying the same variable name.
 .. figure:: images/gettingStarted/gui_dataflow.png
    :alt: Dataflow in GUI
 
-   Dataflow in GUI
+   Illustration showing dataflow between the GUI windows.
 
 If an app produces an error or warning, these will be displayed in the
 Matlab console.
 
 The example applications show how the user interfaces can be combined to
 achieve a particular goal. To get started using the GUI, work through
-these examples. For additional information, see the `ui package
-documentation <Ui>`__.
+these examples. For additional information, see the
+:ref:`ui-package` documentation.
 
 It is possible to customize these interfaces, however creating custom
 user interfaces in Matlab is rather time consuming and involves a lot of
 code duplication. Instead, we recommend using live scripts, see the
-`live script example <Grating-And-Lens-LiveScript>`__. It is also
-possible to develop user interfaces in LabVIEW, for details see the
-`accessing otslm from LabVIEW example <Accessing-otslm-from-labview>`__.
+:ref:`grating-and-lenses-livescript` example. It is also
+possible to develop user interfaces in LabVIEW, for details see
+:ref:`accessing-otslm-from-labview`.
 
 Using the toolbox functions
 ===========================
 
-The toolbox functions are organised into 4 main packages:
-`simple <Simple>`__, `iter <Iter>`__, `tools <Tools>`__ and
-`utils <Utils>`__. To use these functions, either prefix the function
+The toolbox functions/classes are organised into four main packages:
+:ref:`simple-package`, :ref:`iter-package`, :ref:`tools-package`
+and :ref:`utils-package`. To use these functions, either prefix the function
 with ``otslm`` and the package name
 
 .. code:: matlab
@@ -189,8 +235,8 @@ this range using ``mod(pattern, 1)``. To convert these patterns to the
 ``otslm.tools.finalize`` function.
 
 To get started using the toolbox functions for beam shaping, take a look
-at the `Simple <Simple-Beams>`__ and `Advanced <Advanced-Beams>`__
-examples. The ``examples`` directory provides examples of other toolbox
+at the :ref:`simple-beams` and :ref:`advanced-beams` examples.
+The ``examples`` directory provides examples of other toolbox
 functions and how they can be used.
 
 To get help on toolbox functions or classes, type ``help`` followed by
@@ -209,3 +255,4 @@ class use
     help otslm.iter.DirectSearch/run
 
 For more extensive help, refer to this documentation.
+

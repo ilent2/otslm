@@ -13,7 +13,7 @@ In the initial release we include functions our group currently uses or
 is interested in using, but we hope that others will also contribute
 codes for patterns they use in research publications. If you would like
 to contribute patterns, we would love to hear from you, see the
-Contributing section bellow.
+:ref:`contributing` section.
 
 This documentation provides an overview of the toolbox functions and
 classes, including examples, typical output, and function/class
@@ -27,7 +27,7 @@ Additional example code is provided as part of the toolbox in the
 The packages section contains information about each of the packages.
 This includes function/class reference pages and example output.
 Most toolbox functions/classes are documented in the source code,
-and can be viewed by typing `help <function-name>` at the matlab prompt.
+and can be viewed by typing ``help <function-name>`` at the Matlab prompt.
 The documentation includes the rendered function/class help and
 additional content such as examples and typical output.
 
@@ -53,6 +53,8 @@ toolbox incorporate third party open source code, see the documentation,
 thirdparty folder and code for details about licensing of these parts.
 Further details can be found in LICENSE.md. If you would like to use the
 toolbox for something not covered by the license, please contact us.
+
+.. _contributing:
 
 Contributing
 ============

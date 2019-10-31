@@ -1,4 +1,6 @@
 
+.. _accessing-otslm-from-labview:
+
 ############################
 Accessing OTSLM from LabVIEW
 ############################

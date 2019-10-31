@@ -1,4 +1,6 @@
 
+.. _advanced-beams:
+
 ##############
 Advanced Beams
 ##############
