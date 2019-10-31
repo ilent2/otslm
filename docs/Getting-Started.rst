@@ -87,8 +87,9 @@ it displays the contents of the ``+otslm/Contents.m`` file
     help otslm
 
 If you have multiple versions of ``otslm`` downloaded, you may want to
-check which version is currently being used, use the following command
-to check
+check which version is currently being used.
+The following following command can be used to check which toolbox
+is being used
 
 .. code:: matlab
 
@@ -145,35 +146,46 @@ functionality of the toolbox without writing a single line of code.
 The GUIs can be accessed by running the OTSLM Launcher application.
 The launcher can be found in the **Apps** menu (if OTSLM was installed
 using a ``.mltbx`` file), or run from the file explorer by navigating
-to the ``+otslm/+ui`` directory and running ``Launcher.mlapp``,
-or alternatively it can be started by running the following in the
-Matlab command window
+to the ``+otslm/+ui`` directory and running ``Launcher.mlapp``.
+If you have already added OTSLM to the path, you can also start the
+launcher by running the following command in the command window
 
 .. code:: matlab
 
     otslm.ui.Launcher
 
-The following window will be displayed
+If everything is installed correctly, the launcher should appear,
+as depicted in :numref:`launcher-overview`.
+The window is split into 4 sections: a description of the toolbox, a
+list of GUI categories, a list of applications, and a description about
+the selected application. Once you select an application, click Launch.
 
+.. _launcher-overview:
 .. figure:: images/gettingStarted/gui_launcher.png
    :alt: Launcher
 
    Overview of the Launcher application.
 
-The window is split into 4 sections: a description of the toolbox, a
-list of GUI categories, a list of applications, and a description about
-the selected application. Once you select an application, click Launch.
-
-Applications which generate a pattern have an option to enter a MATLAB
+The output from various applications can either be saved to the Matlab
+workspace or sent to a :class:`+otslm.+utils.Showable` device
+(if one has already been configured).
+Applications which generate a pattern have an option to enter a Matlab
 variable name. When the pattern is generated, the image is saved to the
-MATLAB workspace. Applications which take patterns as inputs (for
+current Matlab workspace. Applications which take patterns as inputs (for
 example, combine and finalize) can use the patterns produced by another
-window by simply specifying the same variable name.
+window by simply specifying the same variable name, for example
+see :numref:`gui-data-flow`.
 
+.. _gui-data-flow:
 .. figure:: images/gettingStarted/gui_dataflow.png
    :alt: Dataflow in GUI
 
    Illustration showing dataflow between the GUI windows.
+   A linear grating is generated with the name ``outLinear``,
+   when the pattern is ready it is saved to the Matlab workspace (1).
+   This pattern can then be used by other interfaces, for example
+   (2) shows the same variable name being used as an input to the
+   Dither application.
 
 If an app produces an error or warning, these will be displayed in the
 Matlab console.
@@ -187,13 +199,13 @@ It is possible to customize these interfaces, however creating custom
 user interfaces in Matlab is rather time consuming and involves a lot of
 code duplication. Instead, we recommend using live scripts, see the
 :ref:`grating-and-lenses-livescript` example. It is also
-possible to develop user interfaces in LabVIEW, for details see
-:ref:`accessing-otslm-from-labview`.
+possible to create a graphical user interfaces in LabVIEW,
+for details see :ref:`accessing-otslm-from-labview`.
 
 Using the toolbox functions
 ===========================
 
-The toolbox functions/classes are organised into four main packages:
+The toolbox functions and classes are organised into four main packages:
 :ref:`simple-package`, :ref:`iter-package`, :ref:`tools-package`
 and :ref:`utils-package`. To use these functions, either prefix the function
 with ``otslm`` and the package name
@@ -223,16 +235,16 @@ typically be logical, double or complex. Complex matrices are typically
 used when the complex amplitude of the light field needs to be
 represented. Double matrices are used for both amplitude and phase
 patterns. Logicals are returned when the function could be used as a
-mask, for instance, ``otslm.simple.aperture`` returns a logical array by
-default.
+mask, for instance, :func:`+otslm.+simple.aperture` returns a
+logical array by default.
 
 For phase patterns, there are three type of value ranges: ``[0, 1)``,
 ``[0, 2*pi)`` and device specific colour range (after applying a lookup
-table to the pattern). Most of the ``otslm.simple`` functions return
+table to the pattern). Most of the :mod:`+otslm.+simple` functions return
 phase patterns between 0 and 1 or patterns which can be converted to
 this range using ``mod(pattern, 1)``. To convert these patterns to the
 ``[0, 2*pi)`` range or apply a specific colour-map, you can use the
-``otslm.tools.finalize`` function.
+:func:`+otslm.+tools.finalize` function.
 
 To get started using the toolbox functions for beam shaping, take a look
 at the :ref:`simple-beams` and :ref:`advanced-beams` examples.
@@ -240,14 +252,14 @@ The ``examples`` directory provides examples of other toolbox
 functions and how they can be used.
 
 To get help on toolbox functions or classes, type ``help`` followed by
-the OTSLM package/function/class/method name. For example, to get help
-on the ``simple`` package, type:
+the OTSLM package, function, class or method name. For example, to get help
+on the :mod:`+otslm.+simple` package, type:
 
 .. code:: matlab
 
     help otslm.simple
 
-or to get help on the ``run`` method in the ``otslm.iter.DirectSearch``
+or to get help on the ``run`` method in the :class:`+otslm.+iter.DirectSearch`
 class use
 
 .. code:: matlab

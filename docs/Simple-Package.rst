@@ -43,6 +43,8 @@ tools package :ref:`tools-package` or matlab operations on arrays
    :local:
 ..
 
+.. _simple-lens-functions:
+
 Lens functions
 ==============
 

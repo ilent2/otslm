@@ -350,7 +350,7 @@ the show function should match the ``patternType`` property, for
 ``pattern_type`` parameter in the constructor. If ``patternType`` is
 amplitude, the input to show is assumed to be a real amplitude pattern,
 if ``patternType`` is phase, the input is assumed to be a phase pattern.
-The ``showComplex`` function uses ``otslm.tools.finalize`` to convert
+The ``showComplex`` function uses :func:`+otslm.+tools.finalize` to convert
 the complex amplitude to a phase or amplitude pattern (depending on the
 value for ``patternType``), before calling ``show`` to display the
 pattern on the device. Further details can be found in the documentation

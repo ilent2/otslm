@@ -47,7 +47,7 @@ beam <Simple-Beams#hg-beam>`__ examples in `Simple
 Beams <Simple-Beams>`__ we noted how in order to create pure LG or HG
 beams we need to control both the phase and amplitude of the beam. In
 the `sinc pattern <Simple-Beams#sinc-pattern>`__ example we used the
-``otslm.tools.encode1d`` method to encode a 1-dimensional pattern into a
+:func:`+otslm.+tools.encode1d` method to encode a 1-dimensional pattern into a
 2-dimensional phase pattern. For encoding two dimensional phase patterns
 we need to create a mixture of two patterns: the pattern we want to
 generate and a second pattern which scatters light into another
@@ -61,7 +61,7 @@ profile
 Creating a HG beam
 ------------------
 
-To create the HG beam, we use the ``otslm.simple.hgmode`` function we
+To create the HG beam, we use the :func:`+otslm.+simple.hgmode` function we
 used in the simple beams example, except this time we request both the
 phase and amplitude outputs:
 
@@ -71,7 +71,7 @@ phase and amplitude outputs:
 
 To combine the phase, amplitude and beam correction factor, which
 accounts for the non-uniform illumination, we can pass the amplitude
-terms into ``otslm.tools.finalize``:
+terms into :func:`+otslm.+tools.finalize`:
 
 .. code:: matlab
 
@@ -113,7 +113,7 @@ phase can be added for Bessel beams with angular momentum. To create the
 Bessel beam, we need a ring with a finite power and infinitely small
 thickness. This is difficult to achieve, so instead it is better to
 create a ring with a finite thickness, for this we can use the
-``otslm.simple.aperture`` function to create a ring. We can replace the
+:func:`+otslm.+simple.aperture` function to create a ring. We can replace the
 regions outside the aperture with a checkerboard pattern to scatter the
 light to high angles.
 
@@ -165,7 +165,7 @@ Superposition of beams
 
 To create a superposition of different beams we can combine the complex
 amplitudes of the individual beams. To do this, we can use the
-``otslm.tools.combine`` function which provides a ``super`` method. The
+:func:`+otslm.+tools.combine` function which provides a ``super`` method. The
 combine function accepts additional arguments for weighted
 superpositions and also supports adding random phase offsets using the
 ``rsuper`` method.
@@ -213,12 +213,12 @@ Spatial light modulators can be used for creating beams and sampling
 light from specific regions of beams for novel imaging applications. The
 toolbox provides a method to help with creating region masks for
 sampling different regions of the device. In this example, we show how
-``otslm.tools.mask_regions`` can be used to sample three regions of the
+:func:`+otslm.+tools.mask_regions` can be used to sample three regions of the
 device to create three separate beams.
 
 The first stage is to setup three different spots. We specify the
 location of each spot, the radius and the pattern. We use
-``otslm.tool.finalize`` to apply amplitude corrections and apply the
+:func:`+otslm.+tool.finalize` to apply amplitude corrections and apply the
 modulo to the patterns but we request the output remain in the range [0,
 1).
 
@@ -249,7 +249,7 @@ For the background we use a checkerboard pattern.
 
 To combine the patterns, we call ``mask_region`` with the background
 pattern, the region patterns, their locations, radii and the mask shape
-(in this case a circle). We then call ``otslm.tools.finalize`` to
+(in this case a circle). We then call :func:`+otslm.+tools.finalize` to
 rescale the resulting pattern from the [0, 1) range to the [0, 2pi)
 range needed for the visualisation.
 
@@ -258,7 +258,7 @@ range needed for the visualisation.
     pattern = otslm.tools.mask_regions(background, ...
         {pattern1, pattern2, pattern3}, {loc1, loc2, loc3}, ...
         {radius1, radius2, radius3}, 'shape', 'circle');
-      
+
     pattern = otslm.tools.finalize(pattern);
 
 .. figure:: images/examples/advancedBeams/regionSampling.png
@@ -295,7 +295,7 @@ setting the ``adaptive`` parameter to a non-unity value.
 To run the algorithm, we simply need to call run with the number of
 iterations we would like to run for. The result of the run method is the
 pattern. This pattern has a range of 0 to 2pi which does not need to be
-passed to ``otslm.tools.finalize`` before visualisation.
+passed to :func:`+otslm.+tools.finalize` before visualisation.
 
 .. code:: matlab
 
@@ -330,7 +330,7 @@ will use a device with 512x1024 pixels.
     dmdsz = [512, 1024];
     aspect = 2;
 
-To create the lgmode pattern, we can use the ``otslm.simple.lgmode``
+To create the LG-mode pattern, we can use the :func:`+otslm.+simple.lgmode`
 function. This function has an optional argument for the aspect ratio
 and returns both the amplitude and phase for the pattern.
 
@@ -366,7 +366,7 @@ we pass ``none`` as the ``rpack`` option.
 
 At this stage, the pattern is for a continuous amplitude device. To
 convert the continuous amplitude to a binary amplitude, we can use
-``otslm.tools.dither``. It is possible to do this all in one step using
+:func:`+otslm.+tools.dither`. It is possible to do this all in one step using
 one call to ``finalize`` but this allows additional control over the
 dither.
 
@@ -388,7 +388,7 @@ so the output will still be zeros and ones.
         'colormap', 'gray', 'rpack', '45deg', 'modulo', 'none');
 
 The final step is to visualise the pattern. For this we create a uniform
-incident illumination and we call the ``otslm.tools.visualise`` method
+incident illumination and we call the :func:`+otslm.+tools.visualise` method
 with no phase.
 
 .. code:: matlab

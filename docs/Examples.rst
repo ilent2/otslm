@@ -5,9 +5,8 @@
 Examples
 ########
 
-The toolbox has a range of examples in the ``examples`` directory. This
-documentation contains more detailed information about the following
-examples:
+The toolbox has a range of examples in the ``examples`` directory.
+Additional information is provided here for some of these examples.
 
 .. toctree::
    :maxdepth: 1
