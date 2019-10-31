@@ -1,4 +1,6 @@
 
+.. automodule:: +otslm.+utils
+
 .. _utils-package:
 
 ###############
@@ -27,6 +29,7 @@ LookupTable
 ===========
 
 .. automodule:: +otslm.+utils
+   :noindex:
 
 .. autoclass:: LookupTable
    :members: LookupTable, load, save, sorted,
@@ -230,6 +233,7 @@ Base classes of showable and viewable objects
 =============================================
 
 .. automodule:: +otslm.+utils
+   :noindex:
 
 These abstract base classes define the interface expected by the
 various imaging, calibration and GUI functions/classes in the toolbox.
