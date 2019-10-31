@@ -49,6 +49,9 @@ extensions = [
 
 numfig = True;
 
+# Packages should be displayed as otslm.simple not +otslm.+simple
+matlab_keep_package_prefix = False
+
 # Things for todo extension
 todo_include_todos = True
 
