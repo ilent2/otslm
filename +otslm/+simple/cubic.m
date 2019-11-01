@@ -12,18 +12,18 @@ function [pattern] = cubic(sz, varargin)
 %   pattern = cubic(sz, ...) generates a cubic pattern according to
 %
 % Parameters
-%   - sz -- size of the pattern ``[rows, cols]``
+%   - sz (size) -- size of the pattern ``[rows, cols]``
 %
 % Optional named parameters
-%   'scale'       scale       Scaling factor for pattern.
+%   - scale      (numeric) -- Scaling factor for pattern.
 %
-%   - 'centre'      [x, y] --   centre location for lens (default: sz/2)
-%   - 'offset'      [x, y] --   offset after applying transformations
-%   - 'type'        type   --   is the lens cylindrical or spherical (1d or 2d)
-%   - 'aspect'      aspect --   aspect ratio of lens (default: 1.0)
-%   - 'angle'       angle  --   Rotation angle about axis (radians)
-%   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
-%   - 'gpuArray'    bool   --   If the result should be a gpuArray
+%   - centre     (numeric) -- Centre location for lens (default: sz/2)
+%   - offset     (numeric) -- Offset after applying transformations ``[x,y]``
+%   - type       (enum)    -- Cylindrical ``1d`` or spherical ``2d``
+%   - aspect     (numeric) -- aspect ratio of lens (default: 1.0)
+%   - angle      (numeric) -- Rotation angle about axis (radians)
+%   - angle_deg  (numeric) -- Rotation angle about axis (degrees)
+%   - gpuArray   (logical) -- If the result should be a gpuArray
 
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

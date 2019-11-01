@@ -295,6 +295,8 @@ The output is shown in :numref:`advanced-example-region-sampling`.
    Example output from :func:`+otslm.tools.mask_regions` sampling
    three regions of interest.
 
+.. _gerchberg-saxton-example:
+
 Gerchberg-Saxton
 ================
 

@@ -6,13 +6,13 @@ function pattern = parabolic(sz, alphas, varargin)
 %
 %   z(r) = \alpha_1*r^2 + \alpha_2*r^4 + \alpha_3*r^6 + ...
 %
-% where :math:`alpha_n` are the polynomial coefficients.
+% where :math:`\alpha_n` are the polynomial coefficients.
 %
 % Usage
 %   pattern = parabolic(sz, alphas, ...) generates a parabolic lens.
 %
 % Parameters
-%   - sz -- size of pattern
+%   - sz (size) -- size of pattern ``[rows, cols]``
 %   - alphas -- array of polynomial coefficients :math:`\alpha_n`
 %
 % The default centre for the lens is the centre of the pattern,

@@ -1,6 +1,4 @@
 
-.. todo:: Each iterative method should have a short example
-
 .. _iter-package:
 
 ##############
@@ -8,7 +6,9 @@
 ##############
 
 Package containing algorithms and cost functions for iterative
-optimisation.
+optimisation.  This section is split into two parts,
+a description of the optimisation methods and a description of the
+objective function classes.
 
 .. contents:: Contents
    :depth: 1
@@ -28,6 +28,21 @@ track progress of the method.
 The objective can be set on construction or by setting the objective
 property.  See the :ref:`iter-objective-functions`
 section for available objectives.
+For an example of how to use these iterative methods, see the
+:scpt:`examples/iterative` and the :ref:`gerchberg-saxton-example` example.
+A minimal example is shown bellow
+
+.. code:: matlab
+
+   sz = [512, 512];
+   incident = ones(sz);
+
+   prop = otslm.tools.prop.FftForward.simpleProp(zeros(sz));
+   vismethod = @(U) prop.propagate(U .* incident);
+
+   target = otslm.simple.aperture(sz, sz(1)/20);
+   gs = otslm.iter.GerchbergSaxton(target, 'adaptive', 1.0, ...
+       'vismethod', vismethod);
 
 .. automodule:: +otslm.+iter
 
@@ -41,26 +56,64 @@ section for available objectives.
 GerchbergSaxton
 ---------------
 
-.. todo:: Need to finish tweaking this section (this was from Advance-dBeams)
+The Gerchberg-Saxton algorithm is an iterative algorithm that involves
+iterating between the near-field and far-field and applying constraints
+to the fields after each iteration.
+The constraints could include a particular incident illumination or a
+desired far-field intensity or phase pattern.
+Components that are not constrained are free to change.
+The algorith was originally described in
 
-replacing the amplitude/phase with the desired
-amplitude/phase pattern. The procedure is: 1. Generate initial guess at
-the SLM phase pattern: P 2. Calculate output for phase pattern: Proj(P)
-**->** O 3. Multiply output phase by target amplitude: ``|T| * O / |O|``
-**->** Q 4. Calculate the complex amplitude required to generate Q:
-Inv(Q) **->** I 5. Calculate new guess from the phase ofI: Angle(I)
-**->** P 6. Goto step 2 until converged
+   R. W. Gerchberg, O. A Saxton W.,
+   A practical algorithm for the deter-mination of phase from
+   image and diffraction plane pictures, Optik 35(1971) 237-250 (Nov 1971).
+
+Details about the algorithm can be found on the
+`Wikipedia page <https://en.wikipedia.org/wiki/Gerchberg%E2%80%93Saxton_algorithm>`__.
+A sketch of the algorithm for generating a target amplitude pattern
+using a phase-only device is shown bellow:
+
+1. Generate initial guess for the SLM phase pattern :math:`P`.
+2. Calculate output for phase pattern: :math:`\text{Proj}(P) \rightarrow O`.
+3. Multiply output phase by target amplitude:
+   :math:`|T|\frac{O}{|O|} \rightarrow Q`.
+4. Calculate the complex amplitude required to generate :math:`Q`:
+   :math:`\text{Inv}(Q) \rightarrow I`.
+5. Calculate new guess from the phase of :math:`I`:
+   :math:`\text{Angle}(I) \rightarrow P`.
+6. Goto step 2 until converged.
+
+:math:`\text{Proj}` and :math:`\text{Inv}` are the forward
+and inverse propagation methods, these could be, for example, the
+forward and inverse Fourier transforms.
+A constraint for the incident illumination can be added to the forward
+propagator or the constraint can be added at another step.
+There are other variants for generating a target phase field or
+applying other constraints to the far-field.
+If this guess is symmetric, these symmetries will influence the final
+output, this can be useful for generating symmetric target fields.
 
 :class:`GerchbergSaxton` also implements the adaptive-adaptive
 algorithm, which we can enable by
 setting the ``adaptive`` parameter to a non-unity value.
+The adaptive-adaptive algorithm is similar to the above except
+step 3 mixes the propagator amplitude output with the target amplitude
+instead of replacing it
 
+.. math::
+
+   t = \alpha |T| + (1 - \alpha) |O|
+
+   Q = t \frac{O}{|O|}
+
+where :math:`\alpha` is the adaptive-adaptive factor.
 
 .. autoclass:: GerchbergSaxton
    :members: GerchbergSaxton
 
 DirectSearch
 ------------
+
 
 .. autoclass:: DirectSearch
    :members: DirectSearch
@@ -100,7 +153,7 @@ bowman2017
 .. autofunction:: bowman2017
 
 
-.. _iter-objective-functions
+.. _iter-objective-functions:
 
 Objective functions
 ===================

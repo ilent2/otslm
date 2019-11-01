@@ -84,27 +84,29 @@ for instance
     pattern = otslm.tools.finalize(pattern);
 
 To copy the final pattern back from the GPU we can use the ``gather``
-function:
+function.
+The result is shown in :numref:`example-gpudemo-simple`.
 
 .. code:: matlab
 
     pattern = gather(pattern);
     imagesc(pattern);
 
+.. _example-gpudemo-simple:
 .. figure:: images/examples/gpuDemo/simple.png
-   :alt: simple pattern
+   :alt: simple pattern with GPU
 
-   simple pattern
+   Example of a pattern generated with the GPU
 
 Creating complex textures
 -------------------------
 
 The GPU often has significantly less memory than the main computer. This
-means that methods like ``otslm.tools.combine`` become memory limited
+means that methods like :func:`+otslm.+tools.combine` become memory limited
 sooner. In order to work around this, it is sometimes possible to
 implement a version which calculates each pattern, adds it to the total
 array and re-uses the same memory to calculate the next pattern. The
-``otslm.tools.lensesAndPrisms`` function implements the Prisms and
+:func:`+otslm.+tools.lensesAndPrisms` function implements the Prisms and
 Lenses algorithm without needing to generate all the patterns before
 combining.
 
@@ -115,12 +117,17 @@ combining.
 
 Using a GeForce GTX 1060 GPU to run the Prisms and Lenses algorithm
 produces a order of magnitude decrease in run-time for multiple traps
-compared to a i7-8750H CPU.
+compared to a i7-8750H CPU, as shown in
+:numref:`example-gpudemo-plperformance`.
 
+.. _example-gpudemo-plperformance:
 .. figure:: images/examples/gpuDemo/prismsAndLenses.png
-   :alt: simple pattern
+   :alt: prisms and lenses performance
 
-   simple pattern
+   Comparison of hologram generation time using CPU and GPU with
+   different numbers of traps.
+   For reference, a line is marked corresponding to the 60Hz refresh
+   rate of a moderately fast SLM.
 
 Using iterative algorithms
 --------------------------
@@ -151,6 +158,7 @@ it can run on any computer with OpenGL capabilities connected to your
 network (with appropriate firewall permission). Images, shaders and
 other data can be sent to RedTweezers via UDP, the RedTweezers server
 deals with uploading the shader and managing the shaders memory.
+RedTweezers interfaces are located in :module:`+otslm.+utils.+RedTweezers`.
 
 Installing RedTweezers
 ----------------------
@@ -165,23 +173,27 @@ Once downloaded, unzip the file (on windows you can use a such as
 ``hologram_engine_64.exe`` (or ``hologram_engine.exe`` for the 32-bit
 version). On the first run you may need to allow access to your network.
 If everything worked correctly, a new window with the RedTweezers splash
-screen should be displayed:
+screen should be displayed, shown in :numref:`example-gpudemo-red-splash`.
 
+.. _example-gpudemo-red-splash:
 .. figure:: images/examples/gpuDemo/redtweezersSplash.png
    :alt: red tweezers splash
 
-   red tweezers splash
+   Red tweezers splash screen.
 
 Displaying a image with RedTweezers
 -----------------------------------
 
 Displaying images isn't the intended purpose of RedTweezers, however by
 loading a shader which simply draws a texture to the screen we can
-implement a ``ScreenDevice``-like interface using RedTweezers. This is
-implemented by ``otslm.utils.RedTweezers.Showable``. This class inherits
-from ``otslm.utils.Showable`` (in addition to the ``RedTweezers`` base
+implement a :class:`~+otslm.+utils.ScreenDevice`-like interface
+using RedTweezers. This is
+implemented by :class:`+otslm.+utils.+RedTweezers.Showable`.
+This class inherits from :class:`+otslm.+utils.Showable`
+(in addition to the :class:`~+otslm.+utils.+RedTweezers.RedTweezers` base
 class) and provides all the same functionality of a
-``otslm.utils.ScreenDevice`` object. By default the object is configured
+:class:`~+otslm.+utils.ScreenDevice` object.
+By default the object is configured
 to connect to UDP port ``127.0.0.1:61557`` and display an amplitude
 pattern. We can change the port and pattern type using the optional
 arguments.
@@ -192,19 +204,21 @@ arguments.
     rt.window= [100, 200, 512, 512];   % Window size [x, y, width, height]
     rt.show(otslm.simple.linear([200, 200], 20));
 
-The main difference between ``ScreenDevice`` and
-``RedTweezers.Showable`` is the size of the pattern and the
-size/position of the window. ``ScreenDevice`` requires the pattern size
-to match the size of the window. For ``RedTweezers.Showable``, the
+The main difference between :class:`~+otslm.+utils.ScreenDevice` and
+:class:`~+otslm.+utils.+RedTweezers.Showable`
+is the size of the pattern and the size/position of the window.
+:class:`~+otslm.+utils.ScreenDevice` requires the pattern size
+to match the size of the window.
+For :class:`~+otslm.+utils.+RedTweezers.Showable`, the
 pattern is stretched to fill the window. A further limitation is the
 maximum packet size RedTweezers supports only allows images of
-approximatly 400x400 pixels (RedTweezers isn't intended for displaying
+approximately 400x400 pixels (RedTweezers isn't intended for displaying
 images).
 
 Using the RedTweezers Prisms and Lenses
 ---------------------------------------
 
-``otslm.utils.RedTweezers.PrismsAndLenses`` implements the Prisms and
+:class:`+otslm.+utils.+RedTweezers.PrismsAndLenses` implements the Prisms and
 Lenses algorithm described in the RedTweezers paper (and implemented in
 the LabView code supplied with RedTweezers). To use the Prisms and
 Lenses implementation, start by creating a new instance of the object
@@ -229,7 +243,8 @@ default since they may already be set by another program.
     rt.zernike = zeros(1, 12);
 
 This should create a blank hologram. To add spots to this hologram use
-the ``addSpot`` method. For example, to add a spot to diffract light to
+the :meth:`~+otslm.+utils.+RedTweezers.PrismsAndLenses.addSpot` method.
+For example, to add a spot to diffract light to
 a particular coordinate in the focal plane, use:
 
 .. code:: matlab
@@ -250,8 +265,11 @@ Creating custom RedTweezers shaders
 -----------------------------------
 
 To create a custom GLSL shader and load it using RedTweezers simply
-inherit from the ``otslm.utils.RedTweezers.RedTweezers`` class, load the
-GLSL shader source using the ``sendShader`` commend, and use
-``sendUniform`` and ``sendTexture`` to send data to the shader. For
-inspiration, look at the ``Showable`` and ``PrismsAndLenses``
-implementations.
+inherit from the :class:`+otslm.+utils.+RedTweezers.RedTweezers` class,
+load the GLSL shader source using the
+:meth:`~+otslm.+utils.+RedTweezers.RedTweezers.sendShader`, and use
+:meth:`~+otslm.+utils.+RedTweezers.RedTweezers.sendUniform` and
+:meth:`~+otslm.+utils.+RedTweezers.RedTweezers.sendTexture` to
+send data to the shader. For inspiration, look at the
+:class:`~+otslm.+utils.+RedTweezers.Showable` and
+:class:`~+otslm.+utils.+RedTweezers.PrismsAndLenses` implementations.
