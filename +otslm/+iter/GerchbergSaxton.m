@@ -24,6 +24,7 @@ classdef GerchbergSaxton < otslm.iter.IterBase
 
   properties
     adaptive      % Adaptive-adaptive factor (1 for Gerchberg-Saxton)
+    roimask       % Mask for target pattern region to keep
   end
   
   methods (Static)
@@ -32,6 +33,7 @@ classdef GerchbergSaxton < otslm.iter.IterBase
       p = inputParser;
       p.KeepUnmatched = true;
       p.addParameter('adaptive', 1.0);
+      p.addParameter('roimask', []);
       p.parse(varargin{:});
     end
   end
@@ -70,6 +72,9 @@ classdef GerchbergSaxton < otslm.iter.IterBase
 
       % Store adaptive-adaptive factor
       mtd.adaptive = p.Results.adaptive;
+      
+      % Store roimask
+      mtd.roimask = p.Results.roimask;
 
     end
 
@@ -83,6 +88,11 @@ classdef GerchbergSaxton < otslm.iter.IterBase
       % Do adaptive-adaptive step
       targetAmplitude = mtd.adaptive.*abs(mtd.target) ...
           + (1 - mtd.adaptive).*abs(output);
+        
+      % Apply ROI mask
+      if ~isempty(mtd.roimask)
+        targetAmplitude(~mtd.roimask) = abs(output(~mtd.roimask));
+      end
 
       % Calculate new guess
       D = targetAmplitude .* exp(1i*angle(output));
