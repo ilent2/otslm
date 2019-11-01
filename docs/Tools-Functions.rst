@@ -25,7 +25,8 @@ binary images for display on a digital micro-mirror device.
 The function supports a range of different dither methods including
 Matlab's builtin dither, raw thresholding, random dithering and
 using the Floyd-Steinberg algorithm.
-For example:
+The folowwing code example demonstrates a couple of different
+methods, the results are shown in :numref:`tools-package-dither`.
 
 .. code:: matlab
 
@@ -35,8 +36,11 @@ For example:
    d3 = otslm.tools.dither(im, 0.5, 'method', 'floyd');
    d4 = otslm.tools.dither(im, 0.5, 'method', 'random');
 
+.. _tools-package-dither:
 .. figure:: images/toolsPackage/dither_example.png
    :alt: Example output from the dither method
+
+   Example output from :func:`dither` using different methods.
 
 .. autofunction:: dither
 

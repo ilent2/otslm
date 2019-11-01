@@ -114,6 +114,27 @@ where :math:`\alpha` is the adaptive-adaptive factor.
 DirectSearch
 ------------
 
+The direct search algorithm involves choosing a pixel, trying a range
+of possible values for that pixel, and keeping the choice which
+maximises some objective function.
+This is a expensive procedure, on a device with 512x512 pixels and
+256 values per pixel, cycling over each pixel requires 67 million
+Fourier transforms.
+The process is further complicated since the optimal value for any
+pixel is not independent of every other pixel.
+However, this method can be useful for further improving a good guess,
+such as the output of one of the other methods.
+
+A rough outline for the procedure is
+
+1. Choose an initial guess, :math:`P`
+2. Randomly select a pixel to modify
+3. Generate a set of patterns :math:`P_i` with a set :math:`\{i\}` of
+   different pixel values.
+4. Propagate these patterns and calculate the fitness :math:`F_i`
+5. Choose the pattern which maximises the fitness
+   :math:`P_j \rightarrow P` where :math:`j = \text{argmax}_i F_i`.
+6. Go to 2 until converged
 
 .. autoclass:: DirectSearch
    :members: DirectSearch
@@ -121,11 +142,44 @@ DirectSearch
 IterBase
 --------
 
+This is the base class for iterative methods.
+It is an abstract class and can not be directly instantiated.
+To implement your own iterative method class, inherit from
+this class and implement the abstract methods/properties.
+
 .. autoclass:: IterBase
    :members: IterBase, show_fitness, run, stopIterations, evaluateFitness
 
 SimulatedAnnealing
 ------------------
+
+Simulated annealing is a stochastic method that can be useful for
+optimising systems with many degrees of freedom (such as patterns
+with many non-independent pixels).
+A description of the method can be found on the
+`wikipedia page <https://en.wikipedia.org/wiki/Simulated_annealing>`__.
+The algorithm is analogous to cooling (annealing) of solids and
+chooses new state probabilistically depending on a temperature parameter.
+An outline follows
+
+1. Starting with an initial pattern :math:`P` and temperature :math:`T`
+2. Pick a random pattern which is similar to the current pattern
+3. Compare fitness of two patterns :math:`F_1` and :math:`F_2`
+4. Accept the new pattern if :math:`P(F_1, F_2, T) > \text{rand}(0, 1)`
+5. Goto 2 until converged, gradually reducing temperature
+
+There are several parameters that can be chosen which strongly affect
+the performance and convergence of the algorithm.
+The implementation currently only supports the following function
+
+.. math::
+
+   P(F_1, F_2, T) = \exp{-(F_2-F_1)/T}
+
+The change in temperature can be controlled via the
+``temperatureFcn`` optional parameter.
+
+This implementation could be improved and we welcome suggestions.
 
 .. autoclass:: SimulatedAnnealing
    :members: SimulatedAnnealing, simpleTemperatureFcn
@@ -133,11 +187,30 @@ SimulatedAnnealing
 GerchbergSaxton3d
 -----------------
 
+This function implements the 3-D analog of the Gerchberg-Saxton
+method.
+The method is described in
+
+   Hao Chen et al 2013 J. Opt. 15 035401
+
+and
+
+   Graeme Whyte and Johannes Courtial 2005 New J. Phys. 7 117
+
+For an outline of the Gerchberg-Saxton algorithm, see
+:class:`GerchbergSaxton`.
+
 .. autoclass:: GerchbergSaxton3d
    :members: GerchbergSaxton3d
 
 IterBaseEwald
 -------------
+
+This is the base class for iterative methods that 3-D Fourier transforms
+and an Ewald sphere far-field mapping.
+This is class can be combined with the IterBase class to provide
+the 3-D specialisation.
+Currently only used by :class:`GerchbergSaxton3d`.
 
 .. autoclass:: IterBaseEwald
    :members: IterBaseEwald
@@ -145,10 +218,20 @@ IterBaseEwald
 bsc
 ---
 
+This function attempts to optimise the beam using vector spherical
+wave functions.  The function may be unstable/change in future
+releases but demonstrates how OTT can be used with OTSLM.
+
 .. autofunction:: bsc
 
 bowman2017
 ----------
+
+This function provides an interface for
+`Bowman, et al. Optics Express 25, 11692 (2017) <https://doi.org/10.1364/OE.25.011692>`.
+This requires a suitable Python version and various libraries.
+The wrapper may be unstable and will hopefully be improved in future
+releases.
 
 .. autofunction:: bowman2017
 
