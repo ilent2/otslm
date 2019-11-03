@@ -24,6 +24,8 @@ function pattern = zernike(sz, m, n, varargin)
 %   - 'angle'       angle  --   Rotation angle about axis (radians)
 %   - 'angle_deg'   angle  --   Rotation angle about axis (degrees)
 %   - 'gpuArray'    bool   --   If the result should be a gpuArray
+%
+% See also :scpt:`examples.liveScripts.booth1998`.
 
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

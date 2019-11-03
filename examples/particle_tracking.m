@@ -25,7 +25,6 @@ r_particle = 10;        % Radius of particle (pixels)
 x_particle = 5;         % Particle offset from centre (pixels)
 r_slm = 60;             % Size of SLM ROI (pixels)
 r_pinhole = 100;         % Size of spatial filter (pixels)
-padding = 800;          % Padding for FT (pixels)
 particle_type = 'absorbing';
 
 %% Generate incident illumination
@@ -61,8 +60,7 @@ end
 %% Simulate spatial resolution loss of imaging system
 
 pinhole = otslm.simple.aperture(sz, r_pinhole, 'shape', 'circle');
-image_slm = otslm.tools.spatial_filter(image_fp, pinhole, ...
-    'padding', padding);
+image_slm = otslm.tools.spatial_filter(image_fp, pinhole);
 
 figure();
 subplot(3, 2, 1);

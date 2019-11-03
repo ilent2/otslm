@@ -26,6 +26,7 @@
 %   spherical    - generates a spherical lens pattern
 %   step         - generates a step
 %   zernike      - generates a pattern based on the zernike polynomials
+%   aberrationRiMismatch - Calculates aberration for a plane interface refractive index mismatch.
 %
 % Functions for 3-D volumes
 %   aperture3d   - generate a 3-D volume similar to otslm.simple.aperture

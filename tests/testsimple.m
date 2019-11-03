@@ -243,6 +243,13 @@ function testAperture3d(testCase)
   
 end
 
+function testAberrationRiMismatch(testCase)
 
+  sz = [512, 512];
+  n1 = 1.5;
+  n2 = 1.33;
+  NA = 1.2;
+  alpha = asin(NA/n1);
+  pattern = otslm.simple.aberrationRiMismatch(sz, n1, n2, alpha);
 
-
+end
