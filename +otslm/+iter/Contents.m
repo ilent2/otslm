@@ -10,19 +10,19 @@
 %
 % Files
 %   GerchbergSaxton    - Implementation of Gerchberg-Saxton and Adaptive-Adaptive algorithms
-%   DirectSearch       - search through each pixel value to optimise hologram
-%   IterBase           - base class for iterative algorithm classes
-%   SimulatedAnnealing - Optimise the pattern using simulated annealing
+%   DirectSearch       - Optimiser to search through each pixel value to optimise hologram
+%   IterBase           - Base class for iterative algorithm classes.
+%   SimulatedAnnealing - Optimise the pattern using simulated annealing.
 %   GerchbergSaxton3d  - Implementation of 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
-%   IterBaseEwald      - base class for 3-D Ewald iterative algorithm classes
-%   bsc                - optimisation in vector spherical wave function basis
-%   bowman2017         - wrapper for Bowman 2017 conjugate gradient implementation
+%   IterBaseEwald      - Abstract base class for 3-D Ewald iterative algorithm classes
+%   bsc                - Optimisation in vector spherical wave function basis
+%   bowman2017         - Wrapper for Bowman 2017 conjugate gradient implementation
 %
 % Sub-packages
 %   +objectives        - objective functions for use with optimisation algorithms
 %
 % Private sub-folders
-%   bowman2017         - Files used by Bowman2017
+%   bowman2017py       - Files used by Bowman2017
 %
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
