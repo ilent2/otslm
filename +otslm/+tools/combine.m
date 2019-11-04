@@ -4,6 +4,10 @@ function pattern = combine(inputs, varargin)
 % Typical input should be a pattern between 0 and 1.
 % Most methods output range is between 0 and 1.
 %
+% For iterative combination methods, see :class:`otslm.iter.IterCombine`
+% or generate a target field using the ``farfield`` method and use an
+% :class:`otslm.iter.IterBase` iterative method.
+%
 % Usage
 %   pattern = combine(inputs, ...) combines the cell array of patterns.
 %
@@ -18,9 +22,6 @@ function pattern = combine(inputs, varargin)
 %         - dither   --   Randomly chooses values from different patterns
 %         - super    --   Uses phi = angle(\sum_ii exp(1i*2*pi*inputs(ii)))
 %         - rsuper   --   Superposition with random offset for each layer
-%         - gs       --   Applies GS algorithm to try and generate the
-%           pattern that would be created by the sum of the individual
-%           beams.  Starts with an initial guess using rsuper.
 %
 %       Methods to modulate a beam pattern
 %         - add      --   Adds the patterns: \sum_ii inputs(ii)
@@ -29,10 +30,19 @@ function pattern = combine(inputs, varargin)
 %         - average  --   Weighted average of inputs.  (default weights: ones)
 %           :math:`\sum_i w_i I_i / \sum_i w_i`
 %
+%       Miscelanious
+%         - farfield --   Calculate farfield sum: \sum_ii Prop(inputs(ii)).
+%           This method assumes the input has the currect range for the
+%           propagator.  The default propagator is a FFT, so the inputs
+%           should have range [0, 2*pi).
+%
 %       Default method: super.
 %
 %   - 'weights' (numeric) -- Array of weights, one for each pattern.
 %     (default: [], uses equal weights for each pattern)
+%
+%   - 'vismethod' (fcn) -- Used by ``farfield`` method.
+%     Default: ``@otslm.tools.prop.FftForward.simpleProp.evaluate``.
 %
 % See also Di Leonardo, Ianni and Ruocco (2007).
 
@@ -40,9 +50,12 @@ function pattern = combine(inputs, varargin)
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+% TODO: Do we want to include some nice defaults for GS, GSW, GAA?
+
 p = inputParser;
 p.addParameter('method', 'super');
 p.addParameter('weights', []);
+p.addParameter('vismethod', []);
 p.parse(varargin{:});
 
 % Check that we have work to do
@@ -78,38 +91,23 @@ switch p.Results.method
     end
 
     pattern = (angle(pattern)/pi+1)/2;
-
-  case 'gs'
-
-    % Calculate initial guess using random phase superposition
-    guess = otslm.tools.combine(inputs, varargin{:}, ...
-        'method', 'rsuper');
-
-    incident = ones(size(inputs{1}));
-
-    % Calculate the target using fft
-    target = zeros(size(inputs{1}));
-    for ii = 1:length(inputs)
-      padding = size(target)./2;
-      vis = otslm.tools.visualise(2*pi*inputs{ii}, ...
-          'incident', incident, 'method', 'fft', 'padding', padding, ...
-          'trim_padding', true);
-      target = target + nweights(ii).*abs(vis).^2;
-    end
-    target = target ./ length(inputs);
     
-    % Setup visualisation function
-    prop = otslm.tools.prop.FftForward.simpleProp(target, ...
-        'gpuArray', isa(target, 'gpuArray'));
-    vismethod = @(U) prop.propagate(U .* incident);
+  case 'farfield'
+    
+    % Handle default visualisation method
+    vismethod = p.Results.vismethod;
+    if isempty(vismethod)
+      prop = otslm.tools.prop.FftForward.simpleProp(inputs{1}, ...
+          'gpuArray', isa(inputs{1}, 'gpuArray'));
+      vismethod = @prop.propagate;
+    end
 
-    % Calculate the pattern with GS algorithm
-    gs = otslm.iter.GerchbergSaxton(target, 'guess', 2*pi*guess, ...
-        'vismethod', vismethod);
-    gs.run(100, 'show_progress', false);
-
-    % Convert pattern to 0-1 range
-    pattern = (gs.phase/pi+1)/2;
+    % Combine patterns
+    pattern = nweights(1).*vismethod(inputs{1});
+    for ii = 2:length(inputs)
+      pattern = pattern + nweights(ii).*vismethod(inputs{ii});
+    end
+    pattern = pattern ./ length(inputs);
 
   case 'add'
 

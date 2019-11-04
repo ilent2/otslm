@@ -9,6 +9,7 @@
 %   line_trap            - Simulation of different types of line traps
 %   particle_tracking    - Simulate particles being imaged using SLM/QPD system
 %   iterative            - Demonstrate different iterative algorithms
+%   iter_combine         - Demonstrate iter.CombineGerchbergSaxton
 %   phaseblur            - Demonstration of effects of phase blur
 %   iterative_3d         - Demonstration of 3-D iterative algorithms
 %   gpu_demo             - Demonstration of the GPU capabilities of the toolbox

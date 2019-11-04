@@ -57,7 +57,7 @@ classdef IterBase < handle
 
   methods
     function mtd = IterBase(varargin)
-      % Abstract constructor for iterative algorithm base class
+      % Constructor for iterative algorithm (abstract) base class
       %
       % Usage
       %   mtd = IterBase(target, ...)
