@@ -1,12 +1,12 @@
 % OTSLM/UTILS/REDTWEEZERS Red-Tweezers interface
 %
 % Classes
-%   RedTweezers   - Minimal RedTweezers interface
-%   Showable      - Showable-like interface using RedTweezers
-%   PrismsAndLenses - Implementation of Prisms and Lenses algorithm
+%   RedTweezers   - Interface to RedTweezers
+%   Showable      - RedTweezers interface for displaying pre-computed patterns
+%   PrismsAndLenses - PrismsAndLenses Prisms and Lenses algorithm for RedTweezers
 %
 % Other classes
-%   PrismsAndLensesSpot - Definition of a PrismsAndLenses spot
+%   PrismsAndLensesSpot - Properties definition for a PrismsAndLenses spot
 %
 % Other files
 %   PrismsAndLenses.glsl - OpenGL shader for PrismsAndLenses

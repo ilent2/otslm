@@ -70,26 +70,7 @@ end
 
 pattern = pattern .* p.Results.scale + p.Results.delta;
 
-% Ensure result is real
-imag_parts = imag(pattern) ~= 0;
-
-if isa(p.Results.background, 'char')
-  switch p.Results.background
-    case 'random'
-      background = otslm.simple.random(sz, 'gpuArray', p.Results.gpuArray);
-    case 'checkerboard'
-      background = otslm.simple.checkerboard(sz, 'gpuArray', p.Results.gpuArray);
-    otherwise
-      error('Unknown background string');
-  end
-  pattern(imag_parts) = background(imag_parts);
-else
-  if numel(p.Results.background) == 1
-    pattern(imag_parts) = p.Results.background;
-  elseif size(p.Results.background) == size(imag_parts)
-    pattern(imag_parts) = p.Results.background(imag_parts);
-  else
-    error('Number of background elements must be 1 or same size as pattern');
-  end
-end
+% Replace imaginary values with background
+pattern = replaceImagBackground(pattern, ...
+    p.Results.background, p.Results.gpuArray);
 

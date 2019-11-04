@@ -308,6 +308,29 @@ useful for creating composite images, for example (see also
    Example of using :func:`aperture` to generate logical arrays
    for masking two patterns.
 
+aberrationRiMismatch
+--------------------
+
+.. autofunction:: aberrationRiMismatch
+
+Example usage (see also :numref:`simple-aberrationRiMismatch-example`):
+
+.. code:: matlab
+
+  sz = [512, 512];
+  n1 = 1.5;
+  n2 = 1.33;
+  NA = 0.4;
+  alpha = asin(NA/n1);
+  pattern = otslm.simple.aberrationRiMismatch(sz, ...
+      n1, n2, alpha, 'depth', 2.0);
+
+.. _simple-aberrationRiMismatch-example:
+.. figure:: images/simplePackage/aberrationRiMismatch_example.png
+   :alt: example aberrationRiMismatch output
+
+   Example output from :func:`aberrationRiMismatch`.
+
 zernike
 -------
 

@@ -8,6 +8,7 @@
 %   expandGrid3dParameters   - Expand input parser for grid3d parameters
 %   expandGridParameters     - Expand input parser for grid parameters
 %   getParameterAngle        - Get angle from inputParameter results in radians or degrees
+%   replaceImagBackground    - Replace imaginary values in pattern with the background pattern
 %
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
