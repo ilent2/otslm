@@ -2,6 +2,8 @@ classdef Ott2Forward < otslm.tools.prop.OttForward
 % Propagate the field using the optical tweezers toolbox.
 % Provides a wrapper to calculate the 2-D field after beam calculation.
 %
+% Requires the optical tweezers toolbox (OTT).
+%
 % Properties
 %  - axis         -- Axis perpendicular to output image plane
 %  - offset       -- Offset along axial direction
@@ -23,7 +25,7 @@ classdef Ott2Forward < otslm.tools.prop.OttForward
 %  - simple()      --  propagate the field with a simple interface
 %  - simpleProp()  --  construct the propogator for input pattern
 %
-% See also Ott3Forward, FftForward and otslm.tools.visualise.
+% See also OttForward, FftForward and otslm.tools.visualise.
 
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

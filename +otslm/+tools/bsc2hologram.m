@@ -1,6 +1,8 @@
 function [pattern, cpattern] = bsc2hologram(sz, beam, varargin)
 % Calculates the far-field hologram for a BSC beam
 %
+% Requires the optical tweezers toolbox (OTT).
+%
 % .. warning:: The current version of the optical tweezers toolbox
 %    may introduce additional phase artifacts in the far-field.
 %

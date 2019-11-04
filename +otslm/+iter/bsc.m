@@ -1,6 +1,8 @@
 function [pattern, beam, coeffs] = bsc(sz, target, varargin)
 % Optimisation in vector spherical wave function basis
 %
+% Requires the optical tweezers toolbox (OTT).
+%
 % Usage
 %   [pattern, beam, coeffs] = bsc(target, ...) attempt to produce
 %   target using a phase pattern.  Returns the phase pattern matched

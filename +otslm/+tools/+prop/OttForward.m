@@ -1,6 +1,8 @@
 classdef OttForward < otslm.tools.prop.Propagator
 % Propagate the field using the optical tweezers toolbox
 %
+% Requires the optical tweezers toolbox (OTT).
+%
 % Properties
 %  - size          -- Size of input beam image
 %  - beam_data     -- Beam with saved data for repeated computations
@@ -15,7 +17,7 @@ classdef OttForward < otslm.tools.prop.Propagator
 %  - simple()      --  propagate the field with a simple interface
 %  - simpleProp()  --  construct the propogator for input pattern
 %
-% See also Ott2Forward, Ott3Forward and otslm.tools.visualise.
+% See also Ott2Forward and otslm.tools.visualise.
 
 % Copyright 2019 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

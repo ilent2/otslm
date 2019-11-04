@@ -26,7 +26,7 @@ function varargout = visualise(phase, varargin)
 %    - 'fft3'        Use 3-D Fourier transform, if original image
 %      is 2-D, converts to volume and takes Fourier transform.
 %      If input is 3-D, directly applies 3-D Fourier transform.
-%    - 'ott'         Use optical tweezers toolbox
+%    - 'ott'         Use optical tweezers toolbox (OTT).
 %    - 'rs'          Rayleigh-Sommerfeld diffraction formula
 %    - 'rslens'      Use rs to propagate to a lens, apply the lens
 %      phase pattern and propagate some distance from the lens.
