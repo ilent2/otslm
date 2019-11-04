@@ -32,31 +32,31 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
       % prop = simpleProp(pattern, ...) construct a new propagator.
       %
       % Optional named arguemnts:
-      %    diameter    num     Diameter of the lens.
-      %       Default: min(size(pattern))
+      %  - diameter    num     Diameter of the lens.
+      %    Default: min(size(pattern))
       %
-      %    zsize       num     Depth of the FFT volume.
-      %       Default: Calculated from focal_length and diameter
+      %  - zsize       num     Depth of the FFT volume.
+      %    Default: Calculated from focal_length and diameter
       %
-      %    focal_length  num   Set the focal length of the lens.
-      %       Default: diameter/2 (unless NA is set)
+      %  - focal_length  num   Set the focal length of the lens.
+      %    Default: diameter/2 (unless NA is set)
       %
-      %    NA          num     Set the focal length via NA.
-      %       Default: [] (i.e. defer to focal_length default)
+      %  - NA          num     Set the focal length via NA.
+      %    Default: [] (i.e. defer to focal_length default)
       %
-      %    interpolate   bool   If the Ewald mapping should interpolate.
-      %       Default: true.
+      %  - interpolate   bool   If the Ewald mapping should interpolate.
+      %    Default: true.
       %
-      %    padding  num | [xy, z] | [x, y, z]  Padding for transform.
-      %       For details, see FftEwaldForward.
-      %       Default: ceil([size(pattern), zsize]/2)
+      %  - padding  num | [xy, z] | [x, y, z]  Padding for transform.
+      %    For details, see FftEwaldForward.
+      %    Default: ceil([size(pattern), zsize]/2)
       %
-      %    trim_padding   bool   if padding should be trimmed from output.
-      %       Default: true.
+      %  - trim_padding   bool   if padding should be trimmed from output.
+      %    Default: true.
       %
-      %    gpuArray    bool     if we should use the GPU.
-      %       Default: isa(pattern, 'gpuArray')
-      
+      %  - gpuArray    bool     if we should use the GPU.
+      %    Default: isa(pattern, 'gpuArray')
+
       p = inputParser;
       p.KeepUnmatched = true;
       p.addParameter('diameter', min(size(pattern)));
@@ -134,31 +134,31 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
   
   methods
     function obj = FftEwaldForward(sz, varargin)
-      %FFTEWALDFORWARD Construct a Ewald sphere FFT propagator instance
+      % Construct a Ewald sphere FFT propagator instance
       %
       % FFTEWALDFORWARD(sz, ...) construct a new propagator instance
       % for the specified pattern size.  sz must be a 3 element vector.
       %
       % Optional named arguments:
-      %    focal_length   num   focal length of the lens in pixels.
-      %       Default: min(sz/2).
+      %  - focal_length   num   focal length of the lens in pixels.
+      %    Default: min(sz/2).
       %
-      %    interpolate   bool   If the Ewald mapping should interpolate.
-      %       Default: true.
+      %  - interpolate   bool   If the Ewald mapping should interpolate.
+      %    Default: true.
       %
-      %    padding    num | [xy, z] | [x, y, z] padding to add to edges of
-      %       the image.  Either a single number for uniform padding,
-      %       two numbers for separate axial and radial padding,
-      %       or three numbers for x, y and z padding.
-      %       Default: ceil(sz/2).
+      %  - padding    num | [xy, z] | [x, y, z] padding to add to edges of
+      %    the image.  Either a single number for uniform padding,
+      %    two numbers for separate axial and radial padding,
+      %    or three numbers for x, y and z padding.
+      %    Default: ceil(sz/2).
       %
-      %    trim_padding   bool   if the output_roi should be set
-      %       to remove the padding added before the transform.
-      %       Default: false.
+      %  - trim_padding   bool   if the output_roi should be set
+      %    to remove the padding added before the transform.
+      %    Default: false.
       %
-      %    gpuArray   bool    if true, allocates memory on the GPU
-      %       and does the transform with the GPU instead of the CPU.
-      %       Default: false.
+      %  - gpuArray   bool    if true, allocates memory on the GPU
+      %    and does the transform with the GPU instead of the CPU.
+      %    Default: false.
       
       p = inputParser;
       p.KeepUnmatched = true;

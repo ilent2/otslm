@@ -8,58 +8,60 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 %   is 0 to 1, so the output should be passed to otslm.tools.finalize.
 %
 % Parameters
-%   - sz (size) -- size of the generated pattern
-%   - locations (numeric) --
-%   - detectors (numeric) --
-%
-% If detectors is a single location, all the patterns will point to
-% the same detector.
-%
-% Locations should be in pixels.  TODO: units for detectors.
+%   - sz (size) -- size of the generated pattern ``[rows, cols]``
+%   - locations (cell{numeric}) -- cell array of locations in the
+%     generated pattern to place regions.  ``{[x1, y1], [x2, y2], ...}``.
+%     Location shave units of pixels.
+%   - detectors (cell{numeric}) -- cell array of numbers describing
+%     the locations in the far-field.  ``{[x1, y1], [x2, y2], ...}``.
+%     This locations are passed into :func:`+otslm.+simple.linear` as
+%     the spacing argument.
+%     Must be the same length as ``locations`` or be a single location.
+%     If detectors is a single location, all the patterns will point to
+%     the same detector.
 %
 % Most optional named parameters can also be cell arrays (or cell arrays of
 % cell arrays) for different options for each location.
 %
 % Optional named parameters
-%   'radii'       [r, ...]      Radius of each SLM region
-%   'amplitude'   method        Specifies a method for amplitude modulation.
-%   'ampliutdeargs', args       Amplitude method arguments.
-%   'background'  type          Specifies the background type.
-%       Possible values are:
-%           'zero'            Uses 0 phase as the background.
-%           'nan'             Uses NaN phase as the background.
-%           'checkerboard'    Uses a checkerboard for the background.
-%           'random'          Uses noise for the background.
-%           'randombin'       Uses binary noise for the background.
+%   - radii (numeric)      -- Radius of each SLM region.  Should be
+%     a single element or an array the same length as ``locations``.
+%   - amplitude (enum)     -- Specifies a method for amplitude modulation.
+%     See bellow for a list of methods and arguments.
+%   - ampliutdeargs (cell) -- Cell array of arguments to pass to
+%     amplitude method.
+%   - background (enum)    --   Specifies the background type.
+%     Possible values are:
+%    - 'zero'         -- Uses 0 phase as the background.
+%    - 'nan'          -- Uses NaN phase as the background.
+%    - 'checkerboard' -- Uses a checkerboard for the background.
+%    - 'random'       -- Uses noise for the background.
+%    - 'randombin'    -- Uses binary noise for the background.
 %
-% Possible amplitude methods are:
-%   'step'              Sharp step between background and pattern
+% Possible amplitude methods are
+%   - 'step'            -- Sharp step between background and pattern.
+%     No parameters.
 %
-%   'gaussian_dither'   Randomly mixes in background
-%     Args:
-%       'offset'
-%       'noise'
+%   - 'gaussian_dither' -- Randomly mixes in background.
+%     Parameters:
+%    - 'offset' (numeric) -- offset for dither threshold.
+%    - 'noise' (numeric)  -- scale of uniform noise to add to pattern.
 %
-%   'gaussian_noise'   Adds noise to edge
-%       of the pattern.  The type must be 'uniform' or 'gaussian'
-%       for uniform noise or Gaussian noise.  The scale is the
-%       uniform noise range or Gaussian width.
-%     Args:
-%       'offset'
-%       'scale'
-%       'type'
+%   - 'gaussian_noise'   -- Adds noise to edge of the pattern.
+%     Parameters:
+%    -  'offset' (numeric) -- Offset.
+%    -  'scale' (numeric)  -- Uniform noise range or Gaussian width.
+%    -  'type'  (enum)     -- type of noise, either 'uniform' or 'gaussian'
 %
-%   'gaussian_scale'  Scales the pattern by a Gaussian
-%       and then uses the mix method to combine the pattern with
-%       the background.  The mix method must be 'add' for
-%       adding the result to the background, or 'step' for
-%       placing the scaled pattern on the background as a step.
-%     Args:
-%       'mix'
-%       'mixargs'
-%       'scale'
-%
-% TODO: Documentation in this function
+%   - 'gaussian_scale'  -- Scales the pattern by a Gaussian
+%     and then uses the mix method to combine the pattern with
+%     the background.  The mix method must be 'add' for
+%     adding the result to the background, or 'step' for
+%     placing the scaled pattern on the background as a step.
+%     Parameters:
+%   - 'mix' (enum)      -- mix method, 'add' or 'step'
+%   - 'mixargs' (cell)  -- arguments for mix method
+%   - 'scale' (numeric) -- scaling factor
 
 % Copyright 2018 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about

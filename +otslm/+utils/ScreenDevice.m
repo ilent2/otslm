@@ -47,18 +47,17 @@ classdef ScreenDevice < otslm.utils.Showable
       % are assumed to be amplitude based, value range is RGB.
       %
       % Optional named parameters:
-      %
-      %   'target_size'   [r,c]   Size of the device within the window
-      %   'target_offset' [x,y]   Offset within the window.  Negative
-      %       values are offset fro the top of the screen.
-      %   'lookup_table'  table   Lookup table to use for device
-      %       Default lookup table is value_range{1} repeated for each channel.
-      %   'value_range'   table   Cell array of value ranges
-      %       Default is 256x3 for a RGB screen
-      %   'pattern_type'  type    Type of pattern the device displays.
-      %       Default is amplitude.
-      %   'fullscreen'    bool    Default value for showRaw/fullscreen
-      %   'prescaledPatterns'  bool  If the pattern is already pre-scaled.
+      %   - 'target_size'   [r,c]  -- Size of the device within the window
+      %   - 'target_offset' [x,y]  -- Offset within the window.  Negative
+      %     values are offset fro the top of the screen.
+      %   - 'lookup_table'  table  -- Lookup table to use for device
+      %     Default lookup table is value_range{1} repeated for each channel.
+      %   - 'value_range'   table  -- Cell array of value ranges
+      %     Default is 256x3 for a RGB screen
+      %   - 'pattern_type'  type   -- Type of pattern the device displays.
+      %     Default is amplitude.
+      %   - 'fullscreen'    bool   -- Default value for showRaw/fullscreen
+      %   - 'prescaledPatterns'  bool  If the pattern is already pre-scaled.
 
       p = inputParser;
       p.addRequired('device_number');

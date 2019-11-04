@@ -279,6 +279,7 @@ the sinc radius. The function can generate both 1-dimensional and
     radius = 50;
     sinc = otslm.simple.sinc(sz, 50, 'type', '1d');
 
+.. _simple-example-sincraw:
 .. figure:: images/examples/simpleBeams/sincRaw.png
    :alt: raw sinc pattern
 

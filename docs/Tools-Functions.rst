@@ -101,6 +101,7 @@ The :func:`phaseblur` function can be used to simulate how a pattern
 is affected by cross-talk between the pixels.
 For example, the following example shows how the effect of cross-talk
 on a checkerboard could be simulated.
+Results are shown in :numref:`tools-phaseblur-example`.
 
 .. code:: matlab
 
@@ -117,8 +118,13 @@ on a checkerboard could be simulated.
    im1 = otslm.tools.visualise(chk, 'trim_padding', true);
    im2 = otslm.tools.visualise(blur, 'trim_padding', true);
 
+.. _tools-phaseblur-example:
 .. figure:: images/toolsPackage/phaseblur_example.png
    :alt: example output from phaseblur function
+
+   Checkerboard pattern and simulated far-field (left) and the
+   same checkerboard pattern after using the :func:`phaseblur`
+   function (right).
 
 .. autofunction:: phaseblur
 
@@ -202,6 +208,7 @@ In code, the operation performed is
 To use the function, we simply need to pass in a matrix for the
 spot locations.  Additionally, we could pass in weights for the
 different components or custom patterns for the lens and gratings.
+Example output is shown in :numref:`tools-lp-example`.
 
 .. code:: matlab
 
@@ -209,8 +216,11 @@ different components or custom patterns for the lens and gratings.
    xyz = [10, 5, 0.1; -3, -2, -0.2] ./ sz(1);
    pattern = otslm.tools.lensesAndPrisms(sz, xyz.');
 
+.. _tools-lp-example:
 .. figure:: images/toolsPackage/lensesAndPrisms_example.png
    :alt: lenses and prisms example output
+
+   Example output from :func:`lensesAndPrisms`.
 
 .. autofunction:: lensesAndPrisms
 
@@ -233,6 +243,4 @@ a bunch of the size of the patterns and default values for any
 empty inputs.
 
 .. autofunction:: make_beam
-
-.. _prop-package:
 

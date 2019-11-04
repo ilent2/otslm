@@ -32,16 +32,16 @@ classdef FftForward < otslm.tools.prop.FftBase
       % prop = simpleProp(pattern, ...) construct a new propagator.
       %
       % Optional named arguemnts:
-      %    axial_offset    num   Offset along the propagation axis
-      %       Default: 0.0.
-      %    NA         num     Numerical aperture for axial offset lens.
-      %       Default: 0.1.
-      %    padding  num | [num, num]  Padding for transform.
-      %       For details, see FftForward.  Default: ceil(size(pattern)/2)
-      %    trim_padding   bool   if padding should be trimmed from output.
-      %       Default: true.
-      %    gpuArray    bool     if we should use the GPU.
-      %       Default: isa(pattern, 'gpuArray')
+      %  - axial_offset    num   Offset along the propagation axis
+      %    Default: 0.0.
+      %  - NA         num     Numerical aperture for axial offset lens.
+      %    Default: 0.1.
+      %  - padding  num | [num, num]  Padding for transform.
+      %    For details, see FftForward.  Default: ceil(size(pattern)/2)
+      %  - trim_padding   bool   if padding should be trimmed from output.
+      %    Default: true.
+      %  - gpuArray    bool     if we should use the GPU.
+      %    Default: isa(pattern, 'gpuArray')
       
       p = inputParser;
       p.addParameter('axial_offset', 0.0);
@@ -88,26 +88,26 @@ classdef FftForward < otslm.tools.prop.FftBase
       % FFTFORWARD(sz, ...) construct a new propagator instance
       % for the specified pattern size.  sz must be a 2 element vector.
       %
-      % Optional named arguments:
-      %    padding    num | [num, num]   padding to add to edges of
-      %       the image.  Either a single number for uniform padding
-      %       or two numbers to pass to the `padarray` function.
-      %       Default: ceil(sz/2)
+      % Optional named arguments
+      %  - padding    num | [num, num] --  padding to add to edges of
+      %    the image.  Either a single number for uniform padding
+      %    or two numbers to pass to :func:`padarray`.
+      %    Default: ``ceil(sz/2)``
       %
-      %    lens       pattern    lens function to add to the transform.
-      %       This can be useful for shifting the pattern in the axial
-      %       direction.  Pattern should have same size as sz + padding.
-      %       The lens function should be a complex field amplitude.
-      %       Default: [].
+      %  - lens       pattern  --  lens function to add to the transform.
+      %    This can be useful for shifting the pattern in the axial
+      %    direction.  Pattern should have same size as sz + padding.
+      %    The lens function should be a complex field amplitude.
+      %    Default: [].
       %
-      %    trim_padding   bool   if the output_roi should be set
-      %       to remove the padding added before the transform.
-      %       Default: false.
+      %  - trim_padding (logical) -- if ``output_roi`` should be set
+      %    to remove the padding added before the transform.
+      %    Default: false.
       %
-      %    gpuArray   bool    if true, allocates memory on the GPU
-      %       and does the transform with the GPU instead of the CPU.
-      %       Default: false.
-      
+      %  - gpuArray (logical) -- if true, allocates memory on the GPU
+      %    and does the transform with the GPU instead of the CPU.
+      %    Default: false.
+
       obj = obj@otslm.tools.prop.FftBase(sz, varargin{:});
     end
   end

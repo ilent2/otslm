@@ -6,12 +6,21 @@
 
 .. automodule:: +otslm.+tools.+prop
 
-This package contains classes for propagating the fields.
+The ``otslm.tools.prop`` package contains classes for propagating
+the fields.
 For simple beam propagation, see :func:`+tools.visualise`.
 This documentation contains information on the Propagator base class
 and the propagator sub-classes.
 The package contains additional base classes for the common code
 shared between the forward and inverse methods.
+
+For most propagators there are three methods that can be used to
+create a new instance.
+The class constructor creates a new instance where you specify
+all the options.
+The ``simple`` and ``simpleProp`` static functions create an
+instance of the propagator from an input pattern and return
+an output image or propagator depending on the method.
 
 .. contents::
    :local:
@@ -28,53 +37,55 @@ Fft3Forward
 -----------
 
 .. autoclass:: Fft3Forward
-   :members:
+   :members: Fft3Forward, simple, simpleProp
 
 Fft3Inverse
 -----------
 
 .. autoclass:: Fft3Inverse
-   :members:
+   :members: Fft3Inverse, simple, simpleProp
 
 FftEwaldForward
 ---------------
 
 .. autoclass:: FftEwaldForward
-   :members:
+   :members: FftEwaldForward, simple, simpleProp
 
 FftEwaldInverse
 ---------------
 
 .. autoclass:: FftEwaldInverse
-   :members:
+   :members: FftEwaldInverse, simple, simpleProp
 
 FftForward
 ----------
 
 .. autoclass:: FftForward
-   :members:
+   :members: FftForward, simple, simpleProp
 
 FftInverse
 ----------
 
 .. autoclass:: FftInverse
-   :members:
+   :members: FftInverse, simple, simpleProp
 
 OttForward
 ----------
 
 .. autoclass:: OttForward
-   :members:
+   :members: OttForward, simple, simpleProp
 
 Ott2Forward
 -----------
 
 .. autoclass:: Ott2Forward
-   :members:
+   :members: Ott2Forward, simple, simpleProp
 
 RsForward
 ---------
 
+.. warning:: This method may be unstable.
+
 .. autoclass:: RsForward
-   :members:
+   :members: RsForward, simple, simpleProp
 

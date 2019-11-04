@@ -55,22 +55,22 @@ classdef SimulatedAnnealing < otslm.iter.IterBase
       % target using the Simulated Annealing algorithm.
       %
       % Optional named arguments:
-      %   levels    num    Number of discrete levels or array of
+      %   - levels    num    Number of discrete levels or array of
       %     levels between -pi and pi.  Default: 256.
-      %   temperature num  Initial temperature of the solver.
+      %   - temperature num  Initial temperature of the solver.
       %
-      %   guess     im     Initial guess at complex amplitude pattern.
+      %   - guess     im     Initial guess at complex amplitude pattern.
       %     If not image is supplied, a guess is created using invmethod.
       %
-      %   vismethod fcn    Function to calculate far-field.  Takes one
+      %   - vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
       %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
       %
-      %   invmethod fcn    Function to calculate near-field.  Takes one
+      %   - invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
       %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
       %
-      %   objective fcn    Objective function to measure fitness.
+      %   - objective fcn    Objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity
 
       % Parse inputs

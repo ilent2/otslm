@@ -1,12 +1,15 @@
 classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
-  %PrismsAndLenses Prisms and Lenses algorithm for RedTweezers
-  %
-  % Implements the Prisms and Lenses algorithm in an OpenGl shader.
-  %
-  % Copyright 2019 Isaac Lenton
-  % This file is part of OTSLM, see LICENSE.md for information about
-  % using/distributing this file.
-  
+% Prisms and Lenses algorithm for RedTweezers.
+% Inherits from :class:`RedTweezers`.
+%
+% Implements the Prisms and Lenses algorithm in an OpenGl shader.
+%
+% See also PrismsAndLenses and :class:`Showable`.
+
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
+
   properties (SetObservable)
     
     % Array of PrismsAndLenses spots
@@ -143,30 +146,30 @@ classdef PrismsAndLenses < otslm.utils.RedTweezers.RedTweezers
       % Add a spot to the pattern
       %
       % rt.addSpot(position, ...) declares a new spot at
-      % the specified position [x, y, z].  Uses the PrismsAndLensesSpot
-      % class to create the spot.
+      % the specified position [x, y, z].  Uses :class:`PrismsAndLensesSpot`
+      % to represent the spot.
       %
       % Optional named parameters:
-      %   'oam'    int    Vortex charge
-      %   'phase'  float  Phase offset for the spot
-      %   'intensity' float  Intensity for the spot
-      %   'aperture'  [x, y, R]  Position and radius of aperture
-      %   'line'   [x, y, z, phase] Direction, length and phase of line
-      
+      %   - 'oam'    int   -- Vortex charge
+      %   - 'phase'  float -- Phase offset for the spot
+      %   - 'intensity' float -- Intensity for the spot
+      %   - 'aperture'  [x, y, R] -- Position and radius of aperture
+      %   - 'line'   [x, y, z, phase] -- Direction, length and phase of line
+
       % Create a spot
       spot = otslm.utils.RedTweezers.PrismsAndLensesSpot(varargin{:});
-      
+
       % Add it to the array
       rt.spots = [rt.spots; spot];
     end
-    
+
     function removeSpot(rt, index)
       % Remove the specified spot from the pattern
       %
-      % rt.removeSpot() removes a spot from the end of the array;
+      % rt.removeSpot() removes a spot from the end of the array.
       %
       % Can also directly modify the Spot array
-      
+
       % Handle default spot (last spot)
       if nargin < 2
         index = numel(rt.spots);

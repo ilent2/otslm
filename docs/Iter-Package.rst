@@ -228,7 +228,7 @@ bowman2017
 ----------
 
 This function provides an interface for
-`Bowman, et al. Optics Express 25, 11692 (2017) <https://doi.org/10.1364/OE.25.011692>`.
+`Bowman, et al. Optics Express 25, 11692 (2017) <https://doi.org/10.1364/OE.25.011692>`__.
 This requires a suitable Python version and various libraries.
 The wrapper may be unstable and will hopefully be improved in future
 releases.

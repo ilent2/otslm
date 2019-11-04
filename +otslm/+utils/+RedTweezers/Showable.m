@@ -1,13 +1,14 @@
 classdef Showable < otslm.utils.RedTweezers.RedTweezers & otslm.utils.Showable
-  % RedTweezers interface for displaying pre-computed patterns
-  %
-  % Loads a shader into RedTweezers for displaying images.
-  % This is roughly equivilant to the ScreenDevice class.
-  %
-  % Copyright 2019 Isaac Lenton
-  % This file is part of OTSLM, see LICENSE.md for information about
-  % using/distributing this file.
-  
+% RedTweezers interface for displaying pre-computed patterns.
+% Inherits from :class:`+otslm.+utils.Showable` and :class:`RedTweezers`.
+%
+% Loads a shader into RedTweezers for displaying images.
+% This is roughly equivilant to the ScreenDevice class.
+
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
+
   properties (SetAccess=protected)
     valueRange              % Range of values for screen
     lookupTable             % Lookup table for colour mapping
@@ -43,16 +44,16 @@ classdef Showable < otslm.utils.RedTweezers.RedTweezers & otslm.utils.Showable
       %
       % rt = RedTweezers(address, port, ...) specifies a custom address/port.
       %
-      % Accepts additional named arguments passed to Showable.
-      %   'lookup_table'  table   Lookup table to use for device
-      %       Default lookup table is value_range{1} repeated for each channel.
-      %   'value_range'   table   Cell array of value ranges
-      %       Default is 256x3 for a RGB screen
-      %   'pattern_type'  str    Type of pattern the device displays.
-      %       Default is 'amplitude'.  Can also be 'phase'.
-      %   prescaledPatterns   bool   Default value for prescaled argument
-      %       in show.  Default: false.
-      
+      % Optional named arguments
+      %   - 'lookup_table'  table  -- Lookup table to use for device
+      %     Default lookup table is value_range{1} repeated for each channel.
+      %   - 'value_range'   table  -- Cell array of value ranges
+      %     Default is 256x3 for a RGB screen
+      %   - 'pattern_type'  str    -- Type of pattern the device displays.
+      %     Default is 'amplitude'.  Can also be 'phase'.
+      %   - prescaledPatterns   bool -- Default value for prescaled argument
+      %     in show.  Default: false.
+
       % Parse inputs
       ip = inputParser;
       ip.addParameter('address', '127.0.0.1');

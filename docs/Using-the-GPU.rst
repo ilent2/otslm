@@ -158,7 +158,7 @@ it can run on any computer with OpenGL capabilities connected to your
 network (with appropriate firewall permission). Images, shaders and
 other data can be sent to RedTweezers via UDP, the RedTweezers server
 deals with uploading the shader and managing the shaders memory.
-RedTweezers interfaces are located in :module:`+otslm.+utils.+RedTweezers`.
+RedTweezers interfaces are located in :mod:`+otslm.+utils.+RedTweezers`.
 
 Installing RedTweezers
 ----------------------

@@ -1,19 +1,31 @@
 classdef PrismsAndLensesSpot
-  % Properties definition for a PrismsAndLenses spot
-  %   This class is for use with PrismsAndLenses.
-  
+% Properties definition for a PrismsAndLenses spot.
+% This class is for use with :class:`PrismsAndLenses`.
+%
+% Properties
+%   - position     -- Position of spot [x; y; z]
+%   - oam          -- Orbital angular momentum charge number (int)
+%   - phase        -- Phase of the spot
+%   - intensity    -- Intensity of the spot
+%   - aperture     -- Aperture to define hologram within [x; y; radius]
+%   - line         -- Line trap direction and phase [x; y; z; phase]
+
+% Copyright 2019 Isaac Lenton
+% This file is part of OTSLM, see LICENSE.md for information about
+% using/distributing this file.
+
   properties
     position      % Position of spot [x; y; z]
     oam           % Orbital angular momentum charge number (int)
-    
+
     phase         % Phase of the spot
     intensity     % Intensity of the spot
-    
+
     aperture      % Aperture to define hologram within [x; y; radius]
-    
+
     line          % Line trap direction and phase [x; y; z; phase]
   end
-  
+
   methods
     function obj = PrismsAndLensesSpot(varargin)
       % Declares a new spot for PrismsAndLenses
@@ -21,13 +33,13 @@ classdef PrismsAndLensesSpot
       % PrismsAndLensesSpot(position, ...) declares a new spot at
       % the specified position [x, y, z].
       %
-      % Optional named parameters:
-      %   'oam'    int    Vortex charge
-      %   'phase'  float  Phase offset for the spot
-      %   'intensity' float  Intensity for the spot
-      %   'aperture'  [x, y, R]  Position and radius of aperture
-      %   'line'   [x, y, z, phase] Direction, length and phase of line
-      
+      % Optional named parameters
+      %   - 'oam'    int   -- Vortex charge
+      %   - 'phase'  float -- Phase offset for the spot
+      %   - 'intensity' float -- Intensity for the spot
+      %   - 'aperture'  [x, y, R] -- Position and radius of aperture
+      %   - 'line'   [x, y, z, phase] -- Direction, length and phase of line
+
       ip = inputParser;
       ip.addOptional('position', [0, 0, 0]);
       ip.addParameter('oam', 0);
@@ -36,7 +48,7 @@ classdef PrismsAndLensesSpot
       ip.addParameter('aperture', [0, 0, 1]);
       ip.addParameter('line', [0, 0, 0, 0]);
       ip.parse(varargin{:});
-      
+
       % Store parameters
       obj.position = ip.Results.position;
       obj.oam = ip.Results.oam;

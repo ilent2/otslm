@@ -70,32 +70,35 @@ classdef Ott2Forward < otslm.tools.prop.OttForward
     function obj = Ott2Forward(sz, varargin)
       %OTT2FORWARD Construct a new propagator instance
       %
-      % prop = Ott2Forward(sz, ...) construct a new propagator instance.
-      % sz must be a 2 element vector for the far-field size.
+      % Usage
+      %   prop = Ott2Forward(sz, ...) construct a new propagator instance.
       %
-      % Optional named arguments:
-      %    axis      char     'x', 'y' or 'z' for axis perpendicular to
-      %       image.  Default: z.
+      % Parameters
+      %   - sz (size) -- size of the pattern in far-field ``[rows, cols]``
       %
-      %    offset    num      Offset along axial direction.
-      %       Default: 0.0
+      % Optional named arguments
+      %  - axis (enum)   --   'x', 'y' or 'z' for axis perpendicular to
+      %    image.  Default: z.
       %
-      %    field     [char]   Field to calculate.  See ott.Bsc.visualise
-      %       for a list of valid parameters.
-      %       Default: 'irradiance'.
+      %  - offset (numeric) -- Offset along axial direction.
+      %    Default: 0.0.
       %
-      %    output_size  [num, num]   Size of output image.
-      %       Default: [80, 80]
+      %  - field (enum)     --  Field to calculate.
+      %    See :func:`+ott.+Bsc.visualise` for a list of valid parameters.
+      %    Default: 'irradiance'.
       %
-      %    range     [ x, y ]    Range of points to visualise.
-      %       Can either be a cell array { x, y }, two scalars for
-      %       range [-x, x], [-y, y] or 4 scalars [ x0, x1, y0, y1 ].
-      %       Default: []  (parameter is omitted, see ott.Bsc.visualise)
+      %  - output_size  [num, num] --  Size of output image.
+      %    Default: [80, 80]
       %
-      %    pre_calculate   bool   If beam_data should be set at
-      %       construction or at first use of propagate().
-      %       Defalut: true
-      
+      %  - range     [ x, y ]    Range of points to visualise.
+      %    Can either be a cell array { x, y }, two scalars for
+      %    range [-x, x], [-y, y] or 4 scalars [ x0, x1, y0, y1 ].
+      %    Default: []  (parameter is omitted, see ott.Bsc.visualise)
+      %
+      %  - pre_calculate (logical) -- If beam_data should be set at
+      %    construction or at first use of propagate().
+      %    Defalut: true
+
       p = inputParser;
       p.KeepUnmatched = true;
       p.addParameter('axis', 'z');

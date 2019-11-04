@@ -32,16 +32,16 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
       % prop = simpleProp(pattern, ...) construct a new propagator.
       %
       % Optional named arguemnts:
-      %    padding   num | [xy, z] | [x, y, z]  Padding for transform.
-      %       For details, see FftEwaldInverse.
-      %       Default: ceil(size(pattern)/2)
+      %  - padding   num | [xy, z] | [x, y, z]  Padding for transform.
+      %    For details, see :meth:`FftEwaldInverse`.
+      %    Default: ``ceil(size(pattern)/2)``
       %
-      %    trim_padding   bool   if padding should be trimmed from output.
-      %       Default: true.
+      %  - trim_padding   bool   if padding should be trimmed from output.
+      %    Default: true.
       %
-      %    gpuArray    bool     if we should use the GPU.
-      %       Default: isa(pattern, 'gpuArray')
-      
+      %  - gpuArray    bool     if we should use the GPU.
+      %    Default: isa(pattern, 'gpuArray')
+
       p = inputParser;
       p.addParameter('diameter', min([size(pattern, 1), size(pattern, 2)]));
       p.addParameter('focal_length', []);
@@ -51,10 +51,10 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
       p.addParameter('trim_padding', true);
       p.addParameter('gpuArray', isa(pattern, 'gpuArray'));
       p.parse(varargin{:});
-      
+
       % Get the default diameter of the lens
       diameter = p.Results.diameter;
-      
+
       % Get focal length (from focal_length or NA or default)
       assert(isempty(p.Results.focal_length) || isempty(p.Results.NA), ...
         'Only NA or focal_length should be set, not both');
@@ -98,32 +98,32 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
   
   methods
     function obj = FftEwaldInverse(sz, varargin)
-      %FFTEWALDINVERSE Construct a Ewald inverse FFT propagator instance
+      % Construct a Ewald inverse FFT propagator instance.
       %
       % FFTEWALDINVERSE(sz, ...) construct a new propagator instance
       % for the specified pattern size.  sz must be a 3 element vector.
       %
       % Optional named arguments:
-      %    focal_length   num   focal length of the lens in pixels.
-      %       Default: ((min(sz(1:2))/2).^2 + sz(3).^2)/(2*sz(3))
+      %  - focal_length   num   focal length of the lens in pixels.
+      %    Default: ``((min(sz(1:2))/2).^2 + sz(3).^2)/(2*sz(3))``
       %
-      %    interpolate   bool   If the Ewald mapping should interpolate.
-      %       Default: true.
+      %  - interpolate   bool   If the Ewald mapping should interpolate.
+      %    Default: true.
       %
-      %    padding    num | [xy, z] | [x, y, z] padding to add to edges of
-      %       the image.  Either a single number for uniform padding,
-      %       two numbers for separate axial and radial padding,
-      %       or three numbers for x, y and z padding.
-      %       Default: ceil(sz/2)
+      %  - padding    num | [xy, z] | [x, y, z] padding to add to edges of
+      %    the image.  Either a single number for uniform padding,
+      %    two numbers for separate axial and radial padding,
+      %    or three numbers for x, y and z padding.
+      %    Default: ``ceil(sz/2)``
       %
-      %    trim_padding   bool   if the output_roi should be set
-      %       to remove the padding added before the transform.
-      %       Default: false.
+      %  - trim_padding (logical) -- if the output_roi should be set
+      %    to remove the padding added before the transform.
+      %    Default: false.
       %
-      %    gpuArray   bool    if true, allocates memory on the GPU
-      %       and does the transform with the GPU instead of the CPU.
-      %       Default: false.
-      
+      %  - gpuArray (logical) -- if true, allocates memory on the GPU
+      %    and does the transform with the GPU instead of the CPU.
+      %    Default: false.
+
       p = inputParser;
       p.KeepUnmatched = true;
       p.addParameter('focal_length', ...

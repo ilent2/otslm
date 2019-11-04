@@ -1,5 +1,5 @@
 classdef RedTweezers < handle
-% Interface to RedTweezers
+% Interface to RedTweezers.
 %
 % RedTweezers is a software package which calculates the hologram
 % using OpenGL and directly displays the hologram on the hardware.

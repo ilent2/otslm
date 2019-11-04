@@ -34,12 +34,12 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
       % prop = simpleProp(pattern, ...) construct a new propagator.
       %
       % Optional named arguemnts:
-      %    padding  num | [num, num]  Padding for transform.
-      %       For details, see FftForward.  Default: ceil(size(pattern)/2)
-      %    trim_padding   bool   if padding should be trimmed from output.
-      %       Default: true.
-      %    gpuArray    bool     if we should use the GPU.
-      %       Default: isa(pattern, 'gpuArray')
+      %  - padding  num | [num, num]  Padding for transform.
+      %    For details, see FftForward.  Default: ceil(size(pattern)/2)
+      %  - trim_padding   bool   if padding should be trimmed from output.
+      %    Default: true.
+      %  - gpuArray    bool     if we should use the GPU.
+      %    Default: ``isa(pattern, 'gpuArray')``
       
       p = inputParser;
       p.addParameter('padding', ceil(size(pattern)/2));
@@ -53,7 +53,7 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
         'trim_padding', p.Results.trim_padding, ...
         'gpuArray', p.Results.gpuArray);
     end
-    
+
     function [output, prop] = simple(pattern, varargin)
       % propagate the field with a simple interface
       %
@@ -61,38 +61,38 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
       % propogator and apply it to the pattern.  Returns the
       % propagated pattern and the propagator.
       %
-      % See also simpleProp for named arguments.
-      
+      % See also :meth:`simpleProp` for named arguments.
+
       prop = otslm.tools.prop.Fft3Forward.simpleProp(pattern, varargin{:});
-      
+
       % Apply propagator
       output = prop.propagate(pattern);
-      
+
     end
   end
-  
+
   methods
     function obj = Fft3Forward(sz, varargin)
-      %FFT3FORWARD Construct a FFT propagator instance
+      % Construct a FFT propagator instance
       %
       % FFT3FORWARD(sz, ...) construct a new propagator instance
       % for the specified pattern size.  sz must be a 3 element vector.
       %
       % Optional named arguments:
-      %    padding    num | [xy, z] | [x, y, z] padding to add to edges of
-      %       the image.  Either a single number for uniform padding,
-      %       two numbers for separate axial and radial padding,
-      %       or three numbers for x, y and z padding.
-      %       Default: ceil(sz/2)
+      %  - padding    num | [xy, z] | [x, y, z] padding to add to edges of
+      %    the image.  Either a single number for uniform padding,
+      %    two numbers for separate axial and radial padding,
+      %    or three numbers for x, y and z padding.
+      %    Default: ceil(sz/2)
       %
-      %    trim_padding   bool   if the output_roi should be set
-      %       to remove the padding added before the transform.
-      %       Default: false.
+      %  - trim_padding   bool   if the output_roi should be set
+      %    to remove the padding added before the transform.
+      %    Default: false.
       %
-      %    gpuArray   bool    if true, allocates memory on the GPU
-      %       and does the transform with the GPU instead of the CPU.
-      %       Default: false.
-      
+      %  - gpuArray   bool    if true, allocates memory on the GPU
+      %    and does the transform with the GPU instead of the CPU.
+      %    Default: false.
+
       p = inputParser;
       p.KeepUnmatched = true;
       p.addParameter('convfilt', []);

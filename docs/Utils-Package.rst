@@ -11,14 +11,16 @@ The ``otslm.utils`` package contains functions for controlling,
 interacting with and simulating hardware.
 
 Hardware (and simulated hardware) is represented by classes inheriting
-from the ``Showable`` and ``Viewable`` base classes. ``Test*`` devices
+from the :class:`Showable` and :class:`Viewable` base classes.
+``Test*`` devices
 are used for simulating non-physical devices, these are used mainly for
 testing algorithms. For converting from a ``[0, 2*pi)`` phase range to a
 device specific lookup table, the :class:`LookupTable`
-class can be used. This package contains three sub-packages containing
-`imaging algorithms <#imaging>`__, `calibration
-methods <#calibration>`__ and an
-`interface for RedTweezers <#redtweezers>`__.
+class can be used.
+This package contains three sub-packages containing
+:ref:`utils-imaging` algorithms,
+:ref:`utils-calibration` methods and the
+:ref:`utils-red-tweezers` interface.
 
 .. contents::
    :depth: 1
@@ -90,6 +92,8 @@ scan2d
 
 .. autofunction:: scan2d
 
+.. _utils-calibration:
+
 calibration
 ===========
 
@@ -128,7 +132,8 @@ interferometer. The method applies a phase shift to half of the device
 and measures the change in fringe position as a function of phase
 change. The unchanged half of the device is used as a reference.
 
-The easiest way to use this method is via the ``CalibrationSMichelson``
+The easiest way to use this method is via the
+:app:`+otslm.+ui.CalibrationSMichelson`
 graphical user interface.
 
 The method takes two slices through the output image of the Viewable
@@ -140,9 +145,18 @@ describe the location of the two slices. The ``step_angle`` parameter
 sets the direction of the phase step.
 
 In order to understand the function parameters, we recommend using the
-``CalibrationSMichelson`` GUI with the ``TestMichelson`` GUI.
+:app:`+otslm.+ui.CalibrationSMichelson` GUI with
+the :app:`+otslm.+ui.TestMichelson` GUI.
+A possible configuration is shown in :numref:`utils-smichelson-demo`.
 
-.. todo:: Screen-shot showing GUI configuration and output
+.. _utils-smichelson-demo:
+
+.. figure:: images/utilsPackage/smichelsonDemo.png
+   :alt: GUI config for smichelson demo
+
+   :app:`+otslm.+ui.CalibrationSMichelson` and :
+   :app:`+otslm.+ui.TestMichelson` used to demonstrate the
+   smichelson calibration method.
 
 .. autofunction:: smichelson
 
@@ -158,11 +172,18 @@ sides of the step function. An extension to this function is
 function, allowing for more precise calibration.
 
 The easiest way to use this method is via the
-``CalibrationStepFarfield`` graphical user interface.
+:app:`CalibrationStepFarfield` GUI.
 In order to understand the function parameters, we recommend using the
-``CalibrationStepFarfield`` GUI with the ``TestFarfield`` GUI.
+:app:`CalibrationStepFarfield` GUI with the :app:`TestFarfield` GUI.
+An example configuration is shown in :numref:`utils-step-demo`.
 
-.. todo:: Screen-shot showing GUI configuration and output
+.. _utils-step-demo:
+.. figure:: images/utilsPackage/stepDemo.png
+   :alt: GUI config for step demo
+
+   :app:`+otslm.+ui.CalibrationStepFarfield` and :
+   :app:`+otslm.+ui.TestFarfield` used to demonstrate the
+   step calibration method.
 
 .. autofunction:: step
 
@@ -185,6 +206,8 @@ michelson
 ---------
 
 .. autofunction:: michelson
+
+.. _utils-red-tweezers:
 
 RedTweezers
 ===========
@@ -209,25 +232,26 @@ RedTweezers base class
 ----------------------
 
 .. autoclass:: RedTweezers
-   :members:
+   :members: RedTweezers, readGlslFile, sendCommand, sendTexture,
+      sendShader, sendUniform, updateAll
 
 Showable
 --------
 
 .. autoclass:: Showable
-   :members:
+   :members: Showable, showRaw
 
 PrismsAndLenses
 ---------------
 
 .. autoclass:: PrismsAndLenses
-   :members:
+   :members: PrismsAndLenses, addSpot, removeSpot, updateAll
 
 PrismsAndLensesSpot
 ~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: PrismsAndLensesSpot
-   :members:
+   :members: PrismsAndLensesSpot
 
 Base classes of showable and viewable objects
 =============================================
@@ -251,13 +275,14 @@ Showable
 --------
 
 .. autoclass:: Showable
-   :members:
+   :members: Showable, linearValueRange, show, showComplex, showIndexed,
+      valuerangeNumel, valueRangeSize, view, viewComplex, viewIndexed
 
 Viewable
 --------
 
 .. autoclass:: Viewable
-   :members:
+   :members: crop, viewTarget
 
 
 .. _utils-physical-devices:
@@ -284,7 +309,7 @@ interface for controlling a Matlab figure, making sure the window has
 the correct size, and ensures the window is positioned above other
 windows on the screen.
 
-To use the ``ScreenDevice`` class, you need to specify which screen to
+To use the :class:`ScreenDevice` class, you need to specify which screen to
 place the window on and how large the screen should be. To create a
 full-screen window on monitor 1 you might do
 
@@ -317,7 +342,7 @@ finalize function (i.e. for a linear grating with a spacing of 50
 pixels, the pattern should be in the range 0 to 1 and not 0 to 2pi). If
 you are using pre-scaled patterns (in the range 0 to 2pi), you can set
 the ``prescaledPatterns`` optional parameter in the constructor for the
-ScreenDevice to true:
+:class:`ScreenDevice` to ``true``:
 
 .. code:: matlab
 
@@ -326,7 +351,7 @@ ScreenDevice to true:
       'prescaledPatterns', true);
 
 To display a sequence of frames on the device, you can use multiple
-calls to the ``show`` function. This will apply the colour-map during
+calls to :meth:`ScreenDevice.show`. This will apply the colour-map during
 the animation, which can be time consuming and reduce the frame rate. An
 alternative is to pre-calculate the animation frames. To do this, we
 generate a struct which can be passed to the ``movie`` function:
@@ -350,7 +375,7 @@ range of values suitable for the device. The ``show`` function converts
 the specified pattern into the device value range (by applying, for
 example, a colour-map or modulo to the pattern). The type of input to
 the show function should match the ``patternType`` property, for
-``ScreenDevice`` objects, ``patternType`` is set from the
+:class:`ScreenDevice` objects, ``patternType`` is set from the
 ``pattern_type`` parameter in the constructor. If ``patternType`` is
 amplitude, the input to show is assumed to be a real amplitude pattern,
 if ``patternType`` is phase, the input is assumed to be a phase pattern.
@@ -358,12 +383,12 @@ The ``showComplex`` function uses :func:`+otslm.+tools.finalize` to convert
 the complex amplitude to a phase or amplitude pattern (depending on the
 value for ``patternType``), before calling ``show`` to display the
 pattern on the device. Further details can be found in the documentation
-for the ```Showable`` <#showable>`__ base class.
+for the :class:`Showable` base class.
 
 To setup the lookup table which is applied by ``show``, we can load a
 lookup table from a file and pass it in on construction. If you don't
 yet have a lookup table, you can use one of the calibration functions,
-see `calibration <#calibration>`__. As an example, to load a lookup
+see :ref:`utils-calibration`. As an example, to load a lookup
 table specified by a filename ``fname`` we could use the following:
 
 .. code:: matlab
@@ -380,9 +405,9 @@ the file, the third channel is all zeros. The format for the input is
 specify the order of the bits from least significant to most significant
 (``morder``). The phase isn't specified in this lookup table, so we
 assume it is linear from 0 to 2pi. For further details, see
-`LookupTable <#lookuptable>`__.
+:class:`LookupTable`.
 
-To use this lookup table for the ``ScreenDevice``, we simply pass it
+To use this lookup table for the :class:`ScreenDevice`, we simply pass it
 into the constructor:
 
 .. code:: matlab
@@ -391,45 +416,45 @@ into the constructor:
         'target_offset', [0, 0], 'lookup_table', lookup_table, ...
         'pattern_type', 'phase', 'fullscreen', true);
 
-.. autoclass:: ScreenDevicce
-   :members:
+.. autoclass:: ScreenDevice
+   :members: ScreenDevice, close, showRaw
 
 GigeCamera
 ----------
 
-``Showable`` wrapper for cameras using the ``gigecam`` interface. This
+:class:`Showable` wrapper for cameras using the ``gigecam`` interface. This
 class uses the ``snapshot`` function to get an image from the device.
 The ``gigecam`` device is stored in the ``device`` property of the
 class.
 
 .. autoclass:: GigeCamera
-   :members:
+   :members: GigeCamera
 
 WebcamCamera
 ------------
 
-``Showable`` wrapper for windows web-cameras. Uses the
+:class:`Showable` wrapper for windows web-cameras. Uses the
 ``videoinput('winvideo', ...)`` function to connect to the device. This
 class uses the ``getsnapshot`` function to get an image from the device.
 The ``videoinput`` device is stored in the ``device`` property of the
 class.
 
-This class currently doesn't inherit from ``ImaqCamera`` but is likely
-to in a future release of OTSLM.
+.. note:: This class currently doesn't inherit from :class:`ImaqCamera`
+   but is likely to in a future release of OTSLM.
 
 .. autoclass:: WebcamCamera
-   :members:
+   :members: WebcamCamera
 
 ImaqCamera
 ----------
 
-``Showable`` wrapper for image acquisition toolbox cameras. Uses the
+:class:`Showable` wrapper for image acquisition toolbox cameras. Uses the
 ``videoinput(...)`` function to connect to the device. This class uses
 the ``getsnapshot`` function to get an image from the device. The
 ``videoinput`` device is stored in the ``device`` property of the class.
 
 .. autoclass:: ImaqCamera
-   :members:
+   :members: ImaqCamera
 
 .. _utils-non-physical-devices:
 
@@ -439,14 +464,15 @@ Non-physical devices
 The ``utils`` package defines several non-physical devices which can be
 used to test calibration or imaging algorithms.
 The :class:`TestDmd` and :class:`TestSlm` classes are
-Showable devices which can be combined with the
+:class:`Showable` devices which can be combined with the
 :class:`TestFarfield` or
-:class:`TestMichelson` Viewable devices. These Showable
+:class:`TestMichelson` Viewable devices. These :class:`Showable`
 devices implement the same functions as their physical counter-parts,
-except they store their output to a ``pattern`` property. The Viewable
-devices require a valid TestShowable instance and implement a view
-function which retrieves the ``pattern`` property from the Showable and
-simulates the expected output.
+except they store their output to a ``pattern`` property. The
+:class:`Viewable` devices require a valid :class:`TestShowable`
+instance and implement a view
+function which retrieves the ``pattern`` property from the
+:class:`Showable` and simulates the expected output.
 
 For example usage, see the examples in the :ref:`utils-imaging` section.
 

@@ -5,7 +5,7 @@ classdef (Abstract) Viewable < handle
 % Methods (Abstract)
 %  - view()        Show an image from the device.
 %
-% Methods:
+% Methods
 %  - viewTarget()  Show an image of the target region from the device.
 %    The default behaviour is just to call view().
 %  - crop(roi)     Create a region of interest that is returned by
@@ -42,8 +42,8 @@ classdef (Abstract) Viewable < handle
       % regions using the crop function.  If no output is requiested,
       % the image will be displayed in the current axes.
       %
-      % Optional named arguments:
-      %   roi     array     Specified which roi to return
+      % Optional named arguments
+      %   - roi     array     Specified which roi to return
       %
       % See also otslm.Viewable.crop.
 

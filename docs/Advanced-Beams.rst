@@ -44,7 +44,8 @@ correction term is defined as
 Amplitude control with a phase device
 =====================================
 
-In the :ref:`simple-beams-lgbeam-example` and :ref:`simple-beams-hgbeam`
+In the :ref:`simple-beams-lgbeam-example` and
+:ref:`simple-beams-hgbeam-example`
 examples in :scpt:`examples.simple_beams`
 we noted how in order to create pure LG or HG
 beams we need to control both the phase and amplitude of the beam.

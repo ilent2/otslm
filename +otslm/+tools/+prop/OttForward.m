@@ -66,25 +66,28 @@ classdef OttForward < otslm.tools.prop.Propagator
     function obj = OttForward(sz, varargin)
       %OTTFORWARD Construct a new propagator instance
       %
-      % prop = OttForward(sz, ...) construct a new propagator instance.
-      % sz must be a 2 element vector for the far-field size.
+      % Usage
+      %   prop = OttForward(sz, ...) construct a new propagator instance.
       %
-      % Optional named arguments:
-      %    pre_calculate   bool   If beam_data should be set at
-      %       construction or at first use of propagate().
-      %       Defalut: true
+      % Parameters
+      %   - sz (size) -- 2 element vector for the far-field size.
       %
-      %    beam_data     ott.Bsc  Beam object to use instead of
-      %       calculating the VSWF expansion.  Incompatible with
-      %       pre_calculate.   Default: []
+      % Optional named arguments
+      %  - pre_calculate   bool   If beam_data should be set at
+      %    construction or at first use of propagate().
+      %    Defalut: true
       %
-      %   Nmax         num      The VSWF truncation number
-      %   polarisation [x,y]    Polarisation of the VSWF beam
-      %   index_medium num      Refractive index of medium
-      %   NA           num      Numerical aperture of objective
-      %   wavelength0  num      Wavelength of light in vacuum (default: 1)
-      %   omega        num      Angular frequency of light (default: 2*pi)
-      
+      %  - beam_data     ott.Bsc  Beam object to use instead of
+      %    calculating the VSWF expansion.  Incompatible with
+      %    pre_calculate.   Default: []
+      %
+      %  - Nmax         num      The VSWF truncation number
+      %  - polarisation [x,y]    Polarisation of the VSWF beam
+      %  - index_medium num      Refractive index of medium
+      %  - NA           num      Numerical aperture of objective
+      %  - wavelength0  num      Wavelength of light in vacuum (default: 1)
+      %  - omega        num      Angular frequency of light (default: 2*pi)
+
       p = inputParser;
       p.addParameter('Nmax', 20);
       p.addParameter('polarisation', [1, 1i]);

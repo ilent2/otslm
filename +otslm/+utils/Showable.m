@@ -3,40 +3,40 @@ classdef (Abstract) Showable < handle
 % Inherits from :class:`handle`.
 %
 % Methods (abstract):
-%   showRaw(pattern)      Display the pattern on the device.  The pattern
-%       is raw values from the device valueRange (i.e. colour mapping
-%       should already have been applied).
+%   - showRaw(pattern)  --  Display the pattern on the device.  The pattern
+%     is raw values from the device valueRange (i.e. colour mapping
+%     should already have been applied).
 %
 % Methods:
-%   show(pattern)         Display the pattern on the device.  The pattern
-%       type is determined from the patternType property.
+%   - show(pattern)     --  Display the pattern on the device.  The pattern
+%     type is determined from the patternType property.
 %
-%   showComplex(pattern)  Display a complex pattern.  The default
-%       behaviour is to call show after converting the pattern
-%       to the patternType of the device.  Conversion is done by calling
-%       otslm.tools.finalize with for amplitude, phase target.
+%   - showComplex(pattern) -- Display a complex pattern.  The default
+%     behaviour is to call show after converting the pattern
+%     to the patternType of the device.  Conversion is done by calling
+%     otslm.tools.finalize with for amplitude, phase target.
 %
-%   showIndexed(pattern)  Display a pattern with integers describing
-%       entries in the lookup table.
+%   - showIndexed(pattern) -- Display a pattern with integers describing
+%     entries in the lookup table.
 %
-%   view(pattern)         Calculate the raw pattern.
-%   viewComplex(pattern)  Calculate the raw pattern from complex
-%   viewIndexed(pattern)  Calculate the raw pattern from indexed
+%   - view(pattern)        -- Calculate the raw pattern.
+%   - viewComplex(pattern) -- Calculate the raw pattern from complex
+%   - viewIndexed(pattern) -- Calculate the raw pattern from indexed
 %
-%   valueRangeNumel()     Total number of values device can display
+%   - valueRangeNumel() --  Total number of values device can display
 %
 % Properties (abstract):
-%   valueRange          Values that the device patterns can contain.
-%       This should be a 1-d array, or cell array of 1-d arrays for
-%       each dimension of the raw pattern.
+%   - valueRange      --  Values that the device patterns can contain.
+%     This should be a 1-d array, or cell array of 1-d arrays for
+%     each dimension of the raw pattern.
 %
-%   patternType         Type of pattern, can be one of:
-%       'phase'             Real pattern in range [0, 1]
-%       'amplitude'         Real pattern in range [0, 1]
-%       'complex'           Complex pattern, abs(value) <= 1
+%   - patternType     --  Type of pattern, can be one of:
+%    - 'phase'        --   Real pattern in range [0, 1]
+%    - 'amplitude'    --   Real pattern in range [0, 1]
+%    - 'complex'      --   Complex pattern, abs(value) <= 1
 %
-%   size                Size of the device [rows, columns]
-%   lookupTable         Lookup table for show -> raw mapping
+%   - size            --  Size of the device [rows, columns]
+%   - lookupTable     --  Lookup table for show -> raw mapping
 %
 % This is the interface that utility functions which request an
 % image from the experiment/simulation use.  For declaring a new
@@ -59,8 +59,8 @@ classdef (Abstract) Showable < handle
       % Constructor for Showable objects, provides options for default vals
       %
       % Optional named arguments
-      %   prescaledPatterns   bool   Default value for prescaled argument
-      %       in show.  Default: false.
+      %   - prescaledPatterns   bool  -- Default value for prescaled argument
+      %     in show.  Default: false.
       
       p = inputParser;
       p.addParameter('prescaledPatterns', false);
@@ -158,13 +158,13 @@ classdef (Abstract) Showable < handle
       % scalled by 2*pi (i.e. mod(pattern, 1)*2*pi should give the angle).
       %
       % Optional named arguments:
-      %   prescaled  bool  If the pattern is already scalled by 2*pi.
-      %         Default: false.
+      %   -- prescaled  bool -- If the pattern is already scalled by 2*pi.
+      %      Default: false.
       %
       % Additional arguments are passed to showRaw.
       %
       % See also view, showRaw, showComplex.
-      
+
       p = inputParser;
       p.KeepUnmatched = true;
       p.addOptional('pattern', []);

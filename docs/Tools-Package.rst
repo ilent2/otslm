@@ -5,7 +5,7 @@
 `tools` Package
 ###############
 
-The ``tools`` package is a collection of functions for working with and
+The ``otslm.tools`` package is a collection of functions for working with and
 combining patterns. This includes tools for visualising patterns,
 generating patterns which combine the phase and amplitude information of
 a target beam into a single pattern, and various other tools.

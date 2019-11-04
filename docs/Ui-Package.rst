@@ -6,17 +6,18 @@
 ############
 
 The UI sub-package contains graphical user interfaces for exploring the
-toolbox functionality. The sub-package contains a
-```Launcher.mlapp`` <#launcher>`__ GUI which provides a list of
+toolbox functionality. The sub-package contains the :app:`Launcher`
+GUI which provides a list of
 components and a brief description of their function. The rest of the
 sub-package is split between ``simple``, ``utils``, ``tools``, ``iter``,
 and ``examples`` sub-packages providing interfaces to the OTSLM core
 packages and examples of how the UI can be combined. The UI sub-package
-also contains a :mod:`otslm.ui.support` sub-package with
+also contains a :mod:`+otslm.+ui.+support` sub-package with
 common code used by the GUIs.
 
-This page describes the Launcher, the support package and provides a
-brief `overview of the other GUI components <#simple-gui-overview>`__.
+This section provides information required to extend the Launcher,
+or other GUI windows as well as a
+brief :ref:`overview of the other GUI components <ui-simple-gui-overview>`.
 For details on the functions the GUIs represent, see the corresponding
 package documentation: :ref:`iter-package`, :ref:`tools-package`,
 :ref:`simple-package` or :ref:`utils-package`.
@@ -30,6 +31,8 @@ and :ref:`examples`.
 
 Launcher
 ========
+
+.. autoapplication:: +otslm.+ui.+Launcher
 
 The launcher consists of two layers: the category list and the
 application list. The application list is populated when the user
@@ -67,11 +70,15 @@ struct, for example:
         'grating to split a beam into two independently controllable spots.'];
     data.AppName = 'otslm.ui.examples.MixingTwoBeams';
 
+.. _ui-simple-gui-overview:
+
 Simple GUI overview
 ===================
 
-Most GUIs are split into 4 main sections
+Most GUIs are split into 4 main sections, shown in
+:numref:`ui-simple-overview-fig`
 
+.. _ui-simple-overview-fig:
 .. figure:: images/uiPackage/simpleOverview.png
    :alt: overview of ui.simple.linear
 
@@ -83,14 +90,14 @@ Most GUIs are split into 4 main sections
    (4) Pattern preview window.
 
 When the window launches it will search the base workspace for variables
-names and ``otslm.utils.Showable`` devices which can be used for
-displaying the pattern (see
-`populateDeviceList <#populateDeviceList>`__).
+names and :class:`+otslm.+utils.Showable` devices which can be used for
+displaying the pattern (see :func:`+otslm.+ui.+support.populateDeviceList`).
 
 Methods which updated as soon as the user changes a value will have most
 of the implementation contained in a callback function. For
-``ui.simple.linear``, this is done in the ``patternValueChanged``
-function. The content of this function involves first getting the inputs
+:app:`+ui.+simple.linear`, this is done in
+:func:`+otslm.+ui.+support.patternValueChanged`.
+The content of this function involves first getting the inputs
 from the user and converting the strings to variables:
 
 .. code:: matlab
@@ -113,8 +120,8 @@ The function then calls the OTSLM method:
     pattern = pattern + offset;
 
 And finally, calls the
-`simplePatternValueChanged <#simplePatternValueChanged>`__ helper
-function which handles updating the preview window, saving the result to
+:func:`+otslm.+ui.+support.simplePatternValueChanged` helper
+handle updating the preview window, saving the result to
 the workspace and updating the device.
 
 .. code:: matlab
