@@ -35,9 +35,9 @@ function testRsuper(tests)
   otslm.tools.combine(tests.TestData.patterns, 'method', 'rsuper');
 end
 
-function testGs(tests)
-  
-  otslm.tools.combine(tests.TestData.patterns, 'method', 'gs');
+function testFarfield(tests)
+
+  otslm.tools.combine(tests.TestData.patterns, 'method', 'farfield');
 end
 
 function testAdd(tests)

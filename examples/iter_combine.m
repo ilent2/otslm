@@ -10,6 +10,8 @@
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
 
+addpath('../');
+
 h = figure();
 
 %% Setup target spot arrays
@@ -18,6 +20,13 @@ sz = [512, 512];
 
 numc = 100;
 components = zeros([sz, numc]);
+for ii = 1:10
+  for jj = 1:10
+    components(:, :, (ii-1)*10 + jj) = otslm.simple.linear(sz, 64./[ii-5, jj-5]);
+  end
+end
+
+% We could also try random trap locations or even rings with OAM
 % for ii = 1:numc
 %   components(:, :, ii) = otslm.simple.linear(sz, randn(1, 2).*50);
 %   if rand() > 0.5
@@ -25,11 +34,6 @@ components = zeros([sz, numc]);
 %         + otslm.simple.lgmode(sz, 2, 0);
 %   end
 % end
-for ii = 1:10
-  for jj = 1:10
-    components(:, :, (ii-1)*10 + jj) = otslm.simple.linear(sz, 64./[ii-5, jj-5]);
-  end
-end
 
 %% Calculate random superposition (for comparison and initial guess)
 

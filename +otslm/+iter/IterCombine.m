@@ -109,7 +109,7 @@ classdef IterCombine < otslm.iter.IterBase
       % Set the actual target
       target = p.Results.target;
       if isempty(target)
-        target = otslm.tools.combine(num2cell(components, [1, 2]), ...
+        target = otslm.tools.combine(num2cell(exp(1i*components), [1, 2]), ...
             'method', 'farfield', 'vismethod', vismethod);
       end
 

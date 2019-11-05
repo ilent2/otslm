@@ -34,7 +34,7 @@ function pattern = combine(inputs, varargin)
 %         - farfield --   Calculate farfield sum: \sum_ii Prop(inputs(ii)).
 %           This method assumes the input has the currect range for the
 %           propagator.  The default propagator is a FFT, so the inputs
-%           should have range [0, 2*pi).
+%           should be complex amplitudes.
 %
 %       Default method: super.
 %

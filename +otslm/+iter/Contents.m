@@ -8,13 +8,17 @@
 % further optimise a initial guess at a SLM pattern but can be slow if
 % starting with a bad initial guess.  bsc is a work in progress.
 %
+% Base classes
+%   IterBase           - Base class for iterative algorithm classes.
+%   IterCombine        - Base class for iterative combination algorithms.
+%   IterBaseEwald      - Abstract base class for 3-D Ewald iterative algorithm classes
+%
 % Files
 %   GerchbergSaxton    - Implementation of Gerchberg-Saxton and Adaptive-Adaptive algorithms
+%   CombineGerchbergSaxton - Implementation of Gerchberg-Saxton type combination algorithms.
 %   DirectSearch       - Optimiser to search through each pixel value to optimise hologram
-%   IterBase           - Base class for iterative algorithm classes.
 %   SimulatedAnnealing - Optimise the pattern using simulated annealing.
 %   GerchbergSaxton3d  - Implementation of 3-D Gerchberg-Saxton and Adaptive-Adaptive algorithms
-%   IterBaseEwald      - Abstract base class for 3-D Ewald iterative algorithm classes
 %   bsc                - Optimisation in vector spherical wave function basis
 %   bowman2017         - Wrapper for Bowman 2017 conjugate gradient implementation
 %

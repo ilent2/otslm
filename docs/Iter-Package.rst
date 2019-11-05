@@ -19,6 +19,23 @@ Iterative optimisation methods
 ==============================
 
 The package contains a series of iterative optimisation algorithms.
+There are currently two types of iterative optimisation algorithms,
+methods that attempt to approximate some target far-field and methods
+which attempt to combine a series of SLM patterns.
+The former can also be used to combine a series of patterns by first
+generating a target far-field, for example
+using :func:`+otslm.+tools.combine`:
+
+.. code:: matlab
+
+   lin = otslm.simple.linear(sz, 10);
+   lg = otslm.simple.linear(sz, -10) + otslm.simple.lgmode(sz, 3, 0);
+
+   % Convert to complex amplitudes (could use finalize)
+   lin = exp(1i*2*pi*lin);
+   lg = exp(1i*2*pi*lg);
+
+   target = otslm.tools.combine({lin, lg}, 'method', 'farfield');
 
 The methods which inherit from :class:`IterBase` have an objective
 function property.
@@ -28,9 +45,11 @@ track progress of the method.
 The objective can be set on construction or by setting the objective
 property.  See the :ref:`iter-objective-functions`
 section for available objectives.
-For an example of how to use these iterative methods, see the
-:scpt:`examples/iterative` and the :ref:`gerchberg-saxton-example` example.
-A minimal example is shown bellow
+For an example of how to use these iterative methods, see
+:scpt:`examples.iterative`, :scpt:`examples.iter_combine` and
+:ref:`gerchberg-saxton-example` examples.
+A minimal example for methods which attempt to generate a particular
+far-field is shown bellow:
 
 .. code:: matlab
 
@@ -139,17 +158,6 @@ A rough outline for the procedure is
 .. autoclass:: DirectSearch
    :members: DirectSearch
 
-IterBase
---------
-
-This is the base class for iterative methods.
-It is an abstract class and can not be directly instantiated.
-To implement your own iterative method class, inherit from
-this class and implement the abstract methods/properties.
-
-.. autoclass:: IterBase
-   :members: IterBase, show_fitness, run, stopIterations, evaluateFitness
-
 SimulatedAnnealing
 ------------------
 
@@ -203,12 +211,116 @@ For an outline of the Gerchberg-Saxton algorithm, see
 .. autoclass:: GerchbergSaxton3d
    :members: GerchbergSaxton3d
 
+CombineGerchbergSaxton
+----------------------
+
+This function implements the Gerchberg-Saxton algorithm and similar
+iterative optimisers for generating point traps.
+The method can be used to combine a set of SLM patterns :math:`\phi_m`
+into a single pattern in a similar way to :func:`+otslm.+tools.combine`.
+Starting with an initial guess at the phase pattern :math:`\phi^0`
+the method proceeds as
+
+.. math::
+
+   \phi^{j+1} = \sum_n e^{i \phi_n} \eta_n^j \frac{V_n^j}{|V_n^j|}
+
+where
+
+.. math::
+
+   V_m^j = \sum_{x,y} e^{i (\phi^j(x, y) - \phi_m(x, y))}
+
+and :math:`x, y` are the SLM pixel coordinates and :math:`\eta_n^j` is
+an optional parameter for Adaptive-Adaptive or weighted versions of
+the algorithm (for Gerchberg-Saxton :math:`\eta = 1`).
+To calculate the pattern we simply need to iterative the above equation
+for a few steps.
+
+There are two relatively simple extensions to this algorithm.
+First is the Adaptive-Adaptive algorithm which involves setting
+
+.. math::
+
+   \eta = \alpha + \frac{1-\alpha}{|V_n^j|}
+
+where :math:`\alpha` is a factor between 0 and 1.
+The second extension is the weighted Gerchberg-Saxton algorithm
+which involves setting
+
+.. math::
+
+   \eta^{j+1} = \eta^j \frac{\langle V_n^j \rangle}{V_n^j}
+
+where :math:`\langle \cdot \rangle` denotes the average and
+we re-calculate :math:`\eta` at each iteration starting with
+an initial value of 1.
+
+To use the method we need to pass in a set of patterns to combine.
+For instance, we could have a set of 2 traps:
+
+.. code:: matlab
+
+   lin1 = otslm.simple.linear(sz, 10);
+   lin2 = otslm.simple.linear(sz, -5);
+
+   components = zeros([sz, 2]);
+   components(:, :, 1) = lin1;
+   components(:, :, 2) = lin1;
+
+Then to use the iterative method we would run
+
+.. code:: matlab
+
+   mtd = otslm.iter.CombineGerchbergSaxton(2*pi*components, ...
+      'weighted', true, 'adaptive', 1.0);
+   mtd.run(10);
+   imagesc(mtd.phase);
+
+For a more complete example see :scpt:`examples.iter_combine`.
+A more detailed discussion of these algorithms can be found in
+
+   R. Di Leonardo, et al.,
+   Opt. Express 15 (4) (2007) 1913-1922.
+   https://doi.org/10.1364/OE.15.001913
+
+.. autoclass:: CombineGerchbergSaxton
+   :members: CombineGerchbergSaxton
+
+IterBase
+--------
+
+This is the base class for iterative methods.
+It is an abstract class and can not be directly instantiated.
+To implement your own iterative method class, inherit from
+this class and implement the abstract methods/properties.
+
+.. autoclass:: IterBase
+   :members: IterBase, show_fitness, run, stopIterations, evaluateFitness
+
+IterCombine
+-----------
+
+This is the base class for iterative methods which combine multiple
+input pattern.
+It is an abstract class inheriting from :class:`IterBase` however
+not all properties are needed/used by classes inheriting from this
+method.
+For instance, the :class:`CombineGerchbergSaxton` class only uses the
+``vismethod`` to calculate the fitness when an objective function is
+supplied.
+If the objective is omitted the method doesn't calculate the fitness
+and doesn't need ``vismethod`` or ``invmethod``.
+
+.. autoclass:: IterCombine
+   :members: IterCombine
+
 IterBaseEwald
 -------------
 
 This is the base class for iterative methods that 3-D Fourier transforms
 and an Ewald sphere far-field mapping.
-This is class can be combined with the IterBase class to provide
+This is class can be combined with :class:`IterBase` to provide
 the 3-D specialisation.
 Currently only used by :class:`GerchbergSaxton3d`.
 

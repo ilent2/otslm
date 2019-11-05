@@ -1,5 +1,6 @@
 classdef CombineGerchbergSaxton < otslm.iter.IterCombine
-% Implementation of Gerchberg-Saxton type combination algorithms
+% Implementation of Gerchberg-Saxton type combination algorithms.
+% Inherits from :class:`IterCombine`.
 %
 % This includes Gerchberg-Saxton, Adaptive-Adaptive and weighted
 % GerchbergSaxton algorithms.
@@ -131,8 +132,6 @@ classdef CombineGerchbergSaxton < otslm.iter.IterCombine
       if ~isempty(mtd.objective)
         mtd.fitness(end+1) = mtd.evaluateFitness();
       end
-
-      % TODO: weighted and adaptive factors
     end
 
     function set.adaptive(mtd, val)
