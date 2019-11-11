@@ -172,9 +172,10 @@ switch rpack
     ny = ceil(ox/2) + (sz(1) - 1) - (oy - 1);
     ind = sub2ind(size(npattern), ny, nx);
 
+    % In Matlab R2018a this cast npattern from complex double to double
     npattern(ind) = pattern;
 
-    pattern = npattern;
+    pattern = cast(npattern, 'like', pattern);
 
   otherwise
     error('Unknown option for rpack');

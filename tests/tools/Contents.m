@@ -13,6 +13,7 @@
 %   testSpatialFilter   - Tests for spatial_filter
 %   testVisualise       - Tests for visualise
 %   testvolume2hologram - Tests for volume2hologram and hologram2volume
+%   testColormap        - Tests for colormap
 %
 % Sub-folders
 %   prop                - Tests for propagators sub-package

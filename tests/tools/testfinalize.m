@@ -45,3 +45,16 @@ function testDmd(tests)
   fp = otslm.tools.finalize([], 'device', 'dmd', 'amplitude', a);
 
 end
+
+function testRpackReturnTypePreserved(testCase)
+
+  sz = [512, 512];
+  a = complex(rand(sz));
+  
+  fp = otslm.tools.finalize(a, 'rpack', '45deg', 'modulo', 'none', ...
+    'colormap', 'gray');
+  
+  import matlab.unittest.constraints.IsReal
+  testCase.verifyThat(fp, ~IsReal);
+
+end
