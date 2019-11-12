@@ -7,6 +7,7 @@
 %   FftEwaldInverse - Propagate using inverse Ewald sphere and 3-D FFT
 %   FftForward      - Propagate using forward 2-D fast Fourier transform
 %   FftInverse      - Propagate using inverse 2-D fast Fourier transform
+%   FftDebyeForward - Propagate using forward 2-D FFT formulation of Debye integral.
 %   Ott2Forward     - Propagate the field using the optical tweezers toolbox.
 %   OttForward      - Propagate the field using the optical tweezers toolbox
 %   RsForward       - Propagate the field forward using Rayleight-Sommerfeld integral

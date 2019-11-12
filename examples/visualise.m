@@ -19,6 +19,7 @@ pattern = otslm.tools.finalize(pattern + 0.25);
 
 % Show the pattern
 figure();
+nr = 3;
 imagesc(pattern);
 caxis([-pi, pi]);
 
@@ -42,14 +43,39 @@ im1 = im1(end/2-o:end/2+o, end/2-o:end/2+o);
 im2 = im2(end/2-o:end/2+o, end/2-o:end/2+o);
 
 figure(hf);
-subplot(2, 2, 1);
+subplot(nr, 2, 1);
 imagesc(abs(im1).^2);
 axis image;
 title('fft2, z=0');
-subplot(2, 2, 2);
+subplot(nr, 2, 2);
 imagesc(abs(im2).^2);
 axis image;
 title('fft2, z\neq0');
+
+%% Debye fourier transoform
+% This uses the propagator rather than the visualise method.
+
+z_offset = 5;  % Wavelengths
+
+im1 = otslm.tools.prop.FftDebyeForward.simple(pattern, ...
+  'axial_offset', 0.0, 'NA', 0.5);
+im2 = otslm.tools.prop.FftDebyeForward.simple(pattern, ...
+  'axial_offset', z_offset, 'NA', 0.5);
+  
+% Zoom into centre of image
+o = 35;
+im1 = im1(end/2-o:end/2+o, end/2-o:end/2+o, :);
+im2 = im2(end/2-o:end/2+o, end/2-o:end/2+o, :);
+
+figure(hf);
+subplot(nr, 2, 3);
+imagesc(sum(abs(im1).^2, 3));
+axis image;
+title('fft2-debye, z=0');
+subplot(nr, 2, 4);
+imagesc(sum(abs(im2).^2, 3));
+axis image;
+title('fft2-debye, z\neq0');
 
 %% 3-D Fourier transform
 
@@ -77,11 +103,11 @@ im2 = otslm.tools.visualise(pattern, 'method', 'ott', 'z', z_offset, ...
   'NA', 1.0);
 
 figure(hf);
-subplot(2, 2, 3);
+subplot(nr, 2, 5);
 imagesc(im1);
 axis image;
 title('ott, z=0');
-subplot(2, 2, 4);
+subplot(nr, 2, 6);
 imagesc(im2);
 axis image;
 title('ott, z\neq0');

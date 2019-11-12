@@ -69,6 +69,12 @@ FftInverse
 .. autoclass:: FftInverse
    :members: FftInverse, simple, simpleProp
 
+FftDebyeForward
+---------------
+
+.. autoclass:: FftDebyeForward
+   :members: FftDebyeForward, simple, simpleProp, calculateLens, propagate
+
 OttForward
 ----------
 

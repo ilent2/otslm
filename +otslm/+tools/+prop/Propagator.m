@@ -1,5 +1,9 @@
-classdef Propagator
-% Base class for field propagation methods
+classdef Propagator < handle
+% Base class for field propagation methods.
+%
+% Inherits from handle.  This means that we can reuse the data block
+% through multiple calls to propagate and easily split our code up
+% into separate overload-able functions.
 %
 % Abstract methods:
 %    out = propagate(in, ...) propagates the complex field amplitudes
