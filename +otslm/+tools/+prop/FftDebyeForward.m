@@ -300,6 +300,9 @@ classdef FftDebyeForward < otslm.tools.prop.FftForward
       E = dot(input, ep, 3).*et + dot(input, es, 3).*es3;
 
       E = E ./ cos(theta);
+      
+      % Remove light outside aperture
+      E(repmat(rr >= obj.radius, 1, 1, 3)) = 0;
 
       % Assign data
       obj.data(obj.roi(2)-1 + (1:obj.roi(4)), ...

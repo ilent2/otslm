@@ -1,4 +1,4 @@
-classdef (Abstract) EwaldBase
+classdef (Abstract, HandleCompatible) EwaldBase
 % Abstract base class for *Ewald* propagator methods
 %
 % Properties
