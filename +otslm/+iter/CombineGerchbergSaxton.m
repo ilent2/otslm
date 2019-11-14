@@ -76,12 +76,12 @@ classdef CombineGerchbergSaxton < otslm.iter.IterCombine
       %   - vismethod fcn    Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
       %     Optional, only used for fitness evaluation.
-      %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
+      %     Default: @otslm.tools.prop.FftForward.simpleProp.propagate
       %
       %   - invmethod fcn    Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
       %     Optional, not used.
-      %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
+      %     Default: @otslm.tools.prop.FftInverse.simpleProp.propagate
       %
       %   - objective fcn    Objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity

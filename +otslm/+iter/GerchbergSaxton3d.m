@@ -48,11 +48,11 @@ classdef GerchbergSaxton3d < otslm.iter.IterBaseEwald ...
       %
       %   - vismethod fcn -- Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
-      %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
+      %     Default: @otslm.tools.prop.FftEwaldForward.simpleProp.propagate
       %
       %   - invmethod fcn -- Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
-      %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
+      %     Default: @otslm.tools.prop.FftEwaldInverse.simpleProp.propagate
       %
       %   - objective fcn -- Optional objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity

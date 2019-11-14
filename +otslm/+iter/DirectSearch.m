@@ -52,11 +52,11 @@ classdef DirectSearch < otslm.iter.IterBase
       %
       %   - vismethod fcn -- Function to calculate far-field.  Takes one
       %     argument: the complex amplitude near-field.
-      %     Default: @otslm.tools.prop.FftForward.simpleProp.evaluate
+      %     Default: @otslm.tools.prop.FftForward.simpleProp.propagate
       %
       %   - invmethod fcn -- Function to calculate near-field.  Takes one
       %     argument: the complex amplitude far-field.
-      %     Default: @otslm.tools.prop.FftInverse.simpleProp.evaluate
+      %     Default: @otslm.tools.prop.FftInverse.simpleProp.propagate
       %
       %   - objective fcn -- Objective function to measure fitness.
       %     Default: @otslm.iter.objectives.FlatIntensity
