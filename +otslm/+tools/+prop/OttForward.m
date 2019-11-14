@@ -29,6 +29,7 @@ classdef OttForward < otslm.tools.prop.Propagator
     
     Nmax          % Nmax for VSWF
     polarisation  % Polarisation of beam (jones vector)
+    radius        % Radius of lens aperture
     index_medium  % Refractive index in medium
     NA            % Numerical aperture
     wavelength0   % Wavelength in vacuum
@@ -44,7 +45,10 @@ classdef OttForward < otslm.tools.prop.Propagator
       %
       % Additional named arguments are passed to Ott2Forward.
       
-      prop = otslm.tools.prop.OttForward(size(pattern), varargin{:});
+      % Pattern could be multiple-channel
+      sz = [size(pattern, 1), size(pattern, 2)];
+      
+      prop = otslm.tools.prop.OttForward(sz, varargin{:});
       
     end
     
@@ -84,7 +88,12 @@ classdef OttForward < otslm.tools.prop.Propagator
       %    pre_calculate.   Default: []
       %
       %  - Nmax         num      The VSWF truncation number
-      %  - polarisation [x,y]    Polarisation of the VSWF beam
+      %  - polarisation [x,y]    Default polarisation of the VSWF beam.
+      %    Only used for single channel input images.
+      %    Default ``[1, 1i]``.
+      %
+      %  - radius (numeric)   -- Radius of lens aperture.
+      %    Default: ``min(sz)/2``.
       %  - index_medium num      Refractive index of medium
       %  - NA           num      Numerical aperture of objective
       %  - wavelength0  num      Wavelength of light in vacuum (default: 1)
@@ -93,6 +102,7 @@ classdef OttForward < otslm.tools.prop.Propagator
       p = inputParser;
       p.addParameter('Nmax', 20);
       p.addParameter('polarisation', [1, 1i]);
+      p.addParameter('radius', min(sz)/2);
       p.addParameter('index_medium', 1.0);
       p.addParameter('NA', 0.9);
       p.addParameter('wavelength0', 1.0);
@@ -105,6 +115,7 @@ classdef OttForward < otslm.tools.prop.Propagator
       obj.size = sz;
       obj.Nmax = p.Results.Nmax;
       obj.polarisation = p.Results.polarisation;
+      obj.radius = p.Results.radius;
       obj.index_medium = p.Results.index_medium;
       obj.NA = p.Results.NA;
       obj.wavelength0 = p.Results.wavelength0;
@@ -118,8 +129,16 @@ classdef OttForward < otslm.tools.prop.Propagator
             'Nmax', obj.Nmax, 'polarisation', obj.polarisation, ...
             'index_medium', obj.index_medium, 'NA', obj.NA, ...
             'wavelength0', obj.wavelength0, 'omega', obj.omega, ...
-            'keep_coefficient_matrix', true);
+            'keep_coefficient_matrix', true, ...
+            'radius', obj.radius);
       end
+    end
+    
+    function set.size(obj, val)
+      % Check inputs
+      assert(numel(val) == 2 && isnumeric(val), ...
+        'Size must be 2 element numeric vector');
+      obj.size = val;
     end
     
     function beam = propagate(obj, input, varargin)
@@ -127,15 +146,19 @@ classdef OttForward < otslm.tools.prop.Propagator
       %
       % output = propagate(input, ...) propogates the complex input
       % image using the optical tweezers toolbox.
+      % Input can be a MxN or MxNx2 image, if a single channel image
+      % is supplied, ``polarisation`` is used for the polarisation.
       
-      assert(all(size(input) == obj.size), ...
-        'input must match Propagator.size');
+      assert(size(input, 1) == obj.size(1) ...
+          && size(input, 2) == obj.size(2), ...
+          'First two dimensions of input must match Propagator.size');
       
-      beam = otslm.tools.hologram2bsc(input, ...
+      beam = otslm.tools.hologram2bsc(complex(input), ...
         'Nmax', obj.Nmax, 'polarisation', obj.polarisation, ...
         'index_medium', obj.index_medium, 'NA', obj.NA, ...
         'wavelength0', obj.wavelength0, 'omega', obj.omega, ...
         'beamData', obj.beam_data, ...
+        'radius', obj.radius, ...
         'keep_coefficient_matrix', isempty(obj.beam_data));
       
       % If we haven't already set it, set it now

@@ -48,7 +48,10 @@ classdef Ott2Forward < otslm.tools.prop.OttForward
       %
       % Additional named arguments are passed to Ott2Forward.
       
-      prop = otslm.tools.prop.Ott2Forward(size(pattern), varargin{:});
+      % Pattern could be multiple-channel
+      sz = [size(pattern, 1), size(pattern, 2)];
+      
+      prop = otslm.tools.prop.Ott2Forward(sz, varargin{:});
     end
     
     function [output, prop] = simple(pattern, varargin)

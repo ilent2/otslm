@@ -15,9 +15,14 @@ function beam = hologram2bsc(pattern, varargin)
 %   - incident (numeric)  -- Uses the incident illumination
 %   - amplitude (numeric) -- Specifies the amplitude of the pattern
 %   - Nmax       num      -- The VSWF truncation number
-%   - polarisation [x,y]  -- Polarisation of the VSWF beam
-%   - index_medium num    -- Refractive index of medium
-%   - NA           num    -- Numerical aperture of objective
+%   - polarisation [x,y]  -- Polarisation of the VSWF beam.
+%     Ignored if pattern is a NxMx2 matrix.  Default ``[1, 1i]``.
+%   - radius (numeric)    -- Radius of lens back aperture (pixels).
+%     Default ``min([size(pattern, 1), size(pattern, 2)])/2``.
+%   - index_medium num    -- Refractive index of medium.
+%     Default ``1.0``.
+%   - NA           num    -- Numerical aperture of objective.
+%     Default ``0.9``.
 %   - wavelength0  num    -- Wavelength of light in vacuum (default: 1)
 %   - omega        num    -- Angular frequency of light (default: 2*pi)
 %   - beamData     beam   -- Pass an existing Paraxial beam to reuse
@@ -36,8 +41,9 @@ p.addParameter('incident', []);
 p.addParameter('amplitude', []);
 p.addParameter('Nmax', 20);
 p.addParameter('polarisation', [1, 1i]);
-p.addParameter('index_medium', 1.33);
-p.addParameter('NA', 1.02);
+p.addParameter('radius', min([size(pattern, 1), size(pattern, 2)])./2);
+p.addParameter('index_medium', 1.0);
+p.addParameter('NA', 0.9);
 p.addParameter('wavelength0', 1);
 p.addParameter('omega', 2*pi);
 p.addParameter('beamData', []);
@@ -53,6 +59,7 @@ pattern = otslm.tools.make_beam(pattern, ...
 beam = ott.BscPmParaxial(-p.Results.NA, pattern, ...
     'index_medium', p.Results.index_medium, ...
     'polarisation', p.Results.polarisation, ...
+    'radius', p.Results.radius, ...
     'Nmax', p.Results.Nmax, ...
     'wavelength0', p.Results.wavelength0, ...
     'omega', p.Results.omega, ...

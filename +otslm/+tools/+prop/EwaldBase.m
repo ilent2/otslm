@@ -1,5 +1,15 @@
 classdef (Abstract, HandleCompatible) EwaldBase
-% Abstract base class for *Ewald* propagator methods
+% Abstract base class for *Ewald* propagator methods.
+%
+% Ewald surfaces are described in
+%
+%   Gal Shabtay, Three-dimensional beam forming and Ewald’s surfaces,
+%   Optics Communications, Volume 226, Issues 1–6, 2003, Pages 33-37,
+%   https://doi.org/10.1016/j.optcom.2003.07.056.
+%
+% and
+%
+%   P.P. Ewald, J. Opt. Soc. Am., 9 (1924), p. 626
 %
 % Properties
 %   - focal_length -- focal length of the lens

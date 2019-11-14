@@ -1,6 +1,17 @@
 classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
     & otslm.tools.prop.EwaldBase
-% Propagate using inverse Ewald sphere and 3-D FFT
+% Propagate using inverse Ewald sphere and 3-D FFT.
+% Inherits from :class:`EwaldBase` and :class:`Fft3Inverse`.
+%
+% Ewald surfaces are described in
+%
+%   Gal Shabtay, Three-dimensional beam forming and Ewald’s surfaces,
+%   Optics Communications, Volume 226, Issues 1–6, 2003, Pages 33-37,
+%   https://doi.org/10.1016/j.optcom.2003.07.056.
+%
+% and
+%
+%   P.P. Ewald, J. Opt. Soc. Am., 9 (1924), p. 626
 %
 % Methods
 %  - FftEwaldInverse() -- construct a new propagator instance
