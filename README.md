@@ -128,10 +128,10 @@ File listing
 ```
 README.md     - Overview of toolbox (this file)
 LICENSE.md    - License information for OTSLM original code
-TODO          - Future changes/additions to the toolbox
 thirdparty/   - Third party licenses (multiple files)
 examples/     - Example files showing different toolbox features
 tests/        - Unit tests to verify toolbox features function correctly
+docs/         - Files for building the documentation
 +otslm/       - The toolbox
 ```
 
