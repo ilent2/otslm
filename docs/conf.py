@@ -99,6 +99,9 @@ html_theme = 'sphinx_rtd_theme'
 # Logo to place at top of side-bar
 html_logo = "images/otslm_logo.png"
 
+# Logo to use for tabs/other tiny 16x16 pixel places
+html_favicon = "images/otslm_favicon.ico"
+
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
