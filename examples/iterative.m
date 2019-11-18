@@ -117,7 +117,7 @@ subplot(Nf, 2, 9);
 imagesc(pattern);
 
 subplot(Nf, 2, 10);
-output = vismethod(pattern);
+output = vismethod(exp(1i*pattern));
 imagesc(zoom(abs(output).^2, zm));
 caxis([1e-9, 0.5e-5]);
 
