@@ -52,7 +52,7 @@ classdef FftDebyeForward < otslm.tools.prop.FftForward
       %
       %   \exp{2\pi i \cos\theta z}
       %
-      % where :math:`\theta = \asin(r)` and :math:`r` is the normalized
+      % where :math:`\theta = \arcsin(r)` and :math:`r` is the normalized
       % radius of the lens.
       %
       % Usage
