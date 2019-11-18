@@ -63,6 +63,42 @@ far-field is shown bellow:
    gs = otslm.iter.GerchbergSaxton(target, 'adaptive', 1.0, ...
        'vismethod', vismethod);
 
+:numref:`iter-method-comparison-table` compares the run-time and required
+number of iterations for some of the iterative optimisation methods.
+This table is based on
+`Di Leonardo et al. 2007 <https://doi.org/10.1364/OE.15.001913>`__,
+a more detailed discussion can be found in the reference.
+This is only a guide, some methods may work better than other methods
+under certain circumstances, for instance, the direct search method
+can be used for fine tuning the output of other methods but takes too
+long for practical use when given a bad initial guess.
+The combination algorithm and 2-D optimisation algorithms have been
+combined, actual performance will be different but similar.
+There are a range of different extensions to the described methods
+which may improve performance for particular problems, such as using a
+super-pixel style approach with the Direct Search algorithm.
+
+.. tabularcolumns:: |l|l|l|
+
+.. _iter-method-comparison-table:
+.. table:: Comparison of iterative methods
+
+   +----------------------+-----------------+------------------+
+   | Iterative methods    | Num. Iterations | Typical Run-time |
+   +======================+=================+==================+
+   | Gerchberg-Saxton     | 30              | 5 s              |
+   +----------------------+-----------------+------------------+
+   | Weighted GS          | 30              | 5 s              |
+   +----------------------+-----------------+------------------+
+   | Adaptive-adaptive    | 30              | 5 s              |
+   +----------------------+-----------------+------------------+
+   | Bowman 2017          | < 200           | 2 m              |
+   +----------------------+-----------------+------------------+
+   | Simulated Annealing  | :math:`10^4`    | 10 m             |
+   +----------------------+-----------------+------------------+
+   | Direct Search        | :math:`10^9`    | days             |
+   +----------------------+-----------------+------------------+
+
 .. automodule:: +otslm.+iter
 
 .. contents:: Methods
