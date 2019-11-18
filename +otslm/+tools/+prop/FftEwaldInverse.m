@@ -5,8 +5,8 @@ classdef FftEwaldInverse < otslm.tools.prop.Fft3Inverse ...
 %
 % Ewald surfaces are described in
 %
-%   Gal Shabtay, Three-dimensional beam forming and Ewald’s surfaces,
-%   Optics Communications, Volume 226, Issues 1–6, 2003, Pages 33-37,
+%   Gal Shabtay, Three-dimensional beam forming and Ewald surfaces,
+%   Optics Communications, Volume 226, Issues 16, 2003, Pages 33-37,
 %   https://doi.org/10.1016/j.optcom.2003.07.056.
 %
 % and
