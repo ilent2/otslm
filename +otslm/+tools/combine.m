@@ -66,7 +66,7 @@ weights = p.Results.weights;
 if isempty(weights)
   weights = ones(length(inputs), 1);
 end
-nweights = ones(size(weights)); %weights ./ sum(weights);
+nweights = weights ./ sum(weights);
 
 
 switch p.Results.method
