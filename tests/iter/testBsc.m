@@ -2,9 +2,11 @@ function tests = testBsc
   tests = functiontests(localfunctions);
 end
 
-function testSimple(tests)
-
+function setupOnce(tests)
   addpath('../../');
+end
+
+function testSimple(tests)
 
   % Describe the incident illumination
   incident = ones(128, 128);
@@ -16,8 +18,8 @@ function testSimple(tests)
       'shape', 'rect', 'value', [0,1]);
 
   % Objective function for optimisation
-  objective = @(t, a) otslm.iter.objectives.bowman2017cost(t, a, ...
-      'roi', @otslm.iter.objectives.roiAll, 'd', 9);
+  objective = otslm.iter.objectives.Bowman2017('scale', 9, ...
+    'field', 'amplitude');
 
   % Run the method
   [pattern, beam, coeffs] = otslm.iter.bsc(size(incident), target, ...

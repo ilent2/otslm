@@ -32,5 +32,5 @@ function testMatchCombineOutput(testCase)
   
   target = otslm.tools.combine({mod(l1+g1, 1), mod(l2+g2, 1)}, 'method', 'super');
   
-  testCase.verifyEqual(abs(0.5 - mod(pattern-target, 1)), 0.5*ones(sz), 'AbsTol', 0.02);
+  testCase.verifyEqual(abs(0.5 - mod(pattern-target, 1)), zeros(sz), 'AbsTol', 0.02);
 end

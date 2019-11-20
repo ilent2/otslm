@@ -78,7 +78,7 @@ switch p.Results.method
       pattern = pattern + nweights(ii).*exp(1i*2*pi*inputs{ii});
     end
 
-    pattern = (angle(pattern)/pi+1)/2;
+    pattern = (angle(pattern)/pi)/2;
 
   case 'rsuper'
 
@@ -90,7 +90,7 @@ switch p.Results.method
       pattern = pattern + nweights(ii).*exp(1i*2*pi*inputs{ii} + 1i*offsets(ii));
     end
 
-    pattern = (angle(pattern)/pi+1)/2;
+    pattern = (angle(pattern)/pi)/2;
     
   case 'farfield'
     
@@ -123,7 +123,7 @@ switch p.Results.method
 
     weights = p.Results.weights;
     if isempty(weights)
-      weights = zeros(length(inputs), 1);
+      weights = ones(length(inputs), 1);
     end
 
     for ii = 1:length(inputs)
@@ -134,7 +134,7 @@ switch p.Results.method
 
   case 'multiply'
 
-    pattern = zeros(size(inputs{1}));
+    pattern = ones(size(inputs{1}));
 
     for ii = 1:length(inputs)
       pattern = pattern .* inputs{ii};
@@ -147,7 +147,7 @@ switch p.Results.method
       pattern = pattern .* exp(1i*2*pi*inputs{ii});
     end
 
-    pattern = (angle(pattern)/pi+1)/2;
+    pattern = (angle(pattern)/pi)/2;
 
   case 'dither'
     
