@@ -236,8 +236,10 @@ classdef ScreenDevice < otslm.utils.Showable
           obj.image_handle = [];
           axes_handle = axes(obj.figure_handle);
         else
-          obj.image_handle = image(img);
-          axes_handle = imgca(obj.figure_handle);
+          % Explicitly create the axes, not sure why this is necessary,
+          % but implicit axes creation was causing problems in the lab
+          axes_handle = axes(obj.figure_handle);
+          obj.image_handle = image(axes_handle, img);
         end
 
         % Set the axes properties
