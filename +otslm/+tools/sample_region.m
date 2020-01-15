@@ -27,7 +27,7 @@ function pattern = sample_region(sz, locations, detectors, varargin)
 %   - radii (numeric)      -- Radius of each SLM region.  Should be
 %     a single element or an array the same length as ``locations``.
 %   - amplitude (enum)     -- Specifies a method for amplitude modulation.
-%     See bellow for a list of methods and arguments.
+%     See below for a list of methods and arguments.
 %   - ampliutdeargs (cell) -- Cell array of arguments to pass to
 %     amplitude method.
 %   - background (enum)    --   Specifies the background type.

@@ -114,7 +114,7 @@ camera are positioned in one of the configurations shown in
 The sub-package contains several methods using these configurations.
 Some of the methods can be fairly unstable. The most robust methods,
 from our experience, are ``smichelson`` and ``step``, both are described
-bellow. For information on the other methods, see the file comments and
+below. For information on the other methods, see the file comments and
 ``examples/calibration.m``.
 
 .. contents::
@@ -137,7 +137,7 @@ The easiest way to use this method is via the
 graphical user interface.
 
 The method takes two slices through the output image of the Viewable
-obejct. The slices should be perpendicular to the interference fringes
+object. The slices should be perpendicular to the interference fringes
 on the SLM. The step width determines how many pixels to average over.
 One slice should be in the unshifted region of the SLM, and the other in
 the shifted region of the SLM. The slice offset, angle and width

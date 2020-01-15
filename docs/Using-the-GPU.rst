@@ -167,7 +167,7 @@ To use RedTweezers, you will need to download the executable and have it
 running on a computer that is accessible on your network. RedTweezers
 can be downloaded from the `computer physics communications program
 summaries page <http://cpc.cs.qub.ac.uk/summaries/AEQH_v1_0.html>`__.
-Once downloaded, unzip the file (on windows you can use a such as
+Once downloaded, unzip the file (on windows you can use a program such as
 `7-zip <https://www.7-zip.org/>`__ to extract the files from the
 ``.tar.gz`` archive). Once unzipped, run either the
 ``hologram_engine_64.exe`` (or ``hologram_engine.exe`` for the 32-bit

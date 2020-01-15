@@ -7,7 +7,7 @@ classdef RsForward < otslm.tools.prop.Propagator
 %
 % Static methods
 %  - simple()      --  propagate the field with a simple interface
-%  - simpleProp()  --  construct the propogator for input pattern
+%  - simpleProp()  --  construct the propagator for input pattern
 %
 % See also FftForward, OttForward and otslm.tools.visualise.
 

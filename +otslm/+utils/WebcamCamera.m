@@ -33,7 +33,7 @@ classdef WebcamCamera < otslm.utils.Viewable
     function obj = WebcamCamera(varargin)
       % Connect to the camera
       %
-      % cam = WebcamCamera(device_id) conntect to the specified
+      % cam = WebcamCamera(device_id) connect to the specified
       % webcam camera.  For the device id, imaqhwinfo.
       %
       % If the device you are interested in is not listed, try

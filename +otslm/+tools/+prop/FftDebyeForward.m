@@ -32,7 +32,7 @@ classdef FftDebyeForward < otslm.tools.prop.FftForward
 %
 % Static methods
 %  - simple()      --  propagate the field with a simple interface
-%  - simpleProp()  --  construct the propogator for input pattern
+%  - simpleProp()  --  construct the propagator for input pattern
 %  - calculateLens() -- generates the lens required by the method
 %
 % See also FftForward, Fft3Forward and OttForward

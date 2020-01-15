@@ -10,7 +10,7 @@ function pattern = mask_regions(base, patterns, locations, sizes, varargin)
 %     must be the same size as base.  Patterns should be numeric.
 %   - locations (cell) -- cell array containing vectors for the centre
 %     of each mask region.  Must be the same length as patterns.
-%   - sizes -- size parameters for each shape (see options bellow).
+%   - sizes -- size parameters for each shape (see options below).
 %     Number of sizes must be 1 (for a single shape) or match the
 %     length of patterns.
 %

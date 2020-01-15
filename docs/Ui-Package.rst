@@ -46,7 +46,7 @@ Application names are specified in the ``CategoryListBoxValueChanged``
 function. To add a new application, extend the ``ItemsData`` and
 ``Items`` fields of the ``ApplicationListBox`` for the category you wish
 to place the app in. The ``ItemsData`` field is used in the ``*Data``
-function (see bellow) to get the application name and description.
+function (see below) to get the application name and description.
 
 Program name, description and launch command
 --------------------------------------------

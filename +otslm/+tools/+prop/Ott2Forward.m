@@ -23,7 +23,7 @@ classdef Ott2Forward < otslm.tools.prop.OttForward
 %
 % Static methods
 %  - simple()      --  propagate the field with a simple interface
-%  - simpleProp()  --  construct the propogator for input pattern
+%  - simpleProp()  --  construct the propagator for input pattern
 %
 % See also OttForward, FftForward and otslm.tools.visualise.
 

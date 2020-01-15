@@ -54,7 +54,7 @@ classdef Fft3Inverse < otslm.tools.prop.Fft3Base
       % propagate the field with a simple interface
       %
       % [output, prop] = simple(pattern, ...) construct a new FFT
-      % propogator and apply it to the pattern.  Returns the
+      % propagator and apply it to the pattern.  Returns the
       % propagated pattern and the propagator.
       %
       % See also simpleProp for named arguments.

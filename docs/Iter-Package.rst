@@ -49,7 +49,7 @@ For an example of how to use these iterative methods, see
 :scpt:`examples.iterative`, :scpt:`examples.iter_combine` and
 :ref:`gerchberg-saxton-example` examples.
 A minimal example for methods which attempt to generate a particular
-far-field is shown bellow:
+far-field is shown below:
 
 .. code:: matlab
 
@@ -69,7 +69,8 @@ This table is based on
 `Di Leonardo et al. 2007 <https://doi.org/10.1364/OE.15.001913>`__,
 a more detailed discussion can be found in the reference.
 This is only a guide, some methods may work better than other methods
-under certain circumstances, for instance, the direct search method
+under certain circumstances.
+For instance, the direct search method
 can be used for fine tuning the output of other methods but takes too
 long for practical use when given a bad initial guess.
 The combination algorithm and 2-D optimisation algorithms have been
@@ -117,16 +118,16 @@ to the fields after each iteration.
 The constraints could include a particular incident illumination or a
 desired far-field intensity or phase pattern.
 Components that are not constrained are free to change.
-The algorith was originally described in
+The algorithm was originally described in
 
    R. W. Gerchberg, O. A Saxton W.,
-   A practical algorithm for the deter-mination of phase from
+   A practical algorithm for the determination of phase from
    image and diffraction plane pictures, Optik 35(1971) 237-250 (Nov 1971).
 
 Details about the algorithm can be found on the
 `Wikipedia page <https://en.wikipedia.org/wiki/Gerchberg%E2%80%93Saxton_algorithm>`__.
 A sketch of the algorithm for generating a target amplitude pattern
-using a phase-only device is shown bellow:
+using a phase-only device is shown below:
 
 1. Generate initial guess for the SLM phase pattern :math:`P`.
 2. Calculate output for phase pattern: :math:`\text{Proj}(P) \rightarrow O`.
@@ -327,7 +328,7 @@ IterBase
 --------
 
 This is the base class for iterative methods.
-It is an abstract class and can not be directly instantiated.
+It is an abstract class and cannot be directly instantiated.
 To implement your own iterative method class, inherit from
 this class and implement the abstract methods/properties.
 

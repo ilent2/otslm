@@ -88,7 +88,7 @@ it displays the contents of the ``+otslm/Contents.m`` file
 
 If you have multiple versions of ``otslm`` downloaded, you may want to
 check which version is currently being used.
-The following following command can be used to check which toolbox
+The following command can be used to check which toolbox
 is being used
 
 .. code:: matlab

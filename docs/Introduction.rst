@@ -50,7 +50,7 @@ If you publish work using this toolbox, please cite it as
 
 This version of the code is licensed under the GNU GPLv3. Parts of the
 toolbox incorporate third party open source code, see the documentation,
-thirdparty folder and code for details about licensing of these parts.
+``thirdparty`` folder and code for details about licensing of these parts.
 Further details can be found in LICENSE.md. If you would like to use the
 toolbox for something not covered by the license, please contact us.
 

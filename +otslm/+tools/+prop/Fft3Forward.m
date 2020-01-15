@@ -14,7 +14,7 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
 %
 % Static methods
 %  - simple()     -- propagate the field with a simple interface
-%  - simpleProp() -- construct the propogator for input pattern
+%  - simpleProp() -- construct the propagator for input pattern
 %
 % See also Fft3Inverse, FftForward and otslm.tools.visualise.
 
@@ -58,7 +58,7 @@ classdef Fft3Forward < otslm.tools.prop.Fft3Base
       % propagate the field with a simple interface
       %
       % [output, prop] = simple(pattern, ...) construct a new FFT
-      % propogator and apply it to the pattern.  Returns the
+      % propagator and apply it to the pattern.  Returns the
       % propagated pattern and the propagator.
       %
       % See also :meth:`simpleProp` for named arguments.

@@ -130,7 +130,7 @@ classdef FftEwaldForward < otslm.tools.prop.Fft3Forward ...
       % propagate the field with a simple interface
       %
       % [output, prop] = simple(pattern, ...) construct a new
-      % propogator and apply it to the pattern.  Returns the
+      % propagator and apply it to the pattern.  Returns the
       % propagated pattern and the propagator.
       %
       % See also simpleProp for named arguments.

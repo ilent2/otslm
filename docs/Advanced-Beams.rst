@@ -109,7 +109,7 @@ the simple beams example
    :alt: a better hg beam
 
    A phase pattern (left) to generate a HG beam in the far-field (right).
-   This pattern accouts for non-uniform incident illumination.
+   This pattern accounts for non-uniform incident illumination.
 
 Creating a Bessel beam
 ----------------------
@@ -321,7 +321,7 @@ In this example, we setup a propagator with the incident illumination
    prop = otslm.tools.prop.FftForward.simpleProp(zeros(sz));
    vismethod = @(U) prop.propagate(U .* incident);
 
-and then create aninstance of the iterator class.
+and then create an instance of the iterator class.
 :class:`GerchbergSaxton` also implements the adaptive-adaptive
 algorithm via the ``adaptive`` optional parameter,
 see the documentation for additional details.
@@ -388,7 +388,7 @@ The DMD diffraction efficiency when controlling both the phase and
 amplitude is fairly low, so we expect there to be a significant amount
 of light left in the zero order. We can shift our LG beam away from the
 zero order light using a linear diffraction grating. There are also
-artifacts from the hard edges of the square (diamond) shaped pixels, to
+artefacts from the hard edges of the square (diamond) shaped pixels, to
 avoid these artefacts we rotate the linear grating.
 
 .. code:: matlab
@@ -398,8 +398,8 @@ avoid these artefacts we rotate the linear grating.
 
 For this example we are going to assume uniform illumination. To encode
 both the amplitude and phase into the amplitude-only pattern we can use
-the finalize function and specify that the device is a dmd and the
-colormap is grayscale. By default, the finalize function assumes dmds
+the finalize function and specify that the device is a DMD and the
+colormap is grayscale. By default, the finalize function assumes DMDs
 should be rotated (packed) differently, however we want to leave our
 pattern unchanged for now and explicitly rotate it at a later stage, so
 we pass ``none`` as the ``rpack`` option.

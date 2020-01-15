@@ -39,7 +39,7 @@ classdef (Abstract) Viewable < handle
       %
       % im = viewTarget(...) acquire one or more target regions and
       % return them to an cell array of images.  Specify target
-      % regions using the crop function.  If no output is requiested,
+      % regions using the crop function.  If no output is requested,
       % the image will be displayed in the current axes.
       %
       % Optional named arguments

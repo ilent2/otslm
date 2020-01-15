@@ -63,7 +63,7 @@ absolute value squared (converts from the complex output of
 :func:`imagesc`) and zooms into a region of interest in the far-field image.
 This piece of code isn't really part of the example, it is only included
 to make the following sections more succinct. You could replace the use
-of the ``visualize`` function in the sections bellow with a single call
+of the ``visualize`` function in the sections below with a single call
 the :func:`+otslm.+tools.visualise` and manually zoom into the resulting
 image.
 
@@ -296,7 +296,7 @@ range are assigned the phase of the pattern (0 for positive amplitude,
 0.5 for negative amplitudes). Pixels outside this region should be
 assigned another value, such as a checkerboard pattern. The encode
 method also takes an optional argument to scale the pattern by, this can
-be though of as the ratio of pattern amplitude and device height.
+be thought of as the ratio of pattern amplitude and device height.
 
 .. code:: matlab
 

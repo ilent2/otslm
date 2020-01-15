@@ -105,7 +105,7 @@ classdef (Abstract) Showable < handle
     end
 
     function im = viewComplex(slm, pattern)
-      % Convert the complexp attern to a raw pattern
+      % Convert the complex pattern to a raw pattern
 
       % Split the pattern
       phase = angle(pattern);
