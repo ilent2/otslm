@@ -1,6 +1,7 @@
 OTSLM Toolbox for Structured Light Methods
 ==========================================
 
+[![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.cpc.2020.107199-blue)](https://doi.org/10.1016/j.cpc.2020.107199)
 [![Documentation Status](https://readthedocs.org/projects/otslm/badge/?version=latest)](https://otslm.readthedocs.io/en/latest/?badge=latest)
 [![View OTSLM Toolbox for Structured Light Methods on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://au.mathworks.com/matlabcentral/fileexchange/74174-otslm-toolbox-for-structured-light-methods)
 
@@ -83,7 +84,7 @@ If you publish work using this toolbox, please cite it as
 
 > I. C. D. Lenton, A. B. Stilgoe, T. A. Nieminen, H. Rubinsztein-Dunlop,
 > "OTSLM toolbox for structured light methods",
-> Computer Physics Communications, 2019.
+> Computer Physics Communications, Elsevier BV, Feb. 2020, p. 107199, doi:10.1016/j.cpc.2020.107199.
 
 This version of the code is licensed under the GNU GPLv3.
 Parts of the toolbox incorporate third party open source code,
