@@ -2,6 +2,7 @@ OTSLM Toolbox for Structured Light Methods
 ==========================================
 
 [![Documentation Status](https://readthedocs.org/projects/otslm/badge/?version=latest)](https://otslm.readthedocs.io/en/latest/?badge=latest)
+[![View OTSLM Toolbox for Structured Light Methods on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://au.mathworks.com/matlabcentral/fileexchange/74174-otslm-toolbox-for-structured-light-methods)
 
 A set of Matlab functions and graphical user interface for generating
 patterns for phase and amplitude spatial light modulators (SLMs) such as
