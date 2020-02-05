@@ -1,6 +1,8 @@
 OTSLM Toolbox for Structured Light Methods
 ==========================================
 
+[![Documentation Status](https://readthedocs.org/projects/otslm/badge/?version=latest)](https://otslm.readthedocs.io/en/latest/?badge=latest)
+
 A set of Matlab functions and graphical user interface for generating
 patterns for phase and amplitude spatial light modulators (SLMs) such as
 the digital micromirror device (DMD) and liquid crystal type device.
