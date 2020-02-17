@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toolset id="user_apps_toolset" template="false">
+   <tool app_file_path="+otslm/+ui/Launcher.mlapp" handler_class="com.mathworks.deployment.desktop.toolstrip.ToolboxToolSetExtensionHandler" id="6cddfb13-964c-43ae-8181-0574b2f46eb0:+otslm/+ui/Launcher.mlapp" label="OTSLM Launcher" quick_access_eligible="false" toolset_id="user_apps_toolset">
+      <callback>otslm.ui.Launcher</callback>
+      <icon filename="matlab_app_generic_icon_16"/>
+      <icon filename="matlab_app_generic_icon_24"/>
+      <parent_tool id="my_apps" toolset_id="apps_toolset"/>
+   </tool>
+</toolset>

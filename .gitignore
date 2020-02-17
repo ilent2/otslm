@@ -6,5 +6,6 @@
 *.mexa64
 *.pyc
 *.mexw64
+*.mltbx
 
 .DS_Store

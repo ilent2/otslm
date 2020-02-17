@@ -1,0 +1,117 @@
+<deployment-project plugin="plugin.toolbox" plugin-version="1.0">
+  <configuration file="C:\Users\uqilento\Documents\Research2017\otslm\OTSLM Toolbox for Structured Light Methods.prj" location="C:\Users\uqilento\Documents\Research2017\otslm" name="OTSLM Toolbox for Structured Light Methods" target="target.toolbox" target-name="Package Toolbox">
+    <param.appname>OTSLM Toolbox for Structured Light Methods</param.appname>
+    <param.authnamewatermark>Isaac Lenton</param.authnamewatermark>
+    <param.email>uqilento@uq.edu.au</param.email>
+    <param.company>The University of Queensland</param.company>
+    <param.summary>A set of Matlab functions and graphical user interface for generating patterns for phase and amplitude spatial light modulators (SLMs) such</param.summary>
+    <param.description>A set of Matlab functions and graphical user interface for generating patterns for phase and amplitude spatial light modulators (SLMs) such as the digital micromirror device (DMD) and liquid crystal type device. The focus of this toolbox is on patterns for optical tweezers systems but the same functions can probably be used in other applications where amplitude or phase control of light is required.
+
+Documentation can be found at https://otslm.readthedocs.io/
+
+A paper describing the initial release can be found at https://doi.org/10.1016/j.cpc.2020.107199
+
+This research was funded by the Australian Government through the Australian Research
+Council's Discovery Projects funding scheme (project DP180101002).
+Isaac Lenton acknowledges support from the Australian Government RTP Scholarship.</param.description>
+    <param.screenshot>${PROJECT_ROOT}\docs\images\otslm_logo.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.output>${PROJECT_ROOT}\OTSLM Toolbox for Structured Light Methods.mltbx</param.output>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.guid>6cddfb13-964c-43ae-8181-0574b2f46eb0</param.guid>
+    <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
+% from packaging.  Excludes should be listed relative to the toolbox folder.
+% Some examples of how to specify excludes are provided below:
+%
+% A single file in the toolbox folder:
+% .svn
+
+.git
+.git*
+**/.git
+docs
+tests
+.readthedocs.yml</param.exclude.filters>
+    <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
+    <param.examples />
+    <param.demosxml />
+    <param.apps />
+    <param.registered.apps>
+      <file>${PROJECT_ROOT}\+otslm\+ui\Launcher.mlapp</file>
+    </param.registered.apps>
+    <param.docs>${PROJECT_ROOT}\info.xml</param.docs>
+    <param.getting.started.guide />
+    <param.matlabpath.excludes />
+    <param.javaclasspath.excludes />
+    <param.exported.on.package>false</param.exported.on.package>
+    <param.release.start>R2016b</param.release.start>
+    <param.release.end>latest</param.release.end>
+    <param.release.current.only>false</param.release.current.only>
+    <param.compatiblity.windows>true</param.compatiblity.windows>
+    <param.compatiblity.macos>true</param.compatiblity.macos>
+    <param.compatiblity.linux>true</param.compatiblity.linux>
+    <param.compatiblity.matlabonline>true</param.compatiblity.matlabonline>
+    <unset>
+      <param.version />
+      <param.output />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.exclude.pcodedmfiles />
+      <param.examples />
+      <param.demosxml />
+      <param.apps />
+      <param.getting.started.guide />
+      <param.matlabpath.excludes />
+      <param.javaclasspath.excludes />
+      <param.exported.on.package />
+      <param.release.current.only />
+      <param.compatiblity.windows />
+      <param.compatiblity.macos />
+      <param.compatiblity.linux />
+      <param.compatiblity.matlabonline />
+    </unset>
+    <fileset.rootdir>
+      <file>C:\Users\uqilento\Documents\Research2017\otslm</file>
+    </fileset.rootdir>
+    <fileset.rootfiles>
+      <file>${PROJECT_ROOT}\+otslm</file>
+      <file>${PROJECT_ROOT}\DesktopToolset.xml</file>
+      <file>${PROJECT_ROOT}\examples</file>
+      <file>${PROJECT_ROOT}\info.xml</file>
+      <file>${PROJECT_ROOT}\LICENSE.md</file>
+      <file>${PROJECT_ROOT}\README.md</file>
+      <file>${PROJECT_ROOT}\thirdparty</file>
+    </fileset.rootfiles>
+    <fileset.depfun.included />
+    <fileset.depfun.excluded />
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\uqilento\Documents\Research2017\otslm" name="OTSLM Toolbox for Structured Light Methods.mltbx" optional="false">C:\Users\uqilento\Documents\Research2017\otslm\OTSLM Toolbox for Structured Light Methods.mltbx</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2018a</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
