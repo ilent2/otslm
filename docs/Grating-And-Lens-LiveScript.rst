@@ -60,7 +60,7 @@ To achieve this, we use the following section of code
 .. code:: matlab
 
    if 0 == exist('sd', 'var') || ~ishandle(sd.figure_handle)
-       sd = otslm.utils.ScreenDevice(1, 'target_size', sz,...
+       sd = otslm.utils.ScreenDevice(1, 'size', sz,...
            'pattern_type', 'phase', 'prescaledPatterns', true);
 
        % Get the figure handle for the livescript

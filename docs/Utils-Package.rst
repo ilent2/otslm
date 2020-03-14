@@ -310,17 +310,37 @@ the correct size, and ensures the window is positioned above other
 windows on the screen.
 
 To use the :class:`ScreenDevice` class, you need to specify which screen to
-place the window on and how large the screen should be. To create a
-full-screen window on monitor 1 you might do
+place the window on and how large the screen should be.
+The :class:`ScreenDevice` can either occupy the whole screen, for example
 
 .. code:: matlab
 
-    scid = 1;
-    scsz = get(0,'ScreenSize');
-    target_size = fliplr(scsz(scid, 3:4));
+   slm = otslm.utils.ScreenDevice(2, 'pattern_type', 'phase');
 
-    slm = otslm.utils.ScreenDevice(scid , 'target_size', target_size, ...
-      'target_offset', [0, 0], 'pattern_type', 'phase', 'fullscreen', true);
+would create a full-screen window on display number 2; or the class
+can create a window of a specified size, for example
+
+.. code:: matlab
+
+   slm = otslm.utils.ScreenDevice(1, 'pattern_type', 'amplitude', ...
+         'size', [512, 512], 'offset', [100, 100]);
+
+creates a 512x512 window positioned 100 pixels from the bottom and
+100 pixels from the left of screen 1.
+Size must always be positive numbers, while offset can be negative
+to indicate a position relative to the right/top of the screen,
+for details, see figure :numref:`utils-screen-placement`.
+
+.. _utils-screen-placement:
+.. figure:: images/utilsPackage/screenPlacement.png
+   :alt: guide to the size and offset parameters
+
+   Position and size of the screen device and display showing how they
+   relate to the :class:`ScreenDevice` ``offset`` and ``size`` input
+   parameters.  (left) a :class:`ScreenDevice` positioned relative to
+   the bottom left corner, ``offset`` is positive.  (right) a
+   :class:`ScreenDevice` positioned relative to the top right
+   corner, ``offset`` is negative.
 
 The ``pattern_type`` argument specifies if the input pattern to the
 ``show`` methods should be a phase, amplitude or complex amplitude
@@ -346,8 +366,7 @@ the ``prescaledPatterns`` optional parameter in the constructor for the
 
 .. code:: matlab
 
-    slm = otslm.utils.ScreenDevice(scid , 'target_size', target_size, ...
-      'target_offset', [0, 0], 'pattern_type', 'phase', 'fullscreen', true, ...
+    slm = otslm.utils.ScreenDevice(scid, 'pattern_type', 'phase', ...
       'prescaledPatterns', true);
 
 To display a sequence of frames on the device, you can use multiple
@@ -412,9 +431,9 @@ into the constructor:
 
 .. code:: matlab
 
-    slm = otslm.utils.ScreenDevice(1, 'target_size', target_size, ...
-        'target_offset', [0, 0], 'lookup_table', lookup_table, ...
-        'pattern_type', 'phase', 'fullscreen', true);
+    slm = otslm.utils.ScreenDevice(1, ...
+        'lookup_table', lookup_table, ...
+        'pattern_type', 'phase');
 
 .. autoclass:: ScreenDevice
    :members: ScreenDevice, close, showRaw

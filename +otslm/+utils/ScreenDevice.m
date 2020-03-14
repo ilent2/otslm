@@ -30,12 +30,60 @@ classdef ScreenDevice < otslm.utils.Showable
     valueRange              % Range of values for screen
     lookupTable             % Lookup table for colour mapping
     patternType             % Pattern type
-    offset                  % Offset for target screen [x, y]
+    offset                  % Offset for target screen [rows, cols]
   end
   
   properties
     default_fullscreen  logical % Should showRaw use fullscreen by default
     size                    % Target screen size [rows, columns]
+  end
+  
+  methods (Static)
+    
+    function positions = getMonitorPositions()
+      % Get the monitor positions in pixels using java
+      %
+      % This is a workaroud for the get(0, 'MonitorPositions')
+      % function not returning monitors connected after starting Matlab.
+      %
+      % This also gets the monitor size in pixels instead of virtual pix.
+      %
+      % Based on https://au.mathworks.com/matlabcentral/answers/312738-how-to-get-real-screen-size
+      
+      ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+      gds = ge.getScreenDevices();
+      
+      % bouds returns height in DPI modified units, displayMode
+      % returns height in actual units, so we need a conversion factor
+      % Unfortunatly we can't just use the DPI value since it doesn't
+      % update when we change the display DPI (it only updates when
+      % we logout and back in on Windows).
+      defaultScreenDisplay = ge.getDefaultScreenDevice().getDisplayMode();
+      defaultScreenBounds = ge.getDefaultScreenDevice().getDefaultConfiguration().getBounds();
+      dpiConversion = defaultScreenDisplay.getHeight ./ defaultScreenBounds.height;
+      
+      positions = zeros(0, 4);
+      for ii = 1:length(gds)
+        bounds = gds(ii).getDefaultConfiguration().getBounds();
+        displayMode = gds(ii).getDisplayMode();
+        
+        thisDpiConversion = displayMode.getHeight ./ bounds.height;
+        
+        positions(ii, :) = [(bounds.x)*thisDpiConversion + 1, ...
+            dpiConversion*defaultScreenBounds.height - thisDpiConversion*(bounds.y + bounds.height) + 1, ...
+            displayMode.getWidth, displayMode.getHeight];
+      end
+    end
+    
+    function num = getScreenCount()
+      % Get the number of screens currently detected
+      
+      ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+      gds = ge.getScreenDevices();
+      
+      num = length(gds);
+      
+    end
   end
 
   methods
@@ -47,9 +95,11 @@ classdef ScreenDevice < otslm.utils.Showable
       % are assumed to be amplitude based, value range is RGB.
       %
       % Optional named parameters:
-      %   - 'target_size'   [r,c]  -- Size of the device within the window
-      %   - 'target_offset' [x,y]  -- Offset within the window.  Negative
-      %     values are offset fro the top of the screen.
+      %   - 'size'   [r,c]  -- Size of the device within the window
+      %     Default: `[]`, (i.e. `slm.device_size`)
+      %   - 'offset' [r,c]  -- Offset within the window.  Negative
+      %     values are offset from the top of the screen.
+      %     Default: `[0, 0]`
       %   - 'lookup_table'  table  -- Lookup table to use for device
       %     Default lookup table is value_range{1} repeated for each channel.
       %   - 'value_range'   table  -- Cell array of value ranges
@@ -61,8 +111,8 @@ classdef ScreenDevice < otslm.utils.Showable
 
       p = inputParser;
       p.addRequired('device_number');
-      p.addParameter('target_size', []);
-      p.addParameter('target_offset', [0, 0]);
+      p.addParameter('size', []);
+      p.addParameter('offset', [0, 0]);
       p.addParameter('lookup_table', []);
       p.addParameter('value_range', { 0:255, 0:255, 0:255 });
       p.addParameter('pattern_type', 'amplitude');
@@ -84,7 +134,7 @@ classdef ScreenDevice < otslm.utils.Showable
       % Store other properties
       obj.valueRange = p.Results.value_range;
       obj.patternType = p.Results.pattern_type;
-      obj.offset = p.Results.target_offset;
+      obj.offset = p.Results.offset;
       obj.default_fullscreen = p.Results.fullscreen;
 
       % Store or generate the lookup table
@@ -99,32 +149,47 @@ classdef ScreenDevice < otslm.utils.Showable
       end
 
       % Store the device target size (or use reported size)
-      if isempty(p.Results.target_size)
+      if isempty(p.Results.size)
         obj.size = obj.device_size;
       else
-        obj.size = p.Results.target_size;
+        obj.size = p.Results.size;
       end
       
       % Conert from negative to positive offset
       if obj.offset(1) < 0
-        obj.offset(1) = obj.device_size(2) + obj.offset(1);
+        obj.offset(1) = obj.device_size(1) + obj.offset(1);
       end
       if obj.offset(2) < 0
-        obj.offset(2) = obj.device_size(1) + obj.offset(2);
+        obj.offset(2) = obj.device_size(2) + obj.offset(2);
       end
 
       % Check target size is ok
       assert(all(obj.offset >= 0), 'Offset must be >= 0');
-      assert(obj.size(1) + obj.offset(1) <= obj.device_size(1), ...
-        ['Target max row must be <= ' num2str(obj.device_size(1))]);
-      assert(obj.size(2) + obj.offset(2) <= obj.device_size(2), ...
-        ['Target max column must be <= ' num2str(obj.device_size(2))]);
+      
+      if obj.size(1) + obj.offset(1) > obj.device_size(1) ...
+          || obj.size(2) + obj.offset(2) > obj.device_size(2)
+        warning('otslm:utils:ScreenDevice:screen_outside', ...
+          'Screen may be positioned outside device');
+      end
 
     end
 
     function delete(obj)
       % Delete the object, closes the screen and frees resources
       obj.close();
+    end
+    
+    function set.device_number(slm, val)
+      % Add checks for valid device_number
+      
+      assert(isnumeric(val) && isscalar(val), ...
+        'Device number must be numeric scalar');
+      assert(floor(val) == val, 'Device number must be integer');
+      
+      assert(val > 0 && val <= slm.getScreenCount(), ...
+        'Device number must be between 1 and number of screens');
+      
+      slm.device_number = val;
     end
 
     function sz = get.device_size(obj)
@@ -199,7 +264,7 @@ classdef ScreenDevice < otslm.utils.Showable
       if isempty(obj.figure_handle) || ~ishandle(obj.figure_handle)
         
         % Get the position of the desired monitor
-        monitor_positions = get(0, 'MonitorPositions');
+        monitor_positions = obj.getMonitorPositions();
         oposition = monitor_positions(obj.device_number, :);
         
         if p.Results.fullscreen
@@ -219,7 +284,7 @@ classdef ScreenDevice < otslm.utils.Showable
               'menubar','none', ...
               'NumberTitle','off', ...
               'units','pixels', ...
-              'Position', [oposition(1:2) + obj.offset, obj.size(2), obj.size(1)], ...
+              'Position', [oposition(1:2) + obj.offset([2, 1]), obj.size(2), obj.size(1)], ...
               'doublebuffer', obj.doublebuffer, ...
               'IntegerHandle', 'off');
         end
@@ -245,7 +310,7 @@ classdef ScreenDevice < otslm.utils.Showable
         % Set the axes properties
         set(axes_handle, ...
             'units', 'pixels', ...
-            'position', [obj.offset + [1,1], obj.size(2), obj.size(1)], ...
+            'position', [1, 1, obj.size(2), obj.size(1)], ...
             'YTickLabel', [], ...
             'XTickLabel', [], ...
             'YTick', [], ...
@@ -254,9 +319,16 @@ classdef ScreenDevice < otslm.utils.Showable
             'ylimmode','manual', ...
             'zlimmode','manual', ...
             'climmode','manual', ...
-            'alimmode','manual');
+            'alimmode','manual', ...
+            'box', 'off');
           
-        if ~p.Results.fullscreen
+          % Hide the axis rulers
+          axes_handle.XAxis.Visible = 'off';
+          axes_handle.YAxis.Visible = 'off';
+          
+        % The full screen window is placed in the window coordinates
+        % instead of the global coordinates, so adjust the size accordingly
+        if p.Results.fullscreen
           set(axes_handle, 'position', [0, 0, obj.size(2), obj.size(1)]);
         end
           
