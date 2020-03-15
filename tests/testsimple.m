@@ -57,6 +57,20 @@ function testCheckerboard(testCase)
   
 end
 
+function testStripes(testCase)
+
+  sz = [2, 4];
+  
+  pattern = otslm.simple.stripes(sz, 2, 'value', [false, true]);
+  testCase.verifyClass(pattern, 'logical', 'wrong type (logical)');
+  
+  pattern = otslm.simple.stripes(sz, 2);
+  testCase.verifyClass(pattern, 'double', 'wrong type (double)');
+  
+  testCase.veifyEqual(pattern, [0.5, 0.5, 0, 0; 0.5, 0.5, 0, 0]);
+  
+end
+
 function testGaussian(testCase)
   sz = [512, 512];
   pattern = otslm.simple.gaussian(sz, 100);

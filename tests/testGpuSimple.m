@@ -50,6 +50,14 @@ function testCheckerboard(testCase)
   testCase.verifyClass(pattern, 'gpuArray', 'wrong type (gpu)');
 end
 
+function testStripes(testCase)
+  sz = [512, 512];
+  
+  pattern = otslm.simple.stripes(sz, 2, 'gpuArray', true);
+  testCase.verifyClass(pattern, 'gpuArray', 'wrong type (gpu)');
+  
+end
+
 function testGaussian(testCase)
   sz = [512, 512];
   

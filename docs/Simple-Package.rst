@@ -396,6 +396,25 @@ Example usage (see also :numref:`simple-checkerboard-example`):
 
    Example output from :func:`checkerboard`.
 
+stripes
+-------
+
+.. autofunction:: stripes
+
+Example usage (see also :numref:`simple-stripes-example`):
+
+.. code:: matlab
+
+   sz = [10, 10];
+   im = otslm.simple.stripes(sz, 2);
+   imagesc(im);
+
+.. _simple-stripes-example:
+.. figure:: images/simplePackage/stripes_default.png
+   :alt: example of a striped pattern
+
+   Example output from :func:`stripes`.
+
 grid
 ----
 
