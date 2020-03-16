@@ -6,9 +6,9 @@ classdef TestDmd < otslm.utils.TestShowable
 % simulating a binary amplitude device, such as a digital
 % micro-mirror device.
 %
-% When ``showRaw`` is called, the function calculates the pattern by
-% applying ``rpack`` using the :func:`otslm.tools.finalize`
-% method and sets the ``pattern`` property with the computed pattern. The
+% When ``showRaw`` is called, the function calculates the pattern,
+% optionally by applying ``rpack`` using the :func:`otslm.tools.finalize`
+% method, and sets the ``pattern`` property with the computed pattern. The
 % incident illumination is added to the output. To change the incident
 % illumination, either set a different pattern on construction or change
 % the property value.
@@ -21,6 +21,7 @@ classdef TestDmd < otslm.utils.TestShowable
 %    incident illumination and applying ``rpack``. The ``rpack`` operation
 %    means that this pattern is larger than the device, with extra padding
 %    added to the corners.
+%  - use_rpack (logical) -- True if ``rpack`` should be used.
 %
 % Constant properties
 %  - size (size) -- device resolution (pixels) [rows, columns]
@@ -40,6 +41,7 @@ classdef TestDmd < otslm.utils.TestShowable
 
   properties (SetAccess=protected)
     pattern         % Pattern currently displayed on the device
+    use_rpack       % True if rpack should be used by show
 
     valueRange = {0:1};
     lookupTable
@@ -60,11 +62,13 @@ classdef TestDmd < otslm.utils.TestShowable
       % Optional named arguments
       %   - size      [row, col] -- Size of the device (default: [512,512])
       %   - incident      im     -- Incident illumination (default: [])
+      %   - use_rpack (logical)  -- If ``rpack`` should be used.
 
       % Parse inputs
       p = inputParser;
       p.addParameter('incident', []);
       p.addParameter('size', [512, 512]);
+      p.addParameter('use_rpack', true, @(x) islogical(x));
       p.parse(varargin{:});
       
       % Call base constructor
@@ -84,6 +88,8 @@ classdef TestDmd < otslm.utils.TestShowable
       value = slm.linearValueRange('structured', true).';
       slm.lookupTable = otslm.utils.LookupTable(...
           [0; 1], value, 'range', 1);
+        
+      slm.use_rpack = p.Results.use_rpack;
       
       % Show the device, ensures pattern is initialized
       slm.show();
@@ -97,9 +103,15 @@ classdef TestDmd < otslm.utils.TestShowable
       end
       
       % Pack pattern with 45 degree rotation
-      pattern = otslm.tools.finalize(pattern, 'rpack', '45deg', ...
+      if slm.use_rpack
+        rpack_option = {'rpack', '45deg'};
+      else
+        rpack_option = {'rpack', 'none'};
+      end
+      
+      pattern = otslm.tools.finalize(pattern, rpack_option{:}, ...
           'colormap', 'gray', 'modulo', 'none');
-      incident = otslm.tools.finalize(slm.incident, 'rpack', '45deg', ...
+      incident = otslm.tools.finalize(slm.incident, rpack_option{:}, ...
           'colormap', 'gray', 'modulo', 'none');
 
       % Make the pattern complex and add incident light
