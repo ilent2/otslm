@@ -358,6 +358,40 @@ Example usage (see also :numref:`simple-zernike-example`):
 
    Example output from :func:`zernike`.
 
+hadamard
+--------
+
+Hadamard matrices can be used as a discrete binary orthogonal basis
+in Cartesian coordinates for applications such as single pixel
+imaging.
+This function generates images representing rows of a Hadamard matrix.
+These patterns can be used as an alternative to Fourier single-pixel imaging,
+for example and comparison see
+
+   Zibang Zhang et al., Hadamard single-pixel imaging versus Fourier
+   single-pixel imaging.  Vol. 25, Issue 16, pp. 19619-19639 (2017)
+   https://doi.org/10.1364/OE.25.019619
+
+.. autofunction:: hadamard
+
+Example usage (see also :numref:`simple-hadamard-example`):
+
+.. code:: matlab
+
+    u = 2;
+    v = 3;
+    sz = [8, 20];
+    im = otslm.simple.hadamard(sz, u, v);
+
+.. _simple-hadamard-example:
+.. figure:: images/simplePackage/hadamard_default.png
+   :alt: example hadamard output
+
+   Example output from :func:`hadamard`.
+   The pattern corresponds to one row from a 16x16 Hadamard Matrix
+   (i.e. product of two 8x8 Hadamard row vectors).  Values outside the
+   pattern have been filled with zeros.
+
 sinc
 ----
 
