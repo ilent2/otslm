@@ -26,13 +26,23 @@ There are a range of online tutorials for getting started with
 git and GitHub, for example
 https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners.
 
+Installing via Matlab Addons Explorer
+-------------------------------------
+
+If using Matlab, the easiest method to install the toolbox is using
+the Matlab Addons explorer.
+Simply launch Matlab and navigate to **Home** > **Addons** > **Get-Addons**
+and search for
+"OTSLM".  Then, simply click the
+*Add from GitHub* button to automatically download the package and
+add it to the path.
+You may need to logging to a Mathworks account to complete this step.
+
 Using a ``.mltbx`` file
 -----------------------
 
 You can download the latest stable release of OTSLM from either the
-`GitHub release page <https://github.com/ilent2/otslm/releases>`__
-or the `Mathworks File Exchange <https://au.mathworks.com/matlabcentral/fileexchange?q=otslm>`__ (you can also access the File Exchange from within
-Matlab via the **Home** > **Add-ons** > **Get Add-ons** button).
+`GitHub release page <https://github.com/ilent2/otslm/releases>`__.
 Simply download the appropriate ``.mltbx`` file for the relevant version.
 Once downloaded, execute the file and follow the instructions to install
 the toolbox.
