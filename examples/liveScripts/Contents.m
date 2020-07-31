@@ -3,9 +3,11 @@
 % Examples showing how livescripts can be used to control the toolbox.
 %
 % Files
-%   GratingAndLens.mlx - Create a phase pattern to control the beam location
 %   booth1998.mlx      - Simulate imaging of a point object embedded in a material
+%   GratingAndLens.mlx - Create a phase pattern to control the beam location
+%   HadamardSinglePixelImaging.mlx - Demosntrate use of otslm.simple.hadamard
+%   TugOfWarTweezers.mlx - Create a phase pattern for tug-of-war tweezers
 %
-% Copyright 2019 Isaac Lenton
+% Copyright 2019-2020 Isaac Lenton
 % This file is part of OTSLM, see LICENSE.md for information about
 % using/distributing this file.
