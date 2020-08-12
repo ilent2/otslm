@@ -12,6 +12,7 @@
 %   axicon       - Generates a axicon lens.
 %   bessel       - Generates the phase and amplitude patterns for Bessel beams
 %   checkerboard - Generates a checkerboard pattern.
+%   chiralAsvpp  - Chiral field using an anular subzone vortex phase plate
 %   cubic        - Generates cubic phase pattern for Airy beams.
 %   gaussian     - Generates a Gaussian pattern.
 %   grid         - Generates a grid of points similar to meshgrid.
