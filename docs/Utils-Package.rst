@@ -177,13 +177,24 @@ In order to understand the function parameters, we recommend using the
 :app:`CalibrationStepFarfield` GUI with the :app:`TestFarfield` GUI.
 An example configuration is shown in :numref:`utils-step-demo`.
 
+A linear grating can also be applied to offset the fringe from the zeroth order for more precise calibration.
+Typically, this should be done perpendicular to the step. An example of use within the GUI is show in :numref:`utils-step-linear-demo`.
+
 .. _utils-step-demo:
 .. figure:: images/utilsPackage/stepDemo.png
    :alt: GUI config for step demo
 
-   :app:`+otslm.+ui.CalibrationStepFarfield` and :
+   :app:`+otslm.+ui.CalibrationStepFarfield` and
    :app:`+otslm.+ui.TestFarfield` used to demonstrate the
    step calibration method.
+
+.. _utils-step-linear-demo:
+.. figure:: images/utilsPackage/stepLinearDemo.png
+   :alt: GUI config for step demo when applying a linear grating
+
+   :app:`+otslm.+ui.CalibrationStepFarfield` and
+   :app:`+otslm.+ui.TestFarfield` used to demonstrate the
+   step calibration method when a linear grating is used.
 
 .. autofunction:: step
 

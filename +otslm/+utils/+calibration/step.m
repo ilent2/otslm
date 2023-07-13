@@ -2,15 +2,15 @@ function lt = step(slm, cam, varargin)
 % Applies a step function and looks at interference.
 %
 % This function creates a step phase pattern with two regions.
-% The far-field interference pattern of these regions contains a
-% fringe which moves depending on the relative phase between the
-% two regions.
+% The far-field interference pattern of these regions contains a fringe
+% which moves depending on the relative phase between the two regions.
+% Additionally, a linear grating can also be applied to position the fringe
+% away from the zeroth order.
 %
 % The function uses a Fourier transform to determine the position of the
-% interference fringe. The frequency for the Fourier transform is
-% specified by the ``freq_index`` parameter. The width and angle
-% parameters control the number of pixels to average over and the angle of
-% the slice.
+% interference fringe. The frequency for the Fourier transform is specified
+% by the ``freq_index`` parameter. The width and angle parameters control
+% the number of pixels to average over and the angle of the slice.
 %
 % Usage
 %   lt = step(slm, cam, ...) calibrates using the step method.
@@ -28,6 +28,11 @@ function lt = step(slm, cam, varargin)
 %   - delay           num  -- delay after displaying slm image
 %   - stride          num  -- number of linear indexes to step
 %   - basevalue       num  -- value to use for the first region
+%
+%   - apply_linear    bool -- apply a linear grating ontop of the step
+%                             pattern
+%   - linear_spacing  num  -- spacing of linear grating
+%   - linear_angle    num  -- angle of the linear grating (deg)
 %
 %   - verbose         bool -- display progress in console
 %   - show_progress   bool -- show progress figure
@@ -47,6 +52,9 @@ p.addParameter('freq_index', 1);
 p.addParameter('step_angle', 0);
 p.addParameter('delay', []);
 p.addParameter('stride', 1);
+p.addParameter('apply_linear', false);
+p.addParameter('linear_spacing', 100);
+p.addParameter('linear_angle', 0);
 p.addParameter('verbose', true);
 p.addParameter('show_progress', false);
 p.addParameter('show_camera', false);
@@ -137,8 +145,22 @@ for ii = 1:p.Results.stride:size(valueTable, 2)
   end
 
   % Generate raw pattern
-  ipattern = ones(slm.size).*p.Results.basevalue;
-  ipattern(mask) = ii;
+  step = ones(slm.size).*p.Results.basevalue;
+  step(mask) = ii;
+
+  if p.Results.apply_linear
+      % Add a linear grating
+      ilinear = slm.view(otslm.simple.linear(slm.size, ...
+          p.Results.linear_spacing, 'angle_deg', p.Results.linear_angle));
+      % Cast to double, as uint does not wrap around.
+      ipattern = cast(step, 'double') + cast(ilinear, 'double');
+      % Wrap around values to be valid indexes.
+      % The shift of the index is so that an index of size(valueTable, 2) is
+      % correctly converted to size(valueTable, 2) instead of being 0.
+      ipattern = mod(ipattern - 1, size(valueTable, 2)) + 1;
+  else
+      ipattern = step;
+  end
 
   % Display on slm
   slm.showIndexed(ipattern);
