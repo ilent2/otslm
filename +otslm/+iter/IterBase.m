@@ -91,7 +91,14 @@ classdef IterBase < handle
       p.parse(varargin{:});
 
       % Store inputs
-      mtd.target = double(p.Results.target);
+      if iscell(p.Results.target)
+          mtd.target = p.Results.target;
+          for m = 1:numel(mtd.target)
+              mtd.target{m} = double(mtd.target{m});
+          end
+      else
+        mtd.target = double(p.Results.target);
+      end
       mtd.guess = p.Results.guess;
       mtd.vismethod = p.Results.vismethod;
       mtd.invmethod = p.Results.invmethod;
@@ -266,28 +273,58 @@ classdef IterBase < handle
       p.parse(varargin{:});
 
       % Evaluate guess
-      trial = mtd.vismethod(p.Results.guess);
+      if iscell(mtd.vismethod)
+          score = zeros(1, size(p.Results.guess, 3));
+          for m = 1:numel(mtd.vismethod)
+              trial = mtd.vismethod{m}(p.Results.guess);
+    
+              % Evaluate the score or multiple scores
+              if size(mtd.target{m}, 3) ~= size(trial, 3)
+                for ii = 1:length(score)
+                  our_score = mtd.objective.evaluate(trial(:, :, ii), mtd.target{m});
+                
+                  % Collect result from gpu
+                  if isa(our_score, 'gpuArray')
+                    our_score = gather(our_score);
+                  end
+                  
+                  score(ii) = score(ii) + our_score;
+                end
+              else
+                our_score = mtd.objective.evaluate(trial, mtd.target{m});
+                
+                % Collect result from gpu
+                if isa(our_score, 'gpuArray')
+                  our_score = gather(our_score);
+                end
 
-      % Evaluate the score or multiple scores
-      if size(mtd.target, 3) ~= size(trial, 3)
-        score = zeros(1, size(mtd.target, 3));
-        for ii = 1:length(score)
-          our_score = mtd.objective.evaluate(trial(:, :, ii), mtd.target);
-        
-          % Collect result from gpu
-          if isa(our_score, 'gpuArray')
-            our_score = gather(our_score);
+                score(1) = score(1) + our_score;
+              end
           end
-          
-          score(ii) = our_score;
-        end
       else
-        score = mtd.objective.evaluate(trial, mtd.target);
-        
-        % Collect result from gpu
-        if isa(score, 'gpuArray')
-          score = gather(score);
-        end
+          trial = mtd.vismethod(p.Results.guess);
+    
+          % Evaluate the score or multiple scores
+          if size(mtd.target, 3) ~= size(trial, 3)
+            score = zeros(1, size(mtd.target, 3));
+            for ii = 1:length(score)
+              our_score = mtd.objective.evaluate(trial(:, :, ii), mtd.target);
+            
+              % Collect result from gpu
+              if isa(our_score, 'gpuArray')
+                our_score = gather(our_score);
+              end
+              
+              score(ii) = our_score;
+            end
+          else
+            score = mtd.objective.evaluate(trial, mtd.target);
+            
+            % Collect result from gpu
+            if isa(score, 'gpuArray')
+              score = gather(score);
+            end
+          end
       end
     end
     

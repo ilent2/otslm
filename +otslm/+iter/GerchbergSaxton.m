@@ -79,17 +79,35 @@ classdef GerchbergSaxton < otslm.iter.IterBase
     function result = iteration(mtd)
       % Implementation of the Gerchberg-Saxton algorithm
 
-      % Calculate generated pattern from guess
-      B = mtd.guess;
-      output = mtd.vismethod(B);
-
-      % Do adaptive-adaptive step
-      targetAmplitude = mtd.adaptive.*abs(mtd.target) ...
-          + (1 - mtd.adaptive).*abs(output);
-
-      % Calculate new guess
-      D = targetAmplitude .* exp(1i*angle(output));
-      mtd.guess = exp(1i.*angle(mtd.invmethod(D)));
+      if iscell(mtd.vismethod)  % Assume multiple input planes
+          new_guess = zeros(size(mtd.guess));
+          for m = 1:numel(mtd.vismethod)
+              % Calculate generated pattern from guess
+              B = mtd.guess;
+              output = mtd.vismethod{m}(B);
+        
+              % Do adaptive-adaptive step
+              targetAmplitude = mtd.adaptive.*abs(mtd.target{m}) ...
+                  + (1 - mtd.adaptive).*abs(output);
+        
+              % Calculate new guess
+              D = targetAmplitude .* exp(1i*angle(output));
+              new_guess = new_guess + exp(1i.*angle(mtd.invmethod{m}(D)));
+          end
+          mtd.guess = new_guess;
+      else
+          % Calculate generated pattern from guess
+          B = mtd.guess;
+          output = mtd.vismethod(B);
+    
+          % Do adaptive-adaptive step
+          targetAmplitude = mtd.adaptive.*abs(mtd.target) ...
+              + (1 - mtd.adaptive).*abs(output);
+    
+          % Calculate new guess
+          D = targetAmplitude .* exp(1i*angle(output));
+          mtd.guess = exp(1i.*angle(mtd.invmethod(D)));
+      end
 
       % Return the latest guess
       if nargout > 0
